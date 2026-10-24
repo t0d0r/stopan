@@ -1,0 +1,43 @@
+== 2011-05-19
+
+  FileUploader: http://valums.com/ajax-upload/
+
+== 2011-05-11
+
+Проба за wysiwyg
+
+Gemfile 
+  gem "mark_it_up"
+
+  rails generate miu_controller
+
+* Copying assets to /Users/t0d0r/Projects/rails/g0no/public/mark_it_up
+* Run 'script/generate miu_controller' to generate MarkItUpController and to be able to use default preview parser
+
+== 2011-04-19
+
+ Acts_as_list, sortable_element
+http://railscasts.com/episodes/147-sortable-lists
+http://media.railscasts.com/videos/147_sortable_lists.mov
+
+== 2011-04-05 - създаване на проекта
+
+  bundle install
+  
+* информация за CouchRest::Model https://github.com/couchrest/couchrest_model 
+
+* date_selector (date picker)
+   r plugin install git://github.com/brianjlandau/unobtrusive_date_picker.git
+  
+* low_pro.js сваляме от http://svn.danwebb.net/external/lowpro/tags/rel-0.2/dist/lowpro-0.2.zip
+* http://www.ujs4rails.com/
+  rails plugin install http://source.ujs4rails.com/current/unobtrusive_javascript
+  
+* реших да подменя couchrest_model със couch_potato, придържа се по-близо до ActiveRecord модела, 
+има примери и за attachments - https://github.com/langalex/couch_potato
+
+* couch_potato-extensions допълнение към couch_potato
+
+* https://github.com/phifty/couchmodel, още един начи за работа
+
+ gem "couchmodel", :require => "couch_model"

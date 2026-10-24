@@ -1,0 +1,12 @@
+<%# A flash message is a small sticky: yellow for notices, pink for alerts. %>
+<% kind = flash_kind(type) %>
+<div class="sticky sticky--<%= kind == "alert" ? "pink" : "yellow" %> flash flash--<%= kind %>"
+     role="<%= kind == "alert" ? "alert" : "status" %>" data-flash data-flash-kind="<%= kind %>">
+  <div class="sticky__bar">
+    <button type="button" class="sticky__box" aria-label="<%= t("ui.dismiss") %>" title="<%= t("ui.dismiss") %>"
+            data-dismiss>&times;</button>
+    <span class="sticky__caption"><%= t("ui.flash.#{kind}") %></span>
+    <span class="sticky__box sticky__box--spacer" aria-hidden="true"></span>
+  </div>
+  <p class="flash__text"><%= message %></p>
+</div>

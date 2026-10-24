@@ -1,0 +1,17 @@
+<%# Sun/moon theme switch and text size menu. Both are forms (no JavaScript
+    needed); application.js applies them at once and sets the same cookies. %>
+<%= form_with url: preferences_path, method: :patch, class: "prefs", data: { preference: true } do %>
+  <%# Only one button shows, depending on the current theme (application.css). %>
+  <button type="submit" name="theme" value="dark" class="tool-button theme-toggle theme-toggle--to-dark"
+          title="<%= t("ui.prefs.dark") %>" aria-label="<%= t("ui.prefs.dark") %>"><%= icon :moon, size: 15 %></button>
+  <button type="submit" name="theme" value="light" class="tool-button theme-toggle theme-toggle--to-light"
+          title="<%= t("ui.prefs.light") %>" aria-label="<%= t("ui.prefs.light") %>"><%= icon :sun, size: 15 %></button>
+  <%# Three A buttons of growing size: Normal, Big, Extra big. %>
+  <span class="scale-buttons" role="group" aria-label="<%= t("ui.prefs.text_size") %>">
+    <% PreferencesController::SCALES.each do |scale| %>
+      <button type="submit" name="scale" value="<%= scale %>" class="tool-button scale-button scale-button--<%= scale %>"
+              aria-pressed="<%= scale == scale_preference %>" title="<%= t("ui.prefs.scales.#{scale}") %>"
+              aria-label="<%= t("ui.prefs.text_size") %>: <%= t("ui.prefs.scales.#{scale}") %>">A</button>
+    <% end %>
+  </span>
+<% end %>

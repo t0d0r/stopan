@@ -1,0 +1,452 @@
+# Bulgarian localization for Ruby on Rails 2.2+
+# by Samson Behar <master.webmaster.master@gmail.com>
+# Fixes by Yavor Ivanov, http://github.com/YavorIvanov
+#
+# Минимална локализация на приложения за поддръжка на български език.
+
+bg:
+  "Are You sure?": "Сигурни ли сте?"
+  "Notes by tag": "Бележки с ключова дума" 
+  "Your Notes": "Вашите Бележки"
+  Add: "Добави" 
+  Content: "Съдържание"
+  Date: "дата"
+  amount: "сума"
+  comment: "коментар"
+  content: "съдържание"
+  delete: "изтриване"
+  description: "описание"
+  expence: "разход"
+  email: "Емайл"
+  logout: "изход"
+  password: "Парола"
+  remember_me: "Запомни ме"
+  tags: "тагове"
+  title: "заглавие"
+
+  ui:
+    back: "Към бележките"
+    cancel: "Отказ"
+    created_by: "преди %{time} от %{author}"
+    delete_note: "Изтрий бележката"
+    dismiss: "Затвори"
+    edited: "редактирана преди %{time}"
+    expenses: "Разходи"
+    files: "Файлове"
+    login: "Имейл или потребителско име"
+    new_note: "Нова бележка"
+    no_notes: "Все още няма бележки. Създайте първата."
+    notes_count:
+      one: "%{count} бележка"
+      other: "%{count} бележки"
+    save: "Запис"
+    sign_in: "Вход"
+    upload: "Качи"
+    links:
+      forgot_password: "Забравена парола?"
+      sign_in: "Вход"
+      sign_up: "Регистрация"
+    change_password: "Смяна на паролата"
+    confirm_new_password: "Повторете новата парола"
+    new_password: "Нова парола"
+    password_minimum:
+      one: "поне %{count} символ"
+      other: "поне %{count} символа"
+    color: "Цвят"
+    colors:
+      all: "Всички цветове"
+      yellow: "Жълт"
+      blue: "Син"
+      green: "Зелен"
+      pink: "Розов"
+      purple: "Лилав"
+      gray: "Сив"
+      random: "Случаен цвят"
+    files_count:
+      zero: "без файлове"
+      one: "%{count} файл"
+      other: "%{count} файла"
+    search:
+      label: "Търсене в бележките"
+      placeholder: "Търсене"
+      filter: "Филтър по цвят"
+      apply: "Приложи"
+      results: "Резултати"
+      clear: "Изчисти филтъра"
+      no_results: "Няма намерени бележки."
+    preview:
+      close: "Затвори прегледа"
+      previous: "Предишен файл"
+      next: "Следващ файл"
+      download: "Изтегли"
+      none: "Няма преглед за този вид файл. Изтеглете го, за да го отворите."
+      error: "Прегледът не можа да се зареди."
+    share:
+      title: "Споделяне"
+      shared: "Споделена"
+      shared_note: "Споделена бележка"
+      link: "Връзка за споделяне"
+      copy: "Копирай връзката"
+      copied: "Копирано"
+      create: "Създай връзка"
+      renew: "Нова връзка"
+      renew_hint: "Новата връзка заменя тази; старата спира да работи."
+      stop: "Спри споделянето"
+      password: "Парола за споделяне"
+      password_placeholder: "Парола (по желание, поне 6 символа)"
+      status_open: "Всеки с връзката може да види бележката."
+      status_password: "Всеки с връзката и паролата може да види бележката."
+      since: "споделена преди %{time}"
+      open_link: "връзка"
+      with_password: "връзка + парола"
+      locked_title: "Изисква се парола"
+      locked_hint: "Бележката е защитена. Въведете паролата, която сте получили."
+      unlock: "Отвори бележката"
+      missing_title: "Връзката не е достъпна"
+      missing_hint: "Бележката не е споделена или връзката е заменена."
+    admin:
+      title: "Администрация"
+      users: "Потребители"
+      new_user: "Нов потребител"
+      edit_user: "Редакция на %{name}"
+      edit: "редакция"
+      back: "Към администрацията"
+      role: "Роля"
+      admin: "Администратор"
+      sign_ins: "Влизания"
+      last_sign_in: "Последно влизане"
+      never: "никога"
+      ago: "преди %{time}"
+      password_keep: "Оставете празно, за да запазите текущата парола."
+      self_admin: "Не можете да премахнете собствената си администраторска роля."
+      shared_notes: "Споделени бележки"
+      no_shared_notes: "Няма споделени бележки."
+      stats:
+        users: "потребители"
+        notes: "бележки"
+        files: "файла"
+        storage: "заето място"
+        expenses: "разходи"
+    confirm:
+      title: "Сигурни ли сте?"
+      ok: "Изтрий"
+      delete_note_title: "Да се изтрие ли бележката?"
+      delete_note: "'%{title}' ще бъде изтрита завинаги, заедно с %{expenses} и %{files}. Това не може да се отмени."
+      delete_note_button: "Изтрий бележката"
+      expenses:
+        zero: "без разходи"
+        one: "%{count} разход"
+        other: "%{count} разхода"
+      delete_file_title: "Да се изтрие ли файлът?"
+      delete_file: "'%{filename}' (%{size}) ще бъде изтрит завинаги. Това не може да се отмени."
+      delete_file_button: "Изтрий файла"
+      stop_share_title: "Да се спре ли споделянето на '%{title}'?"
+      stop_share: "Текущата връзка спира да работи за всички, които я имат. По-късно можете да създадете нова."
+      delete_user_title: "Да се изтрие ли потребител %{name}?"
+      delete_user: "%{name} (%{email}) вече няма да може да влиза. Бележките остават."
+      delete_user_button: "Изтрий потребителя"
+    drop:
+      hint: "Можете и да пуснете файлове върху бележката, за да ги прикачите."
+      overlay: "Пуснете файловете, за да ги прикачите към бележката"
+      uploading: "Качване..."
+    history:
+      open: "История"
+      title: "История на %{title}"
+      heading: "%{title} във времето"
+      count:
+        one: "%{count} версия"
+        other: "%{count} версии"
+      timeline: "Времева линия"
+      current: "Това е текущата версия"
+      same_as_current: "Същата като текущата версия"
+      restore: "Възстанови"
+      restore_title: "Да се възстанови ли тази версия?"
+      restore_body: "Бележката ще получи заглавието, текста и цвета от %{time}. Файловете и разходите не се променят. Текущата версия остава в историята и можете да се върнете към нея."
+      done: "Готово"
+      older: "По-стара (стрелка нагоре)"
+      newer: "По-нова (стрелка надолу)"
+      show_changes: "Покажи промените"
+      position: "%{index} от %{total}"
+      events:
+        baseline: "Начало на историята"
+        created: "Създадена"
+        edited: "Редактирана"
+        recolored: "Сменен цвят"
+        restored: "Възстановена от %{time}"
+        file_added: "Добавен файл: %{details}"
+        file_deleted: "Изтрит файл: %{details}"
+        expense_added: "Добавен разход: %{details}"
+    flash:
+      notice: "Съобщение"
+      alert: "Внимание"
+    autosave:
+      hint: "Бележките се запазват сами, щом имат заглавие."
+      saving: "Запазване..."
+      saved: "Запазено в"
+      failed: "Не е запазено:"
+      needs_title: "Добавете заглавие, за да се запази бележката."
+      remote_change: "Променена е другаде. Ще се презареди, щом спрете да редактирате; вашият текст се записва върху промяната, а двата остават в Историята."
+    prefs:
+      dark: "Тъмна тема"
+      light: "Светла тема"
+      text_size: "Размер на текста"
+      scales:
+        normal: "Нормален"
+        big: "Голям"
+        extra: "Много голям"
+    copy_note:
+      label: "Копирай текста на бележката"
+      copied: "Копирано в клипборда"
+    lock:
+      hint: "Щракнете два пъти върху бележката, за да я редактирате."
+      lock: "Заключи бележката (край на редакцията)"
+      unlock: "Отключи бележката за редакция"
+    markdown:
+      show_formatted: "Покажи като Markdown"
+      show_plain: "Покажи като обикновен текст"
+    sort:
+      title: "Подредба: %{order}. Щракнете за следващата."
+      created_asc: "Първо най-старите"
+      created_desc: "Първо най-новите"
+      updated_desc: "Последно редактирани"
+      updated_asc: "Отдавна нередактирани"
+    nav:
+      label: "Раздели"
+    wide:
+      widen: "По-широка бележка"
+      narrow: "По-тясна бележка"
+    send_reset_instructions: "Изпрати инструкции за нова парола"
+
+  flash:
+    note_created: "Бележката е създадена."
+    note_deleted: "Документ със заглавие '%{title}' беше изтрит успешно"
+    note_gone: "Тази бележка беше изтрита."
+    file_deleted: "Файлът %{filename} беше изтрит."
+    note_shared: "Връзката за споделяне е създадена."
+    note_unshared: "Бележката вече не е споделена."
+    share_wrong_password: "Грешна парола."
+    share_too_many_attempts: "Твърде много опити. Опитайте отново след няколко минути."
+    share_revoked: "Споделянето на '%{title}' е спряно."
+    admin_only: "Само администратори могат да отворят тази страница."
+    user_created: "Потребител %{name} е създаден."
+    user_updated: "Потребител %{name} е обновен."
+    user_deleted: "Потребител %{name} е изтрит."
+    user_self_delete: "Не можете да изтриете собствения си акаунт оттук."
+    version_restored: "Възстановена е версията от %{time}."
+    registration_closed: "Регистрацията е затворена. Помолете администратор за акаунт."
+
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d %b"
+      long: "%d %B %Y"
+
+    day_names: [неделя, понеделник, вторник, сряда, четвъртък, петък, събота]
+    standalone_day_names: [Неделя, Понеделник, Вторник, Сряда, Четвъртък, Петък, Събота]
+    abbr_day_names: [Нд, Пн, Вт, Ср, Чт, Пт, Сб]
+
+    # should start with nil cause there is no 0-th month
+    month_names: [~, Януари, Февруари, Март, Април, Май, Юни, Юли, Август, Септември, Октомври, Ноември, Декември]
+    abbr_month_names: [~, яну., фев., март, апр., май, юни, юли, авг., сеп., окт., ноем., дек.]
+
+    order:
+      - :day
+      - :month
+      - :year
+
+  time:
+    formats:
+      default: "%a, %d %b %Y, %H:%M:%S %z"
+      short: "%d %b, %H:%M"
+      long: "%d %B %Y, %H:%M"
+
+    am: "преди обяд"
+    pm: "следобед"
+
+  number:
+    format:
+      separator: "."
+      delimiter: " "
+      precision: 3
+
+    currency:
+      format:
+        format: "%n %u"
+        unit: "лв."
+        separator: "."
+        delimiter: " "
+        precision: 2
+
+    percentage:
+      format:
+        delimiter: ""
+
+    precision:
+      format:
+        delimiter: ""
+
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+      # Rails 2.2
+      # storage_units: [байт, КБ, МБ, ГБ, ТБ]
+
+      # Rails 2.3
+      storage_units:
+        # Storage units output formatting.
+        # %u is the storage unit, %n is the number (default: 2 MB)
+        format: "%n %u"
+        units:
+          byte:
+            one: "байт"
+            few: "байта"
+            many: "байт"
+            other: "байта"
+          kb: "КБ"
+          mb: "МБ"
+          gb: "ГБ"
+          tb: "ТБ"
+
+  datetime:
+    distance_in_words:
+      half_a_minute: "по-малко от минута"
+      less_than_x_seconds:
+        one: "по-малко от %{count} секунди"
+        few: "по-малко от %{count} секунди"
+        many: "по-малко от %{count} секунди"
+        other: "по-малко от %{count} секунди"
+      x_seconds:
+        one: "%{count} секунда"
+        few: "%{count} секунди"
+        many: "%{count} секунди"
+        other: "%{count} секунди"
+      less_than_x_minutes:
+        one: "по-малко от %{count} минута"
+        few: "по-малко от %{count} минути"
+        many: "по-малко от %{count} минути"
+        other: "по-малко от %{count} минути"
+      x_minutes:
+        one: "%{count} минута"
+        few: "%{count} минути"
+        many: "%{count} минути"
+        other: "%{count} минути"
+      about_x_hours:
+        one: "около %{count} час"
+        few: "около %{count} часа"
+        many: "около %{count} часа"
+        other: "около %{count} часа"
+      x_days:
+        one: "%{count} ден"
+        few: "%{count} дни"
+        many: "%{count} дни"
+        other: "%{count} дена"
+      about_x_months:
+        one: "около %{count} месеца"
+        few: "около %{count} месеца"
+        many: "около %{count} месеца"
+        other: "около %{count} месеца"
+      x_months:
+        one: "%{count} месец"
+        few: "%{count} месеца"
+        many: "%{count} месеци"
+        other: "%{count} месеца"
+      almost_x_years:
+        one: "почти %{count} година"
+        few: "почти %{count} години"
+        many: "почти %{count} години"
+        other: "почти %{count} години"
+      about_x_years:
+        one: "около %{count} година"
+        few: "около %{count} години"
+        many: "около %{count} години"
+        other: "около %{count} години"
+      over_x_years:
+        one: "над %{count} година"
+        few: "над %{count} години"
+        many: "над %{count} години"
+        other: "над %{count} години"
+    prompts:
+      year: "Година"
+      month: "Месец"
+      day: "Ден"
+      hour: "Часа"
+      minute: "Минути"
+      second: "Секунди"
+
+  activerecord:
+    models:
+      user: "потребител"
+      note: "бележка"
+    attributes:
+      user:
+        email: "Имейл"
+        password: "Парола"
+        password_confirmation: "Повторете паролата"
+        current_password: "Текуща парола"
+        remember_me: "Запомни ме"
+        username: "Потребителско име"
+      note:
+        title: "Заглавие"
+        color: "Цвят"
+        share_password: "Парола за споделяне"
+        description: "Описание"
+      finance_entry:
+        amount: "Сума"
+        date: "Дата"
+      note_attachment:
+        file: "Файл"
+    errors:
+      template:
+        header:
+          one: "%{model}: записа неуспешен заради %{count} грешка"
+          few: "%{model}: записа неуспешен заради %{count} грешки"
+          many: "%{model}: записа неуспешен заради %{count} грешки"
+          other: "%{model}: записа неуспешен заради %{count} грешки"
+
+        body: "Възникнаха проблеми при следните полета:"
+
+      messages:
+        inclusion: "съдържа непредвидена стойност"
+        exclusion: "съдържа предварително зададена стойност"
+        invalid: "съдържа невярна стойност"
+        confirmation: "не съответства на потвърждението"
+        accepted: "трябва да се потвърди"
+        empty: "не може да е празно"
+        blank: "не може да е без стойност"
+        too_long:
+          one: "е с прекалена дължина (не може да е повече от %{count} символ)"
+          few: "е с прекалена дължина (не може да е повече от %{count} символа)"
+          many: "е с прекалена дължина (не може да е повече от %{count} символи)"
+          other: "е с прекалена дължина (не може да е повече от %{count} символа)"
+        too_short:
+          one: "е с недостатъчна дължина (не может быть меньше %{count} символ)"
+          few: "е с недостатъчна дължина (не может быть меньше %{count} символа)"
+          many: "е с недостатъчна дължина (не может быть меньше %{count} символи)"
+          other: "е с недостатъчна дължина (не может быть меньше %{count} символа)"
+        wrong_length:
+          one: "е с грешна дължина (трябва да е с дължина, равна на %{count} символ)"
+          few: "е с грешна дължина (трябва да е с дължина, равна на %{count} символа)"
+          many: "е с грешна дължина (трябва да е с дължина, равна на %{count} символа)"
+          other: "е с грешна дължина (трябва да е с дължина,  равна на %{count} символа)"
+        taken: "вече съществува"
+        not_a_number: "не е число"
+        greater_than: "може да е със стойност, по-голяма от %{count}"
+        greater_than_or_equal_to: "може да е със стойност, по-голяма или равна на %{count}"
+        equal_to: "може да е единствено със стойност, равна на %{count}"
+        less_than: "може да е със стойност, по-малка от %{count}"
+        less_than_or_equal_to: "може да е със стойност, по-голяма или равна на %{count}"
+        odd: "може да е единствено четно"
+        even: "може да е единствено нечетно"
+        record_invalid: "имаше грешки: %{errors}"
+
+  support:
+    array:
+      # Rails 2.2
+      sentence_connector: "и"
+      skip_last_comma: true
+
+      # Rails 2.3
+      words_connector: ", "
+      two_words_connector: " и "
+      last_word_connector: " и "
