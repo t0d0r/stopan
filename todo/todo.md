@@ -1,5 +1,45 @@
 # Todo
 
+## Phase 1 - service desk vertical slice (2026-10-25)
+
+- [x] inspect the g0no baseline; write the service desk spec (specs/README.md)
+- [~] rebrand g0no -> Stopan; remove the notes domain, deploy files and import (specs/overview.md)
+- [ ] fresh migrations: users with roles, organizations, memberships, tickets, comments, ticket events (specs/data-model.md)
+- [ ] roles, scopes and TicketPolicy with tests (specs/roles.md)
+- [ ] ticket model: numbering, validations, transitions, events (specs/tickets.md)
+- [ ] comments, internal notes and the timeline (specs/timeline.md)
+- [ ] attachments with limits and authorized download (specs/attachments.md)
+- [ ] agent queue and My tickets with filters, search, pagination (specs/queues.md)
+- [ ] ticket pages: new, show with properties, composer (specs/tickets.md, specs/ui.md)
+- [ ] admin: dashboard, users and roles, organizations and memberships (specs/admin.md)
+- [ ] Devise lockable and user deactivation (specs/auth.md)
+- [ ] service desk styling, English and Bulgarian translations (specs/ui.md)
+- [ ] content security policy and log filtering of ticket text (specs/ui.md, specs/overview.md)
+- [ ] flow tests for lifecycle and visibility (specs/roles.md)
+- [ ] demo data task, README rewrite (specs/auth.md)
+
+## Later (specs/roadmap.md)
+
+- [ ] email notifications and SMTP (specs/roadmap.md)
+- [ ] email ingestion with Action Mailbox (specs/roadmap.md)
+- [ ] auto-close resolved tickets after N days (specs/roadmap.md)
+- [ ] SLAs per priority (specs/roadmap.md)
+- [ ] live ticket and queue updates over Turbo Streams (specs/roadmap.md)
+- [ ] agent groups and organization-wide requester visibility (specs/roadmap.md)
+- [ ] reporting (specs/roadmap.md)
+- [ ] JSON API (specs/roadmap.md)
+- [ ] headless browser system tests (specs/roadmap.md)
+- [ ] build and check the Stopan Docker image (specs/docker.md)
+- [ ] production deployment design for Stopan (specs/roadmap.md)
+- [ ] add gitleaks as a pre-commit hook (../AGENTS.md)
+- [ ] regenerate the local .env copied from g0no (specs/auth.md)
+
+## Archive - g0no baseline
+
+The list below is g0no's record, copied with the code on 2026-10-25. It
+describes the notes app Stopan started from; open items in it do not apply
+to Stopan unless they are listed above.
+
 - [x] upgrade from Rails 3.0.5 to Rails 8.1.4 on Ruby 4.0 (specs/overview.md)
 - [x] replace CouchDB with SQLite and Active Storage (specs/data-model.md)
 - [x] import task for the 2011 CouchDB data (specs/couchdb-import.md)

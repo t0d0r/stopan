@@ -1,164 +1,103 @@
 # User interface
 
-Requested by the operator on 2026-10-18: "styling like Apple sticky notes".
+Stopan keeps g0no's macOS Stickies visual language - pastel paper with a
+darker title strip, square corners, a soft shadow, a neutral desk under a
+translucent menu bar - and applies it to a working service desk: dense,
+scannable lists, a clear ticket timeline and obvious separation of public
+and internal content.
+
 Styles: `app/assets/stylesheets/application.css`. Behaviour:
-`app/assets/javascripts/application.js`. No CSS framework; Turbo Drive for
-page changes, otherwise plain JavaScript.
+`app/assets/javascripts/application.js`. No CSS framework, no JS framework;
+Turbo Drive for page changes.
 
 ## Look
 
-- **Desk:** neutral warm-grey background (`--desk`), darker in dark mode.
-- **Menu bar:** translucent bar at the top, like the macOS menu bar. Left:
-  the sticky icon (`public/icon.svg`) and "g0No" (icon only under 560px),
-  then the sections as pills, each with a small paper colour square
-  (Content yellow, Admin grey); the current section has a grey pill and
-  bold text (`aria-current="page"`). Right: theme, text size, user name and
-  logout.
-- **Sticky paper:** square corners (3px), soft shadow, a slightly darker
-  title strip (`.sticky__bar`) of the same colour. Notes keep their paper
-  colours in dark mode, as Stickies does.
-- **Colours** (paper / title strip), as in the Stickies Color menu:
+- **Desk:** warm grey background (`--desk`), darker in dark mode.
+- **Menu bar:** translucent bar at the top. Left: the sticky icon and
+  "Stopan" (icon only under 560px), then section pills with a paper-colour
+  square: "Queue" (staff, yellow) or "My tickets" (requesters, yellow),
+  "New ticket" (green), "Admin" (admins, grey). The current section has
+  `aria-current="page"`. Right: theme switch, three text sizes, the user's
+  name with a role label, "Logout".
+- **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
+  #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink
+  `#fcd4e6 / #f4b0cf`, purple `#e3d8fc / #c9b9f5`, gray `#efeeea / #d8d6cf`.
+  Paper keeps its colour in dark mode.
+- **Meaning of colour** (always paired with text):
 
-  | name | paper | strip |
-  |------|-------|-------|
-  | yellow | #fff6a8 | #f5e270 |
-  | blue | #cfe7fc | #a9d1f5 |
-  | green | #d4f4c6 | #ade5a0 |
-  | pink | #fcd4e6 | #f4b0cf |
-  | purple | #e3d8fc | #c9b9f5 |
-  | gray | #efeeea | #d8d6cf |
+  | thing | colour |
+  |-------|--------|
+  | status new | yellow |
+  | status open | pink |
+  | status pending | blue |
+  | status resolved | green |
+  | status closed | gray |
+  | priority low / normal / high / urgent | gray / blue / purple / red text with red edge |
+  | requester reply | yellow paper |
+  | staff public reply | blue paper |
+  | internal note | pink paper, padlock, "Internal note" label |
 
-  A note's colour is `id mod 6` in that order (`NotesHelper#sticky_color`),
-  so it never changes. New notes are yellow.
-- **Font:** the system font (San Francisco on Apple devices).
-- **Expense amounts** are red and use tabular figures.
+- **Font:** the system font. Ticket numbers use tabular figures.
 
 ## Pages
 
-- **Board** (index, by tag): responsive grid of cards, at least 210px wide
-  (150px under 560px). The first card is a dashed "+ New note" tile.
-  Hovering a card lifts it slightly.
-- **Note window** (show, new, edit): one sticky, max 760px wide. Title strip
-  with a close box (back to the list), a caption ("edited ... ago" or "New
-  note"), the colour menu, the history box and a delete box. Title and
-  description are borderless fields on the paper; the description grows
-  with its content. Changes save themselves (features.md, Autosave). Expenses and files are sections below,
-  each with a one-line form.
-- **Account pages** (sign in, sign up, password reset): a small yellow
-  sticky centred on the desk.
-- **Flash messages:** small stickies pinned at the top right under the menu
-  bar (operator: notices should look like the site itself): yellow paper
-  with caption "Notice" for notices, pink with "Attention" for alerts, a
-  close box in the title strip. Notices fade out after 6 seconds (paused
-  while hovered or focused); alerts stay until closed. They slide in, and
-  do not animate with reduced motion.
+- **Queue** (staff): views column + filter bar + table in a grey sticky
+  panel (queues.md). Under 760px the views become a scrollable tab row and
+  table columns other than number, subject and status are hidden.
+- **My tickets** (requester): tabs, search, "New ticket" button, table in a
+  yellow sticky panel.
+- **New ticket:** one yellow sticky form, labels above fields, hints under
+  them, required fields marked, file input with the limits stated.
+- **Ticket page:** two columns from 900px. Main: a header with `#number`,
+  subject and status pill; the description as the first sticky; the
+  timeline; the composer. Side: "Properties" panel (status, priority,
+  assignee as selects with "Update" for staff, plain values for
+  requesters), "Requester" panel (name, email, organization; staff only see
+  email) and dates. Requesters see "Mark as resolved" when allowed. Under
+  900px the side panel comes after the header.
+- **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
+  sticky.
+- **Account pages:** a small yellow sticky centred on the desk.
+- **Flash messages:** small stickies at the top right (yellow "Notice", pink
+  "Attention"); notices fade after 6 seconds unless hovered or focused.
+- **Confirm dialog:** a yellow sticky with a red "!" badge, a question, what
+  will happen, Cancel and a red action button (`ApplicationHelper#confirm_data`).
+- **Forbidden page (403):** a small pink sticky with a sentence and a link
+  back to the start page.
 
-- **Board tools:** search box, colour filter and sort button in the board
-  header next to the note count (features.md, Sorting); small grey text
-  buttons that highlight on hover. The menu bar has no search.
-- **Colour menu:** six small squares in a note's title strip, the current one
-  ringed. Fixed set only.
-- **Card badges:** paperclip + file count, link icon for shared notes, then
-  the total. Icons are inline SVG (`NotesHelper#icon`), no image files.
-- **Preview dialog:** a large sticky in the note's colour over a dimmed desk;
-  title strip with close, file name and previous/next boxes; footer with
-  size, comment, position and a blue Download button.
-- **Confirm dialog:** a small yellow sticky with a red "!" badge, a bold
-  question, a sentence on what will happen, Cancel and a red action button.
-- **Drop overlay:** dashed blue border and "Drop files to attach them to
-  this note" over the note window while files are dragged onto it.
-- **Sort button:** small text button with an up/down arrow icon after the
-  note count, showing the current order ("Oldest first", ...).
-- **Menu bar tools:** sun/moon theme button and three "A" buttons (small,
-  medium, large letter) for Normal / Big / Extra big text. In dark
-  theme the desk, menu bar and menus darken; notes keep their paper colours.
-  Dark colours are CSS variables, redefined under
-  `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` and
-  `:root[data-theme="dark"]`.
-- **Description field:** grows with its text and never shows a scroll bar
-  (the height includes the border; it is measured again on resize, when
-  fonts load and when the text size changes). Without JavaScript it keeps a
-  normal scroll bar so no text is hidden.
-- **Markdown box:** M-down icon right after the close box; dark while the
-  note is shown as Markdown (markdown.md). Formatted text uses the note's
-  font; code and tables get a light grey background and rules.
-- **Wide box:** diagonal arrows pointing out (widen) or in (narrow), next to
-  the Markdown box.
-- **Lock:** padlock box in the title strip (closed when locked, open while
-  editing). While editing, the title and description show their dashed
-  rules; locked fields have a default cursor.
-- **Copy box:** a small copy icon in the note's title strip (and on shared
-  notes) puts the note's text on the clipboard, or the title when there is
-  no text; it shows a green check mark for 1.5 seconds. Falls back to
-  `execCommand("copy")` where the Clipboard API is unavailable (plain HTTP
-  other than localhost). Hidden without JavaScript.
-- **Site icon:** a small yellow sticky with a darker title strip and three
-  text lines: `public/icon.svg` (source), `favicon.ico` (16/32/48 PNG
-  entries), `icon.png` (512) and `apple-touch-icon.png` (180, on the desk
-  colour because iOS does not allow transparency).
-- **Autosave status:** small grey text under the description, red when a
-  save fails.
-- **Colour menu dice:** a small five-dot die after the swatches; it turns a
-  little on hover.
-- **History:** night-sky page; versions stacked like Time Machine windows,
-  timeline at the right, controls at the bottom; green insertions, red
-  struck-through deletions (history.md). Clock box in the note title strip.
-- **Admin:** coloured stat tiles, grey sticky panels with tables.
-- **Shared note:** the note window without boxes or forms, caption "Shared
-  note"; password page and "link not available" page as small stickies.
+## Behaviour (application.js)
 
-## Turbo Drive
+- Theme and text-size buttons apply at once and set cookies.
+- Filter selects in the queue submit their form on change.
+- The composer switch toggles `is-internal` on the form (pink paper,
+  button label "Add internal note" / "Send reply").
+- Text areas grow with their text.
+- Confirm dialog for `form[data-confirm]`; flash dismissal.
+- All page setup runs on `turbo:load`; page listeners use an abort signal.
 
-- `application.js` runs once; `setUpPage` runs on every `turbo:load` (and on
-  `DOMContentLoaded` if Turbo did not load). Listeners on `document` or
-  `window` that belong to one page pass `{ signal: pageSignal }`; the
-  signal is aborted when the next page is set up, so nothing piles up.
-  Checked in Chrome: the count of page listeners returns to the same value
-  after each visit.
-- `<meta name="turbo-cache-control" content="no-cache">`: no page snapshots.
-  A back or forward visit always fetches the page, so an old copy of a note
-  can never be shown and then autosaved over newer text, and nothing stays
-  cached after sign-out.
-- Autosave also flushes on `turbo:visit` and `turbo:submit-start`, since a
-  Turbo visit has no `pagehide`. Address changes (new note, history) use
-  `history.replaceState(history.state, ...)` to keep Turbo's restoration
-  data.
-- Live updates (live-updates.md) use Turbo's page refresh with
-  `turbo-refresh-scroll` `preserve`; a refresh waits while the page is busy.
-  `application.js` has `data-turbo-eval="false"` so an error page swap does
-  not run it twice.
-- File downloads (`data-turbo="false"`) and the sort link (no hover
-  prefetch: it sets a cookie) opt out. Assets carry
-  `data-turbo-track="reload"`, so a deploy with new CSS or JS reloads the
-  page. Forms keep their status codes: 422 re-renders, 303/302 redirects.
-- The loading bar (`.turbo-progress-bar`) is 2px in the accent colour.
+## Accessibility
 
-## Constraints
-
-- Works at 390px width with no horizontal scrolling.
-- Visible focus rings on links, buttons and fields; every form field has a
-  label (visually hidden where the placeholder shows it).
-- Delete actions ask for confirmation in the confirm dialog (`data-confirm`,
-  `data-confirm-title`, `data-confirm-button` via
-  `ApplicationHelper#confirm_data`).
+- Works at 390px width with no horizontal page scroll (tables scroll inside
+  their panel).
+- Visible focus rings; every field has a label; errors are listed in an
+  `role="alert"` box at the top of the form and fields with errors get
+  `aria-invalid`.
+- Status, priority and internal notes never rely on colour alone.
+- Landmarks: `header`, `nav`, `main`, `aside` on the ticket page; one `h1`
+  per page; the timeline is an ordered list.
+- Respects `prefers-reduced-motion`.
 
 ## Translations
 
-All UI text is in `config/locales/{en,bg}.yml` (`ui.*`, `flash.*`) and
-Devise text in `config/locales/devise.{en,bg}.yml`. The locale follows the
-browser (see features.md).
-
-## Verified
-
-Screenshots were taken on 2026-10-18 with headless Chrome at 1280px and
-390px for the sign-in (with an error), sign-up, board and note pages. Later
-the same day (puppeteer-core driving Chrome): colour filter, search, note
-with colour menu, image / PDF / text previews, confirm dialog, drop overlay
-and upload, sharing section, admin panel, shared note locked / wrong
-password / unlocked, and the board at 390px.
+All UI text is in `config/locales/{en,bg}.yml` (`ui.*`, `flash.*`,
+`activerecord.*`) and Devise text in `config/locales/devise.{en,bg}.yml`.
+The locale follows the browser's `Accept-Language` (first supported
+language, default English). `test/i18n/locales_test.rb` checks that both
+files have the same keys.
 
 ## Security Note
 
-User text (titles, descriptions, comments, file names) is always rendered
-escaped; the CSS and JS are served from the app itself, with no third-party
-assets.
+User text is always rendered escaped. CSS and JS are served from the app;
+a Content Security Policy (`config/initializers/content_security_policy.rb`)
+allows only same-origin scripts, styles, images and forms, with a nonce for
+Turbo's progress bar style, and forbids framing.

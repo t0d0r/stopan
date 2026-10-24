@@ -1,47 +1,58 @@
-# Admin panel
+# Administration
 
-Requested by the operator on 2026-10-18: "add admin panel for admin user".
+All under `/admin`, controllers in `app/controllers/admin/`, admins only
+(roles.md). The menu bar shows "Admin" to admins only.
 
-## Who is an administrator
+## Dashboard - `GET /admin`
 
-`users.admin` (boolean, default false). The seed (`db/seeds.rb`) creates the
-`ADMIN_USERNAME` user (default `admin`) with `admin: true`, and sets the flag
-on an existing user with that username if it is missing (email and password
-are left unchanged). Sign-up never sets the flag: Devise only permits email
-and password there.
+Stat tiles: unsolved tickets, unassigned unsolved tickets, tickets solved
+in the last 7 days, organizations, agents (agents + admins), requesters.
+Links to the user and organization lists.
 
-## Pages
-
-All under `/admin`, controllers in `app/controllers/admin/`. A signed-out
-visitor is sent to sign in; a signed-in user without the flag is redirected
-to the board with the alert "Only administrators can open that page". The
-menu bar shows an "Admin" link to administrators only.
+## Users - `/admin/users`
 
 | route | behaviour |
 |-------|-----------|
-| `GET /admin` | stats (users, notes, files, stored bytes, sum of expenses), the user table (username, email, role, sign-in count, last sign-in, edit / delete) and the list of shared notes with "Stop sharing" |
-| `GET /admin/users/new`, `POST /admin/users` | create a user: username, email, password + confirmation, admin flag |
-| `GET /admin/users/:id/edit`, `PATCH /admin/users/:id` | edit the same fields; a blank password keeps the current one |
-| `DELETE /admin/users/:id` | delete a user; notes they wrote stay (authors are stored as names) |
-| `DELETE /admin/shares/:id` | revoke the share link of note `:id` |
+| `GET /admin/users` | table: name, username, email, role, organizations, status (active / deactivated), last sign-in; filter by role, search by name/username/email |
+| `GET /admin/users/new`, `POST /admin/users` | name, username, email, password + confirmation, role, organizations (checkboxes) |
+| `GET /admin/users/:id/edit`, `PATCH /admin/users/:id` | same fields plus "Deactivated"; a blank password keeps the current one |
+| `DELETE /admin/users/:id` | only for users with no tickets (as requester or assignee) and no comments; otherwise refused with "has ticket history; deactivate instead" |
 
-## Rules
+Rules:
 
-- An administrator cannot remove their own admin flag (the checkbox is
-  disabled and the parameter is ignored) and cannot delete their own account.
-  So at least one administrator always remains.
+- An admin cannot change their own role, deactivate or delete themselves
+  (fields disabled, parameters ignored, delete refused).
 - Changing your own password keeps you signed in (`bypass_sign_in`).
-- Usernames are unique, case-insensitive (`User` validation); surrounding
-  spaces are stripped and a blank username is stored as NULL.
+- Usernames are unique case-insensitively; blank usernames are stored as
+  NULL. Emails are unique (Devise).
+- Demoting an agent who is assignee of unsolved tickets is allowed; those
+  tickets become unassigned and each gets an `assignee_changed` event with
+  the admin as actor.
+- Deactivating a user also unassigns their unsolved tickets the same way.
+- "Agent membership" is managed by setting the role: agents and admins are
+  the staff list used for assignment.
+
+## Organizations - `/admin/organizations`
+
+| route | behaviour |
+|-------|-----------|
+| `GET /admin/organizations` | table: name, members, unsolved tickets, all tickets; search by name |
+| `GET /admin/organizations/new`, `POST` | name (required, unique case-insensitively, at most 120 characters), notes (optional, staff-only text) |
+| `GET /admin/organizations/:id` | details, member list with role and "Remove", "Add member" (select of users not yet members) |
+| `GET /admin/organizations/:id/edit`, `PATCH` | name, notes |
+| `DELETE /admin/organizations/:id` | only without tickets; memberships are removed with it |
+| `POST /admin/organizations/:id/memberships` | add a member (`user_id`) |
+| `DELETE /admin/memberships/:id` | remove a member; their access to that organization's tickets ends at once |
+
+Destructive actions ask in the confirm dialog, naming what will be lost.
 
 ## Acceptance
 
-`test/controllers/admin_controller_test.rb` covers access control, listing,
-create, update with and without a password, self-protection, delete and
-share revocation.
+`test/controllers/admin/*_test.rb`: access control, CRUD, self-protection,
+delete refusal with history, unassignment on demotion/deactivation,
+membership add/remove.
 
 ## Security Note
 
-The admin panel can set any user's password and grant the admin flag. Keep
-the number of administrators small, and keep the seeded admin password
-(in `.env`) private.
+Admins can set passwords and grant roles. Keep the number of admins small
+and keep the seeded admin password (in `.env`) private.

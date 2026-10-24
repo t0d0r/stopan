@@ -1,64 +1,58 @@
 # Authentication
 
-Devise 5 with the modules `database_authenticatable`, `registerable`,
-`recoverable`, `rememberable`, `trackable` and `validatable` (the same set as
-in 2011).
+Devise 5 with `database_authenticatable`, `registerable`, `recoverable`,
+`rememberable`, `trackable`, `validatable` and `lockable`.
 
-- The sign-in form has one field labelled "Email"; it accepts the email or
-  the username, case-insensitively (`User.find_for_database_authentication`).
-- Sign-up accepts email and password only; `username` is set by the seed or
-  the console (it was not mass-assignable in 2011 either).
-- Sign-out is `DELETE /users/sign_out` (a `button_to` in the top bar).
-- Sign-in, sign-up and password reset pages are translated (`bg`, `en`),
-  including Devise's flash messages (`config/locales/devise.bg.yml`).
+- The sign-in form has one field, "Email or username"; it matches either,
+  case-insensitively (`User.find_for_database_authentication`).
+- Passwords are 8 to 128 characters.
+- **Lockable:** 10 failed sign-ins lock the account for 15 minutes
+  (`unlock_strategy :time`, no email needed). The sign-in error does not say
+  whether the account exists (`paranoid` mode).
+- **Deactivated users** (`deactivated_at` set) cannot sign in
+  (`active_for_authentication?` false, message "Your account has been
+  deactivated. Contact your service desk administrator."), and a signed-in
+  session ends on the next request.
+- Sign-out is `DELETE /users/sign_out` (a `button_to` in the menu bar).
+- Account pages (sign in, sign up, password reset, edit account) and
+  Devise's messages are translated (`bg`, `en`).
+- The legacy 2011 password pepper support from g0no was removed with the
+  old migrations; `DEVISE_PEPPER` is no longer read.
+
+## Sign-up
+
+Controlled by `REGISTRATION_OPEN`: open by default in development and test,
+closed by default in production. A self-registered user is a requester
+without organizations, so they can sign in but cannot open tickets until an
+administrator adds them to an organization. When closed, the sign-up link is
+hidden and `GET /users/sign_up` and `POST /users` redirect to sign-in with
+"Sign-up is closed. Ask an administrator for an account."
 
 ## Admin user
 
 `db/seeds.rb` creates the user `ADMIN_USERNAME` (default `admin`) with
-`ADMIN_EMAIL` and `ADMIN_PASSWORD` and the admin flag when no user with that
-username exists (case-insensitive), even if other users exist. For an
-existing user with that username the seed only sets the admin flag if it is
-missing; email and password are never changed, so editing `.env` later does
-not change the password. Without
-`ADMIN_EMAIL` or `ADMIN_PASSWORD` the seed prints a message and does nothing.
-The password is never printed.
+`ADMIN_EMAIL`, `ADMIN_PASSWORD` and role `admin` when no user with that
+username exists (case-insensitive). For an existing user with that username
+it only sets role `admin` if needed; email and password are never changed.
+Without `ADMIN_EMAIL` or `ADMIN_PASSWORD` it prints a message and does
+nothing. The password is never printed.
 
 `bin/setup-env` creates `.env` from `.env.example` (mode 600) when it is
-missing and fills only empty values: `SECRET_KEY_BASE` (random),
-`ADMIN_EMAIL` (`admin@localhost`), `ADMIN_USERNAME` (`admin`) and
-`ADMIN_PASSWORD` (24 random hex characters). `make run` runs it, loads
-`.env`, runs the seed and starts the server. `make docker-up` runs it before
-starting the container, whose entrypoint runs the seed on every start.
+missing and fills only empty values: `SECRET_KEY_BASE`, `ADMIN_EMAIL`,
+`ADMIN_USERNAME`, `ADMIN_PASSWORD`. `make run` runs it, loads `.env`, seeds
+and starts the server.
 
-To change the admin password, use the admin panel (`/admin`, admin.md) or
-`bin/rails runner`, not `.env`.
+## Demo data (development only)
 
-## Users created by the 2011 app
-
-Devise 1.1 hashed `password + pepper` with bcrypt (cost 10). Devise 5 checks
-`password + Devise.pepper` against the bcrypt string, so old hashes verify
-when the same pepper is configured. The pepper is read from `DEVISE_PEPPER`;
-it is unset by default. A test (`test/models/user_test.rb`) covers this.
-
-To keep old passwords working, set `DEVISE_PEPPER` to the value from the
-2011 `config/initializers/devise.rb` (in git history). Better: leave it unset
-and have users reset their password (or set a new one from the console),
-because that value is public in the repository history. Note that changing
-the pepper later invalidates every password hashed with the old one.
-
-Moving an existing users database: copy the old `db/production.sqlite3` to
-`storage/production.sqlite3` and run `bin/rails db:migrate`. The first
-migration has the same version as in 2011 and is skipped; the next one adds
-`reset_password_sent_at` and drops `password_salt` and `remember_token`.
+`make demo` (`bin/rails stopan:demo`) creates two example organizations, an
+agent, three requesters and a handful of tickets with replies, notes and
+status changes, all with `example.com` addresses. It needs `DEMO_PASSWORD`
+in the environment (used for every demo user, never printed) and refuses to
+run in production. Running it again does nothing if the demo data exists.
 
 ## Security Note
 
-Sign-up (Devise registrations) is controlled by `REGISTRATION_OPEN`: open
-by default in development and test, closed by default in production
-(operator, 2026-10-19, before the public deployment). When closed, the
-sign-up link is hidden and `GET /users/sign_up` and `POST /users` redirect
-to sign-in with "Sign-up is closed. Ask an administrator for an account.";
-administrators create users at `/admin`. Signed-in users can still edit
-their own account. Every signed-in user can read all notes, so keep sign-up
-closed on a public host. Password reset emails need SMTP settings, which are not
-configured yet (see todo).
+Keep sign-up closed on a public host. Password reset emails need SMTP
+settings, which are not configured yet (roadmap). The `.env` copied from
+g0no when Stopan was created holds g0no's secrets; regenerate it for Stopan
+(delete it and run `bin/setup-env`).

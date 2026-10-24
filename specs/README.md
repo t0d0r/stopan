@@ -2,19 +2,18 @@
 
 | file | summary |
 |------|---------|
-| [overview.md](overview.md) | what g0No is, the stack, and the decisions of the Rails 8 migration |
-| [data-model.md](data-model.md) | tables for notes, tags, finance entries and attachments |
-| [features.md](features.md) | pages and behaviour the app must keep |
-| [ui.md](ui.md) | look and feel: macOS Stickies style, colours, layout, translations |
-| [admin.md](admin.md) | admin flag, admin panel for users, stats and shared notes |
-| [markdown.md](markdown.md) | per-note Markdown switch, formatted view, clickable task lists |
-| [history.md](history.md) | version history of notes, Time Machine style view and restore |
-| [sharing.md](sharing.md) | public share links, optionally with a password |
-| [live-updates.md](live-updates.md) | note and share pages reload themselves when the note changes (Action Cable) |
-| [auth.md](auth.md) | Devise setup, sign-in by username or email, legacy password hashes |
-| [couchdb-import.md](couchdb-import.md) | one-off import of the 2011 CouchDB data |
+| [overview.md](overview.md) | what Stopan is, its origin as a copy of g0no, the stack and the main decisions |
+| [roles.md](roles.md) | requester, agent and administrator; organizations and memberships; permission matrix and how it is enforced |
+| [tickets.md](tickets.md) | ticket fields, numbering, statuses, allowed transitions, creating and updating |
+| [timeline.md](timeline.md) | public replies, internal notes, the append-only event log and the composer |
+| [attachments.md](attachments.md) | file limits, allowed types and authorized download-only serving |
+| [queues.md](queues.md) | agent queue views, filters, search, sort, pagination and the requester's "My tickets" |
+| [admin.md](admin.md) | admin dashboard, users and roles, organizations and memberships |
+| [data-model.md](data-model.md) | tables, columns, indexes and deletion rules |
+| [auth.md](auth.md) | Devise setup, lockable, deactivation, sign-up switch, seeded admin, demo data |
+| [ui.md](ui.md) | Stickies-based look adapted to a service desk, pages, behaviour, accessibility, translations |
 | [docker.md](docker.md) | Docker image, compose file and environment variables |
-| [deploy.md](deploy.md) | production on a server: rootless Podman under its own user, Apache, certbot |
+| [roadmap.md](roadmap.md) | later phases: notifications, ingestion, SLAs, automation, API, reporting, groups, ... |
 
 ## Security Note
 
