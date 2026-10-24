@@ -44,7 +44,6 @@
 /specs
 /todo
 /session
-/doc
 
 # Ignore Docker-related files
 /.dockerignore

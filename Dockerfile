@@ -3,8 +3,8 @@
 
 # This Dockerfile is designed for production. For a local run use compose.yaml
 # (make docker-up), or build and run by hand:
-# docker build -t g0no .
-# docker run -d -p 3000:80 -e SECRET_KEY_BASE=<bin/rails secret> -v g0no-storage:/rails/storage --name g0no g0no
+# docker build -t stopan .
+# docker run -d -p 3000:80 -e SECRET_KEY_BASE=<bin/rails secret> -v stopan-storage:/rails/storage --name stopan stopan
 #
 # SQLite databases and uploaded files live in /rails/storage; mount a volume there.
 
