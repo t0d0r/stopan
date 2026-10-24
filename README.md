@@ -1,60 +1,49 @@
-# g0No
+# Stopan
 
-A small notes application: each note has a title, a description, tags, a list
-of expenses (finance entries with a running total) and file attachments.
-Users sign in with Devise. The UI is in Bulgarian and English and looks like
-macOS Stickies; Turbo Drive makes page changes feel like a single-page app.
+A service desk. Customers ("requesters") belong to organizations and open
+tickets; agents triage, answer and resolve them in a shared queue;
+administrators manage users, roles and organizations. Every change to a
+ticket is kept in its timeline, and requesters only ever see their own
+tickets and the public part of each timeline.
 
-Started in 2011 on Rails 3.0 with CouchDB; migrated in 2026 to Rails 8.1 with
-SQLite. The 2011 development notes are in `doc/NOTES-2011.md`.
-
-## Screenshots
-
-The board of notes, newest edits first:
-
-![Board of sticky notes in six colours](doc/screenshots/board.png)
-
-A Markdown note with a task list, opened locked for reading:
-
-![Note window with a task list, expenses, files and sharing](doc/screenshots/note.png)
+The UI is in English and Bulgarian (following the browser), has a light and
+a dark theme and three text sizes, and keeps the macOS Stickies look of the
+notes app it started from (g0no). Turbo Drive makes page changes feel
+instant.
 
 ## Features
 
-- **Notes board** - cards with title, start of the text, age, author, file
-  count, share icon and expense total. Sort by created or edited time,
-  newest or oldest first; cards glide to their new place.
-- **Search and filter** - search title and description from the board
-  header, filter by paper colour, or list the notes with one tag.
-- **Autosave** - no Save button: a note saves itself shortly after typing
-  stops, on focus out and when the page is left. A status line shows when
-  it was saved.
-- **Locked notes** - a saved note opens read-only; double-click (or the
-  padlock) to edit, with the caret where you clicked.
-- **Colours** - six paper colours (yellow, blue, green, pink, purple, gray)
-  and a dice button for a random one.
-- **Markdown** - per-note switch for formatted view, with clickable task
-  lists.
-- **Wide notes** - a zoom box widens a note window to the full desk.
-- **Tags** - space-separated tags on each note.
-- **Expenses** - a list of finance entries per note with a running total.
-- **Attachments** - upload by form or drag and drop; preview images, PDFs,
-  video, audio and text in a dialog with previous/next.
-- **History** - every change to title, text or colour is kept in a Time
-  Machine style view; any older version can be restored.
-- **Sharing** - public read-only link per note, optionally with a password;
-  sharing again replaces the old link.
-- **Live updates** - an open note or share page reloads itself when the
-  note changes elsewhere (Action Cable); it waits while you are editing.
-- **Admin panel** - at `/admin`: manage users, see stats and all shared
-  links.
-- **Look and feel** - macOS Stickies style, light and dark theme, three
-  text sizes, Bulgarian and English UI, Turbo Drive page changes.
-- **Confirmations** - deleting a note, file, share link or user asks in a
-  dialog that names what will be lost.
+- **Roles** - requester, agent, administrator (`specs/roles.md`).
+- **Organizations and memberships** - requesters open tickets only for
+  organizations they belong to and lose access when removed.
+- **Tickets** - number (`#1001`), subject, description, status (new, open,
+  pending, resolved, closed), priority (low to urgent), requester, assignee,
+  organization, timestamps, attachments (`specs/tickets.md`).
+- **Agent queue** - views (all unsolved, assigned to me, unassigned,
+  pending, solved, all) with counts, filters by status, priority, assignee
+  and organization, search by text or number, sort, pagination
+  (`specs/queues.md`).
+- **My tickets** - the requester's open / solved / all lists with search.
+- **Timeline** - public replies, staff-only internal notes, and an
+  append-only audit log of status, priority and assignee changes
+  (`specs/timeline.md`).
+- **Attachments** - up to 5 files of 10 MB from an allow-list of types,
+  always downloaded, only after the ticket's visibility check
+  (`specs/attachments.md`).
+- **Admin** - dashboard, users (roles, memberships, deactivation),
+  organizations and members (`specs/admin.md`).
+- **Secure defaults** - scoped queries everywhere (404 for tickets you may
+  not see), per-role strong parameters, CSRF protection, Content Security
+  Policy, account lockout, closed sign-up in production, ticket text
+  filtered from logs.
+
+What comes later (notifications, email ingestion, SLAs, automation, API,
+reporting, agent groups, ...) is listed in `specs/roadmap.md`.
 
 ## Requirements
 
-- Ruby 4.0 (see `.ruby-version`) and Bundler, or
+- Ruby 4.0 (see `.ruby-version`) and Bundler, first on `PATH` (macOS ships
+  Ruby 2.6; with Homebrew: `export PATH=/opt/homebrew/opt/ruby/bin:$PATH`), or
 - Docker with the compose plugin
 
 ## Run locally
@@ -65,8 +54,18 @@ make run            # http://localhost:3000
 
 `make run` installs gems, prepares `storage/development.sqlite3`, creates
 `.env` with a random `ADMIN_PASSWORD` on first use (`bin/setup-env`), and
-creates the user `admin` from it when that user does not exist. Sign in with
-`admin` (or the email in `ADMIN_EMAIL`) and the password from `.env`.
+creates the administrator `admin` from it when that user does not exist.
+Sign in with `admin` (or the email in `ADMIN_EMAIL`) and the password from
+`.env`.
+
+Example data for trying it out (development only):
+
+```sh
+DEMO_PASSWORD=choose-a-password make demo
+```
+
+This adds two organizations, two agents, three requesters and a few tickets;
+every demo user signs in with `DEMO_PASSWORD` (see `specs/auth.md`).
 
 ## Run with Docker
 
@@ -79,17 +78,6 @@ make docker-down
 Databases and uploaded files live in the `storage` volume. See
 `specs/docker.md`.
 
-## Import from the old CouchDB
-
-```sh
-COUCHDB_URL=http://user:pass@127.0.0.1:5984/gono-production make import
-# or, inside Docker, with COUCHDB_URL in .env:
-make docker-import
-```
-
-The import can be re-run; notes already imported are skipped. See
-`specs/couchdb-import.md`.
-
 ## Development
 
 ```sh
@@ -98,3 +86,12 @@ make check    # rubocop, brakeman and the test suite; must pass before a commit
 make audit    # known-vulnerability check for gems
 ```
 
+Specs (`specs/`) are the source of truth; `todo/todo.md` is the work list
+and `session/` holds the handoff notes between working sessions.
+
+## Security Note
+
+Ticket text and attachments are customer data: keep `storage/` backed up and
+private, keep sign-up closed on a public host (`REGISTRATION_OPEN`), and keep
+`.env` out of git (it is ignored). Report suspected security problems to the
+maintainer privately rather than in a public issue.
