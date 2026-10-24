@@ -1,0 +1,8 @@
+<% content_for :title, t("ui.admin.edit_organization", name: @organization.name_was) %>
+<section class="sticky sticky--purple panel panel--form" aria-labelledby="org-form-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.organizations") %></span></header>
+  <div class="panel__body">
+    <h1 class="panel__title" id="org-form-title"><%= t("ui.admin.edit_organization", name: @organization.name_was) %></h1>
+    <%= render "form", organization: @organization %>
+  </div>
+</section>

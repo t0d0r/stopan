@@ -2,14 +2,17 @@
 
 .DEFAULT_GOAL := help
 
-IMAGE ?= g0no:latest
+IMAGE ?= stopan:latest
 
-.PHONY: help deps build test lint audit check run clean import docker-build docker-up docker-down docker-logs docker-import deploy
+.PHONY: help ruby deps build test lint audit check run demo clean docker-build docker-up docker-down docker-logs
 
 help: ## list the targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-14s %s\n", $$1, $$2}'
 
-deps: ## install gems into vendor/bundle (if missing)
+ruby: ## check that Ruby 4 is first on PATH (macOS ships Ruby 2.6)
+	@ruby -e 'exit(RUBY_VERSION.to_i >= 4 ? 0 : 1)' || { echo "Ruby $$(ruby -e 'print RUBY_VERSION') found; Stopan needs Ruby 4 (.ruby-version). With Homebrew: export PATH=/opt/homebrew/opt/ruby/bin:\$$PATH"; exit 1; }
+
+deps: ruby ## install gems into vendor/bundle (if missing)
 	@bundle config set --local path vendor/bundle
 	@bundle check >/dev/null || bundle install
 
@@ -32,13 +35,13 @@ run: build ## build, create the admin user from .env if missing, start http://lo
 	@bin/setup-env
 	@set -a; . ./.env; set +a; bin/rails db:seed && exec bin/rails server
 
+demo: build ## add example organizations, users and tickets (development only; needs DEMO_PASSWORD)
+	@test -n "$(DEMO_PASSWORD)" || { echo "DEMO_PASSWORD is not set, e.g. DEMO_PASSWORD=choose-one make demo"; exit 1; }
+	bin/rails stopan:demo
+
 clean: ## remove caches, logs, compiled assets and test uploads (keeps databases in storage/)
 	rm -rf tmp/cache tmp/storage/* public/assets
 	rm -f log/*.log
-
-import: deps ## import notes from the legacy CouchDB (needs COUCHDB_URL)
-	@test -n "$(COUCHDB_URL)" || { echo "COUCHDB_URL is not set, e.g. COUCHDB_URL=http://127.0.0.1:5984/gono-production"; exit 1; }
-	bin/rails couchdb:import
 
 docker-build: ## build the production Docker image
 	docker build -t $(IMAGE) .
@@ -52,11 +55,3 @@ docker-down: ## stop the docker compose app (data stays in the storage volume)
 
 docker-logs: ## follow the docker compose app logs
 	docker compose logs -f web
-
-docker-import: ## import from the legacy CouchDB inside the container (COUCHDB_URL in .env)
-	@bin/setup-env
-	docker compose run --rm web sh -c "bin/rails db:prepare && bin/rails couchdb:import"
-
-deploy: ## build and restart the app on the server $(DEPLOY_HOST) (setup: specs/deploy.md)
-	@test -n "$(DEPLOY_HOST)" || { echo "DEPLOY_HOST is not set, e.g. DEPLOY_HOST=myserver make deploy"; exit 1; }
-	bin/deploy

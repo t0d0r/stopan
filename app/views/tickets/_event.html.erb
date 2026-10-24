@@ -1,0 +1,36 @@
+<% if event.comment_event? %>
+  <% comment = event.comment %>
+  <% kind = comment.internal? ? "internal" : (comment.author.staff? ? "staff" : "requester") %>
+  <% color = { "internal" => "pink", "staff" => "blue", "requester" => "yellow" }[kind] %>
+  <li class="timeline__item timeline__item--message" id="event-<%= event.id %>">
+    <article class="sticky sticky--<%= color %> message message--<%= kind %>">
+      <header class="sticky__bar">
+        <% if comment.internal? %><%= icon :lock, size: 11 %><% else %><%= icon :reply, size: 11 %><% end %>
+        <span class="sticky__caption"><%= t("ui.timeline.kinds.#{kind}") %></span>
+      </header>
+      <div class="message__body">
+        <p class="message__meta">
+          <strong><%= comment.author.display_name %></strong>
+          <span class="role-tag"><%= role_label(comment.author) %></span>
+          <%= time_ago comment.created_at %>
+          <% if comment.internal? %><span class="internal-tag"><%= t("ui.timeline.internal_only") %></span><% end %>
+        </p>
+        <div class="ticket-text"><%= ticket_text comment.body %></div>
+        <% if comment.files.attached? %>
+          <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
+            <% comment.files.each do |file| %>
+              <li><%= attachment_link ticket, file %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </article>
+  </li>
+<% else %>
+  <li class="timeline__item timeline__item--event<%= " timeline__item--internal" if event.internal? %>" id="event-<%= event.id %>">
+    <span class="timeline__icon"><%= icon event_icon(event), size: 12 %></span>
+    <span class="timeline__text"><%= event_sentence(event) %></span>
+    <% if event.internal? %><span class="internal-tag"><%= t("ui.timeline.internal_only") %></span><% end %>
+    <span class="timeline__time"><%= time_ago event.created_at %></span>
+  </li>
+<% end %>

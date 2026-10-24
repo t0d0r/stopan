@@ -1,0 +1,11 @@
+anna_acme:
+  user: anna
+  organization: acme
+
+boris_acme:
+  user: boris
+  organization: acme
+
+carl_globex:
+  user: carl
+  organization: globex

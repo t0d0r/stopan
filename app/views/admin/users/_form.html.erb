@@ -1,42 +1,68 @@
-<%= form_with model: [ :admin, user ], class: "admin-form" do |f| %>
-  <% if user.errors.any? %>
-    <div class="form-errors" role="alert">
-      <ul>
-        <% user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<%= form_with model: [ :admin, user ], class: "stack-form" do |f| %>
+  <%= form_errors user %>
+  <div class="field-row">
+    <div class="field">
+      <%= f.label :name, t("ui.fields.name") %>
+      <%= f.text_field :name, class: "field-input", autocomplete: "off", maxlength: 120 %>
     </div>
-  <% end %>
-  <div class="field">
-    <%= f.label :username %>
-    <%= f.text_field :username, class: "field-input", autocomplete: "off" %>
+    <div class="field">
+      <%= f.label :username, t("ui.fields.username") %>
+      <%= f.text_field :username, class: "field-input", autocomplete: "off", maxlength: 60 %>
+    </div>
   </div>
   <div class="field">
-    <%= f.label :email %>
-    <%= f.email_field :email, class: "field-input", autocomplete: "off", required: true %>
+    <%= f.label :email, t("ui.fields.email") %>
+    <%= f.email_field :email, class: "field-input", autocomplete: "off", required: true, aria: { invalid: invalid?(user, :email) } %>
+  </div>
+  <div class="field-row">
+    <div class="field">
+      <%= f.label :password, t("ui.fields.password") %>
+      <%= f.password_field :password, class: "field-input", autocomplete: "new-password", required: user.new_record?,
+                           aria: { invalid: invalid?(user, :password) } %>
+      <small class="field-hint">
+        <%= user.persisted? ? t("ui.admin.password_keep") : t("ui.password_minimum", count: Devise.password_length.min) %>
+      </small>
+    </div>
+    <div class="field">
+      <%= f.label :password_confirmation, t("ui.fields.password_confirmation") %>
+      <%= f.password_field :password_confirmation, class: "field-input", autocomplete: "new-password" %>
+    </div>
   </div>
   <div class="field">
-    <%= f.label :password %>
-    <%= f.password_field :password, class: "field-input", autocomplete: "new-password", required: user.new_record? %>
-    <% if user.persisted? %><small class="field-hint"><%= t("ui.admin.password_keep") %></small><% end %>
-  </div>
-  <div class="field">
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, class: "field-input", autocomplete: "new-password" %>
-  </div>
-  <div class="field field--check">
+    <%= f.label :role, t("ui.fields.role") %>
     <% if user == current_user %>
-      <input type="checkbox" checked disabled id="user_admin_self">
-      <label for="user_admin_self"><%= t("ui.admin.admin") %></label>
-      <small class="field-hint"><%= t("ui.admin.self_admin") %></small>
+      <%= f.select :role, User::ROLES.map { |r| [ t("ui.roles.#{r}"), r ] }, {}, class: "select", disabled: true %>
+      <small class="field-hint"><%= t("ui.admin.self_role") %></small>
     <% else %>
-      <%= f.check_box :admin %>
-      <%= f.label :admin, t("ui.admin.admin") %>
+      <%= f.select :role, User::ROLES.map { |r| [ t("ui.roles.#{r}"), r ] }, {}, class: "select", aria: { describedby: "role-hint" } %>
+      <small class="field-hint" id="role-hint"><%= t("ui.admin.role_hint") %></small>
     <% end %>
   </div>
-  <div class="note-actions">
-    <%= link_to t("ui.cancel"), admin_root_path, class: "btn" %>
+  <fieldset class="field checklist">
+    <legend><%= t("ui.admin.organizations") %></legend>
+    <% organizations = Organization.ordered.to_a %>
+    <% if organizations.any? %>
+      <%= f.collection_check_boxes :organization_ids, organizations, :id, :name do |b| %>
+        <label class="check"><%= b.check_box %> <%= b.text %></label>
+      <% end %>
+    <% else %>
+      <p class="field-hint"><%= t("ui.admin.no_organizations_yet") %> <%= link_to t("ui.admin.new_organization"), new_admin_organization_path %></p>
+    <% end %>
+  </fieldset>
+  <% if user.persisted? %>
+    <div class="field">
+      <% if user == current_user %>
+        <label class="check"><input type="checkbox" disabled> <%= t("ui.admin.deactivated") %></label>
+        <small class="field-hint"><%= t("ui.admin.self_deactivate") %></small>
+      <% else %>
+        <%= hidden_field_tag "user[deactivated]", "0", id: nil %>
+        <label class="check"><%= check_box_tag "user[deactivated]", "1", user.deactivated?, id: "user_deactivated" %> <%= t("ui.admin.deactivated") %></label>
+        <small class="field-hint"><%= t("ui.admin.deactivate_hint") %></small>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="form-actions">
+    <%= link_to t("ui.cancel"), admin_users_path, class: "btn" %>
     <%= f.submit t("ui.save"), class: "btn btn--primary" %>
   </div>
 <% end %>

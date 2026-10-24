@@ -1,0 +1,16 @@
+<nav class="pagination" aria-label="<%= t("ui.pagination.label") %>">
+  <span class="pagination__summary">
+    <%= t("ui.pagination.summary", first: filter.first_index, last: filter.last_index, total: filter.total_count) %>
+  </span>
+  <% if filter.total_pages > 1 %>
+    <span class="pagination__links">
+      <% if filter.page > 1 %>
+        <%= link_to t("ui.pagination.previous"), tickets_path(filter.params_with(page: filter.page - 1)), rel: "prev", class: "btn" %>
+      <% end %>
+      <span class="pagination__page"><%= t("ui.pagination.page", page: filter.page, pages: filter.total_pages) %></span>
+      <% if filter.page < filter.total_pages %>
+        <%= link_to t("ui.pagination.next"), tickets_path(filter.params_with(page: filter.page + 1)), rel: "next", class: "btn" %>
+      <% end %>
+    </span>
+  <% end %>
+</nav>

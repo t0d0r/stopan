@@ -1,7 +1,13 @@
 class ApplicationController < ActionController::Base
+  # Raised when a signed-in user asks for an action their role does not
+  # allow on something they can see (specs/roles.md).
+  class NotAuthorized < StandardError; end
+
   around_action :switch_locale
   before_action :authenticate_user!, unless: :devise_controller?
   before_action { Current.user = current_user }
+
+  rescue_from NotAuthorized, with: :forbidden
 
   private
 
@@ -13,5 +19,18 @@ class ApplicationController < ActionController::Base
   def locale_from_accept_language
     request.env["HTTP_ACCEPT_LANGUAGE"].to_s.scan(/^[a-z]{2}/).first
       .presence_in(I18n.available_locales.map(&:to_s))
+  end
+
+  def authorize!(allowed)
+    raise NotAuthorized unless allowed
+  end
+
+  def forbidden
+    render "errors/forbidden", status: :forbidden
+  end
+
+  # Tickets outside the user's scope are "not found" (specs/roles.md).
+  def find_visible_ticket(number)
+    Ticket.visible_to(current_user).find_by!(number: number.to_s)
   end
 end

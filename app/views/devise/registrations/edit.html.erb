@@ -1,0 +1,43 @@
+<h2><%= t("ui.account_page.title") %></h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= form_errors resource %>
+
+  <div class="field">
+    <%= f.label :name, t("ui.fields.name") %>
+    <%= f.text_field :name, autocomplete: "name", maxlength: 120 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :email, t("ui.fields.email") %>
+    <%= f.email_field :email, autocomplete: "email" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password, t("ui.new_password") %>
+    <i><%= t("ui.account_page.password_keep") %></i>
+    <%= f.password_field :password, autocomplete: "new-password" %>
+    <% if @minimum_password_length %>
+      <em><%= t("ui.password_minimum", count: @minimum_password_length) %></em>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation, t("ui.confirm_new_password") %>
+    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :current_password, t("ui.account_page.current_password") %>
+    <i><%= t("ui.account_page.current_password_hint") %></i>
+    <%= f.password_field :current_password, autocomplete: "current-password" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit t("ui.save") %>
+  </div>
+<% end %>
+
+<p class="auth__meta"><%= t("ui.account_page.organizations") %>:
+  <%= resource.organizations.map(&:name).join(", ").presence || t("ui.account_page.no_organizations") %></p>
+<div class="auth__links"><%= link_to t("ui.account_page.back"), root_path %></div>

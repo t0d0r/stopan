@@ -1,15 +1,17 @@
 module Admin
   class DashboardController < BaseController
     def show
-      @users = User.order(:created_at)
-      @shared_notes = Note.shared.order(shared_at: :desc)
       @stats = {
-        users: User.count,
-        notes: Note.count,
-        files: NoteAttachment.count,
-        storage: ActiveStorage::Blob.sum(:byte_size),
-        expenses: FinanceEntry.sum(:amount)
+        unsolved: Ticket.unsolved.count,
+        unassigned: Ticket.unsolved.where(assignee_id: nil).count,
+        solved_week: Ticket.solved.where(resolved_at: 7.days.ago..).or(Ticket.where(closed_at: 7.days.ago..)).count,
+        organizations: Organization.count,
+        staff: User.staff.active.count,
+        requesters: User.requesters.active.count
       }
+      @recent_users = User.order(created_at: :desc).limit(5)
+      @busiest = Organization.joins(:tickets).merge(Ticket.unsolved).group(:id).order(Arel.sql("count(tickets.id) DESC"))
+                             .limit(5).select("organizations.*, count(tickets.id) AS unsolved_count")
     end
   end
 end

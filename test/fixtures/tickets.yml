@@ -1,0 +1,47 @@
+printer:
+  number: 1001
+  subject: Receipt printer prints blank pages
+  description: The printer at till 2 prints empty paper.
+  status: open
+  priority: normal
+  requester: anna
+  assignee: agent
+  organization: acme
+  created_at: <%= 3.days.ago.to_fs(:db) %>
+  updated_at: <%= 2.days.ago.to_fs(:db) %>
+
+email_account:
+  number: 1002
+  subject: New staff member needs an email account
+  description: Our new baker starts on Monday.
+  status: new
+  priority: high
+  requester: boris
+  organization: acme
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+  updated_at: <%= 1.day.ago.to_fs(:db) %>
+
+vpn:
+  number: 1003
+  subject: VPN disconnects every few minutes
+  description: The warehouse laptop loses the VPN.
+  status: pending
+  priority: urgent
+  requester: carl
+  assignee: agent_two
+  organization: globex
+  created_at: <%= 1.day.ago.to_fs(:db) %>
+  updated_at: <%= 1.hour.ago.to_fs(:db) %>
+
+old_question:
+  number: 1004
+  subject: Opening hours over the holidays
+  description: Are you open on the 24th?
+  status: closed
+  priority: low
+  requester: anna
+  organization: acme
+  resolved_at: <%= 10.days.ago.to_fs(:db) %>
+  closed_at: <%= 9.days.ago.to_fs(:db) %>
+  created_at: <%= 12.days.ago.to_fs(:db) %>
+  updated_at: <%= 9.days.ago.to_fs(:db) %>

@@ -5,7 +5,7 @@
 #
 # `make run` and `make docker-up` generate them in .env (bin/setup-env).
 # An existing admin user keeps its email and password; the seed only makes
-# sure it has the admin flag, which opens the admin panel (/admin).
+# sure it has the admin role, which opens the admin panel (/admin).
 
 def create_admin_user
   username = ENV["ADMIN_USERNAME"].presence || "admin"
@@ -14,7 +14,7 @@ def create_admin_user
     if existing.admin?
       puts "create_admin_user: user '#{username}' already exists."
     else
-      existing.update_column(:admin, true)
+      existing.update_column(:role, "admin")
       puts "create_admin_user: user '#{username}' already exists; marked as administrator."
     end
     return
@@ -27,7 +27,7 @@ def create_admin_user
     return
   end
 
-  user = User.new(email: email, password: password, password_confirmation: password, username: username, admin: true)
+  user = User.new(email: email, password: password, password_confirmation: password, username: username, role: "admin")
   if user.save
     puts "create_admin_user: created user '#{username}' <#{email}> with the password from ADMIN_PASSWORD."
   else

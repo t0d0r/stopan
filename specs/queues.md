@@ -30,7 +30,7 @@ Each view shows its count.
 | `priority` | one priority |
 | `assignee` | a staff user id, `me`, or `none` |
 | `organization` | an organization id |
-| `q` | search text: `#1001` or `1001` also matches the ticket number; otherwise case-insensitive substring match on subject and description (LIKE with escaped wildcards) |
+| `q` | search text: `#1001` or `1001` also matches the ticket number; otherwise case-insensitive substring match on subject and description (LIKE with escaped wildcards). SQLite folds only ASCII case, so the app registers `ulower()` (Ruby's Unicode `downcase`, `config/initializers/sqlite_functions.rb`) and searches compare `ulower(column)` with a downcased pattern; Bulgarian text matches regardless of case |
 | `sort` | `updated` (last activity first, default), `created` (newest first), `priority` (urgent first, then last activity) |
 
 Unknown values are ignored (treated as not given). The filter form is a
@@ -62,7 +62,7 @@ and "Next" links that keep all other parameters, and "Showing 26-50 of 112".
 
 ## Acceptance
 
-`test/models/ticket_search_test.rb` (views, filters, search, sort) and
+`test/models/ticket_filter_test.rb` (views, filters, search, sort, pagination) and
 `test/controllers/tickets_controller_test.rb` (which list each role gets,
 and that a requester's list never contains another requester's ticket).
 

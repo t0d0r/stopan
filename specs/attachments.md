@@ -25,10 +25,14 @@ reply or internal note (to the comment). Storage is Active Storage
   the attachment among the ticket's own files and the files of comments in
   `Comment.visible_to(current_user)` on that ticket. Anything else is 404.
   So a requester can never download a file from an internal note.
-- Files are always sent with `Content-Disposition: attachment` and are
-  streamed (`ActiveStorage::Streaming#send_blob_stream`), never loaded
-  whole into memory. `X-Content-Type-Options: nosniff` comes from the Rails
-  defaults. There is no inline preview in this phase.
+- Files are always sent with `Content-Disposition: attachment`. With the
+  Disk service the controller uses `send_file` on the blob's path, so Rack
+  sends it in chunks (and a proxy can take over with X-Sendfile) instead of
+  loading it into memory; other services fall back to `send_data`.
+  `X-Content-Type-Options: nosniff` comes from the Rails defaults. There is
+  no inline preview in this phase.
+- Comments are immutable, so `config.active_storage.touch_attachment_records`
+  is false (attaching a file must not touch its record).
 
 ## Acceptance
 

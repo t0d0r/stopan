@@ -1,10 +1,52 @@
+# Fictional people; every password is "password".
 admin:
   email: admin@example.com
   username: admin
-  admin: true
+  name: Ada Admin
+  role: admin
   encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
 
-bob:
-  email: bob@example.com
-  username: bob
+agent:
+  email: maria@example.com
+  username: maria
+  name: Maria Agent
+  role: agent
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
+agent_two:
+  email: petar@example.com
+  name: Petar Agent
+  role: agent
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
+retired:
+  email: retired@example.com
+  name: Retired Agent
+  role: agent
+  deactivated_at: <%= 1.month.ago.to_fs(:db) %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
+anna:
+  email: anna@example.com
+  username: anna
+  name: Anna Requester
+  role: requester
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
+boris:
+  email: boris@example.com
+  name: Boris Requester
+  role: requester
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
+carl:
+  email: carl@example.com
+  name: Carl Requester
+  role: requester
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
+drifter:
+  email: drifter@example.com
+  name: Dora Without Organization
+  role: requester
   encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>

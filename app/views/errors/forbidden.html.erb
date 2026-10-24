@@ -1,0 +1,9 @@
+<% content_for :title, t("ui.forbidden.title") %>
+<section class="sticky sticky--pink panel panel--narrow" aria-labelledby="forbidden-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.flash.alert") %></span></header>
+  <div class="panel__body">
+    <h1 class="panel__title" id="forbidden-title"><%= t("ui.forbidden.title") %></h1>
+    <p><%= t("ui.forbidden.body") %></p>
+    <p><%= link_to t("ui.forbidden.back"), root_path, class: "btn" %></p>
+  </div>
+</section>

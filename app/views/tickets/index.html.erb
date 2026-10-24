@@ -1,0 +1,2 @@
+<% content_for :title, current_user.staff? ? t("ui.queue.title") : t("ui.my_tickets.title") %>
+<%= render current_user.staff? ? "queue" : "my_tickets", filter: @filter %>

@@ -1,0 +1,74 @@
+<% content_for :title, t("ui.new_ticket.title") %>
+<% can_create = current_user.staff? || current_user.organizations.any? %>
+<section class="sticky sticky--yellow panel panel--form" aria-labelledby="new-ticket-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.new_ticket.caption") %></span></header>
+  <div class="panel__body">
+    <h1 class="panel__title" id="new-ticket-title"><%= t("ui.new_ticket.title") %></h1>
+    <% if can_create %>
+      <p class="panel__intro"><%= current_user.staff? ? t("ui.new_ticket.intro_staff") : t("ui.new_ticket.intro") %></p>
+      <%= form_with model: @ticket, class: "stack-form", data: { turbo: false } do |f| %>
+        <%= form_errors @ticket %>
+        <% if current_user.staff? %>
+          <div class="field-row">
+            <div class="field">
+              <%= f.label :requester_id, t("ui.fields.requester") %>
+              <%= f.collection_select :requester_id, User.active.with_membership.ordered, :id, :display_name,
+                                      { include_blank: t("ui.new_ticket.choose") },
+                                      class: "select", required: true, aria: { invalid: invalid?(@ticket, :requester) } %>
+            </div>
+            <div class="field">
+              <%= f.label :organization_id, t("ui.fields.organization") %>
+              <%= f.collection_select :organization_id, Organization.ordered, :id, :name,
+                                      { include_blank: t("ui.new_ticket.choose") },
+                                      class: "select", required: true, aria: { invalid: invalid?(@ticket, :organization) } %>
+              <small class="field-hint"><%= t("ui.new_ticket.organization_hint") %></small>
+            </div>
+          </div>
+        <% elsif current_user.organizations.size > 1 %>
+          <div class="field">
+            <%= f.label :organization_id, t("ui.fields.organization") %>
+            <%= f.collection_select :organization_id, current_user.organizations, :id, :name,
+                                    { include_blank: t("ui.new_ticket.choose") }, class: "select", required: true %>
+          </div>
+        <% end %>
+        <div class="field">
+          <%= f.label :subject, t("ui.fields.subject") %>
+          <%= f.text_field :subject, class: "field-input", required: true, maxlength: 200,
+                           aria: { invalid: invalid?(@ticket, :subject), describedby: "subject-hint" } %>
+          <small class="field-hint" id="subject-hint"><%= t("ui.new_ticket.subject_hint") %></small>
+        </div>
+        <div class="field">
+          <%= f.label :description, t("ui.fields.description") %>
+          <%= f.text_area :description, class: "field-input", rows: 8, required: true, maxlength: 20_000,
+                          data: { autogrow: true }, aria: { invalid: invalid?(@ticket, :description), describedby: "description-hint" } %>
+          <small class="field-hint" id="description-hint"><%= t("ui.new_ticket.description_hint") %></small>
+        </div>
+        <% if current_user.staff? %>
+          <div class="field-row">
+            <div class="field">
+              <%= f.label :priority, t("ui.fields.priority") %>
+              <%= f.select :priority, priority_options, {}, class: "select" %>
+            </div>
+            <div class="field">
+              <%= f.label :assignee_id, t("ui.fields.assignee") %>
+              <%= f.collection_select :assignee_id, User.staff.active.ordered, :id, :display_name,
+                                      { include_blank: t("ui.unassigned") }, class: "select" %>
+            </div>
+          </div>
+        <% end %>
+        <div class="field">
+          <%= f.label :files, t("ui.fields.files") %>
+          <%= f.file_field :files, multiple: true, class: "field-file", aria: { describedby: "files-hint" } %>
+          <small class="field-hint" id="files-hint"><%= t("ui.files_hint", count: Attachable::MAX_FILES, size: Attachable::MAX_SIZE / 1.megabyte) %></small>
+        </div>
+        <div class="form-actions">
+          <%= link_to t("ui.cancel"), tickets_path, class: "btn" %>
+          <%= f.submit t("ui.new_ticket.submit"), class: "btn btn--primary" %>
+        </div>
+      <% end %>
+    <% else %>
+      <%= form_errors @ticket %>
+      <p class="callout"><%= t("ui.my_tickets.no_organization") %></p>
+    <% end %>
+  </div>
+</section>

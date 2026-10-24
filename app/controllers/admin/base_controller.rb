@@ -1,5 +1,5 @@
 module Admin
-  # Pages under /admin are for users with the admin flag only.
+  # Pages under /admin are for administrators only (specs/admin.md).
   class BaseController < ApplicationController
     before_action :require_admin
 

@@ -49,4 +49,20 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
       assert_response :success
     end
   end
+
+  test "users edit their own name and cannot delete their account" do
+    anna = users(:anna)
+    sign_in anna
+    get edit_user_registration_url
+    assert_select "input[name='user[name]']"
+    assert_select ".auth input[name=_method][value=delete]", 0
+
+    put user_registration_url, params: { user: { name: "Anna P.", email: anna.email, current_password: "password" } }
+    assert_equal "Anna P.", anna.reload.name
+
+    assert_no_difference "User.count" do
+      delete user_registration_url
+    end
+    assert_redirected_to edit_user_registration_url
+  end
 end

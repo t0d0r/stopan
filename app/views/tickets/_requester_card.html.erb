@@ -1,0 +1,20 @@
+<section class="sticky sticky--yellow panel side-panel" aria-labelledby="requester-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.fields.requester") %></span></header>
+  <div class="panel__body">
+    <h2 class="sr-only" id="requester-title"><%= t("ui.fields.requester") %></h2>
+    <dl class="facts">
+      <dt><%= t("ui.fields.name") %></dt>
+      <dd><%= ticket.requester.display_name %></dd>
+      <% if current_user.staff? %>
+        <dt><%= t("ui.fields.email") %></dt>
+        <dd class="text"><%= mail_to ticket.requester.email %></dd>
+      <% end %>
+      <dt><%= t("ui.fields.organization") %></dt>
+      <dd><%= ticket.organization.name %></dd>
+      <% if current_user.staff? %>
+        <dt><%= t("ui.fields.assignee") %></dt>
+        <dd><%= ticket.assignee&.display_name || t("ui.unassigned") %></dd>
+      <% end %>
+    </dl>
+  </div>
+</section>

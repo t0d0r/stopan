@@ -1,0 +1,13 @@
+printer_reply:
+  ticket: printer
+  author: agent
+  body: Is the paper roll inserted with the shiny side towards the head?
+  internal: false
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+
+printer_note:
+  ticket: printer
+  author: agent
+  body: STAFF-ONLY spare printer is in the store room
+  internal: true
+  created_at: <%= 2.days.ago.to_fs(:db) %>

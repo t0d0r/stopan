@@ -1,0 +1,53 @@
+<% content_for :title, "#{@ticket.reference} #{@ticket.subject_was || @ticket.subject}" %>
+<% staff = current_user.staff? %>
+<div class="ticket-page">
+  <header class="ticket-head">
+    <p class="ticket-head__crumbs">
+      <%= link_to staff ? t("ui.queue.title") : t("ui.my_tickets.title"), tickets_path %>
+      <span aria-hidden="true">/</span> <span class="ticket-number"><%= @ticket.reference %></span>
+    </p>
+    <h1 class="ticket-head__title"><%= @ticket.subject_was || @ticket.subject %></h1>
+    <p class="ticket-head__meta">
+      <%= status_pill(@ticket.status_was || @ticket.status) %>
+      <% if staff %><%= priority_pill(@ticket.priority_was || @ticket.priority) %><% end %>
+      <span><%= t("ui.ticket.opened_by", name: @ticket.requester.display_name) %> <%= time_ago @ticket.created_at %></span>
+    </p>
+  </header>
+
+  <aside class="ticket-side" aria-label="<%= t("ui.ticket.details") %>">
+    <%= render "tickets/properties", ticket: @ticket %>
+    <%= render "tickets/requester_card", ticket: @ticket %>
+  </aside>
+
+  <div class="ticket-main">
+    <article class="sticky sticky--yellow message message--description" id="description">
+      <header class="sticky__bar">
+        <span class="sticky__caption"><%= t("ui.ticket.description") %></span>
+      </header>
+      <div class="message__body">
+        <p class="message__meta">
+          <strong><%= @ticket.requester.display_name %></strong>
+          <span class="role-tag"><%= role_label(@ticket.requester) %></span>
+          <%= time_ago @ticket.created_at %>
+        </p>
+        <div class="ticket-text"><%= ticket_text @ticket.description %></div>
+        <% if @ticket.files.attached? %>
+          <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
+            <% @ticket.files.each do |file| %>
+              <li><%= attachment_link @ticket, file %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </article>
+
+    <h2 class="section-heading" id="timeline-title"><%= t("ui.timeline.title") %></h2>
+    <ol class="timeline" aria-labelledby="timeline-title">
+      <% @events.each do |event| %>
+        <%= render "tickets/event", event: event, ticket: @ticket %>
+      <% end %>
+    </ol>
+
+    <%= render "tickets/composer", ticket: @ticket, comment: @comment %>
+  </div>
+</div>

@@ -1,11 +1,8 @@
-<% content_for :title, @user.display_name %>
-<section class="sticky sticky--gray panel panel--narrow">
-  <header class="sticky__bar">
-    <%= link_to "×", admin_root_path, class: "sticky__box", title: t("ui.admin.back"), aria: { label: t("ui.admin.back") } %>
-    <span class="sticky__caption"><%= t("ui.admin.edit_user", name: @user.username_was.presence || @user.email_was) %></span>
-    <span class="sticky__box sticky__box--spacer" aria-hidden="true"></span>
-  </header>
+<% content_for :title, t("ui.admin.edit_user", name: @user.display_name) %>
+<section class="sticky sticky--gray panel panel--form" aria-labelledby="user-form-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.users") %></span></header>
   <div class="panel__body">
+    <h1 class="panel__title" id="user-form-title"><%= t("ui.admin.edit_user", name: @user.name_was.presence || @user.username_was.presence || @user.email_was) %></h1>
     <%= render "form", user: @user %>
   </div>
 </section>

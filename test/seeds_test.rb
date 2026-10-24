@@ -34,7 +34,7 @@ class SeedsTest < ActiveSupport::TestCase
   end
 
   test "marks an existing user with the admin username as administrator" do
-    users(:admin).update_column(:admin, false)
+    users(:admin).update_column(:role, "requester")
     out = run_seeds("ADMIN_EMAIL" => "new@example.com", "ADMIN_PASSWORD" => "another-pass")
 
     admin = users(:admin).reload

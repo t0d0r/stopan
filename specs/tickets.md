@@ -4,7 +4,7 @@
 
 | field | rule |
 |-------|------|
-| `number` | integer, unique, assigned on create, never changes; the first ticket is 1001, each new one is the highest number + 1 (retried on a unique-index clash). Shown as `#1001`; URLs use it: `/tickets/1001` (`Ticket#to_param`) |
+| `number` | integer, unique, assigned on create, never changes; the first ticket is 1001, each new one is the highest number + 1. Rails 8 opens SQLite write transactions as IMMEDIATE, so reading the maximum and inserting happen under the write lock; the unique index is the backstop. Shown as `#1001`; URLs use it: `/tickets/1001` (`Ticket#to_param`) |
 | `subject` | required, stripped, at most 200 characters |
 | `description` | required, at most 20,000 characters, plain text |
 | `status` | `new`, `open`, `pending`, `resolved`, `closed`; default `new` |

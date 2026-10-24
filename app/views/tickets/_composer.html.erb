@@ -1,0 +1,57 @@
+<% staff = current_user.staff? %>
+<% if policy.comment? %>
+  <% internal = comment.internal? || (staff && ticket.closed?) %>
+  <section class="sticky sticky--<%= internal ? "pink" : (staff ? "blue" : "yellow") %> composer<%= " is-internal" if internal %>"
+           aria-labelledby="composer-title" data-composer data-staff-color="blue">
+    <header class="sticky__bar"><span class="sticky__caption" id="composer-title"><%= t("ui.composer.title") %></span></header>
+    <%= form_with model: comment, url: ticket_comments_path(ticket), class: "composer__form", data: { turbo: false } do |f| %>
+      <%= form_errors comment %>
+      <% if staff %>
+        <fieldset class="composer__mode">
+          <legend class="sr-only"><%= t("ui.composer.mode") %></legend>
+          <% if policy.reply? %>
+            <label class="mode-option">
+              <%= f.radio_button :internal, "0", checked: !internal, data: { composer_mode: "public" } %>
+              <%= icon :reply %> <%= t("ui.composer.public") %>
+            </label>
+          <% end %>
+          <label class="mode-option mode-option--internal">
+            <%= f.radio_button :internal, "1", checked: internal, data: { composer_mode: "internal" } %>
+            <%= icon :lock %> <%= t("ui.composer.internal") %>
+          </label>
+        </fieldset>
+      <% end %>
+      <div class="field">
+        <%= f.label :body, staff ? t("ui.composer.body_staff") : t("ui.composer.body"), class: "sr-only" %>
+        <%= f.text_area :body, rows: 5, class: "field-input composer__body", required: true, maxlength: 20_000,
+                        placeholder: staff ? t("ui.composer.placeholder_staff") : t("ui.composer.placeholder"),
+                        data: { autogrow: true }, aria: { invalid: comment.errors[:body].any? } %>
+      </div>
+      <p class="composer__hint composer__hint--internal"><%= icon :lock %> <%= t("ui.composer.internal_hint") %></p>
+      <div class="composer__row">
+        <div class="field composer__files">
+          <%= f.label :files, t("ui.fields.files"), class: "sr-only" %>
+          <%= f.file_field :files, multiple: true, class: "field-file", aria: { describedby: "composer-files-hint" } %>
+          <small class="field-hint" id="composer-files-hint"><%= t("ui.files_hint", count: Attachable::MAX_FILES, size: Attachable::MAX_SIZE / 1.megabyte) %></small>
+        </div>
+        <% if staff %>
+          <div class="field composer__status">
+            <%= label_tag "comment_status", t("ui.composer.submit_as") %>
+            <%= select_tag "comment[status]",
+                           options_for_select([ [ t("ui.composer.keep_status", status: status_name(ticket.status_was || ticket.status)), "" ] ] +
+                                              ticket.next_statuses.map { |s| [ status_name(s), s ] }, params.dig(:comment, :status)),
+                           id: "comment_status", class: "select" %>
+          </div>
+        <% end %>
+        <div class="composer__submit">
+          <button type="submit" class="btn btn--primary" data-composer-submit
+                  data-public-label="<%= t("ui.composer.send_reply") %>" data-internal-label="<%= t("ui.composer.add_note") %>">
+            <%= internal ? t("ui.composer.add_note") : t("ui.composer.send_reply") %>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </section>
+<% elsif ticket.closed? %>
+  <p class="callout"><%= t("ui.composer.closed") %> <%= link_to t("ui.my_tickets.open_new"), new_ticket_path %></p>
+<% end %>

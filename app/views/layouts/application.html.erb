@@ -1,65 +1,62 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>" data-theme="<%= theme_preference %>" data-scale="<%= scale_preference %>">
 <head>
-  <title><%= ["g0No", content_for(:title)].compact_blank.join(" - ") %></title>
+  <title><%= [content_for(:title), "Stopan"].compact_blank.join(" - ") %></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
-  <%# Turbo Drive keeps no page snapshots: a back or forward visit always
-      fetches the page, so an old copy of a note can never be shown (and then
-      autosaved over newer text), and nothing stays cached after sign-out. %>
+  <%# No page snapshots: a back or forward visit always fetches the page, so
+      nothing stays cached after sign-out or after a ticket changes. %>
   <meta name="turbo-cache-control" content="no-cache">
-  <%# A live refresh (live-updates.md) reloads the page where it is scrolled. %>
-  <meta name="turbo-refresh-scroll" content="preserve">
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_include_tag "turbo.min", type: "module", "data-turbo-track": "reload" %>
-  <%# data-turbo-eval=false: Turbo shows an error page (such as a revoked share
-      link) by swapping the whole document, which would run this script a
-      second time. %>
+  <%# data-turbo-eval=false: Turbo shows an error page by swapping the whole
+      document, which would run this script a second time. %>
   <%= javascript_include_tag "application", defer: true, "data-turbo-track": "reload", "data-turbo-eval": "false" %>
 </head>
 <body class="<%= content_for(:body_class) %>">
+  <a class="skip-link" href="#main"><%= t("ui.skip_to_content") %></a>
   <header class="menubar">
-    <%= link_to root_path, class: "menubar__brand", aria: { label: "g0No" } do %>
-      <%= image_tag "/icon.svg", alt: "", width: 18, height: 18 %><span class="menubar__name">g0No</span>
+    <%= link_to root_path, class: "menubar__brand", aria: { label: "Stopan" } do %>
+      <%= image_tag "/icon.svg", alt: "", width: 18, height: 18 %><span class="menubar__name">Stopan</span>
     <% end %>
     <% if user_signed_in? %>
-      <%# Sections as small pills, each marked with a paper colour square. %>
       <nav class="menubar__nav" aria-label="<%= t("ui.nav.label") %>">
-        <%= link_to notes_path, class: "nav-link", aria: { current: ("page" if controller_name == "notes") } do %>
-          <span class="nav-link__dot sticky--yellow" aria-hidden="true"></span><%= t("Content") %>
-        <% end %>
+        <%= nav_link current_user.staff? ? t("ui.nav.queue") : t("ui.nav.my_tickets"), tickets_path, dot: "yellow",
+                     current: current_section == :tickets %>
+        <%= nav_link t("ui.nav.new_ticket"), new_ticket_path, dot: "green", current: current_section == :new_ticket %>
         <% if current_user.admin? %>
-          <%= link_to admin_root_path, class: "nav-link", aria: { current: ("page" if controller_path.start_with?("admin/")) } do %>
-            <span class="nav-link__dot sticky--gray" aria-hidden="true"></span><%= t("ui.admin.title") %>
-          <% end %>
+          <%= nav_link t("ui.nav.admin"), admin_root_path, dot: "gray", current: current_section == :admin %>
         <% end %>
       </nav>
     <% end %>
     <div class="menubar__right">
       <%= render "partials/preferences" %>
       <% if user_signed_in? %>
-        <span class="menubar__user"><%= current_user.display_name %></span>
-        <%= button_to t("logout"), destroy_user_session_path, method: :delete, class: "menubar__button" %>
+        <%= link_to edit_user_registration_path, class: "menubar__user", title: t("ui.account") do %>
+          <span class="menubar__user-name"><%= current_user.display_name %></span>
+          <span class="menubar__role"><%= role_label(current_user) %></span>
+        <% end %>
+        <%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "menubar__button" %>
       <% end %>
     </div>
   </header>
 
-  <main class="desk">
+  <main class="desk" id="main">
     <% if flash.any? %>
       <div class="flash-stack">
         <% flash.each do |type, message| %>
-          <%= render "partials/flash", type: type, message: message %>
+          <%= render "partials/flash", type: type, message: message if message.is_a?(String) %>
         <% end %>
       </div>
     <% end %>
 
     <% if devise_controller? %>
       <div class="sticky sticky--yellow auth">
-        <div class="sticky__bar"><span class="sticky__caption">g0No</span></div>
+        <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
         <div class="auth__body"><%= yield %></div>
       </div>
     <% else %>

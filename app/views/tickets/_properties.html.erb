@@ -1,0 +1,50 @@
+<section class="sticky sticky--gray panel side-panel" aria-labelledby="properties-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.ticket.properties") %></span></header>
+  <div class="panel__body">
+    <h2 class="sr-only" id="properties-title"><%= t("ui.ticket.properties") %></h2>
+    <% if policy.update? %>
+      <%= form_with model: ticket, class: "properties-form" do |f| %>
+        <%= form_errors ticket if ticket.errors.any? && controller_name == "tickets" %>
+        <div class="field">
+          <%= f.label :status, t("ui.fields.status") %>
+          <%= f.select :status, status_options(ticket), {}, class: "select" %>
+        </div>
+        <div class="field">
+          <%= f.label :priority, t("ui.fields.priority") %>
+          <%= f.select :priority, priority_options, {}, class: "select" %>
+        </div>
+        <div class="field">
+          <%= f.label :assignee_id, t("ui.fields.assignee") %>
+          <%= f.select :assignee_id, staff_options(@staff), { include_blank: t("ui.unassigned") }, class: "select" %>
+        </div>
+        <%= f.submit t("ui.ticket.update"), class: "btn btn--primary btn--block" %>
+      <% end %>
+    <% else %>
+      <dl class="facts">
+        <dt><%= t("ui.fields.status") %></dt>
+        <dd><%= status_pill ticket.status %></dd>
+      </dl>
+      <% if policy.resolve? %>
+        <%= button_to t("ui.ticket.resolve"), resolve_ticket_path(ticket), method: :patch, class: "btn btn--block",
+                      form: { data: confirm_data(title: t("ui.ticket.resolve_title"), body: t("ui.ticket.resolve_body"),
+                                                 button: t("ui.ticket.resolve")) } %>
+      <% end %>
+    <% end %>
+    <dl class="facts facts--dates">
+      <dt><%= t("ui.fields.number") %></dt>
+      <dd class="ticket-number"><%= ticket.reference %></dd>
+      <dt><%= t("ui.fields.created") %></dt>
+      <dd><%= time_ago ticket.created_at %></dd>
+      <dt><%= t("ui.fields.updated") %></dt>
+      <dd><%= time_ago ticket.updated_at %></dd>
+      <% if ticket.resolved_at %>
+        <dt><%= t("ui.fields.resolved") %></dt>
+        <dd><%= time_ago ticket.resolved_at %></dd>
+      <% end %>
+      <% if ticket.closed_at %>
+        <dt><%= t("ui.fields.closed") %></dt>
+        <dd><%= time_ago ticket.closed_at %></dd>
+      <% end %>
+    </dl>
+  </div>
+</section>

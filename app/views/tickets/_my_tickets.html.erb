@@ -1,0 +1,69 @@
+<% several_orgs = current_user.organizations.size > 1 %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.my_tickets.title") %></h1>
+  <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
+</div>
+
+<section class="sticky sticky--yellow panel" aria-labelledby="my-tickets-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.my_tickets.title") %></span></header>
+  <div class="panel__body">
+    <h2 class="sr-only" id="my-tickets-title"><%= t("ui.my_tickets.views.#{filter.view}") %></h2>
+    <div class="list-head">
+      <nav class="tabs" aria-label="<%= t("ui.queue.views_label") %>">
+        <% filter.views.each do |view| %>
+          <%= link_to tickets_path(view: view, q: filter.query), class: "tab", aria: { current: ("page" if view == filter.view) } do %>
+            <%= t("ui.my_tickets.views.#{view}") %> <span class="tab__count"><%= filter.counts[view] %></span>
+          <% end %>
+        <% end %>
+      </nav>
+      <%= form_with url: tickets_path, method: :get, class: "list-search" do %>
+        <%= hidden_field_tag :view, filter.view %>
+        <div class="search-field">
+          <%= icon :search %>
+          <%= label_tag :q, t("ui.my_tickets.search_label"), class: "sr-only" %>
+          <%= search_field_tag :q, filter.query, class: "search-field__input", placeholder: t("ui.queue.search_placeholder") %>
+        </div>
+        <%= submit_tag t("ui.queue.search"), class: "btn", name: nil %>
+      <% end %>
+    </div>
+
+    <% if current_user.organizations.empty? %>
+      <p class="callout"><%= t("ui.my_tickets.no_organization") %></p>
+    <% end %>
+
+    <% if filter.tickets.any? %>
+      <div class="table-scroll">
+        <table class="ledger tickets-table">
+          <thead>
+            <tr>
+              <th scope="col" class="num"><%= t("ui.fields.number") %></th>
+              <th scope="col"><%= t("ui.fields.subject") %></th>
+              <% if several_orgs %><th scope="col" class="col-org"><%= t("ui.fields.organization") %></th><% end %>
+              <th scope="col"><%= t("ui.fields.status") %></th>
+              <th scope="col" class="col-updated"><%= t("ui.fields.updated") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% filter.tickets.each do |ticket| %>
+              <tr id="<%= dom_id(ticket) %>" class="ticket-row">
+                <td class="num ticket-number"><%= ticket.reference %></td>
+                <td class="text"><%= link_to ticket.subject, ticket_path(ticket), class: "ticket-link" %></td>
+                <% if several_orgs %><td class="text col-org"><%= ticket.organization.name %></td><% end %>
+                <td><%= status_pill ticket.status %></td>
+                <td class="date col-updated"><%= time_ago ticket.updated_at %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= render "pagination", filter: filter %>
+    <% elsif filter.query %>
+      <p class="panel__empty"><%= t("ui.queue.no_match") %></p>
+    <% else %>
+      <p class="panel__empty">
+        <%= t("ui.my_tickets.empty.#{filter.view}") %>
+        <% if current_user.organizations.any? %><%= link_to t("ui.my_tickets.open_new"), new_ticket_path %><% end %>
+      </p>
+    <% end %>
+  </div>
+</section>

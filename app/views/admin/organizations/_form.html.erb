@@ -1,0 +1,16 @@
+<%= form_with model: [ :admin, organization ], class: "stack-form" do |f| %>
+  <%= form_errors organization %>
+  <div class="field">
+    <%= f.label :name, t("ui.fields.name") %>
+    <%= f.text_field :name, class: "field-input", required: true, maxlength: 120, aria: { invalid: invalid?(organization, :name) } %>
+  </div>
+  <div class="field">
+    <%= f.label :notes, t("ui.fields.notes") %>
+    <%= f.text_area :notes, class: "field-input", rows: 4, maxlength: 5_000, data: { autogrow: true }, aria: { describedby: "notes-hint" } %>
+    <small class="field-hint" id="notes-hint"><%= t("ui.admin.notes_hint") %></small>
+  </div>
+  <div class="form-actions">
+    <%= link_to t("ui.cancel"), organization.persisted? ? admin_organization_path(organization) : admin_organizations_path, class: "btn" %>
+    <%= f.submit t("ui.save"), class: "btn btn--primary" %>
+  </div>
+<% end %>

@@ -18,7 +18,7 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module G0no
+module Stopan
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
@@ -43,14 +43,18 @@ module G0no
     config.i18n.available_locales = [ :en, :bg ]
     config.i18n.default_locale = :en
 
-    # Attachments are served by NotesController#download_file, which requires
-    # sign-in. Active Storage's own routes would serve them without it.
+    # Attachments are served by AttachmentsController after the ticket's
+    # visibility check. Active Storage's own routes would serve them without it.
     config.active_storage.draw_routes = false
     # Attachments are downloaded as-is; no image variants are generated.
     config.active_storage.variant_processor = :disabled
+    # Comments are immutable (readonly once saved), so attaching files must
+    # not touch them.
+    config.active_storage.touch_attachment_records = false
 
-    # Sign-up by anyone (Devise registrations). Closed in production unless
-    # REGISTRATION_OPEN=true; administrators create users at /admin.
+    # Sign-up by anyone (Devise registrations) as a requester without an
+    # organization. Closed in production unless REGISTRATION_OPEN=true;
+    # administrators create users at /admin.
     config.x.registration_open =
       ENV.fetch("REGISTRATION_OPEN") { Rails.env.production? ? "false" : "true" } == "true"
   end

@@ -1,0 +1,6 @@
+<nav class="tabs admin-tabs" aria-label="<%= t("ui.admin.sections") %>">
+  <%= link_to t("ui.admin.overview"), admin_root_path, class: "tab", aria: { current: ("page" if controller_name == "dashboard") } %>
+  <%= link_to t("ui.admin.users"), admin_users_path, class: "tab", aria: { current: ("page" if controller_name == "users") } %>
+  <%= link_to t("ui.admin.organizations"), admin_organizations_path, class: "tab",
+              aria: { current: ("page" if controller_name.in?(%w[organizations memberships])) } %>
+</nav>

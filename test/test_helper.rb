@@ -10,7 +10,9 @@ module ActiveSupport
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
 
-    # Add more helper methods to be used by all tests here...
+    def upload(name = "hello.txt", type = "text/plain")
+      Rack::Test::UploadedFile.new(file_fixture(name), type)
+    end
   end
 end
 

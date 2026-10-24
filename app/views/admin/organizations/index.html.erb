@@ -1,0 +1,49 @@
+<% content_for :title, t("ui.admin.organizations") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.admin.organizations") %></h1>
+  <%= render "admin/tabs" %>
+</div>
+
+<section class="sticky sticky--gray panel" aria-labelledby="organizations-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.organizations") %></span></header>
+  <div class="panel__body">
+    <div class="panel__head">
+      <h2 class="section-title" id="organizations-title"><%= t("ui.admin.organizations_count", count: @organizations.size) %></h2>
+      <%= link_to t("ui.admin.new_organization"), new_admin_organization_path, class: "btn btn--primary" %>
+    </div>
+    <%= form_with url: admin_organizations_path, method: :get, class: "filters filters--compact" do %>
+      <div class="filters__search search-field">
+        <%= icon :search %>
+        <%= label_tag :q, t("ui.admin.search_organizations"), class: "sr-only" %>
+        <%= search_field_tag :q, @query, class: "search-field__input", placeholder: t("ui.admin.search_organizations") %>
+      </div>
+      <div class="filters__actions"><%= submit_tag t("ui.queue.search"), class: "btn", name: nil %></div>
+    <% end %>
+    <% if @organizations.any? %>
+      <div class="table-scroll">
+        <table class="ledger table-organizations">
+          <thead>
+            <tr>
+              <th scope="col"><%= t("ui.fields.name") %></th>
+              <th scope="col" class="num"><%= t("ui.admin.members") %></th>
+              <th scope="col" class="num"><%= t("ui.admin.unsolved") %></th>
+              <th scope="col" class="num"><%= t("ui.admin.all_tickets") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @organizations.each do |organization| %>
+              <tr id="<%= dom_id(organization) %>">
+                <td class="text"><%= link_to organization.name, admin_organization_path(organization) %></td>
+                <td class="num"><%= @member_counts.fetch(organization.id, 0) %></td>
+                <td class="num"><%= link_to @unsolved_counts.fetch(organization.id, 0), tickets_path(view: "unsolved", organization: organization.id) %></td>
+                <td class="num"><%= link_to @ticket_counts.fetch(organization.id, 0), tickets_path(view: "all", organization: organization.id) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="panel__empty"><%= @query ? t("ui.queue.no_match") : t("ui.admin.no_organizations_yet") %></p>
+    <% end %>
+  </div>
+</section>

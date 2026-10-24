@@ -14,6 +14,11 @@ Devise 5 with `database_authenticatable`, `registerable`, `recoverable`,
   deactivated. Contact your service desk administrator."), and a signed-in
   session ends on the next request.
 - Sign-out is `DELETE /users/sign_out` (a `button_to` in the menu bar).
+- **Own account** (`/users/edit`, the user's name in the menu bar): name,
+  email and password, confirmed with the current password; the page lists
+  the user's organizations. Users cannot delete their own account
+  (`DELETE /users` redirects back with a message), because ticket history
+  must keep its people; administrators deactivate accounts instead.
 - Account pages (sign in, sign up, password reset, edit account) and
   Devise's messages are translated (`bg`, `en`).
 - The legacy 2011 password pepper support from g0no was removed with the

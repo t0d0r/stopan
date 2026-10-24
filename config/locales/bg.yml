@@ -1,47 +1,38 @@
-# Bulgarian localization for Ruby on Rails 2.2+
-# by Samson Behar <master.webmaster.master@gmail.com>
-# Fixes by Yavor Ivanov, http://github.com/YavorIvanov
-#
-# Минимална локализация на приложения за поддръжка на български език.
+# Bulgarian texts of Stopan. Rails defaults (dates, numbers, validation
+# messages) are in rails.bg.yml.
 
 bg:
-  "Are You sure?": "Сигурни ли сте?"
-  "Notes by tag": "Бележки с ключова дума" 
-  "Your Notes": "Вашите Бележки"
-  Add: "Добави" 
-  Content: "Съдържание"
-  Date: "дата"
-  amount: "сума"
-  comment: "коментар"
-  content: "съдържание"
-  delete: "изтриване"
-  description: "описание"
-  expence: "разход"
-  email: "Емайл"
-  logout: "изход"
   password: "Парола"
   remember_me: "Запомни ме"
-  tags: "тагове"
-  title: "заглавие"
 
   ui:
-    back: "Към бележките"
+    account: "Вашият профил"
+    ago: "преди %{time}"
     cancel: "Отказ"
-    created_by: "преди %{time} от %{author}"
-    delete_note: "Изтрий бележката"
+    delete: "Изтриване"
     dismiss: "Затвори"
-    edited: "редактирана преди %{time}"
-    expenses: "Разходи"
-    files: "Файлове"
-    login: "Имейл или потребителско име"
-    new_note: "Нова бележка"
-    no_notes: "Все още няма бележки. Създайте първата."
-    notes_count:
-      one: "%{count} бележка"
-      other: "%{count} бележки"
+    logout: "Изход"
     save: "Запис"
+    skip_to_content: "Към съдържанието"
+    unassigned: "Неразпределен"
+    form_errors:
+      one: "Моля, поправете този проблем:"
+      other: "Моля, поправете тези %{count} проблема:"
+    files_hint:
+      one: "До %{count} файл, до %{size} MB. Изображения, PDF, текст, CSV, ZIP и офис документи."
+      other: "До %{count} файла, до %{size} MB всеки. Изображения, PDF, текст, CSV, ZIP и офис документи."
+
+    account_page:
+      title: "Вашият профил"
+      password_keep: "Оставете празно, за да запазите текущата парола."
+      current_password: "Текуща парола"
+      current_password_hint: "Нужна е за потвърждение на всяка промяна."
+      organizations: "Организации"
+      no_organizations: "все още няма - попитайте администратора"
+      back: "Към заявките"
+
     sign_in: "Вход"
-    upload: "Качи"
+    login: "Имейл или потребителско име"
     links:
       forgot_password: "Забравена парола?"
       sign_in: "Вход"
@@ -52,140 +43,229 @@ bg:
     password_minimum:
       one: "поне %{count} символ"
       other: "поне %{count} символа"
-    color: "Цвят"
-    colors:
-      all: "Всички цветове"
-      yellow: "Жълт"
-      blue: "Син"
-      green: "Зелен"
-      pink: "Розов"
-      purple: "Лилав"
-      gray: "Сив"
-      random: "Случаен цвят"
-    files_count:
-      zero: "без файлове"
-      one: "%{count} файл"
-      other: "%{count} файла"
-    search:
-      label: "Търсене в бележките"
-      placeholder: "Търсене"
-      filter: "Филтър по цвят"
+    send_reset_instructions: "Изпратете ми указания"
+
+    nav:
+      label: "Раздели"
+      queue: "Опашка"
+      my_tickets: "Моите заявки"
+      new_ticket: "Нова заявка"
+      admin: "Администрация"
+
+    roles:
+      requester: "Заявител"
+      agent: "Агент"
+      admin: "Администратор"
+    statuses:
+      new: "Нова"
+      open: "Отворена"
+      pending: "Чака отговор"
+      resolved: "Решена"
+      closed: "Затворена"
+    priorities:
+      low: "Нисък"
+      normal: "Нормален"
+      high: "Висок"
+      urgent: "Спешен"
+
+    fields:
+      number: "Заявка"
+      subject: "Тема"
+      description: "Описание"
+      status: "Състояние"
+      priority: "Приоритет"
+      requester: "Заявител"
+      assignee: "Отговорник"
+      organization: "Организация"
+      files: "Прикачени файлове"
+      created: "Създадена"
+      updated: "Последна активност"
+      resolved: "Решена"
+      closed: "Затворена"
+      name: "Име"
+      username: "Потребителско име"
+      email: "Имейл"
+      password: "Парола"
+      password_confirmation: "Повторете паролата"
+      role: "Роля"
+      notes: "Вътрешни бележки"
+
+    queue:
+      title: "Опашка"
+      views_label: "Изгледи на заявките"
+      views:
+        unsolved: "Всички нерешени"
+        mine: "Възложени на мен"
+        unassigned: "Неразпределени"
+        pending: "Чакат отговор"
+        solved: "Решени"
+        all: "Всички заявки"
+      search_label: "Търсене в заявките"
+      search_placeholder: "Търсене в тема, текст или #номер"
+      search: "Търсене"
+      any: "Всички"
+      assignee_me: "Аз"
+      assignee_none: "Никой"
+      sort: "Подредба"
+      sorts:
+        updated: "Последна активност"
+        created: "Най-нови"
+        priority: "Приоритет"
       apply: "Приложи"
-      results: "Резултати"
-      clear: "Изчисти филтъра"
-      no_results: "Няма намерени бележки."
-    preview:
-      close: "Затвори прегледа"
-      previous: "Предишен файл"
-      next: "Следващ файл"
-      download: "Изтегли"
-      none: "Няма преглед за този вид файл. Изтеглете го, за да го отворите."
-      error: "Прегледът не можа да се зареди."
-    share:
-      title: "Споделяне"
-      shared: "Споделена"
-      shared_note: "Споделена бележка"
-      link: "Връзка за споделяне"
-      copy: "Копирай връзката"
-      copied: "Копирано"
-      create: "Създай връзка"
-      renew: "Нова връзка"
-      renew_hint: "Новата връзка заменя тази; старата спира да работи."
-      stop: "Спри споделянето"
-      password: "Парола за споделяне"
-      password_placeholder: "Парола (по желание, поне 6 символа)"
-      status_open: "Всеки с връзката може да види бележката."
-      status_password: "Всеки с връзката и паролата може да види бележката."
-      since: "споделена преди %{time}"
-      open_link: "връзка"
-      with_password: "връзка + парола"
-      locked_title: "Изисква се парола"
-      locked_hint: "Бележката е защитена. Въведете паролата, която сте получили."
-      unlock: "Отвори бележката"
-      missing_title: "Връзката не е достъпна"
-      missing_hint: "Бележката не е споделена или връзката е заменена."
+      clear: "Изчисти филтрите"
+      empty: "Тук няма заявки. Браво!"
+      no_match: "Няма заявки, които отговарят на филтрите."
+
+    my_tickets:
+      title: "Моите заявки"
+      views:
+        open: "Отворени"
+        solved: "Решени"
+        all: "Всички"
+      search_label: "Търсене в моите заявки"
+      empty:
+        open: "Нямате отворени заявки. Нуждаете се от помощ?"
+        solved: "Все още няма решени заявки."
+        all: "Все още не сте подавали заявки. Нуждаете се от помощ?"
+      open_new: "Подайте нова заявка."
+      no_organization: "Профилът ви все още не е част от организация и не можете да подавате заявки. Моля, свържете се с администратора на поддръжката."
+
+    pagination:
+      label: "Страници"
+      summary: "Показани %{first}-%{last} от %{total}"
+      page: "Страница %{page} от %{pages}"
+      previous: "Предишна"
+      next: "Следваща"
+
+    new_ticket:
+      title: "Подаване на заявка"
+      caption: "Нова заявка"
+      intro: "Опишете от какво имате нужда. Ще отговорим тук и ще можете да следите всяка стъпка."
+      intro_staff: "Подайте заявка от името на заявител, например след телефонно обаждане."
+      choose: "Изберете..."
+      organization_hint: "Заявителят трябва да е член на тази организация."
+      subject_hint: "Кратко описание, например: Принтерът на втория етаж не печата."
+      description_hint: "Какво се случи, какво очаквахте и какво вече опитахте."
+      submit: "Подай заявката"
+
+    ticket:
+      details: "Данни за заявката"
+      description: "Първоначална заявка"
+      opened_by: "Подадена от %{name}"
+      properties: "Свойства"
+      update: "Обнови заявката"
+      resolve: "Отбележи като решена"
+      resolve_title: "Да се отбележи ли заявката като решена?"
+      resolve_body: "Използвайте това, когато проблемът ви е решен. Може да отговорите и по-късно, което отваря заявката отново."
+
+    timeline:
+      title: "Активност"
+      system: "Системата"
+      removed_user: "изтрит потребител"
+      internal_only: "Вижда се само от екипа"
+      kinds:
+        requester: "Отговор от заявителя"
+        staff: "Отговор от поддръжката"
+        internal: "Вътрешна бележка"
+      created: "%{actor} подаде заявката"
+      status_changed: "%{actor} промени състоянието от %{from} на %{to}"
+      priority_changed: "%{actor} промени приоритета от %{from} на %{to}"
+      assigned: "%{actor} възложи заявката на %{to}"
+      unassigned: "%{actor} премахна отговорника"
+
+    composer:
+      title: "Добавяне към заявката"
+      mode: "Вид съобщение"
+      public: "Публичен отговор"
+      internal: "Вътрешна бележка"
+      body: "Вашият отговор"
+      body_staff: "Съобщение"
+      placeholder: "Напишете отговора си..."
+      placeholder_staff: "Напишете отговор до заявителя или бележка за екипа..."
+      internal_hint: "Вътрешните бележки се виждат само от агентите и администраторите."
+      submit_as: "След това състояние"
+      keep_status: "Без промяна (%{status})"
+      send_reply: "Изпрати отговора"
+      add_note: "Добави вътрешна бележка"
+      closed: "Заявката е затворена. Ако имате нужда от още помощ, подайте нова заявка."
+
     admin:
       title: "Администрация"
+      sections: "Раздели на администрацията"
+      overview: "Преглед"
       users: "Потребители"
+      organizations: "Организации"
+      users_count:
+        one: "%{count} потребител"
+        other: "%{count} потребители"
+      organizations_count:
+        one: "%{count} организация"
+        other: "%{count} организации"
+      members_count:
+        one: "%{count} член"
+        other: "%{count} членове"
       new_user: "Нов потребител"
       edit_user: "Редакция на %{name}"
-      edit: "редакция"
-      back: "Към администрацията"
-      role: "Роля"
-      admin: "Администратор"
-      sign_ins: "Влизания"
-      last_sign_in: "Последно влизане"
+      new_organization: "Нова организация"
+      edit_organization: "Редакция на %{name}"
+      edit: "Редакция"
+      remove: "Премахни"
+      add: "Добави"
+      add_member: "Добави член"
+      actions: "Действия"
+      members: "Членове"
+      unsolved: "Нерешени"
+      all_tickets: "Всички заявки"
+      details: "Данни"
+      last_sign_in: "Последен вход"
       never: "никога"
-      ago: "преди %{time}"
+      deactivated: "Деактивиран"
+      deactivate_hint: "Деактивираният потребител не може да влиза и се премахва като отговорник на нерешените заявки. Историята му остава."
+      self_deactivate: "Не можете да деактивирате собствения си профил."
+      self_role: "Не можете да промените собствената си роля."
+      role_hint: "Агентите и администраторите работят по всички заявки; администраторите управляват и потребителите и организациите. При понижаване на агент нерешените му заявки остават без отговорник."
       password_keep: "Оставете празно, за да запазите текущата парола."
-      self_admin: "Не можете да премахнете собствената си администраторска роля."
-      shared_notes: "Споделени бележки"
-      no_shared_notes: "Няма споделени бележки."
+      notes_hint: "Виждат се само от администраторите."
+      search_users: "Търсене по име, потребителско име или имейл"
+      search_organizations: "Търсене на организации"
+      busiest: "С най-много нерешени заявки"
+      recent_users: "Най-нови потребители"
+      no_unsolved: "Няма нерешени заявки."
+      no_users: "Няма такива потребители."
+      no_members: "Все още няма членове. Заявителите трябва да са членове, за да подават заявки."
+      no_organizations_yet: "Все още няма организации."
       stats:
-        users: "потребители"
-        notes: "бележки"
-        files: "файла"
-        storage: "заето място"
-        expenses: "разходи"
+        unsolved: "нерешени заявки"
+        unassigned: "неразпределени"
+        solved_week: "решени за 7 дни"
+        organizations: "организации"
+        staff: "агенти и администратори"
+        requesters: "заявители"
+
     confirm:
       title: "Сигурни ли сте?"
       ok: "Изтрий"
-      delete_note_title: "Да се изтрие ли бележката?"
-      delete_note: "'%{title}' ще бъде изтрита завинаги, заедно с %{expenses} и %{files}. Това не може да се отмени."
-      delete_note_button: "Изтрий бележката"
-      expenses:
-        zero: "без разходи"
-        one: "%{count} разход"
-        other: "%{count} разхода"
-      delete_file_title: "Да се изтрие ли файлът?"
-      delete_file: "'%{filename}' (%{size}) ще бъде изтрит завинаги. Това не може да се отмени."
-      delete_file_button: "Изтрий файла"
-      stop_share_title: "Да се спре ли споделянето на '%{title}'?"
-      stop_share: "Текущата връзка спира да работи за всички, които я имат. По-късно можете да създадете нова."
-      delete_user_title: "Да се изтрие ли потребител %{name}?"
-      delete_user: "%{name} (%{email}) вече няма да може да влиза. Бележките остават."
+      delete_user_title: "Да се изтрие ли %{name}?"
+      delete_user: "%{name} (%{email}) ще бъде изтрит и няма да може да влиза. Потребители с история по заявки не могат да се изтриват; деактивирайте ги."
       delete_user_button: "Изтрий потребителя"
-    drop:
-      hint: "Можете и да пуснете файлове върху бележката, за да ги прикачите."
-      overlay: "Пуснете файловете, за да ги прикачите към бележката"
-      uploading: "Качване..."
-    history:
-      open: "История"
-      title: "История на %{title}"
-      heading: "%{title} във времето"
-      count:
-        one: "%{count} версия"
-        other: "%{count} версии"
-      timeline: "Времева линия"
-      current: "Това е текущата версия"
-      same_as_current: "Същата като текущата версия"
-      restore: "Възстанови"
-      restore_title: "Да се възстанови ли тази версия?"
-      restore_body: "Бележката ще получи заглавието, текста и цвета от %{time}. Файловете и разходите не се променят. Текущата версия остава в историята и можете да се върнете към нея."
-      done: "Готово"
-      older: "По-стара (стрелка нагоре)"
-      newer: "По-нова (стрелка надолу)"
-      show_changes: "Покажи промените"
-      position: "%{index} от %{total}"
-      events:
-        baseline: "Начало на историята"
-        created: "Създадена"
-        edited: "Редактирана"
-        recolored: "Сменен цвят"
-        restored: "Възстановена от %{time}"
-        file_added: "Добавен файл: %{details}"
-        file_deleted: "Изтрит файл: %{details}"
-        expense_added: "Добавен разход: %{details}"
+      remove_member_title: "Да се премахне ли %{name}?"
+      remove_member: "%{name} вече няма да е член на %{organization} и губи достъп до заявките ѝ."
+      delete_organization_title: "Да се изтрие ли %{name}?"
+      delete_organization:
+        zero: "Организацията ще бъде изтрита. Тя няма членове."
+        one: "Организацията и %{count} членство ще бъдат изтрити. Потребителят остава."
+        other: "Организацията и %{count} членства ще бъдат изтрити. Потребителите остават."
+      delete_organization_button: "Изтрий организацията"
+
+    forbidden:
+      title: "Не е позволено"
+      body: "Ролята ви не позволява това действие."
+      back: "Към началната страница"
+
     flash:
       notice: "Съобщение"
       alert: "Внимание"
-    autosave:
-      hint: "Бележките се запазват сами, щом имат заглавие."
-      saving: "Запазване..."
-      saved: "Запазено в"
-      failed: "Не е запазено:"
-      needs_title: "Добавете заглавие, за да се запази бележката."
-      remote_change: "Променена е другаде. Ще се презареди, щом спрете да редактирате; вашият текст се записва върху промяната, а двата остават в Историята."
+
     prefs:
       dark: "Тъмна тема"
       light: "Светла тема"
@@ -194,259 +274,79 @@ bg:
         normal: "Нормален"
         big: "Голям"
         extra: "Много голям"
-    copy_note:
-      label: "Копирай текста на бележката"
-      copied: "Копирано в клипборда"
-    lock:
-      hint: "Щракнете два пъти върху бележката, за да я редактирате."
-      lock: "Заключи бележката (край на редакцията)"
-      unlock: "Отключи бележката за редакция"
-    markdown:
-      show_formatted: "Покажи като Markdown"
-      show_plain: "Покажи като обикновен текст"
-    sort:
-      title: "Подредба: %{order}. Щракнете за следващата."
-      created_asc: "Първо най-старите"
-      created_desc: "Първо най-новите"
-      updated_desc: "Последно редактирани"
-      updated_asc: "Отдавна нередактирани"
-    nav:
-      label: "Раздели"
-    wide:
-      widen: "По-широка бележка"
-      narrow: "По-тясна бележка"
-    send_reset_instructions: "Изпрати инструкции за нова парола"
 
   flash:
-    note_created: "Бележката е създадена."
-    note_deleted: "Документ със заглавие '%{title}' беше изтрит успешно"
-    note_gone: "Тази бележка беше изтрита."
-    file_deleted: "Файлът %{filename} беше изтрит."
-    note_shared: "Връзката за споделяне е създадена."
-    note_unshared: "Бележката вече не е споделена."
-    share_wrong_password: "Грешна парола."
-    share_too_many_attempts: "Твърде много опити. Опитайте отново след няколко минути."
-    share_revoked: "Споделянето на '%{title}' е спряно."
-    admin_only: "Само администратори могат да отворят тази страница."
+    ticket_created: "Заявка %{reference} е създадена."
+    ticket_updated: "Заявка %{reference} е обновена."
+    ticket_resolved: "Заявка %{reference} е отбелязана като решена."
+    reply_sent: "Отговорът ви е изпратен."
+    note_added: "Вътрешната бележка е добавена."
+    admin_only: "Само администраторите имат достъп до тази страница."
     user_created: "Потребител %{name} е създаден."
     user_updated: "Потребител %{name} е обновен."
     user_deleted: "Потребител %{name} е изтрит."
-    user_self_delete: "Не можете да изтриете собствения си акаунт оттук."
-    version_restored: "Възстановена е версията от %{time}."
-    registration_closed: "Регистрацията е затворена. Помолете администратор за акаунт."
-
-  date:
-    formats:
-      default: "%d.%m.%Y"
-      short: "%d %b"
-      long: "%d %B %Y"
-
-    day_names: [неделя, понеделник, вторник, сряда, четвъртък, петък, събота]
-    standalone_day_names: [Неделя, Понеделник, Вторник, Сряда, Четвъртък, Петък, Събота]
-    abbr_day_names: [Нд, Пн, Вт, Ср, Чт, Пт, Сб]
-
-    # should start with nil cause there is no 0-th month
-    month_names: [~, Януари, Февруари, Март, Април, Май, Юни, Юли, Август, Септември, Октомври, Ноември, Декември]
-    abbr_month_names: [~, яну., фев., март, апр., май, юни, юли, авг., сеп., окт., ноем., дек.]
-
-    order:
-      - :day
-      - :month
-      - :year
-
-  time:
-    formats:
-      default: "%a, %d %b %Y, %H:%M:%S %z"
-      short: "%d %b, %H:%M"
-      long: "%d %B %Y, %H:%M"
-
-    am: "преди обяд"
-    pm: "следобед"
-
-  number:
-    format:
-      separator: "."
-      delimiter: " "
-      precision: 3
-
-    currency:
-      format:
-        format: "%n %u"
-        unit: "лв."
-        separator: "."
-        delimiter: " "
-        precision: 2
-
-    percentage:
-      format:
-        delimiter: ""
-
-    precision:
-      format:
-        delimiter: ""
-
-    human:
-      format:
-        delimiter: ""
-        precision: 1
-      # Rails 2.2
-      # storage_units: [байт, КБ, МБ, ГБ, ТБ]
-
-      # Rails 2.3
-      storage_units:
-        # Storage units output formatting.
-        # %u is the storage unit, %n is the number (default: 2 MB)
-        format: "%n %u"
-        units:
-          byte:
-            one: "байт"
-            few: "байта"
-            many: "байт"
-            other: "байта"
-          kb: "КБ"
-          mb: "МБ"
-          gb: "ГБ"
-          tb: "ТБ"
-
-  datetime:
-    distance_in_words:
-      half_a_minute: "по-малко от минута"
-      less_than_x_seconds:
-        one: "по-малко от %{count} секунди"
-        few: "по-малко от %{count} секунди"
-        many: "по-малко от %{count} секунди"
-        other: "по-малко от %{count} секунди"
-      x_seconds:
-        one: "%{count} секунда"
-        few: "%{count} секунди"
-        many: "%{count} секунди"
-        other: "%{count} секунди"
-      less_than_x_minutes:
-        one: "по-малко от %{count} минута"
-        few: "по-малко от %{count} минути"
-        many: "по-малко от %{count} минути"
-        other: "по-малко от %{count} минути"
-      x_minutes:
-        one: "%{count} минута"
-        few: "%{count} минути"
-        many: "%{count} минути"
-        other: "%{count} минути"
-      about_x_hours:
-        one: "около %{count} час"
-        few: "около %{count} часа"
-        many: "около %{count} часа"
-        other: "около %{count} часа"
-      x_days:
-        one: "%{count} ден"
-        few: "%{count} дни"
-        many: "%{count} дни"
-        other: "%{count} дена"
-      about_x_months:
-        one: "около %{count} месеца"
-        few: "около %{count} месеца"
-        many: "около %{count} месеца"
-        other: "около %{count} месеца"
-      x_months:
-        one: "%{count} месец"
-        few: "%{count} месеца"
-        many: "%{count} месеци"
-        other: "%{count} месеца"
-      almost_x_years:
-        one: "почти %{count} година"
-        few: "почти %{count} години"
-        many: "почти %{count} години"
-        other: "почти %{count} години"
-      about_x_years:
-        one: "около %{count} година"
-        few: "около %{count} години"
-        many: "около %{count} години"
-        other: "около %{count} години"
-      over_x_years:
-        one: "над %{count} година"
-        few: "над %{count} години"
-        many: "над %{count} години"
-        other: "над %{count} години"
-    prompts:
-      year: "Година"
-      month: "Месец"
-      day: "Ден"
-      hour: "Часа"
-      minute: "Минути"
-      second: "Секунди"
+    user_self_delete: "Не можете да изтриете собствения си профил оттук."
+    user_has_history: "%{name} има история по заявки и не може да бъде изтрит. Деактивирайте профила."
+    organization_created: "Организация %{name} е създадена."
+    organization_updated: "Организация %{name} е обновена."
+    organization_deleted: "Организация %{name} е изтрита."
+    organization_has_tickets: "%{name} има заявки и не може да бъде изтрита."
+    member_added: "%{name} е добавен."
+    member_removed: "%{name} е премахнат."
+    account_delete_disabled: "Профилите не могат да се изтриват оттук. Помолете администратор да деактивира вашия."
+    registration_closed: "Регистрацията е затворена. Поискайте профил от администратор."
 
   activerecord:
     models:
-      user: "потребител"
-      note: "бележка"
+      user: "Потребител"
+      ticket: "Заявка"
+      comment: "Коментар"
+      organization: "Организация"
     attributes:
       user:
+        name: "Име"
+        username: "Потребителско име"
         email: "Имейл"
         password: "Парола"
-        password_confirmation: "Повторете паролата"
+        password_confirmation: "Повторената парола"
+        role: "Роля"
         current_password: "Текуща парола"
         remember_me: "Запомни ме"
-        username: "Потребителско име"
-      note:
-        title: "Заглавие"
-        color: "Цвят"
-        share_password: "Парола за споделяне"
+      ticket:
+        subject: "Тема"
         description: "Описание"
-      finance_entry:
-        amount: "Сума"
-        date: "Дата"
-      note_attachment:
-        file: "Файл"
+        status: "Състояние"
+        priority: "Приоритет"
+        requester: "Заявител"
+        assignee: "Отговорник"
+        organization: "Организация"
+        files: "Прикачени файлове"
+      comment:
+        body: "Съобщение"
+        internal: "Вътрешна бележка"
+        files: "Прикачени файлове"
+      organization:
+        name: "Име"
+        notes: "Вътрешни бележки"
     errors:
-      template:
-        header:
-          one: "%{model}: записа неуспешен заради %{count} грешка"
-          few: "%{model}: записа неуспешен заради %{count} грешки"
-          many: "%{model}: записа неуспешен заради %{count} грешки"
-          other: "%{model}: записа неуспешен заради %{count} грешки"
-
-        body: "Възникнаха проблеми при следните полета:"
-
       messages:
-        inclusion: "съдържа непредвидена стойност"
-        exclusion: "съдържа предварително зададена стойност"
-        invalid: "съдържа невярна стойност"
-        confirmation: "не съответства на потвърждението"
-        accepted: "трябва да се потвърди"
-        empty: "не може да е празно"
-        blank: "не може да е без стойност"
-        too_long:
-          one: "е с прекалена дължина (не може да е повече от %{count} символ)"
-          few: "е с прекалена дължина (не може да е повече от %{count} символа)"
-          many: "е с прекалена дължина (не може да е повече от %{count} символи)"
-          other: "е с прекалена дължина (не може да е повече от %{count} символа)"
-        too_short:
-          one: "е с недостатъчна дължина (не может быть меньше %{count} символ)"
-          few: "е с недостатъчна дължина (не может быть меньше %{count} символа)"
-          many: "е с недостатъчна дължина (не может быть меньше %{count} символи)"
-          other: "е с недостатъчна дължина (не может быть меньше %{count} символа)"
-        wrong_length:
-          one: "е с грешна дължина (трябва да е с дължина, равна на %{count} символ)"
-          few: "е с грешна дължина (трябва да е с дължина, равна на %{count} символа)"
-          many: "е с грешна дължина (трябва да е с дължина, равна на %{count} символа)"
-          other: "е с грешна дължина (трябва да е с дължина,  равна на %{count} символа)"
-        taken: "вече съществува"
-        not_a_number: "не е число"
-        greater_than: "може да е със стойност, по-голяма от %{count}"
-        greater_than_or_equal_to: "може да е със стойност, по-голяма или равна на %{count}"
-        equal_to: "може да е единствено със стойност, равна на %{count}"
-        less_than: "може да е със стойност, по-малка от %{count}"
-        less_than_or_equal_to: "може да е със стойност, по-голяма или равна на %{count}"
-        odd: "може да е единствено четно"
-        even: "може да е единствено нечетно"
-        record_invalid: "имаше грешки: %{errors}"
-
-  support:
-    array:
-      # Rails 2.2
-      sentence_connector: "и"
-      skip_last_comma: true
-
-      # Rails 2.3
-      words_connector: ", "
-      two_words_connector: " и "
-      last_word_connector: " и "
+        too_many: "може да са най-много %{count} файла"
+        too_big: "%{filename} е по-голям от %{limit} MB"
+        type_not_allowed: "%{filename} не е от разрешен вид"
+      models:
+        ticket:
+          attributes:
+            requester:
+              not_a_member: "не е член на тази организация"
+            assignee:
+              not_staff: "трябва да е активен агент или администратор"
+            status:
+              transition: "не може да се смени от %{from} на %{to}"
+            organization:
+              no_membership: "липсва: профилът ви все още не е част от организация"
+        comment:
+          attributes:
+            internal:
+              staff_only: "може да се пише само от агенти и администратори"
+            base:
+              ticket_closed: "Заявката е затворена и не приема повече отговори."

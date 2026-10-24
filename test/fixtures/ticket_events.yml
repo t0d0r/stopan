@@ -1,0 +1,48 @@
+printer_created:
+  ticket: printer
+  actor: anna
+  action: created
+  internal: false
+  created_at: <%= 3.days.ago.to_fs(:db) %>
+
+printer_assigned:
+  ticket: printer
+  actor: agent
+  action: assignee_changed
+  to_value: <%= ActiveRecord::FixtureSet.identify(:agent) %>
+  internal: true
+  created_at: <%= 3.days.ago.to_fs(:db) %>
+
+printer_replied:
+  ticket: printer
+  actor: agent
+  action: replied
+  comment: printer_reply
+  internal: false
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+
+printer_status:
+  ticket: printer
+  actor: agent
+  action: status_changed
+  from_value: new
+  to_value: open
+  internal: false
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+
+printer_noted:
+  ticket: printer
+  actor: agent
+  action: noted
+  comment: printer_note
+  internal: true
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+
+printer_priority:
+  ticket: printer
+  actor: agent
+  action: priority_changed
+  from_value: low
+  to_value: normal
+  internal: true
+  created_at: <%= 2.days.ago.to_fs(:db) %>

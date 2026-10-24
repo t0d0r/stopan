@@ -19,7 +19,7 @@ class PreferencesControllerTest < ActionDispatch::IntegrationTest
 
   test "the menu bar has the theme switch and text sizes" do
     sign_in users(:admin)
-    get notes_url
+    get tickets_url
     assert_select ".menubar form.prefs button[name=theme][value=dark]"
     assert_select ".menubar form.prefs button[name=theme][value=light]"
     assert_select ".menubar form.prefs button[name=scale]", 3

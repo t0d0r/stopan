@@ -1,0 +1,68 @@
+<% content_for :title, t("ui.admin.users") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.admin.users") %></h1>
+  <%= render "admin/tabs" %>
+</div>
+
+<section class="sticky sticky--gray panel" aria-labelledby="users-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.users") %></span></header>
+  <div class="panel__body">
+    <div class="panel__head">
+      <h2 class="section-title" id="users-title"><%= t("ui.admin.users_count", count: @users.size) %></h2>
+      <%= link_to t("ui.admin.new_user"), new_admin_user_path, class: "btn btn--primary" %>
+    </div>
+    <%= form_with url: admin_users_path, method: :get, class: "filters filters--compact", data: { filter_form: true } do %>
+      <div class="filters__search search-field">
+        <%= icon :search %>
+        <%= label_tag :q, t("ui.admin.search_users"), class: "sr-only" %>
+        <%= search_field_tag :q, @query, class: "search-field__input", placeholder: t("ui.admin.search_users") %>
+      </div>
+      <div class="filters__field">
+        <%= label_tag :role, t("ui.fields.role") %>
+        <%= select_tag :role, options_for_select(User::ROLES.map { |r| [ t("ui.roles.#{r}"), r ] }, @role),
+                       include_blank: t("ui.queue.any"), class: "select", data: { auto_submit: true } %>
+      </div>
+      <div class="filters__actions"><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></div>
+    <% end %>
+    <div class="table-scroll">
+      <table class="ledger table-users">
+        <thead>
+          <tr>
+            <th scope="col"><%= t("ui.fields.name") %></th>
+            <th scope="col"><%= t("ui.fields.email") %></th>
+            <th scope="col"><%= t("ui.fields.role") %></th>
+            <th scope="col"><%= t("ui.admin.organizations") %></th>
+            <th scope="col"><%= t("ui.admin.last_sign_in") %></th>
+            <th scope="col"><span class="sr-only"><%= t("ui.admin.actions") %></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr id="<%= dom_id(user) %>" class="<%= "is-deactivated" if user.deactivated? %>">
+              <td class="text">
+                <%= user.display_name %>
+                <% if user.username.present? && user.username != user.display_name %><span class="muted">@<%= user.username %></span><% end %>
+                <% if user.deactivated? %><span class="state-tag"><%= t("ui.admin.deactivated") %></span><% end %>
+              </td>
+              <td class="text"><%= user.email %></td>
+              <td><span class="role-pill role-pill--<%= user.role %>"><%= role_label(user) %></span></td>
+              <td class="text"><%= user.organizations.map(&:name).join(", ").presence || tag.span("-", class: "muted") %></td>
+              <td class="date"><%= user.last_sign_in_at ? time_ago(user.last_sign_in_at) : t("ui.admin.never") %></td>
+              <td class="action">
+                <%= link_to t("ui.admin.edit"), edit_admin_user_path(user) %>
+                <% unless user == current_user %>
+                  <%= button_to t("ui.delete"), admin_user_path(user), method: :delete, class: "link-button",
+                                form: { data: confirm_data(
+                                  title: t("ui.confirm.delete_user_title", name: user.display_name),
+                                  body: t("ui.confirm.delete_user", name: user.display_name, email: user.email),
+                                  button: t("ui.confirm.delete_user_button")) } %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <% if @users.empty? %><p class="panel__empty"><%= t("ui.admin.no_users") %></p><% end %>
+  </div>
+</section>

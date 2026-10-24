@@ -1,0 +1,73 @@
+<% content_for :title, @organization.name %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= @organization.name %></h1>
+  <%= render "admin/tabs" %>
+</div>
+
+<div class="two-columns two-columns--wide-left">
+  <section class="sticky sticky--gray panel" aria-labelledby="members-title">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.members") %></span></header>
+    <div class="panel__body">
+      <h2 class="section-title" id="members-title"><%= t("ui.admin.members_count", count: @memberships.size) %></h2>
+      <% if @memberships.any? %>
+        <div class="table-scroll">
+          <table class="ledger table-members">
+            <tbody>
+              <% @memberships.each do |membership| %>
+                <tr id="<%= dom_id(membership) %>">
+                  <td class="text"><%= link_to membership.user.display_name, edit_admin_user_path(membership.user) %></td>
+                  <td class="text"><%= membership.user.email %></td>
+                  <td><span class="role-pill role-pill--<%= membership.user.role %>"><%= role_label(membership.user) %></span></td>
+                  <td class="action">
+                    <%= button_to t("ui.admin.remove"), admin_membership_path(membership), method: :delete, class: "link-button",
+                                  form: { data: confirm_data(
+                                    title: t("ui.confirm.remove_member_title", name: membership.user.display_name),
+                                    body: t("ui.confirm.remove_member", name: membership.user.display_name, organization: @organization.name),
+                                    button: t("ui.admin.remove")) } %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="panel__empty"><%= t("ui.admin.no_members") %></p>
+      <% end %>
+      <% if @candidates.any? %>
+        <%= form_with model: Membership.new, url: admin_organization_memberships_path(@organization), class: "inline-form" do |f| %>
+          <%= f.label :user_id, t("ui.admin.add_member"), class: "inline-form__label" %>
+          <%= f.collection_select :user_id, @candidates, :id, :display_name, {}, class: "select" %>
+          <%= f.submit t("ui.admin.add"), class: "btn" %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="sticky sticky--purple panel" aria-labelledby="org-details-title">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.details") %></span></header>
+    <div class="panel__body">
+      <h2 class="section-title" id="org-details-title"><%= t("ui.admin.details") %></h2>
+      <dl class="facts">
+        <dt><%= t("ui.admin.unsolved") %></dt>
+        <dd><%= link_to @unsolved_count, tickets_path(view: "unsolved", organization: @organization.id) %></dd>
+        <dt><%= t("ui.admin.all_tickets") %></dt>
+        <dd><%= link_to @ticket_count, tickets_path(view: "all", organization: @organization.id) %></dd>
+        <dt><%= t("ui.fields.created") %></dt>
+        <dd><%= time_ago @organization.created_at %></dd>
+      </dl>
+      <% if @organization.notes.present? %>
+        <h3 class="section-title"><%= t("ui.fields.notes") %></h3>
+        <div class="ticket-text"><%= ticket_text @organization.notes %></div>
+      <% end %>
+      <div class="form-actions form-actions--start">
+        <%= link_to t("ui.admin.edit"), edit_admin_organization_path(@organization), class: "btn" %>
+        <% if @ticket_count.zero? %>
+          <%= button_to t("ui.delete"), admin_organization_path(@organization), method: :delete, class: "btn btn--danger",
+                        form: { data: confirm_data(title: t("ui.confirm.delete_organization_title", name: @organization.name),
+                                                   body: t("ui.confirm.delete_organization", count: @memberships.size),
+                                                   button: t("ui.confirm.delete_organization_button")) } %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+</div>

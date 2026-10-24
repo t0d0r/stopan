@@ -9,23 +9,50 @@ class UserTest < ActiveSupport::TestCase
     assert_nil User.find_for_database_authentication(email: "nobody")
   end
 
-  test "display_name prefers the username" do
-    assert_equal "admin", users(:admin).display_name
+  test "display_name prefers the name, then the username, then the email" do
+    assert_equal "Ada Admin", users(:admin).display_name
+    assert_equal "ada", User.new(email: "x@example.com", username: "ada", name: " ").display_name
     assert_equal "x@example.com", User.new(email: "x@example.com", username: "").display_name
   end
 
-  test "verifies password hashes created by Devise 1.1 with a pepper" do
-    pepper = "legacy-pepper"
-    salt = BCrypt::Engine.generate_salt(10)
-    # Devise 1.1's bcrypt encryptor: hash_secret(password + pepper, salt, stretches)
-    legacy_hash = BCrypt::Engine.hash_secret("secret123#{pepper}", salt)
-    user = User.new(email: "old@example.com", encrypted_password: legacy_hash)
+  test "roles" do
+    assert users(:admin).staff?
+    assert users(:agent).staff?
+    assert_not users(:anna).staff?
+    assert users(:anna).requester?
+    assert_equal "requester", User.new.role
+    assert_not User.new(email: "x@example.com", password: "password", role: "boss").valid?
+  end
 
-    original = Devise.pepper
-    Devise.pepper = pepper
-    assert user.valid_password?("secret123")
-    assert_not user.valid_password?("wrong")
-  ensure
-    Devise.pepper = original
+  test "deactivated users cannot sign in" do
+    assert_not users(:retired).active_for_authentication?
+    assert_equal :deactivated, users(:retired).inactive_message
+    assert users(:agent).active_for_authentication?
+  end
+
+  test "membership" do
+    assert users(:anna).member_of?(organizations(:acme))
+    assert_not users(:anna).member_of?(organizations(:globex))
+    assert_not users(:anna).member_of?(nil)
+  end
+
+  test "releasing assigned tickets unassigns unsolved ones with an event" do
+    maria = users(:agent)
+    assert_difference -> { TicketEvent.where(action: "assignee_changed").count }, 1 do
+      maria.release_assigned_tickets!(users(:admin))
+    end
+    printer = tickets(:printer).reload
+    assert_nil printer.assignee
+    event = printer.events.last
+    assert_equal users(:admin), event.actor
+    assert_equal maria.id.to_s, event.from_value
+    assert event.internal?
+  end
+
+  test "users with ticket history cannot be deleted" do
+    assert users(:anna).ticket_history?
+    assert_not users(:anna).destroy
+    assert_not users(:drifter).ticket_history?
+    assert users(:drifter).destroy
   end
 end

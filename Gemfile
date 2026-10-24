@@ -15,9 +15,6 @@ gem "devise", "~> 5.0"
 # reload [https://turbo.hotwired.dev]; turbo.min.js is served by Propshaft
 gem "turbo-rails", "~> 2.0"
 
-# Markdown rendering for notes (GitHub flavoured, precompiled native gem)
-gem "commonmarker", "~> 2.10"
-
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
