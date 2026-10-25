@@ -13,6 +13,7 @@
 | [auth.md](auth.md) | Devise setup, lockable, deactivation, sign-up switch, seeded admin, demo data |
 | [ui.md](ui.md) | Stickies-based look adapted to a service desk, pages, behaviour, accessibility, translations |
 | [docker.md](docker.md) | Docker image, compose file and environment variables |
+| [deploy.md](deploy.md) | production server layout (ISPConfig site, rootless Podman), setup, acceptance, rollback, current blocker |
 | [roadmap.md](roadmap.md) | later phases: notifications, ingestion, SLAs, automation, API, reporting, groups, ... |
 
 ## Security Note

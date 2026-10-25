@@ -4,7 +4,7 @@
 
 IMAGE ?= stopan:latest
 
-.PHONY: help ruby deps build test lint audit check run demo clean docker-build docker-up docker-down docker-logs
+.PHONY: help ruby deps build test lint audit check run demo clean docker-build docker-up docker-down docker-logs deploy
 
 help: ## list the targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -55,3 +55,6 @@ docker-down: ## stop the docker compose app (data stays in the storage volume)
 
 docker-logs: ## follow the docker compose app logs
 	docker compose logs -f web
+
+deploy: ## ship HEAD to the server, build and restart there (needs DEPLOY_HOST; specs/deploy.md)
+	@bin/deploy

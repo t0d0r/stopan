@@ -1,0 +1,96 @@
+# 2026-10-25 - deploy Stopan to stopan.linuxfan.org (Job 4)
+
+## Why the session ended
+
+Stopped at a non-bypassable access blocker before any server change: the
+ISPConfig Remote API has no account, and no panel credentials or session
+were available through a supported channel. The assignment forbids
+creating the account (or the site) through MySQL or a hand-written vhost.
+
+## Outcome
+
+Not deployed. No mutation on the server. The deployment is designed and
+its artifacts are in the repository (specs/deploy.md), ready to run once
+the operator provides a remote API user.
+
+## Revalidation (read-only, redacted)
+
+- DNS: `stopan.linuxfan.org` A = the server's address (same as
+  `do.linuxfan.org`); no AAAA for either.
+- Today `https://stopan.linuxfan.org` presents another site's certificate
+  (default vhost); `http://` answers 200 from the default vhost. No Stopan
+  vhost in `sites-enabled`.
+- ISPConfig 3.3.1p1, one server (id 1, web server). `web_domain` has no
+  row for stopan; g0no's site is domain 24 (client 1), proxy in its
+  Apache directives to 127.0.0.1:3182 - used as the reference.
+- `remote_user` table: 0 rows; `remote_session`: 0 rows. Panel (8443) and
+  `/remote/json.php` answer 200; maintenance mode not enabled. The panel
+  certificate is self-signed.
+- `ispc` CLI offers `user set-password` but no remote-user command.
+- Listeners: loopback app ports 3181 (ruby) and 3182 (g0no's pasta);
+  3183 free at check time. Public: 80, 443, 8081, 8443 (Apache), 3128.
+- Users: `g0no` (uid 997, lingering, subuid 2000000:65536); no `stopan`
+  user.
+- Capacity: 4 CPUs, 7.8 GiB RAM (about 2.5 GiB available), 84 GB free on
+  `/`. Debian 13, Podman 5.4.2.
+- Earlier preflight files from a previous attempt exist in a root-only
+  directory on the server; they were only listed, not reused as evidence.
+- Local: HEAD 42fdf69 (before this session's commit); `make check` 122
+  runs, 505 assertions, 0 failures, RuboCop and Brakeman clean.
+
+## Done
+
+- `specs/deploy.md`: layout, settings, Remote API use, blocker with the
+  exact access needed, one-time setup, acceptance, rollback.
+- `deploy/stopan.container` (quadlet modelled on g0no's real one, port
+  3183 on 127.0.0.1), `deploy/ispconfig-site.json` (site parameters
+  mirrored from g0no's ISPConfig record, proxy to 3183, no WebSocket),
+  `bin/ispconfig-remote` (JSON Remote API caller, root-only credentials
+  file, pinned panel key), `bin/deploy` and `make deploy` (refuses to start
+  when port 3183 is held by something else).
+- `specs/README.md`, `todo/todo.md` updated.
+
+## Decisions
+
+- No server mutation without the Remote API account (assignment rule).
+- `ispc user set-password admin` not used: it would change the operator's
+  panel password, which is not "available credentials".
+- Searching the workstation or server for stored credentials was not done
+  (and was refused by the harness); credentials must come from the
+  operator.
+- Port 3183 planned, to be re-proved free right before binding.
+- SQLite stays the only database (no MySQL database for Stopan).
+
+## Open
+
+- Operator: create the remote user and the credentials file
+  (specs/deploy.md "Blocker").
+- `bin/ispconfig-remote` has not been run against the live API.
+- The Stopan image is still unbuilt: `make docker-build` on the
+  workstation hung for over 10 minutes resolving `docker/dockerfile:1`
+  from Docker Hub (local registry access) and was cancelled. The server
+  build in `make deploy` is the next real build.
+
+## Files touched
+
+specs/deploy.md, specs/README.md, deploy/stopan.container,
+deploy/ispconfig-site.json, bin/deploy, bin/ispconfig-remote, Makefile,
+todo/todo.md, this note.
+
+## How to verify
+
+- `make check` - lint and tests.
+- `make docker-build` - builds the production image locally.
+- After deployment: the checks in specs/deploy.md "Acceptance".
+
+## Next step
+
+When the operator confirms the credentials file is in place: follow
+specs/deploy.md "One-time setup" from step 1 (re-check DNS, site state,
+port 3183), then steps 2-6, then the acceptance checks.
+
+## Security Note
+
+No secrets were read, generated or written. The remote user should be
+limited to 127.0.0.1 and to the Sites Domain functions, and removed when
+no longer needed.

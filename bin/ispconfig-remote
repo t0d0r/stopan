@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+# Calls one ISPConfig Remote API (JSON) method on this server, as root.
+# Usage: sudo bin/ispconfig-remote <method> [<json file>|-]
+# The JSON holds the method's arguments without session_id, for example
+# deploy/ispconfig-site.json for sites_web_domain_add. Prints the response.
+#
+# Credentials of the ISPConfig remote user come from a root-owned mode 600
+# file (ISPC_REMOTE_ENV) with ISPC_REMOTE_USER and ISPC_REMOTE_PASSWORD.
+# They are passed to jq and curl through the environment and stdin only.
+
+method=${1:?usage: ispconfig-remote <method> [<json file>|-]}
+body=${2:--}
+env_file=${ISPC_REMOTE_ENV:-/root/.config/stopan/ispconfig-remote.env}
+api=https://127.0.0.1:8443/remote/json.php
+# The panel's certificate is self-signed; pin its public key from the file
+# Apache serves instead of trusting any certificate.
+cert=/usr/local/ispconfig/interface/ssl/ispserver.crt
+
+die() { echo "ispconfig-remote: $*" >&2; exit 1; }
+
+[ "$(id -u)" = 0 ] || die "run as root"
+[ "$(stat -c '%a %U' "$env_file" 2>/dev/null)" = "600 root" ] ||
+  die "$env_file must exist, belong to root and have mode 600"
+set -a
+# shellcheck source=/dev/null
+. "$env_file"
+set +a
+: "${ISPC_REMOTE_USER:?missing in $env_file}" "${ISPC_REMOTE_PASSWORD:?missing in $env_file}"
+
+pin=sha256//$(openssl x509 -in "$cert" -pubkey -noout |
+  openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64)
+
+call() {
+  curl -sS -k --pinnedpubkey "$pin" -H 'Content-Type: application/json' \
+    --data-binary @- "$api?$1"
+}
+
+ISPC_SESSION=$(jq -n '{username: env.ISPC_REMOTE_USER, password: env.ISPC_REMOTE_PASSWORD}' |
+  call login | jq -er 'select(.code == "ok") | .response') || die "login failed"
+export ISPC_SESSION
+unset ISPC_REMOTE_PASSWORD
+trap 'jq -n "{session_id: env.ISPC_SESSION}" | call logout >/dev/null' EXIT
+
+result=$(jq '. + {session_id: env.ISPC_SESSION}' "$body" | call "$method")
+if [ "$(jq -r .code <<<"$result")" != ok ]; then
+  die "$method: $(jq -r '"\(.code): \(.message)"' <<<"$result")"
+fi
+jq .response <<<"$result"

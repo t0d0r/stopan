@@ -22,6 +22,16 @@
 - [ ] screenshots of queue, ticket and admin pages in README (specs/ui.md)
 - [ ] translated Devise password reset and sign-up pages: check every string in bg (specs/auth.md)
 
+## Deployment to stopan.linuxfan.org (2026-10-25, specs/deploy.md)
+
+- [x] production deployment design, quadlet, ISPConfig site parameters, deploy and Remote API scripts (specs/deploy.md)
+- [ ] BLOCKED: operator creates an ISPConfig remote user (127.0.0.1, Sites Domain functions) and the root-only credentials file (specs/deploy.md "Blocker")
+- [ ] system user stopan, subuid range, linger, settings file, quadlet (specs/deploy.md setup 2-3)
+- [ ] prove port 3183 free, first `make deploy`, `/up` on loopback (specs/deploy.md setup 4)
+- [ ] `sites_web_domain_add`, vhost and Let's Encrypt certificate provisioned (specs/deploy.md setup 5-6)
+- [ ] external and local acceptance checks, restart and reboot test (specs/deploy.md "Acceptance")
+- [ ] back up ~stopan/storage (specs/deploy.md)
+
 ## Later (specs/roadmap.md)
 
 - [ ] email notifications and SMTP (specs/roadmap.md)
@@ -34,7 +44,6 @@
 - [ ] JSON API (specs/roadmap.md)
 - [ ] headless browser system tests (specs/roadmap.md)
 - [ ] build and check the Stopan Docker image (specs/docker.md)
-- [ ] production deployment design for Stopan (specs/roadmap.md)
 - [ ] add gitleaks as a pre-commit hook (../AGENTS.md)
 - [ ] regenerate the local .env copied from g0no (specs/auth.md)
 

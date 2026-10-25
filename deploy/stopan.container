@@ -1,0 +1,31 @@
+# Rootless Podman quadlet for the stopan system user (see specs/deploy.md).
+# Installed as ~stopan/.config/containers/systemd/stopan.container; systemd
+# generates the user service stopan.service from it.
+[Unit]
+Description=Stopan service desk
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+Image=localhost/stopan:latest
+ContainerName=stopan
+EnvironmentFile=%h/stopan.env
+Volume=%h/storage:/rails/storage:Z
+# Only Apache on the same host talks to the app. The port must be free
+# before the first start (specs/deploy.md, one-time setup).
+PublishPort=127.0.0.1:3183:80
+# The image's user rails (1000) is the stopan user on the host, so the
+# databases and uploads in ~stopan/storage belong to stopan.
+UserNS=keep-id:uid=1000,gid=1000
+NoNewPrivileges=true
+DropCapability=all
+# With no capabilities the image's user may still listen on port 80 (Thruster)
+# inside the container's own network namespace.
+Sysctl=net.ipv4.ip_unprivileged_port_start=80
+
+[Service]
+Restart=always
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target
