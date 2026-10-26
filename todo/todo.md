@@ -66,6 +66,7 @@
 - [x] in-app notification panel: bell with unread count, dropdown, notifications page (specs/notifications.md "Notification panel")
 - [x] live updates of the notification panel over Action Cable (specs/notifications.md "Live updates of the panel")
 - [x] queue views as a horizontal tab row like the admin tabs (specs/queues.md)
+- [x] shared ticket page refreshes live on public changes (specs/sharing.md "Live updates of the shared page")
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 
 ## Later (specs/roadmap.md)

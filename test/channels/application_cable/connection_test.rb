@@ -1,6 +1,7 @@
 require "test_helper"
 
-# Only signed-in, active users get a WebSocket (specs/notifications.md).
+# Connections identify the signed-in, active user or nobody; shared ticket
+# pages are public, so visitors connect too (specs/sharing.md).
 class ApplicationCable::ConnectionTest < ActionCable::Connection::TestCase
   FakeWarden = Struct.new(:signed_in) do
     def user(_scope)
@@ -8,14 +9,15 @@ class ApplicationCable::ConnectionTest < ActionCable::Connection::TestCase
     end
   end
 
-  test "connects a signed-in user" do
+  test "identifies a signed-in user" do
     connect env: { "warden" => FakeWarden.new(users(:anna)) }
     assert_equal users(:anna), connection.current_user
   end
 
-  test "rejects visitors and deactivated users" do
-    assert_reject_connection { connect env: { "warden" => FakeWarden.new(nil) } }
-    assert_reject_connection { connect env: { "warden" => FakeWarden.new(users(:retired)) } }
-    assert_reject_connection { connect }
+  test "visitors and deactivated users connect as nobody" do
+    connect env: { "warden" => FakeWarden.new(users(:retired)) }
+    assert_nil connection.current_user
+    connect
+    assert_nil connection.current_user
   end
 end

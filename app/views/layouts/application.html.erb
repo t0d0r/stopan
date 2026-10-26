@@ -11,6 +11,7 @@
   <%# No page snapshots: a back or forward visit always fetches the page, so
       nothing stays cached after sign-out or after a ticket changes. %>
   <meta name="turbo-cache-control" content="no-cache">
+  <%= yield :head %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_include_tag "turbo.min", type: "module", "data-turbo-track": "reload" %>
   <%# data-turbo-eval=false: Turbo shows an error page by swapping the whole
@@ -66,7 +67,7 @@
     <% end %>
   </main>
   <% if user_signed_in? %>
-    <%= turbo_stream_from current_user, :notifications %>
+    <%= turbo_stream_from current_user, :notifications, channel: NotificationsChannel %>
     <%= render "partials/confirm_dialog" %>
   <% end %>
 </body>

@@ -78,6 +78,17 @@ Operator requests, in order:
   width; under 760px the row scrolls sideways and scrolls the current view
   into sight. README screenshots refreshed.
 
+- Shared page live refresh (operator: "the shared ticket does not
+  refresh"): `/s/:token` subscribes to `Ticket#share_stream` (ticket,
+  :share, SHA-256 of the token) with `turbo-refresh-scroll` preserve;
+  non-internal `TicketEvent`s broadcast a debounced Turbo `refresh` after
+  commit, and replacing or stopping the link refreshes the old token's
+  stream. Visitors are anonymous, so `ApplicationCable::Connection` no
+  longer rejects them (current_user is nil); the notification stream moved
+  to `NotificationsChannel`, which accepts only its signed-in owner.
+  Checked in headless Chrome: an anonymous shared page showed a new agent
+  reply without a reload; the bell still updates live.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

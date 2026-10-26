@@ -1,4 +1,6 @@
 <% content_for :title, "#{@ticket.reference} #{@ticket.subject}" %>
+<% turbo_refreshes_with scroll: :preserve %>
+<%= turbo_stream_from(*@ticket.share_stream) %>
 <div class="ticket-page ticket-page--shared">
   <header class="ticket-head">
     <p class="callout shared-note"><%= icon :link %> <%= t("ui.share.public_note", reference: @ticket.reference) %></p>

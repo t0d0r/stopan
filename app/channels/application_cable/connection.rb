@@ -1,13 +1,13 @@
 module ApplicationCable
-  # WebSocket connections are for signed-in, active users only; they carry
-  # the notification panel's refresh signal (specs/notifications.md).
+  # Identifies the signed-in, active user from the Devise session, or
+  # nobody: shared ticket pages are public, so visitors connect too. Each
+  # stream protects itself (specs/notifications.md, specs/sharing.md).
   class Connection < ActionCable::Connection::Base
     identified_by :current_user
 
     def connect
       user = env["warden"]&.user(:user)
-      reject_unauthorized_connection unless user&.active_for_authentication?
-      self.current_user = user
+      self.current_user = user if user&.active_for_authentication?
     end
   end
 end

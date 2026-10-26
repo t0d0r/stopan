@@ -15,7 +15,7 @@ class NotificationLiveUpdatesTest < ActionDispatch::IntegrationTest
     sign_in users(:anna)
     get tickets_url
     signed = Turbo::StreamsChannel.signed_stream_name([ users(:anna), :notifications ])
-    assert_select "turbo-cable-stream-source[channel='Turbo::StreamsChannel'][signed-stream-name=?]", signed
+    assert_select "turbo-cable-stream-source[channel=NotificationsChannel][signed-stream-name=?]", signed
     assert_select "details#notifications[data-notifications][data-panel-url=?]", panel_notifications_path
   end
 

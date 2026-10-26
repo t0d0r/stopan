@@ -119,21 +119,37 @@ class Ticket < ApplicationRecord
     end
 
     self.share_password = password
+    old_token = share_token
     transaction do
       update_columns(share_token: SecureRandom.base58(32), share_password_digest: share_password_digest,
                      shared_at: Time.current)
       events.create!(action: "shared", actor: actor, internal: true, to_value: ("password" if password))
     end
+    refresh_shared_page(old_token)
     true
   end
 
   def unshare!(actor:)
     return unless shared?
 
+    old_token = share_token
     transaction do
       update_columns(share_token: nil, share_password_digest: nil, shared_at: nil)
       events.create!(action: "unshared", actor: actor, internal: true)
     end
+    refresh_shared_page(old_token)
+  end
+
+  # Stream of the share page: the ticket plus a hash of the token, so the
+  # token stays out of Action Cable's logs and the signed stream name.
+  def share_stream(token = share_token)
+    [ self, :share, Digest::SHA256.hexdigest(token.to_s) ]
+  end
+
+  # Tells an open shared page to reload itself (specs/sharing.md); the
+  # signal carries no content.
+  def refresh_shared_page(token = share_token)
+    Turbo::StreamsChannel.broadcast_refresh_later_to(*share_stream(token)) if token.present?
   end
 
   # Saves property changes made by staff (or the system) in one transaction;

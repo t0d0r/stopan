@@ -1,7 +1,9 @@
 require "test_helper"
+require "turbo/broadcastable/test_helper"
 
 # The public page of a shared ticket (specs/sharing.md).
 class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
+  include Turbo::Broadcastable::TestHelper
   setup { SharedTicketsController::RATE_LIMIT_STORE.clear }
 
   def share(ticket = tickets(:printer), password: nil)
@@ -100,5 +102,42 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     token = share(ticket, password: "s3cret!")
     get shared_ticket_file_url(token, ticket.files.first)
     assert_redirected_to shared_ticket_url(token)
+  end
+
+  test "an open shared page subscribes to a stream named by a hash of the token" do
+    token = share
+    get shared_ticket_url(token)
+    signed = Turbo::StreamsChannel.signed_stream_name(tickets(:printer).share_stream)
+    assert_select "turbo-cable-stream-source[channel='Turbo::StreamsChannel'][signed-stream-name=?]", signed
+    assert_select "meta[name=turbo-refresh-scroll][content=preserve]", 1
+    assert_not_includes Turbo::StreamsChannel.verified_stream_name(signed), token
+  end
+
+  test "a locked page does not subscribe" do
+    get shared_ticket_url(share(password: "s3cret!"))
+    assert_select "turbo-cable-stream-source", 0
+  end
+
+  test "public changes refresh the shared page; internal ones do not" do
+    ticket = tickets(:printer)
+    share(ticket)
+    stream = ticket.share_stream
+
+    refreshes = lambda do |&block|
+      capture_turbo_stream_broadcasts(stream) { perform_enqueued_jobs(&block) }.map { |signal| signal["action"] }
+    end
+    assert_equal [ "refresh" ], refreshes.call { ticket.add_comment(author: users(:agent), body: "Public answer") }
+    assert_empty refreshes.call { ticket.add_comment(author: users(:agent), body: "SECRET", internal: true) }
+    assert_empty refreshes.call { ticket.apply_changes!({ priority: "urgent" }, actor: users(:agent)) }
+    assert_equal [ "refresh" ], refreshes.call { ticket.apply_changes!({ status: "resolved" }, actor: users(:agent)) }
+    assert_equal [ "refresh" ], refreshes.call { ticket.unshare!(actor: users(:agent)) }
+  end
+
+  test "replacing the link tells the old page" do
+    ticket = tickets(:printer)
+    share(ticket)
+    old_stream = ticket.share_stream
+    signals = capture_turbo_stream_broadcasts(old_stream) { perform_enqueued_jobs { share(ticket) } }
+    assert_equal [ "refresh" ], signals.map { |signal| signal["action"] }
   end
 end
