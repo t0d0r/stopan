@@ -13,6 +13,8 @@ declared in the database.
 | name | optional display name |
 | role | `requester` (default), `agent`, `admin`; indexed |
 | deactivated_at | set = cannot sign in, not assignable |
+| locale | nullable, `en`/`bg`: language of the browser last used; emails use it (notifications.md) |
+| notify_new_tickets | boolean, default false: staff opt-in to "new ticket" emails (notifications.md) |
 | failed_attempts, locked_at | Devise lockable |
 | reset_password_*, remember_created_at, trackable columns | Devise |
 

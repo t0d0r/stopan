@@ -36,9 +36,17 @@
 - [ ] operator: re-save the remote user in the panel so the function list loses its trailing newline (specs/deploy.md)
 - [ ] back up ~stopan/storage (specs/deploy.md)
 
+## Phase 2 - email notifications (2026-10-26, specs/notifications.md)
+
+- [x] notifications spec (specs/notifications.md)
+- [~] users.locale and notify_new_tickets; remember the browser language (specs/notifications.md)
+- [ ] TicketNotifier: batches per transaction, recipients and kinds (specs/notifications.md)
+- [ ] TicketMailer with five kinds, bg/en, HTML and text, re-checked visibility (specs/notifications.md)
+- [ ] staff "new tickets" subscription on the account page (specs/notifications.md)
+- [ ] SMTP from environment variables; file delivery in development (specs/notifications.md)
+
 ## Later (specs/roadmap.md)
 
-- [ ] email notifications and SMTP (specs/roadmap.md)
 - [ ] email ingestion with Action Mailbox (specs/roadmap.md)
 - [ ] auto-close resolved tickets after N days (specs/roadmap.md)
 - [ ] SLAs per priority (specs/roadmap.md)

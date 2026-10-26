@@ -5,9 +5,9 @@ before it is built. The "foundation" column says what already exists.
 
 | area | idea | foundation in phase 1 |
 |------|------|-----------------------|
-| email notifications | tell requesters about public replies and status changes, agents about assignment | events table records every change; `visible_to` decides what a requester may be told |
+| email notifications | **specified in notifications.md (phase 2)**; later: per-user preferences, digests, durable queue (Solid Queue) | events table records every change; `visible_to` decides what a requester may be told |
 | email ingestion | create tickets and replies from inbound mail (Action Mailbox) | `Ticket.create` path and comment creation are model methods, not controller code |
-| SMTP | password reset and notifications | Devise mailer sender from `MAILER_SENDER` |
+| SMTP | **specified in notifications.md (phase 2)** | Devise mailer sender from `MAILER_SENDER` |
 | SLAs | first-response and resolution targets per priority, breach warnings | `priority`, `created_at`, first staff `replied` event, `resolved_at` |
 | automation | auto-close resolved tickets after N days, triggers, macros (canned replies) | status transitions in one place (`Ticket::TRANSITIONS`, `Ticket#change_status`) |
 | live updates | refresh an open ticket or queue when it changes (Turbo Streams over Action Cable) | Action Cable is still loaded |
