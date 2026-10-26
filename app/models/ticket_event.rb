@@ -9,6 +9,8 @@ class TicketEvent < ApplicationRecord
 
   validates :action, inclusion: { in: ACTIONS }
 
+  after_create { TicketNotifier.collect(self) }
+
   def self.visible_to(user)
     return none unless user
     return all if user.staff?

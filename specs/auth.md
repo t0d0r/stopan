@@ -80,6 +80,6 @@ and `mailer` keys match in both languages.
 ## Security Note
 
 Keep sign-up closed on a public host. Password reset emails need SMTP
-settings, which are not configured yet (roadmap). The `.env` copied from
+(`SMTP_ADDRESS` and friends, notifications.md); without it no email is sent. The `.env` copied from
 g0no when Stopan was created holds g0no's secrets; regenerate it for Stopan
 (delete it and run `bin/setup-env`).

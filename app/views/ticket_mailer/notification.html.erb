@@ -1,0 +1,42 @@
+<p><%= t("mailer.greeting", name: @recipient.display_name) %></p>
+
+<p><%= notification_intro %></p>
+
+<p><strong><%= @ticket.reference %> <%= @ticket.subject %></strong></p>
+
+<% if @comment %>
+  <blockquote style="margin: 0 0 1em; padding: 0.5em 1em; border-left: 3px solid #c8c8c8;">
+    <%= ticket_text(@comment.body) %>
+    <% if @comment.files.attached? %>
+      <p><%= t("mailer.ticket.files") %>: <%= @comment.files.map { |file| file.filename.to_s }.join(", ") %></p>
+    <% end %>
+  </blockquote>
+<% end %>
+
+<% if @status_event && @kind != "status_changed" %>
+  <p><%= t("mailer.ticket.status_now", status: t("ui.statuses.#{@status_event.to_value}")) %></p>
+<% end %>
+
+<% if @reason == "requester" && @status_event && %w[pending resolved].include?(@status_event.to_value) %>
+  <p><%= t("mailer.ticket.hint.#{@status_event.to_value}") %></p>
+<% end %>
+
+<% if %w[created assigned].include?(@kind) %>
+  <table style="border-collapse: collapse; margin: 0 0 1em;">
+    <tr><td style="padding: 2px 12px 2px 0; color: #666;"><%= t("ui.fields.requester") %></td><td><%= @ticket.requester.display_name %></td></tr>
+    <tr><td style="padding: 2px 12px 2px 0; color: #666;"><%= t("ui.fields.organization") %></td><td><%= @ticket.organization.name %></td></tr>
+    <tr><td style="padding: 2px 12px 2px 0; color: #666;"><%= t("ui.fields.status") %></td><td><%= t("ui.statuses.#{@ticket.status}") %></td></tr>
+    <tr><td style="padding: 2px 12px 2px 0; color: #666;"><%= t("ui.fields.priority") %></td><td><%= t("ui.priorities.#{@ticket.priority}") %></td></tr>
+  </table>
+  <%= ticket_text(@ticket.description) %>
+<% end %>
+
+<p><%= link_to t("mailer.ticket.open", reference: @ticket.reference), ticket_url(@ticket) %></p>
+
+<p style="color: #666; font-size: 0.9em;">
+  <%= t("mailer.ticket.reason.#{@reason}") %>
+  <%= t("mailer.ticket.no_reply") %>
+  <% if @reason == "subscriber" %>
+    <%= t("mailer.ticket.unsubscribe") %> <%= link_to edit_user_registration_url, edit_user_registration_url %>
+  <% end %>
+</p>

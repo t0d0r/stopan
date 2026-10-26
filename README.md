@@ -40,6 +40,11 @@ The screenshots use the fictional data from `make demo`.
 - **Attachments** - up to 5 files of 10 MB from an allow-list of types,
   always downloaded, only after the ticket's visibility check
   (`specs/attachments.md`).
+- **Email notifications** - requesters hear about public replies and
+  status changes, assignees about replies, notes and assignment, and staff
+  can opt in to every new ticket; never about their own actions, never
+  internal content to requesters, in each user's language. SMTP from
+  `SMTP_*` environment variables (`specs/notifications.md`).
 - **Admin** - dashboard, users (roles, memberships, deactivation),
   organizations and members (`specs/admin.md`).
 - **Secure defaults** - scoped queries everywhere (404 for tickets you may
@@ -47,7 +52,7 @@ The screenshots use the fictional data from `make demo`.
   Policy, account lockout, closed sign-up in production, ticket text
   filtered from logs.
 
-What comes later (notifications, email ingestion, SLAs, automation, API,
+What comes later (email ingestion, SLAs, automation, API,
 reporting, agent groups, ...) is listed in `specs/roadmap.md`.
 
 ## Requirements
@@ -96,6 +101,10 @@ make check    # rubocop, brakeman, gitleaks and the test suite; must pass before
 make hooks    # once per clone: gitleaks pre-commit hook (needs gitleaks)
 make audit    # known-vulnerability check for gems
 ```
+
+In development, emails (password reset, notifications) are written to
+`tmp/mails/` instead of being sent. Production sends through SMTP when
+`SMTP_ADDRESS` is set (`.env.example`, `specs/notifications.md`).
 
 Specs (`specs/`) are the source of truth; `todo/todo.md` is the work list
 and `session/` holds the handoff notes between working sessions.

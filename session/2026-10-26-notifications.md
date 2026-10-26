@@ -12,6 +12,30 @@ deployed to production by a separate deployment session
   after commit with `deliver_later`, SMTP from environment variables.
 - Added the columns to specs/data-model.md, the spec to specs/README.md,
   marked the roadmap rows, and split the work into todo items.
+- Implemented it:
+  - migration: `users.locale`, `users.notify_new_tickets`;
+    `ApplicationController#remember_locale` stores a supported browser
+    language of the signed-in user.
+  - `TicketEvent` after create -> `TicketNotifier.collect`: events of one
+    transaction are kept on the ticket object, one
+    `current_transaction.after_commit` hands them over (works inside test
+    transactions too); `TicketNotifier#notifications` picks recipients and
+    kinds; `kind_for` decides the email.
+  - `TicketMailer` (created, replied, noted, assigned, status_changed),
+    one template in HTML and text, recipient's language, `References`
+    header per ticket; re-checks deactivation and visibility at sending
+    time and filters events with `TicketEvent.visible_to`.
+  - account page "Notifications" form for staff, `PATCH
+    /users/notifications` (`Users::NotificationsController`).
+  - SMTP from `SMTP_*` in production (off without `SMTP_ADDRESS`, warning
+    at boot), https links, `tmp/mails/` file delivery in development,
+    `.env.example`, `compose.yaml` and specs/docker.md updated. Checked
+    both production cases with `bin/rails runner` and throwaway values.
+  - The text part of emails now prints user text unescaped (it was
+    HTML-escaped by ERB); fixed in the reset password email too.
+- Tests: test/models/ticket_notifier_test.rb (14),
+  test/controllers/notifications_controller_test.rb (4). `make check`:
+  151 runs, 0 failures.
 
 ## Decisions
 
@@ -25,21 +49,37 @@ deployed to production by a separate deployment session
 
 ## Open
 
-- Implementation (todo, phase 2).
+- Production has no SMTP yet: the operator sets `SMTP_*` in the server's
+  settings file (outside the repository) and redeploys; until then
+  nothing is emailed, as before.
+- Solid Queue for durable delivery (todo).
+- Not deployed by this session.
 
 ## Files touched
 
 specs/notifications.md, specs/README.md, specs/roadmap.md,
-specs/data-model.md, todo/todo.md, this note.
+specs/data-model.md, specs/auth.md, specs/docker.md, todo/todo.md, this
+note; db/migrate/20261026000001_*, db/schema.rb, app/models/{user,ticket,
+ticket_event,ticket_notifier}.rb, app/mailers/*, app/views/ticket_mailer/*,
+app/views/layouts/mailer.html.erb, app/views/devise/mailer/*.text.erb,
+app/views/devise/registrations/edit.html.erb,
+app/controllers/application_controller.rb,
+app/controllers/users/notifications_controller.rb, config/routes.rb,
+config/environments/{production,development,test}.rb,
+config/locales/{en,bg}.yml, .env.example, compose.yaml, README.md,
+test/models/ticket_notifier_test.rb,
+test/controllers/notifications_controller_test.rb.
 
 ## How to verify
 
 - `make check`.
+- Development: `make run`, act as two users (for example the demo agent
+  and requester), read the emails in `tmp/mails/`.
 
 ## Next step
 
-Migration for `users.locale` and `users.notify_new_tickets`, then
-TicketNotifier and TicketMailer with tests.
+Next roadmap item: auto-close resolved tickets after N days (specs first;
+needs a scheduler, which ties in with the Solid Queue todo).
 
 ## Security Note
 

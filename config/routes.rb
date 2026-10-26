@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
+  patch "users/notifications", to: "users/notifications#update", as: :user_notifications
 
   # Tickets are addressed by their number (Ticket#to_param).
   resources :tickets, only: %i[index show new create update] do

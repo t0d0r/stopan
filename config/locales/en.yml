@@ -27,6 +27,10 @@ en:
       organizations: "Organizations"
       no_organizations: "none yet - ask your administrator"
       back: "Back to the tickets"
+      notifications: "Notifications"
+      notify_new_tickets: "Email me about every new ticket"
+      notifications_hint: "You always get emails about tickets assigned to you."
+      save_notifications: "Save notifications"
 
     sign_in: "Sign in"
     login: "Email or username"
@@ -281,6 +285,34 @@ en:
         one: "The link works for %{count} hour."
         other: "The link works for %{count} hours."
       ignore: "If you did not ask for this, ignore this email. Your password does not change until you open the link and choose a new one."
+    ticket:
+      subject: "[Stopan #%{number}] %{kind}: %{subject}"
+      kinds:
+        created: "New ticket"
+        replied: "New reply"
+        noted: "Internal note"
+        assigned: "Assigned to you"
+        status_changed: "Status changed"
+      intro:
+        created_requester: "%{actor} opened ticket %{reference} for you."
+        created_assignee: "New ticket %{reference} from %{requester}, assigned to you."
+        created_subscriber: "New ticket %{reference} from %{requester}."
+        replied: "%{actor} replied on ticket %{reference}."
+        noted: "%{actor} added an internal note on ticket %{reference}."
+        assigned: "%{actor} assigned ticket %{reference} to you."
+        status_changed: "%{actor} changed the status of ticket %{reference} from %{from} to %{to}."
+      status_now: "The status is now %{status}."
+      hint:
+        pending: "The service desk is waiting for your answer. Reply on the ticket page."
+        resolved: "If this does not solve your problem, reply on the ticket page and the ticket opens again."
+      files: "Attached files"
+      open: "Open ticket %{reference}"
+      reason:
+        requester: "You get this email because you opened this ticket or it was opened for you."
+        assignee: "You get this email because this ticket is assigned to you."
+        subscriber: "You get this email because you asked to be told about every new ticket."
+      no_reply: "Replies to this email are not read; please answer on the ticket page."
+      unsubscribe: "To stop these emails, change the setting on your account page:"
 
   flash:
     ticket_created: "Ticket %{reference} was created."
@@ -300,6 +332,7 @@ en:
     organization_has_tickets: "%{name} has tickets and cannot be deleted."
     member_added: "%{name} was added."
     member_removed: "%{name} was removed."
+    notifications_saved: "Notification settings saved."
     account_delete_disabled: "Accounts cannot be deleted here. Ask an administrator to deactivate yours."
     registration_closed: "Sign-up is closed. Ask an administrator for an account."
 

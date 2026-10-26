@@ -39,11 +39,13 @@
 ## Phase 2 - email notifications (2026-10-26, specs/notifications.md)
 
 - [x] notifications spec (specs/notifications.md)
-- [~] users.locale and notify_new_tickets; remember the browser language (specs/notifications.md)
-- [ ] TicketNotifier: batches per transaction, recipients and kinds (specs/notifications.md)
-- [ ] TicketMailer with five kinds, bg/en, HTML and text, re-checked visibility (specs/notifications.md)
-- [ ] staff "new tickets" subscription on the account page (specs/notifications.md)
-- [ ] SMTP from environment variables; file delivery in development (specs/notifications.md)
+- [x] users.locale and notify_new_tickets; remember the browser language (specs/notifications.md)
+- [x] TicketNotifier: batches per transaction, recipients and kinds (specs/notifications.md)
+- [x] TicketMailer with five kinds, bg/en, HTML and text, re-checked visibility (specs/notifications.md)
+- [x] staff "new tickets" subscription on the account page (specs/notifications.md)
+- [x] SMTP from environment variables; file delivery in development (specs/notifications.md)
+- [ ] operator: set SMTP_* (and APP_HOST) in the production settings file, then check a reset email (specs/notifications.md, specs/deploy.md)
+- [ ] durable job queue (Solid Queue) so queued emails survive restarts and failures are retried (specs/notifications.md)
 
 ## Later (specs/roadmap.md)
 

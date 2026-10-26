@@ -1,0 +1,38 @@
+<%= raw t("mailer.greeting", name: @recipient.display_name) %>
+
+<%= raw notification_intro %>
+
+<%= @ticket.reference %> <%= raw @ticket.subject %>
+<% if @comment %>
+
+<%= raw @comment.body %>
+<% if @comment.files.attached? %>
+
+<%= t("mailer.ticket.files") %>: <%= raw @comment.files.map { |file| file.filename.to_s }.join(", ") %>
+<% end %>
+<% end %>
+<% if @status_event && @kind != "status_changed" %>
+
+<%= t("mailer.ticket.status_now", status: t("ui.statuses.#{@status_event.to_value}")) %>
+<% end %>
+<% if @reason == "requester" && @status_event && %w[pending resolved].include?(@status_event.to_value) %>
+
+<%= t("mailer.ticket.hint.#{@status_event.to_value}") %>
+<% end %>
+<% if %w[created assigned].include?(@kind) %>
+
+<%= t("ui.fields.requester") %>: <%= raw @ticket.requester.display_name %>
+<%= t("ui.fields.organization") %>: <%= raw @ticket.organization.name %>
+<%= t("ui.fields.status") %>: <%= t("ui.statuses.#{@ticket.status}") %>
+<%= t("ui.fields.priority") %>: <%= t("ui.priorities.#{@ticket.priority}") %>
+
+<%= raw @ticket.description %>
+<% end %>
+
+<%= t("mailer.ticket.open", reference: @ticket.reference) %>: <%= ticket_url(@ticket) %>
+
+-- 
+<%= t("mailer.ticket.reason.#{@reason}") %> <%= t("mailer.ticket.no_reply") %>
+<% if @reason == "subscriber" %>
+<%= t("mailer.ticket.unsubscribe") %> <%= edit_user_registration_url %>
+<% end %>

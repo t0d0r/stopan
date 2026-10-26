@@ -134,16 +134,23 @@ to `tmp/mails/` (`delivery_method :file`); tests use `:test`.
   registers one after-commit callback on the current transaction.
 - `TicketNotifier` decides recipients and kinds (rules above) and calls
   `TicketMailer.with(recipient:, ticket:, event_ids:).<kind>.deliver_later`.
-- `TicketMailer` repeats the visibility checks and renders.
+- `TicketMailer` repeats the visibility checks and renders one template
+  (`ticket_mailer/notification`, HTML and text) for all kinds.
+- `Users::NotificationsController#update` saves the opt-in.
+- `ApplicationController#remember_locale` stores the browser language.
 
 ## Acceptance
 
-`test/models/ticket_notifier_test.rb` and `test/mailers/ticket_mailer_test.rb`
-cover each example above, the actor rule, deactivated users, a requester
-removed from the organization (no email, also when it happens after
-queueing), no internal text in requester emails, one email per person per
-action, rollback sends nothing, the recipient's language, escaping of user
-text, and the subscription form.
+`test/models/ticket_notifier_test.rb` performs the queued jobs, so it
+covers the notifier and the mailer's own checks together: each example
+above, the actor rule, deactivated users, a requester removed from the
+organization (no email, also when it happens after queueing), no internal
+text in requester emails, one email per person per action, rollback sends
+nothing, the recipient's language, escaping of user text in HTML and plain
+text in the text part, and the threading header.
+`test/controllers/notifications_controller_test.rb` covers the
+subscription form (staff only, only that field) and the remembered
+language.
 
 ## Security Note
 

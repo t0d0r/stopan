@@ -20,8 +20,10 @@ class User < ApplicationRecord
   validates :username, uniqueness: { case_sensitive: false }, length: { maximum: 60 }, allow_nil: true
   validates :name, length: { maximum: 120 }
   validates :role, inclusion: { in: ROLES }
+  validates :locale, inclusion: { in: ->(_) { I18n.available_locales.map(&:to_s) } }, allow_nil: true
 
   scope :active, -> { where(deactivated_at: nil) }
+  scope :new_ticket_subscribers, -> { active.staff.where(notify_new_tickets: true) }
   scope :staff, -> { where(role: STAFF_ROLES) }
   scope :requesters, -> { where(role: "requester") }
   scope :with_membership, -> { where(id: Membership.select(:user_id)) }

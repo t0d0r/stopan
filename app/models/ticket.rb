@@ -63,6 +63,11 @@ class Ticket < ApplicationRecord
     (maximum(:number) || FIRST_NUMBER - 1) + 1
   end
 
+  # Events written in the current transaction, waiting for TicketNotifier.
+  def notification_batch
+    @notification_batch ||= []
+  end
+
   def to_param
     number&.to_s
   end

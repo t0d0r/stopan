@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   around_action :switch_locale
   before_action :authenticate_user!, unless: :devise_controller?
   before_action { Current.user = current_user }
+  before_action :remember_locale
 
   rescue_from NotAuthorized, with: :forbidden
 
@@ -19,6 +20,13 @@ class ApplicationController < ActionController::Base
   def locale_from_accept_language
     request.env["HTTP_ACCEPT_LANGUAGE"].to_s.scan(/^[a-z]{2}/).first
       .presence_in(I18n.available_locales.map(&:to_s))
+  end
+
+  # Emails to this user use the language of the browser they last used
+  # (specs/notifications.md); only a supported Accept-Language is stored.
+  def remember_locale
+    locale = locale_from_accept_language
+    current_user.update_column(:locale, locale) if user_signed_in? && locale && current_user.locale != locale
   end
 
   def authorize!(allowed)

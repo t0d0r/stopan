@@ -38,6 +38,19 @@
   </div>
 <% end %>
 
+<% if resource.staff? %>
+  <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
+    <h3><%= t("ui.account_page.notifications") %></h3>
+    <div class="field">
+      <%= f.check_box :notify_new_tickets %><%= f.label :notify_new_tickets, t("ui.account_page.notify_new_tickets") %>
+      <i><%= t("ui.account_page.notifications_hint") %></i>
+    </div>
+    <div class="actions">
+      <%= f.submit t("ui.account_page.save_notifications") %>
+    </div>
+  <% end %>
+<% end %>
+
 <p class="auth__meta"><%= t("ui.account_page.organizations") %>:
   <%= resource.organizations.map(&:name).join(", ").presence || t("ui.account_page.no_organizations") %></p>
 <div class="auth__links"><%= link_to t("ui.account_page.back"), root_path %></div>
