@@ -18,8 +18,9 @@ Turbo Drive for page changes.
   square: "Queue" (staff, yellow) or "My tickets" (requesters, yellow),
   "New ticket" (green), "Admin" (admins, grey). The current section has
   `aria-current="page"`. Then the ticket search field (signed-in users,
-  queues.md "Search"; on its own full-width row under 560px). Right: theme
-  switch, three text sizes, the user's
+  queues.md "Search"; on its own full-width row under 560px). Right: the
+  notification bell with its unread count and panel (notifications.md
+  "Notification panel"), theme switch, three text sizes, the user's
   name with a role label, "Logout".
 - **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
   #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink

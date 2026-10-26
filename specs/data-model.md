@@ -64,6 +64,14 @@ Files: `has_many_attached :files`.
 `internal` (boolean, default false), `created_at`. Index on
 `[ticket_id, created_at]`. No `updated_at`.
 
+## notifications
+
+In-app notifications (notifications.md "Notification panel"): `user_id`
+(FK, deleted with the user), `ticket_id` (FK), `actor_id` (FK users,
+nullable), `kind`, `event_id` (nullable), `status` (nullable), `read_at`,
+`created_at`, `updated_at`. Indexes `[user_id, created_at]`,
+`[user_id, read_at]`.
+
 ## Active Storage
 
 The standard three tables. Blobs are served only by

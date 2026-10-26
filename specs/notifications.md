@@ -68,6 +68,51 @@ Examples:
   email (the events are internal to staff, and nobody is the new
   assignee).
 
+## Notification panel (in the app)
+
+Requested by the operator on 2026-10-26: "let there be a notification
+panel". Every notification decided above is also stored for the app, so
+people see it even when email is off (no `SMTP_ADDRESS`) or missed.
+
+- **Same rules as email.** `TicketNotifier` creates one `notifications` row
+  per recipient and batch, with the same recipient and kind as the email
+  (actor rule, visibility, deactivated users, one per person per action).
+  New-ticket notifications go to the same opted-in staff.
+- **Menu bar bell** (signed-in users, left of the theme switch): a bell
+  button with the number of unread notifications (hidden at 0, "9+" above
+  9); its accessible name says the count ("Notifications, 3 unread"). It
+  opens a panel (a small yellow sticky, `<details>`) with the 8 newest
+  notifications, newest first: the actor's initials badge, a sentence
+  ("Maria Ivanova replied", "... changed the status to Pending", "...
+  assigned the ticket to you", "... opened a new ticket", "... added an
+  internal note"), the ticket's number and subject, and the time. Unread
+  ones are bold with a dot. Footer: "Mark all as read" and "All
+  notifications". Empty: "No notifications yet."
+- **Opening a notification** (`GET /notifications/:id`) marks it read and
+  redirects to the ticket at the event (`#event-<id>`). Only the user's own
+  notifications are found (404 otherwise).
+- **Opening a ticket page** marks the user's notifications of that ticket
+  read, so the badge does not count what the user has already seen.
+- **Mark all as read:** `PATCH /notifications/read_all`, back to the page
+  the user came from (same host) or to the list.
+- **All notifications:** `GET /notifications`, 50 per page, same rows.
+- **No text from the ticket body.** A notification shows only the kind,
+  the actor, the new status, the ticket number and subject - never reply
+  or note text - so the panel cannot leak more than the ticket list does.
+- **Checked again when shown.** Lists only show notifications whose ticket
+  is in `Ticket.visible_to(user)` now; for non-staff, internal kinds
+  (`noted`) are never shown, even if the user's role changed.
+- **Retention:** each user keeps the 200 newest; older rows are deleted
+  when a new one is created.
+- **Updates on page load** (no live push; live updates are on the roadmap).
+  The panel closes on a click outside or Escape.
+
+Data: `notifications` - `user_id` (FK, deleted with the user), `ticket_id`
+(FK), `actor_id` (FK users, nullable), `kind` (the email kinds),
+`event_id` (the event to jump to, nullable), `status` (new status for
+`status_changed` and when a reply changed it, nullable), `read_at`,
+`created_at`. Indexes `[user_id, created_at]` and `[user_id, read_at]`.
+
 ## Content
 
 - **Language:** the recipient's `users.locale`, else English. The app
