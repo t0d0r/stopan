@@ -44,7 +44,7 @@
 - [ ] reporting (specs/roadmap.md)
 - [ ] JSON API (specs/roadmap.md)
 - [ ] headless browser system tests (specs/roadmap.md)
-- [ ] admin users list: hide Delete for users with ticket history instead of refusing on submit (specs/admin.md)
+- [x] admin users list: hide Delete for users with ticket history instead of refusing on submit (specs/admin.md)
 - [x] build and check the Stopan Docker image, `make docker-check` (specs/docker.md)
 - [x] add gitleaks as a pre-commit hook, `make hooks`, scan in `make lint` (specs/overview.md)
 - [ ] regenerate the local .env copied from g0no (specs/auth.md)

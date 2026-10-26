@@ -15,6 +15,13 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_select ".table-users tbody tr", 1
   end
 
+  test "offers Delete only for other users without ticket history" do
+    get admin_users_url
+    assert_select "#user_#{users(:drifter).id} form[action=?]", admin_user_path(users(:drifter))
+    assert_select "#user_#{users(:anna).id} form[action=?]", admin_user_path(users(:anna)), count: 0
+    assert_select "#user_#{users(:admin).id} form[action=?]", admin_user_path(users(:admin)), count: 0
+  end
+
   test "creates an agent with memberships" do
     assert_difference("User.count") do
       post admin_users_url, params: { user: { name: "Nina New", email: "nina@example.com", password: "s3cret-pass",

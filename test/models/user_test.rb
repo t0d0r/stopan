@@ -55,4 +55,9 @@ class UserTest < ActiveSupport::TestCase
     assert_not users(:drifter).ticket_history?
     assert users(:drifter).destroy
   end
+
+  test "ids_with_ticket_history matches ticket_history? for every user" do
+    ids = User.ids_with_ticket_history(User.ids)
+    User.find_each { |user| assert_equal user.ticket_history?, ids.include?(user.id), user.username }
+  end
 end

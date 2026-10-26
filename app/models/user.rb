@@ -89,4 +89,13 @@ class User < ApplicationRecord
   def ticket_history?
     requested_tickets.exists? || assigned_tickets.exists? || comments.exists? || ticket_events.exists?
   end
+
+  # The ids among user_ids that have ticket history, in one query per table
+  # (for lists).
+  def self.ids_with_ticket_history(user_ids)
+    [ Ticket.where(requester_id: user_ids).distinct.pluck(:requester_id),
+      Ticket.where(assignee_id: user_ids).distinct.pluck(:assignee_id),
+      Comment.where(author_id: user_ids).distinct.pluck(:author_id),
+      TicketEvent.where(actor_id: user_ids).distinct.pluck(:actor_id) ].flatten.to_set
+  end
 end

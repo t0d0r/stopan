@@ -8,7 +8,8 @@ module Admin
       users = User.includes(:organizations).ordered
       users = users.where(role: @role) if @role
       users = users.search(@query) if @query
-      @users = users
+      @users = users.to_a
+      @deletable_ids = @users.map(&:id).to_set - User.ids_with_ticket_history(@users.map(&:id)) - [ current_user.id ]
     end
 
     def new
