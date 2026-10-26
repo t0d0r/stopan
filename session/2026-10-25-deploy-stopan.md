@@ -67,6 +67,18 @@ revision e553a58.
 Next step: operator tasks above; then set up backups of
 `/srv/stopan/storage`.
 
+## Local Docker test (2026-10-26 evening)
+
+The operator asked whether Stopan can be tested locally with Docker. Yes:
+`make docker-check` (smoke test, throwaway secrets, 127.0.0.1:3190) and
+`make docker-up` (http://localhost:3000 with `.env`). The local build now
+works (Docker Hub reachable; about a minute). `docker-check` failed at its
+last step: production logs to STDOUT, so the "SMTP_ADDRESS is not set"
+warning (added with the mail settings) came before `User.count` in the
+`rails runner` output. Fixed in `bin/docker-check` by reading only the
+last line; `make docker-check` -> OK. The "image still unbuilt" item under
+Open below is resolved.
+
 ## First stop (2026-10-25)
 
 Stopped at a non-bypassable access blocker before any server change: the

@@ -61,7 +61,8 @@ status=$(curl -s -o /dev/null -w '%{http_code}' -c "$jar" -b "$jar" \
 echo "restart keeps the data"
 docker restart "$name" >/dev/null
 wait_up
-users=$(docker exec "$name" bin/rails runner 'print User.count' 2>/dev/null)
+# Production logs to STDOUT, so startup warnings come before the count.
+users=$(docker exec "$name" bin/rails runner 'print User.count' 2>/dev/null | tail -n 1)
 [ "$users" = 1 ] || fail "expected 1 user after restart, found $users"
 
 echo "docker-check: OK ($image)"
