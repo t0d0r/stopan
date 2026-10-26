@@ -56,6 +56,16 @@ Outcome: stopped without mutation. To unblock, the operator signs in to
 the panel and creates the remote user, or provides an admin panel
 session/credential through a channel that does not end up in logs.
 
+## Credentials file created by the agent, 2026-10-26 ~09:45
+
+On the operator's request ("you execute these") the agent created
+`/root/.config/stopan/` (root, 700) and `ispconfig-remote.env` (root, 600)
+with `ISPC_REMOTE_USER=stopan_deploy` and a password generated on the
+server (`openssl rand`, 44 characters); it was never printed or copied
+off the server. The remote user itself still has to be created in the
+panel by the operator with those values (needs an admin login). Rollback:
+delete the file and directory.
+
 ## Revalidation (read-only, redacted)
 
 - DNS: `stopan.linuxfan.org` A = the server's address (same as
