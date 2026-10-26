@@ -100,15 +100,19 @@ function setUpPage() {
     });
   });
 
-  // Filter selects in the queue and admin lists apply at once; the Apply
-  // button does the same without JavaScript.
+  // Filter selects in the queue and admin lists apply at once; without
+  // JavaScript the queue has a <noscript> Apply button, admin lists their own.
   document.querySelectorAll("form[data-filter-form] select[data-auto-submit]").forEach((select) => {
     select.addEventListener("change", () => select.form.requestSubmit());
   });
 
-  // Clearing a search field (the field's own x button) shows the full list again.
-  document.querySelectorAll("form[data-filter-form] input[type=search]").forEach((field) => {
-    field.addEventListener("search", () => { if (field.value === "") field.form.requestSubmit(); });
+  // Clearing a search field (the field's own x button) shows the list
+  // without the search again; only when a search was shown, so clearing
+  // typed text on another page does not leave it.
+  document.querySelectorAll("form[data-filter-form] input[type=search], form[data-search-form] input[type=search]").forEach((field) => {
+    field.addEventListener("search", () => {
+      if (field.value === "" && field.defaultValue !== "") field.form.requestSubmit();
+    });
   });
 
   // Notices fade out after a few seconds (not while hovered or focused);

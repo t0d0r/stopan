@@ -47,6 +47,13 @@
 - [ ] operator: set SMTP_* (and APP_HOST) in the production settings file, then check a reset email (specs/notifications.md, specs/deploy.md)
 - [ ] durable job queue (Solid Queue) so queued emails survive restarts and failures are retried (specs/notifications.md)
 
+## Ticket list look (2026-10-26, specs/queues.md, specs/ui.md)
+
+- [x] colour-coded views, list panel and requester tabs; assignee initials badges; set filters highlighted (specs/queues.md)
+- [x] ticket search in the menu bar on every page, keeping the list's view and filters (specs/queues.md)
+- [x] queue filters apply on change, no Apply button (noscript fallback) (specs/queues.md)
+- [ ] admin users list: same auto-applying filters without the Apply button (specs/admin.md)
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

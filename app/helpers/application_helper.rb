@@ -41,6 +41,12 @@ module ApplicationHelper
     end
   end
 
+  # Hidden fields of the menu bar search (queues.md): on a ticket list it
+  # searches within the list's view, filters and sort; elsewhere all tickets.
+  def search_scope_params
+    @filter ? @filter.params_with(q: nil, page: nil) : { view: "all" }
+  end
+
   def role_label(user)
     t("ui.roles.#{user.role}")
   end

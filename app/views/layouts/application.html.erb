@@ -32,6 +32,7 @@
           <%= nav_link t("ui.nav.admin"), admin_root_path, dot: "gray", current: current_section == :admin %>
         <% end %>
       </nav>
+      <%= render "partials/search" %>
     <% end %>
     <div class="menubar__right">
       <%= render "partials/preferences" %>

@@ -8,7 +8,9 @@
     <ul>
       <% filter.views.each do |view| %>
         <li>
-          <%= link_to tickets_path(view: view), class: "view-link", aria: { current: ("page" if view == filter.view) } do %>
+          <%= link_to tickets_path(view: view), class: "view-link sticky--#{view_color(view)}",
+                                                aria: { current: ("page" if view == filter.view) } do %>
+            <span class="view-link__dot" aria-hidden="true"></span>
             <span class="view-link__label"><%= queue_view_label(view) %></span>
             <span class="view-link__count"><%= filter.counts[view] %></span>
           <% end %>
@@ -17,38 +19,34 @@
     </ul>
   </nav>
 
-  <section class="sticky sticky--gray panel queue__list" aria-labelledby="queue-list-title">
+  <section class="sticky sticky--<%= view_color(filter.view) %> panel queue__list" aria-labelledby="queue-list-title">
     <header class="sticky__bar"><span class="sticky__caption"><%= queue_view_label(filter.view) %></span></header>
     <div class="panel__body">
       <h2 class="sr-only" id="queue-list-title"><%= queue_view_label(filter.view) %></h2>
       <%= form_with url: tickets_path, method: :get, class: "filters", data: { filter_form: true, turbo_action: "replace" } do %>
-        <%= hidden_field_tag :view, filter.view %>
-        <div class="filters__search search-field">
-          <%= icon :search %>
-          <%= label_tag :q, t("ui.queue.search_label"), class: "sr-only" %>
-          <%= search_field_tag :q, filter.query, class: "search-field__input", placeholder: t("ui.queue.search_placeholder") %>
-        </div>
+        <%= hidden_field_tag :view, filter.view, id: nil %>
+        <%= hidden_field_tag :q, filter.query, id: nil if filter.query %>
         <div class="filters__field">
           <%= label_tag :status, t("ui.fields.status") %>
           <%= select_tag :status, options_for_select(Ticket::STATUSES.map { |s| [ status_name(s), s ] }, filter.status),
-                         include_blank: t("ui.queue.any"), class: "select", data: { auto_submit: true } %>
+                         include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.status), data: { auto_submit: true } %>
         </div>
         <div class="filters__field">
           <%= label_tag :priority, t("ui.fields.priority") %>
           <%= select_tag :priority, options_for_select(priority_options, filter.priority),
-                         include_blank: t("ui.queue.any"), class: "select", data: { auto_submit: true } %>
+                         include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.priority), data: { auto_submit: true } %>
         </div>
         <div class="filters__field">
           <%= label_tag :assignee, t("ui.fields.assignee") %>
           <%= select_tag :assignee,
                          options_for_select([ [ t("ui.queue.assignee_me"), "me" ], [ t("ui.queue.assignee_none"), "none" ] ] +
                                             User.staff.active.ordered.map { |u| [ u.display_name, u.id.to_s ] }, filter.assignee),
-                         include_blank: t("ui.queue.any"), class: "select", data: { auto_submit: true } %>
+                         include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.assignee), data: { auto_submit: true } %>
         </div>
         <div class="filters__field">
           <%= label_tag :organization, t("ui.fields.organization") %>
           <%= select_tag :organization, options_from_collection_for_select(Organization.ordered, :id, :name, filter.organization_id),
-                         include_blank: t("ui.queue.any"), class: "select", data: { auto_submit: true } %>
+                         include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true } %>
         </div>
         <div class="filters__field">
           <%= label_tag :sort, t("ui.queue.sort") %>
@@ -56,7 +54,7 @@
                          class: "select", data: { auto_submit: true } %>
         </div>
         <div class="filters__actions">
-          <%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %>
+          <noscript><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></noscript>
           <% if filter.filtered? %>
             <%= link_to t("ui.queue.clear"), tickets_path(view: filter.view), class: "filters__clear" %>
           <% end %>
@@ -88,7 +86,13 @@
                   <td class="text col-org"><%= ticket.organization.name %></td>
                   <td><%= status_pill ticket.status %></td>
                   <td class="col-priority"><%= priority_pill ticket.priority %></td>
-                  <td class="text col-assignee"><%= ticket.assignee&.display_name || tag.span(t("ui.unassigned"), class: "muted") %></td>
+                  <td class="text col-assignee">
+                    <% if ticket.assignee %>
+                      <span class="assignee"><%= user_avatar ticket.assignee %><%= ticket.assignee.display_name %></span>
+                    <% else %>
+                      <span class="muted"><%= t("ui.unassigned") %></span>
+                    <% end %>
+                  </td>
                   <td class="date col-updated"><%= time_ago ticket.updated_at %></td>
                 </tr>
               <% end %>

@@ -29,11 +29,12 @@ The screenshots use the fictional data from `make demo`.
 - **Tickets** - number (`#1001`), subject, description, status (new, open,
   pending, resolved, closed), priority (low to urgent), requester, assignee,
   organization, timestamps, attachments (`specs/tickets.md`).
-- **Agent queue** - views (all unsolved, assigned to me, unassigned,
-  pending, solved, all) with counts, filters by status, priority, assignee
-  and organization, search by text or number, sort, pagination
+- **Agent queue** - colour-coded views (all unsolved, assigned to me,
+  unassigned, pending, solved, all) with counts, filters by status,
+  priority, assignee and organization that apply at once, sort, pagination
   (`specs/queues.md`).
-- **My tickets** - the requester's open / solved / all lists with search.
+- **Search** - by text or ticket number from the menu bar on every page.
+- **My tickets** - the requester's open / solved / all lists.
 - **Timeline** - public replies, staff-only internal notes, and an
   append-only audit log of status, priority and assignee changes
   (`specs/timeline.md`).

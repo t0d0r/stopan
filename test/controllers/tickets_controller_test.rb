@@ -18,6 +18,52 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     get tickets_url(view: "all", q: "vpn")
     assert_select ".tickets-table tbody tr", 1
     assert_select "#ticket_#{tickets(:vpn).id} .pill--urgent"
+    assert_select "#ticket_#{tickets(:vpn).id} .avatar[aria-hidden=true]"
+  end
+
+  test "the queue is coloured by view and its filters apply without a button" do
+    sign_in users(:agent)
+    get tickets_url(view: "solved", priority: "urgent", q: "vpn", sort: "created", page: 2)
+    assert_select ".queue__views .view-link.sticky--green[aria-current=page]", /Solved/
+    assert_select ".queue__list.sticky--green"
+    assert_select "form.filters" do
+      assert_select "input[type=hidden][name=view][value=solved]"
+      assert_select "input[type=hidden][name=q][value=vpn]"
+      assert_select "input[type=search]", 0
+      assert_select "select.is-set", 1
+      assert_select "select#priority.is-set"
+      assert_select "noscript input[type=submit]"
+      assert_select "> input[type=submit], .filters__actions > input[type=submit]", 0
+    end
+  end
+
+  test "the menu bar search keeps the list's view and filters but not the page" do
+    sign_in users(:agent)
+    get tickets_url(view: "solved", priority: "urgent", q: "vpn", sort: "created", page: 2)
+    assert_select ".menubar form.menubar__search[role=search][action='#{tickets_path}'][method=get]" do
+      assert_select "input#menubar-q[type=search][name=q][value=vpn]"
+      assert_select "input[type=hidden][name=view][value=solved]"
+      assert_select "input[type=hidden][name=priority][value=urgent]"
+      assert_select "input[type=hidden][name=sort][value=created]"
+      assert_select "input[name=q][type=hidden]", 0
+      assert_select "input[name=page]", 0
+    end
+    assert_select "label[for=menubar-q]"
+  end
+
+  test "the menu bar search on other pages searches all tickets" do
+    sign_in users(:anna)
+    get ticket_url(tickets(:printer))
+    assert_select ".menubar form.menubar__search" do
+      assert_select "input[type=hidden]", 1
+      assert_select "input[type=hidden][name=view][value=all]"
+      assert_select "input#menubar-q:not([value])"
+    end
+
+    get tickets_url(view: "solved")
+    assert_select ".tabs .tab.sticky--green[aria-current=page]"
+    assert_select "section.panel.sticky--green"
+    assert_select ".panel input[type=search]", 0
   end
 
   test "requesters get only their own tickets" do

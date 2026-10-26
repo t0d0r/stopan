@@ -3,6 +3,10 @@ module TicketsHelper
   STATUS_COLORS = { "new" => "yellow", "open" => "pink", "pending" => "blue", "resolved" => "green",
                     "closed" => "gray" }.freeze
   PRIORITY_COLORS = { "low" => "gray", "normal" => "blue", "high" => "purple", "urgent" => "pink" }.freeze
+  # Paper colour per list view (queues.md); pending and solved match their statuses.
+  VIEW_COLORS = { "unsolved" => "yellow", "mine" => "purple", "unassigned" => "pink", "pending" => "blue",
+                  "solved" => "green", "all" => "gray", "open" => "yellow" }.freeze
+  AVATAR_COLORS = %w[yellow blue green pink purple gray].freeze
 
   def status_name(status)
     t("ui.statuses.#{status}")
@@ -79,5 +83,16 @@ module TicketsHelper
 
   def queue_view_label(view)
     t("ui.queue.views.#{view}")
+  end
+
+  def view_color(view)
+    VIEW_COLORS.fetch(view, "gray")
+  end
+
+  # Initials on a paper colour picked from the user id, so a person keeps
+  # their colour. Decorative: the name is always shown next to it.
+  def user_avatar(user)
+    initials = user.display_name.split.first(2).map { |word| word[0] }.join.upcase
+    tag.span(initials, class: "avatar sticky--#{AVATAR_COLORS[user.id % AVATAR_COLORS.size]}", "aria-hidden": "true")
   end
 end

@@ -17,7 +17,9 @@ Turbo Drive for page changes.
   "Stopan" (icon only under 560px), then section pills with a paper-colour
   square: "Queue" (staff, yellow) or "My tickets" (requesters, yellow),
   "New ticket" (green), "Admin" (admins, grey). The current section has
-  `aria-current="page"`. Right: theme switch, three text sizes, the user's
+  `aria-current="page"`. Then the ticket search field (signed-in users,
+  queues.md "Search"; on its own full-width row under 560px). Right: theme
+  switch, three text sizes, the user's
   name with a role label, "Logout".
 - **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
   #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink
@@ -41,11 +43,11 @@ Turbo Drive for page changes.
 
 ## Pages
 
-- **Queue** (staff): views column + filter bar + table in a grey sticky
-  panel (queues.md). Under 760px the views become a scrollable tab row and
+- **Queue** (staff): coloured views column + filter bar + table in a
+  sticky panel in the current view's colour (queues.md). Under 760px the views become a scrollable tab row and
   table columns other than number, subject and status are hidden.
-- **My tickets** (requester): tabs, search, "New ticket" button, table in a
-  yellow sticky panel.
+- **My tickets** (requester): coloured tabs, "New ticket" button, table in
+  a sticky panel in the current tab's colour (yellow, green, gray).
 - **New ticket:** one yellow sticky form, labels above fields, hints under
   them, required fields marked, file input with the limits stated.
 - **Ticket page:** two columns from 900px. Main: a header with `#number`,
@@ -58,7 +60,8 @@ Turbo Drive for page changes.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
   sticky.
 - **Account pages:** a small yellow sticky centred on the desk.
-- **Flash messages:** small stickies at the top right (yellow "Notice", pink
+- **Flash messages:** small stickies at the top right (at the bottom
+  under 560px, where the menu bar has several rows) (yellow "Notice", pink
   "Attention"); notices fade after 6 seconds unless hovered or focused.
 - **Confirm dialog:** a yellow sticky with a red "!" badge, a question, what
   will happen, Cancel and a red action button (`ApplicationHelper#confirm_data`).
@@ -68,7 +71,9 @@ Turbo Drive for page changes.
 ## Behaviour (application.js)
 
 - Theme and text-size buttons apply at once and set cookies.
-- Filter selects in the queue submit their form on change.
+- Filter selects in the queue submit their form on change; there is no
+  Apply button (only a `<noscript>` one).
+- Clearing the menu bar search with the field's clear button submits it.
 - The composer switch toggles `is-internal` on the form (pink paper,
   button label "Add internal note" / "Send reply").
 - Text areas grow with their text.

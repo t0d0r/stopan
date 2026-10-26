@@ -1,0 +1,12 @@
+<%# Ticket search in the menu bar (queues.md "Search"). %>
+<%= form_with url: tickets_path, method: :get, class: "menubar__search", html: { role: "search" }, data: { search_form: true } do %>
+  <% search_scope_params.each do |name, value| %>
+    <%= hidden_field_tag name, value, id: nil %>
+  <% end %>
+  <div class="search-field">
+    <%= icon :search %>
+    <%= label_tag "menubar-q", t("ui.queue.search_label"), class: "sr-only" %>
+    <%= search_field_tag :q, @filter&.query, id: "menubar-q", class: "search-field__input",
+                         placeholder: t("ui.queue.search_placeholder") %>
+  </div>
+<% end %>

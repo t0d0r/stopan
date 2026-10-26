@@ -123,7 +123,6 @@ en:
         open: "Open"
         solved: "Solved"
         all: "All"
-      search_label: "Search my tickets"
       empty:
         open: "You have no open tickets. Need help?"
         solved: "No solved tickets yet."

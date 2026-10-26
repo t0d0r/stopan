@@ -4,27 +4,20 @@
   <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
 </div>
 
-<section class="sticky sticky--yellow panel" aria-labelledby="my-tickets-title">
+<section class="sticky sticky--<%= view_color(filter.view) %> panel" aria-labelledby="my-tickets-title">
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.my_tickets.title") %></span></header>
   <div class="panel__body">
     <h2 class="sr-only" id="my-tickets-title"><%= t("ui.my_tickets.views.#{filter.view}") %></h2>
     <div class="list-head">
       <nav class="tabs" aria-label="<%= t("ui.queue.views_label") %>">
         <% filter.views.each do |view| %>
-          <%= link_to tickets_path(view: view, q: filter.query), class: "tab", aria: { current: ("page" if view == filter.view) } do %>
+          <%= link_to tickets_path(view: view, q: filter.query), class: "tab tab--paper sticky--#{view_color(view)}",
+                                                                 aria: { current: ("page" if view == filter.view) } do %>
+            <span class="view-link__dot" aria-hidden="true"></span>
             <%= t("ui.my_tickets.views.#{view}") %> <span class="tab__count"><%= filter.counts[view] %></span>
           <% end %>
         <% end %>
       </nav>
-      <%= form_with url: tickets_path, method: :get, class: "list-search" do %>
-        <%= hidden_field_tag :view, filter.view %>
-        <div class="search-field">
-          <%= icon :search %>
-          <%= label_tag :q, t("ui.my_tickets.search_label"), class: "sr-only" %>
-          <%= search_field_tag :q, filter.query, class: "search-field__input", placeholder: t("ui.queue.search_placeholder") %>
-        </div>
-        <%= submit_tag t("ui.queue.search"), class: "btn", name: nil %>
-      <% end %>
     </div>
 
     <% if current_user.organizations.empty? %>

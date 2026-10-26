@@ -7,7 +7,8 @@ list query starts from `Ticket.visible_to(current_user)`.
 ## Agent queue (staff)
 
 Layout: a column of views on the left (a row of tabs under 760px), the
-filter bar and the table on the right.
+filter bar and the table on the right. The search field is in the menu bar
+(see "Search" below).
 
 ### Views (`view` parameter)
 
@@ -20,7 +21,18 @@ filter bar and the table on the right.
 | `solved` | resolved, closed | |
 | `all` | every ticket | |
 
-Each view shows its count.
+Each view shows its count. Every view has a paper colour (ui.md), shown
+as a small square and a coloured count; the current view is drawn as a
+small sticky in its colour, and the list panel takes the same colour:
+
+| view | colour |
+|------|--------|
+| `unsolved` | yellow |
+| `mine` | purple |
+| `unassigned` | pink |
+| `pending` | blue (as the pending status) |
+| `solved` | green (as the resolved status) |
+| `all` | gray |
 
 ### Filters (combined with the view, all optional)
 
@@ -30,12 +42,30 @@ Each view shows its count.
 | `priority` | one priority |
 | `assignee` | a staff user id, `me`, or `none` |
 | `organization` | an organization id |
-| `q` | search text: `#1001` or `1001` also matches the ticket number; otherwise case-insensitive substring match on subject and description (LIKE with escaped wildcards). SQLite folds only ASCII case, so the app registers `ulower()` (Ruby's Unicode `downcase`, `config/initializers/sqlite_functions.rb`) and searches compare `ulower(column)` with a downcased pattern; Bulgarian text matches regardless of case |
+| `q` | search text (from the menu bar search): `#1001` or `1001` also matches the ticket number; otherwise case-insensitive substring match on subject and description (LIKE with escaped wildcards). SQLite folds only ASCII case, so the app registers `ulower()` (Ruby's Unicode `downcase`, `config/initializers/sqlite_functions.rb`) and searches compare `ulower(column)` with a downcased pattern; Bulgarian text matches regardless of case |
 | `sort` | `updated` (last activity first, default), `created` (newest first), `priority` (urgent first, then last activity) |
 
 Unknown values are ignored (treated as not given). The filter form is a
-plain GET form; selects submit on change with JavaScript, and an "Apply"
-button works without it. "Clear filters" keeps only the view.
+plain GET form that applies as soon as a select changes (JavaScript, a
+Turbo visit that replaces the history entry); there is no "Apply" button.
+Only browsers without JavaScript get one, inside `<noscript>`. The form
+carries the view and the search text as hidden fields, so changing a
+filter keeps the search. A select with a value other than "Any" is
+highlighted in yellow paper, so the active filters are visible at a
+glance. "Clear filters" keeps only the view.
+
+### Search
+
+The search field is in the menu bar on every page (ui.md), for staff and
+requesters. It is a GET form to `/tickets` that submits on Enter; clearing
+it with the field's own clear button shows the list without search again.
+
+- On a ticket list it searches within the current list: it carries the
+  view, filters and sort as hidden fields (not the page, a new search
+  starts at page 1).
+- On any other page it searches `view=all`, so a closed ticket is found
+  by its number too.
+- The field shows the current search text on a ticket list.
 
 ### Table
 
@@ -43,13 +73,17 @@ Columns: number, subject (with requester name under it), organization,
 status, priority, assignee, last activity. The whole row is not a link -
 the subject is, so keyboard and screen reader users get one clear link per
 ticket. Status and priority are pills with text (colour is never the only
-signal). Urgent and high priority rows get a coloured left edge.
+signal). Urgent and high priority rows get a coloured left edge. The
+assignee has a small round badge with their initials in a paper colour
+picked from their user id, so the same person always has the same colour
+(the name is next to it; the badge is decorative, `aria-hidden`).
 
 ## My tickets (requester)
 
-Tabs: `open` (new, open, pending; default), `solved` (resolved, closed),
-`all`, each with a count; search box (`q`, same matching as above); a
-"New ticket" button. Table columns: number, subject, organization (only if
+Tabs: `open` (new, open, pending; default, yellow), `solved` (resolved,
+closed; green), `all` (gray), each with a coloured count; the current tab
+and the list panel take the tab's colour. Search (`q`, same matching as
+above) is the menu bar search. A "New ticket" button. Table columns: number, subject, organization (only if
 they belong to more than one), status, last activity.
 
 Empty states say what to do next ("You have no open tickets. Need help?
