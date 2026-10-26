@@ -66,8 +66,10 @@ and g0no's server deployment files. They remain in git history only.
 - **Plain text bodies.** Ticket descriptions and comments are plain text
   rendered with line breaks and escaped HTML; no Markdown in this phase
   (the commonmarker gem was removed).
-- **No live updates yet.** g0no's Action Cable note refresh was removed with
-  the notes. Live ticket updates are on the roadmap.
+- **Live updates only for the notification panel.** g0no's Action Cable
+  note refresh was removed with the notes; Action Cable now carries only
+  the notification panel's refresh signal (notifications.md). Live ticket
+  and queue updates are on the roadmap.
 
 ## Not in this phase
 

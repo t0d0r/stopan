@@ -104,8 +104,39 @@ people see it even when email is off (no `SMTP_ADDRESS`) or missed.
   (`noted`) are never shown, even if the user's role changed.
 - **Retention:** each user keeps the 200 newest; older rows are deleted
   when a new one is created.
-- **Updates on page load** (no live push; live updates are on the roadmap).
-  The panel closes on a click outside or Escape.
+- The panel closes on a click outside or Escape.
+
+### Live updates of the panel
+
+Requested by the operator on 2026-10-26. The bell's count and the panel
+update within about a second, without reloading the page, when a
+notification arrives or the user reads notifications in another tab.
+
+- **Signal only, content over HTTP** (as g0no's live updates): signed-in
+  pages subscribe with `turbo_stream_from current_user, :notifications`
+  (a signed stream name per user). The server broadcasts only
+  `<turbo-stream action="notifications_refresh">`, never notification
+  content. The page then fetches `GET /notifications/panel` (the bell and
+  panel HTML, no layout, `Cache-Control: no-store`) with its own session,
+  so sign-in and `Notification.visible_to` are checked as on any request.
+- **Broadcasts:** after a notification is created (after commit), and
+  after notifications are marked read (opening one, opening its ticket,
+  "Mark all as read"), to that user's stream. `broadcast_action_later_to`
+  on the in-process job adapter.
+- **Client** (`application.js`): a custom Turbo Stream action
+  `notifications_refresh`; refreshes are coalesced (300 ms), and while the
+  panel is open the refresh waits until it is closed, so a list the user
+  is reading does not change under the pointer. The new `<details>`
+  replaces the old one.
+- **Connections need a signed-in, active user**
+  (`ApplicationCable::Connection` reads the Devise session from Warden and
+  rejects others). Action Cable accepts only the app's own origin
+  (`allow_same_origin_as_host`, the default).
+- **Adapter:** `async` (`config/cable.yml`), one Puma process; several
+  processes would need solid_cable or Redis.
+- **Without a WebSocket** (blocked proxy, old browser) the panel updates on
+  page load, as before. Production needs `upgrade=websocket` on the Apache
+  `ProxyPass` line for `/cable` (deploy.md); until then it works this way.
 
 Data: `notifications` - `user_id` (FK, deleted with the user), `ticket_id`
 (FK), `actor_id` (FK users, nullable), `kind` (the email kinds),

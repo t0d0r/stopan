@@ -40,8 +40,11 @@ container's own network namespace only, lets the image's user listen on
 port 80. A process that escapes it is the unprivileged user `stopan`,
 which cannot read g0no's or the operator's files.
 
-Stopan has no WebSocket (no Action Cable), so the proxy line has no
-`upgrade=websocket`.
+Since 2026-10-26 the notification panel updates live over Action Cable
+(`/cable`, notifications.md). The installed proxy line has no
+`upgrade=websocket` yet; until the operator adds it (Apache 2.4.47+), the
+panel updates on page load and the browser's Action Cable client keeps
+retrying, which is harmless. Thruster passes WebSockets through.
 
 ## Settings (`~stopan/stopan.env`)
 
