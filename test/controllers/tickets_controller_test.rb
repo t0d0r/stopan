@@ -215,7 +215,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     get ticket_url(tickets(:printer)), headers: { "Accept-Language" => "bg" }
     assert_select "html[lang=bg]"
-    assert_select ".pill--status", "Отворена"
+    assert_select ".pill--status", "В процес"
     get tickets_url, headers: { "Accept-Language" => "bg,en;q=0.8" }
     assert_select "h1", "Опашка"
   end

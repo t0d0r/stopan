@@ -28,6 +28,12 @@
 
 "Unsolved" means new, open or pending. "Solved" means resolved or closed.
 
+Labels: the `open` status is shown as "In progress" ("В процес" in
+Bulgarian), because it means an agent is working on the ticket. Only the
+label changed (2026-10-26); the stored value, URLs (`status=open`) and the
+rules stay `open`. The requester's "Open" tab (new, open and pending) is a
+list name, not this status, and keeps its name.
+
 ## Transitions
 
 Allowed manual changes by staff (`Ticket::TRANSITIONS`):

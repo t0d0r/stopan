@@ -62,7 +62,7 @@ bg:
       admin: "Администратор"
     statuses:
       new: "Нова"
-      open: "Отворена"
+      open: "В процес"
       pending: "Чака отговор"
       resolved: "Решена"
       closed: "Затворена"

@@ -36,6 +36,10 @@ search into the header, and let the filters work without the Apply button.
   throwaway dev server on a scratch database with the demo data; nothing
   from it is kept).
 
+- Status label: `open` is shown as "In progress" / "В процес" (operator
+  chose a rename over a new status). Only the translations, spec, README
+  and test strings changed; the stored value and URLs stay `open`.
+
 ## Decisions
 
 - "Header" = the menu bar, so search is reachable from every page, as in

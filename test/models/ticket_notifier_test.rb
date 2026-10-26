@@ -81,7 +81,7 @@ class TicketNotifierTest < ActiveSupport::TestCase
     assert_equal "[Stopan #1001] Status changed: Receipt printer prints blank pages", sent["anna@example.com"]
     body = body_of("anna@example.com")
     assert_not_includes body, "SECRET"
-    assert_includes body, "from Open to Resolved"
+    assert_includes body, "from In progress to Resolved"
     assert_includes body, "reply on the ticket page and the ticket opens again"
     assert_match(/Internal note/, sent["maria@example.com"])
   end
@@ -102,7 +102,7 @@ class TicketNotifierTest < ActiveSupport::TestCase
     sent = mails { tickets(:printer).apply_changes!({ status: "resolved" }, actor: users(:anna)) }
 
     assert_equal [ "maria@example.com" ], sent.keys
-    assert_includes body_of("maria@example.com"), "Anna Requester changed the status of ticket #1001 from Open to Resolved."
+    assert_includes body_of("maria@example.com"), "Anna Requester changed the status of ticket #1001 from In progress to Resolved."
   end
 
   test "deactivated users and requesters who left the organization get nothing" do

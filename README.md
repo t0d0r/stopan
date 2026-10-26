@@ -26,7 +26,7 @@ The screenshots use the fictional data from `make demo`.
 - **Roles** - requester, agent, administrator (`specs/roles.md`).
 - **Organizations and memberships** - requesters open tickets only for
   organizations they belong to and lose access when removed.
-- **Tickets** - number (`#1001`), subject, description, status (new, open,
+- **Tickets** - number (`#1001`), subject, description, status (new, in progress,
   pending, resolved, closed), priority (low to urgent), requester, assignee,
   organization, timestamps, attachments (`specs/tickets.md`).
 - **Agent queue** - colour-coded views (all unsolved, assigned to me,

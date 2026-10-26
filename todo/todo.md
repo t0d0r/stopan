@@ -52,6 +52,7 @@
 - [x] colour-coded views, list panel and requester tabs; assignee initials badges; set filters highlighted (specs/queues.md)
 - [x] ticket search in the menu bar on every page, keeping the list's view and filters (specs/queues.md)
 - [x] queue filters apply on change, no Apply button (noscript fallback) (specs/queues.md)
+- [x] show the `open` status as "In progress" / "В процес" (specs/tickets.md)
 - [ ] admin users list: same auto-applying filters without the Apply button (specs/admin.md)
 
 ## Later (specs/roadmap.md)

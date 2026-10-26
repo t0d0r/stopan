@@ -59,7 +59,7 @@ en:
       admin: "Administrator"
     statuses:
       new: "New"
-      open: "Open"
+      open: "In progress"
       pending: "Pending"
       resolved: "Resolved"
       closed: "Closed"
