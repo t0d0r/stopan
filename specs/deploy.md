@@ -100,6 +100,9 @@ To unblock, the operator either:
    ```
 
    and tells the agent the file is in place (not the password); or
+   runs `sudo bin/ispconfig-create-remote-user` on the server, which fills
+   the same panel form with the admin login typed at its prompt and the
+   values from that file, then checks the API login; or
 2. gives the agent an authenticated panel session or panel credentials
    through a channel that does not end up in a log, and lets it create the
    remote user as in 1.

@@ -11,6 +11,7 @@
 
 method=${1:?usage: ispconfig-remote <method> [<json file>|-]}
 body=${2:--}
+[ "$body" = - ] && body=/dev/stdin
 env_file=${ISPC_REMOTE_ENV:-/root/.config/stopan/ispconfig-remote.env}
 api=https://127.0.0.1:8443/remote/json.php
 # The panel's certificate is self-signed; pin its public key from the file

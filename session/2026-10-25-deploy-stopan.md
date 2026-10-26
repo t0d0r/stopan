@@ -66,6 +66,18 @@ off the server. The remote user itself still has to be created in the
 panel by the operator with those values (needs an admin login). Rollback:
 delete the file and directory.
 
+## Operator script for the remote user (2026-10-26)
+
+`bin/ispconfig-create-remote-user` (new) signs in to the panel with an
+admin login typed at a prompt (never stored, never in argv), submits the
+System -> Remote Users form with the panel's CSRF token, restricted to
+127.0.0.1 and "Sites Domain functions", reads back the stored row and
+proves an API login with `sites_web_domain_get`. Installed with
+`bin/ispconfig-remote` and `deploy/ispconfig-site.json` in `/root/stopan`
+(root, 700) on the server for the operator to run:
+`sudo /root/stopan/bin/ispconfig-create-remote-user`. Also fixed
+`bin/ispconfig-remote` reading its JSON from stdin (`-`).
+
 ## How g0no's ISPConfig site was made (checked 2026-10-26)
 
 The operator asked to repeat what was done for g0no. Read-only findings:

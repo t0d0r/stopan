@@ -1,0 +1,89 @@
+#!/bin/bash -e
+
+# Creates the ISPConfig remote user for Stopan deployments through the
+# panel's own form (System -> Remote Users), as an operator would in a
+# browser. Run it as root on the server, interactively:
+#   sudo bin/ispconfig-create-remote-user
+# It asks for an ISPConfig admin login (never stored, never on a command
+# line), takes the remote user's name and password from the root-only file
+# ISPC_REMOTE_ENV, restricts the user to 127.0.0.1 and to "Sites Domain
+# functions", and checks the result through the Remote API. See
+# specs/deploy.md.
+
+env_file=${ISPC_REMOTE_ENV:-/root/.config/stopan/ispconfig-remote.env}
+panel=https://127.0.0.1:8443
+cert=/usr/local/ispconfig/interface/ssl/ispserver.crt
+functions='sites_web_domain_get,sites_web_domain_add,sites_web_domain_update,sites_web_domain_delete,sites_web_domain_set_status'
+
+die() { echo "ispconfig-create-remote-user: $*" >&2; exit 1; }
+
+[ "$(id -u)" = 0 ] || die "run as root"
+[ -t 0 ] || die "run it interactively; it asks for the admin login"
+[ "$(stat -c '%a %U' "$env_file" 2>/dev/null)" = "600 root" ] ||
+  die "$env_file must exist, belong to root and have mode 600"
+set -a
+# shellcheck source=/dev/null
+. "$env_file"
+set +a
+: "${ISPC_REMOTE_USER:?missing in $env_file}" "${ISPC_REMOTE_PASSWORD:?missing in $env_file}"
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+jar=$work/cookies
+
+pin=sha256//$(openssl x509 -in "$cert" -pubkey -noout |
+  openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64)
+panel_curl() {
+  curl -sS -k --pinnedpubkey "$pin" -b "$jar" -c "$jar" "$@"
+}
+
+read -r -p "ISPConfig admin username [admin]: " ISPC_ADMIN_USER
+ISPC_ADMIN_USER=${ISPC_ADMIN_USER:-admin}
+read -r -s -p "ISPConfig admin password: " ISPC_ADMIN_PASSWORD
+echo
+export ISPC_ADMIN_USER ISPC_ADMIN_PASSWORD
+
+# Sign in like the login page does.
+panel_curl -o /dev/null "$panel/login/"
+jq -rn '"username=\(env.ISPC_ADMIN_USER|@uri)&password=\(env.ISPC_ADMIN_PASSWORD|@uri)&s_mod=login&s_pg=index"' |
+  panel_curl -o /dev/null --data-binary @- "$panel/login/index.php"
+unset ISPC_ADMIN_PASSWORD
+
+# The empty form carries the CSRF id and key of this session.
+panel_curl -o "$work/form.html" "$panel/admin/remote_user_edit.php"
+grep -q '_csrf_id' "$work/form.html" || die "sign-in failed (wrong admin login?)"
+hidden() {
+  grep -o -E "<input[^>]*name=\"$1\"[^>]*>" "$work/form.html" | head -1 |
+    sed -E 's/.*value="([^"]*)".*/\1/'
+}
+CSRF_ID=$(hidden _csrf_id)
+CSRF_KEY=$(hidden _csrf_key)
+[ -n "$CSRF_ID" ] && [ -n "$CSRF_KEY" ] || die "CSRF fields not found in the form"
+export CSRF_ID CSRF_KEY FUNCTIONS=$functions
+
+jq -rn '[
+    "id=", "remote_userid=",
+    "_csrf_id=\(env.CSRF_ID|@uri)", "_csrf_key=\(env.CSRF_KEY|@uri)",
+    "remote_username=\(env.ISPC_REMOTE_USER|@uri)",
+    "remote_password=\(env.ISPC_REMOTE_PASSWORD|@uri)",
+    "repeat_password=\(env.ISPC_REMOTE_PASSWORD|@uri)",
+    "remote_access=y", "remote_ips=127.0.0.1",
+    "remote_functions[]=\(env.FUNCTIONS|@uri)"
+  ] | join("&")' |
+  panel_curl -o "$work/result.html" --data-binary @- "$panel/admin/remote_user_edit.php"
+panel_curl -o /dev/null "$panel/login/logout.php" || true
+
+# Read back what the panel stored (no password column).
+row=$(mysql -N dbispconfig -e "SELECT remote_access, remote_ips, remote_functions FROM remote_user WHERE remote_username = '${ISPC_REMOTE_USER//\'/}'")
+if [ -z "$row" ]; then
+  grep -o -E 'class="[^"]*error[^"]*"[^<]*<[^>]*>[^<]{1,200}' "$work/result.html" | head -5 >&2 || true
+  die "the panel did not create the remote user (see the form errors above)"
+fi
+[ "$row" = "$(printf 'y\t127.0.0.1\t%s' "$functions")" ] ||
+  die "remote user stored with unexpected settings: $row"
+echo "remote user $ISPC_REMOTE_USER created: access from 127.0.0.1, Sites Domain functions"
+
+# Prove the API login and one read-only call work.
+echo '{"primary_id": {"domain": "stopan.linuxfan.org"}}' |
+  "$(dirname "$0")/ispconfig-remote" sites_web_domain_get - >/dev/null
+echo "Remote API login and sites_web_domain_get work"
