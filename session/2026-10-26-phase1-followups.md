@@ -25,6 +25,12 @@ not touched.
   data, in `docs/screenshots/` (excluded from the Docker image). New
   `bin/screenshots` (headless Chrome over CDP, Node built-ins only) and
   `make screenshots` to refresh them.
+- Secret scanning (specs/overview.md): `.githooks/pre-commit` runs
+  gitleaks on staged changes (refuses when gitleaks is missing), `make
+  hooks` activates it for this clone (repository-local `core.hooksPath`,
+  done here), `make secrets` scans history and staged changes and is part
+  of `make lint`. History scan: 10 commits, no leaks. Hook verified in a
+  throwaway repository: clean commit passes, a fake token is refused.
 
 ## Decisions
 
@@ -48,18 +54,19 @@ config/initializers/devise.rb, config/locales/{en,bg,rails.bg}.yml,
 test/integration/account_pages_bulgarian_test.rb,
 test/i18n/locales_test.rb, specs/auth.md, todo/todo.md, this note;
 README.md, docs/screenshots/*, bin/screenshots, Makefile, .dockerignore,
-specs/ui.md.
+specs/ui.md, .githooks/pre-commit, specs/overview.md.
 
 ## How to verify
 
-- `make check` - lint, Brakeman and all tests (131 runs).
+- `make check` - RuboCop, Brakeman, gitleaks and all tests (131 runs).
+- `make hooks` once per clone for the gitleaks pre-commit hook.
 - `make run`, open the sign-in page with the browser set to Bulgarian.
 - `DEMO_PASSWORD=... STOPAN_URL=http://127.0.0.1:3000 make screenshots`
   with the dev server running and demo data loaded.
 
 ## Next step
 
-gitleaks pre-commit hook, then build and check the Docker image.
+Build and check the Docker image (specs/docker.md).
 
 ## Security Note
 

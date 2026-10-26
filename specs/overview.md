@@ -34,7 +34,8 @@ and g0no's server deployment files. They remain in git history only.
 | page changes | Turbo Drive (no Frames, no Stimulus) |
 | server | Puma behind Thruster (in the Docker image) |
 | tests | Minitest (`make test`) |
-| lint | rubocop-rails-omakase and Brakeman (`make lint`) |
+| lint | rubocop-rails-omakase, Brakeman and a gitleaks secret scan of the git history and staged changes (`make lint`; the scan is skipped with a warning when gitleaks is missing) |
+| secrets | `make hooks` sets `core.hooksPath` to `.githooks` in this repository; its `pre-commit` runs gitleaks on the staged changes and refuses the commit on a finding, or when gitleaks is not installed |
 
 ## Decisions (2026-10-25)
 

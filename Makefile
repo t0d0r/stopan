@@ -4,7 +4,7 @@
 
 IMAGE ?= stopan:latest
 
-.PHONY: help ruby deps build test lint audit check run demo screenshots clean docker-build docker-up docker-down docker-logs deploy
+.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-up docker-down docker-logs deploy
 
 help: ## list the targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -22,9 +22,19 @@ build: deps ## install gems and create or migrate the development database
 test: deps ## run all tests
 	bin/rails test
 
-lint: deps ## style check (rubocop) and security static analysis (brakeman)
+lint: deps secrets ## style check (rubocop), security static analysis (brakeman), secret scan
 	bin/rubocop
 	bin/brakeman --no-pager --quiet
+
+secrets: ## scan the git history and staged changes for secrets (gitleaks; skipped with a warning if missing)
+	@if command -v gitleaks >/dev/null; then \
+	  gitleaks git --redact --no-banner --log-level warn . && \
+	  gitleaks git --pre-commit --staged --redact --no-banner --log-level warn . && echo "gitleaks: no leaks found"; \
+	else echo "WARNING: gitleaks is not installed (brew install gitleaks); secret scan skipped"; fi
+
+hooks: ## use the project's git hooks (.githooks: gitleaks pre-commit); sets core.hooksPath in this repository only
+	git config core.hooksPath .githooks
+	@echo "pre-commit hook active: gitleaks scans staged changes"
 
 audit: deps ## check gems for known vulnerabilities (downloads the advisory database)
 	bin/bundler-audit check --update

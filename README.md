@@ -92,7 +92,8 @@ Databases and uploaded files live in the `storage` volume. See
 
 ```sh
 make help     # all targets
-make check    # rubocop, brakeman and the test suite; must pass before a commit
+make check    # rubocop, brakeman, gitleaks and the test suite; must pass before a commit
+make hooks    # once per clone: gitleaks pre-commit hook (needs gitleaks)
 make audit    # known-vulnerability check for gems
 ```
 
