@@ -67,7 +67,41 @@ At the end of the timeline, for users who may reply:
   "Submit as" status select (keep current, or an allowed transition) and
   the submit button. On a closed ticket only internal notes are offered.
 
+## Live updates of the ticket page
+
+Operator, 2026-10-26: "the ticket page should refresh live too". An open
+ticket page (`/tickets/:number`) reloads itself within about a second when
+the ticket changes elsewhere, keeping its scroll position.
+
+- **Two streams per ticket**, so a page is only told about what it may
+  show: `[ticket, :page, :staff]` gets every event, `[ticket, :page,
+  :public]` only non-internal ones. Staff pages subscribe to the staff
+  stream, requester pages to the public one; an internal note therefore
+  sends nothing to a requester's page, not even the signal.
+- **Signal only.** The server broadcasts `<turbo-stream action="refresh">`
+  (Turbo 8 page refresh, debounced by turbo-rails) after a ticket event is
+  committed; the page fetches itself again over HTTP with the usual
+  visibility checks. Changes made through Turbo requests (properties form,
+  assignment) carry their request id, and Turbo skips refreshes caused by
+  its own recent requests.
+- **Who may subscribe:** `TicketsChannel` accepts a stream only for a
+  signed-in user who can see the ticket now (`Ticket.visible_to`), and the
+  staff stream only for staff. A user who lost access gets no further
+  signals, even with an old signed stream name.
+- **Work in progress is never thrown away.** A refresh waits while the
+  page is busy and runs once it is idle (checked every second): a text
+  area or field has typed text, a select differs from its saved value, a
+  file is chosen, a field has focus, or a dialog or menu (`<details>`) is
+  open. While it waits, a notice above the timeline says the ticket has
+  changed elsewhere and will update when the user is done (there is no
+  "update now" button: it would throw away what the user is writing).
+- Without a WebSocket the page works as before, without live updates.
+
 ## Acceptance
+
+Live updates: `test/channels/tickets_channel_test.rb` (who may subscribe)
+and `test/integration/ticket_live_updates_test.rb` (the page subscribes to
+the right stream; public and internal events reach the right streams).
 
 `test/models/comment_test.rb`, `test/models/ticket_event_test.rb`,
 `test/controllers/comments_controller_test.rb` and the flow test cover:
