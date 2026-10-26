@@ -68,6 +68,7 @@
 - [x] queue views as a horizontal tab row like the admin tabs (specs/queues.md)
 - [x] shared ticket page refreshes live on public changes (specs/sharing.md "Live updates of the shared page")
 - [x] ticket page refreshes live, staff and public streams, waits while the user is busy (specs/timeline.md "Live updates of the ticket page")
+- [x] queue and My tickets refresh live (specs/queues.md "Live updates")
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 
 ## Later (specs/roadmap.md)

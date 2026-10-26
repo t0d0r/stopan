@@ -152,11 +152,21 @@ class Ticket < ApplicationRecord
     [ self, :page, user.staff? ? :staff : :public ]
   end
 
-  # Tells open ticket pages to reload themselves; internal changes reach
-  # only staff pages. The signal carries no content.
+  # Stream of the ticket lists for this user (specs/queues.md "Live
+  # updates"): one queue for all staff, one list per requester.
+  def self.list_stream(user)
+    user.staff? ? [ :queue, :staff ] : [ user, :tickets ]
+  end
+
+  # Tells open ticket pages and ticket lists to reload themselves; internal
+  # changes reach only staff. The signal carries no content.
   def refresh_pages(internal:)
     Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :staff)
-    Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :public) unless internal
+    Turbo::StreamsChannel.broadcast_refresh_later_to(:queue, :staff)
+    return if internal
+
+    Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :public)
+    Turbo::StreamsChannel.broadcast_refresh_later_to(requester, :tickets)
   end
 
   # Tells an open shared page to reload itself (specs/sharing.md); the

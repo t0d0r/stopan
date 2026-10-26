@@ -103,6 +103,15 @@ Operator requests, in order:
   Chrome: idle page updated, typing kept the draft and showed the notice,
   clearing the draft let the refresh run.
 
+- Ticket lists live refresh (operator: "the queue should refresh live
+  too"): `/tickets` subscribes through `TicketListsChannel` to
+  `Ticket.list_stream(user)` - `[:queue, :staff]` for staff (every
+  event) or `[requester, :tickets]` (non-internal events of their own
+  tickets); `Ticket#refresh_pages` broadcasts to them. The busy check
+  holds a refresh while an assign menu is open. Checked in headless
+  Chrome: idle queue refreshed after a reply; with the assign menu open
+  it waited and refreshed once the menu closed.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
