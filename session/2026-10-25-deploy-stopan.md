@@ -79,6 +79,23 @@ warning (added with the mail settings) came before `User.count` in the
 last line; `make docker-check` -> OK. The "image still unbuilt" item under
 Open below is resolved.
 
+## Development in Docker (2026-10-26 evening)
+
+The operator asked for a Docker run for development that does not need
+`docker-down`/`docker-up` per change. Added `Dockerfile.dev`,
+`compose.dev.yaml` and the targets `docker-dev`, `docker-dev-restart`,
+`docker-dev-logs`, `docker-dev-down` (specs/docker.md "Development in
+Docker"); `make help` column widened for the longer names. The source is
+mounted, so changes apply on the next page load. Verified: `/up` 200,
+admin seeded, uid 1000, CSS served, a view edit showed without a restart.
+First run rewrote the mounted `Gemfile.lock` (container bundler checksum
+line); reverted and fixed with `BUNDLE_FROZEN=true`.
+
+Note: a parallel session committed the first version of these files in
+its own commit 254b538; the frozen-lockfile fix, spec and notes are in
+the follow-up commit. The dev container is left running on
+127.0.0.1:3000 (`make docker-dev-down` stops it).
+
 ## First stop (2026-10-25)
 
 Stopped at a non-bypassable access blocker before any server change: the

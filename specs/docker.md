@@ -24,11 +24,40 @@ One service, `web`, published on `${PORT:-3000}`, with a named volume
 Targets: `make docker-up`, `docker-down`, `docker-logs`, `docker-build`,
 `docker-check`.
 
+## Development in Docker (`compose.dev.yaml`, `Dockerfile.dev`)
+
+For working on the code without installing Ruby on the host, and without a
+rebuild or restart per change.
+
+- `Dockerfile.dev`: `ruby:4.0.7-slim` with build tools and SQLite, no
+  application code, user `rails` (uid 1000), `RAILS_ENV=development`.
+- The source tree is bind-mounted at `/rails`, so code, views, CSS and
+  locales apply on the next page load (Rails reloading, Propshaft).
+- Gems (`/usr/local/bundle`), the development database (`/rails/storage`)
+  and `/rails/tmp` are named volumes of the compose project `stopan-dev`,
+  apart from the host's `vendor/bundle`, `storage/` and `tmp/` used by
+  `make run`. `BUNDLE_APP_CONFIG` keeps bundler away from the host's
+  `.bundle/config`.
+- `BUNDLE_FROZEN=true`: the container never rewrites the mounted
+  `Gemfile.lock` (its bundler would add a checksum line). After a Gemfile
+  change run `make deps` on the host, then `make docker-dev-restart`.
+- On start: `bundle install` when needed, `bin/rails db:prepare` (creates,
+  migrates and seeds the admin from `ADMIN_*` in `.env`), Puma on port 3000
+  published only on `127.0.0.1:${DEV_PORT:-3000}`.
+- Targets: `make docker-dev` (start or update, idempotent),
+  `docker-dev-restart` (after Gemfile or `config/` changes),
+  `docker-dev-logs`, `docker-dev-down` (volumes kept).
+
+Verified 2026-10-26: first start about 30 s (gems installed), `/up` 200,
+admin seeded, runs as uid 1000, CSS served; a view edit showed on the next
+request without a restart and the working tree stayed clean.
+
 ## Build context (`.dockerignore`)
 
 The image gets only what the app runs: no `.env*`, git data, agent or
 editor folders (`.hermes`, `.claude`), git hooks, `specs/`, `todo/`,
-`session/`, `docs/`, `test/`, `deploy/` or host gems (`vendor/bundle`).
+`session/`, `docs/`, `test/`, `deploy/`, the development files
+(`Dockerfile.dev`, `compose.dev.yaml`) or host gems (`vendor/bundle`).
 
 ## Smoke test (`make docker-check`)
 
@@ -74,4 +103,6 @@ Production deployment is designed separately in specs/deploy.md.
 
 `.env` is ignored by git and by the Docker build context; keep it that way.
 Behind a public address, terminate TLS in a proxy and keep both SSL
-variables at their default `true`.
+variables at their default `true`. The development container runs with
+reloading and detailed errors; it publishes only on 127.0.0.1 and must not
+be exposed beyond the workstation.

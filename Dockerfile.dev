@@ -20,10 +20,13 @@ RUN groupadd --system --gid 1000 rails && \
     chown -R rails:rails /rails /usr/local/bundle
 
 # Gems live in a volume, not in the host's vendor/bundle (macOS builds).
-# BUNDLE_APP_CONFIG keeps bundler away from the host's .bundle/config.
+# BUNDLE_APP_CONFIG keeps bundler away from the host's .bundle/config;
+# BUNDLE_FROZEN keeps it from rewriting the mounted Gemfile.lock (the host
+# owns it: make deps, then make docker-dev-restart).
 ENV RAILS_ENV="development" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_APP_CONFIG="/usr/local/bundle"
+    BUNDLE_APP_CONFIG="/usr/local/bundle" \
+    BUNDLE_FROZEN="true"
 
 USER 1000:1000
 WORKDIR /rails
