@@ -16,7 +16,7 @@ class LocalesTest < ActiveSupport::TestCase
     end
   end
 
-  %i[ui flash].each do |scope|
+  %i[ui flash mailer].each do |scope|
     test "#{scope} keys match in English and Bulgarian" do
       assert_equal keys(:en, scope), keys(:bg, scope)
     end

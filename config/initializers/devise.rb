@@ -314,3 +314,6 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 end
+
+# Devise's emails use the app's mail layout, which sets the language.
+Rails.application.config.to_prepare { Devise::Mailer.layout "mailer" }

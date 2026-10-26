@@ -272,6 +272,16 @@ en:
         big: "Big"
         extra: "Extra big"
 
+  mailer:
+    greeting: "Hello %{name},"
+    reset_password:
+      intro: "Someone asked for a link to change the password of your Stopan account."
+      action: "Change my password"
+      expires:
+        one: "The link works for %{count} hour."
+        other: "The link works for %{count} hours."
+      ignore: "If you did not ask for this, ignore this email. Your password does not change until you open the link and choose a new one."
+
   flash:
     ticket_created: "Ticket %{reference} was created."
     ticket_updated: "Ticket %{reference} was updated."

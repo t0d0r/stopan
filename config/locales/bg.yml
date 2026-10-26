@@ -43,7 +43,7 @@ bg:
     password_minimum:
       one: "поне %{count} символ"
       other: "поне %{count} символа"
-    send_reset_instructions: "Изпратете ми указания"
+    send_reset_instructions: "Изпратете ми указания за нова парола"
 
     nav:
       label: "Раздели"
@@ -275,6 +275,16 @@ bg:
         big: "Голям"
         extra: "Много голям"
 
+  mailer:
+    greeting: "Здравейте, %{name}!"
+    reset_password:
+      intro: "Някой поиска връзка за смяна на паролата на профила ви в Stopan."
+      action: "Смяна на паролата"
+      expires:
+        one: "Връзката е валидна %{count} час."
+        other: "Връзката е валидна %{count} часа."
+      ignore: "Ако не сте поискали това, не обръщайте внимание на писмото. Паролата ви няма да се промени, докато не отворите връзката и не изберете нова."
+
   flash:
     ticket_created: "Заявка %{reference} е създадена."
     ticket_updated: "Заявка %{reference} е обновена."
@@ -308,7 +318,7 @@ bg:
         username: "Потребителско име"
         email: "Имейл"
         password: "Парола"
-        password_confirmation: "Повторената парола"
+        password_confirmation: "Потвърждение на паролата"
         role: "Роля"
         current_password: "Текуща парола"
         remember_me: "Запомни ме"

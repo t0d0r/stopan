@@ -20,7 +20,8 @@
 - [x] own account page translated, self-deletion disabled (specs/auth.md)
 - [x] Unicode case-insensitive search for Bulgarian text (specs/queues.md)
 - [ ] screenshots of queue, ticket and admin pages in README (specs/ui.md)
-- [ ] translated Devise password reset and sign-up pages: check every string in bg (specs/auth.md)
+- [x] translated Devise password reset and sign-up pages: check every string in bg (specs/auth.md)
+- [x] translated password reset email in the request language (specs/auth.md)
 
 ## Deployment to stopan.linuxfan.org (2026-10-25, specs/deploy.md)
 
