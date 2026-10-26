@@ -163,6 +163,7 @@ class Ticket < ApplicationRecord
   def refresh_pages(internal:)
     Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :staff)
     Turbo::StreamsChannel.broadcast_refresh_later_to(:queue, :staff)
+    RefreshesAdminPages.broadcast
     return if internal
 
     Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :public)

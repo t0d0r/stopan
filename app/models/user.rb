@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include RefreshesAdminPages
+
   ROLES = %w[requester agent admin].freeze
   STAFF_ROLES = %w[agent admin].freeze
 

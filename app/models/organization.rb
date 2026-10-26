@@ -1,4 +1,6 @@
 class Organization < ApplicationRecord
+  include RefreshesAdminPages
+
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
   has_many :tickets, dependent: :restrict_with_error

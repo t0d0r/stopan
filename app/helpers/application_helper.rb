@@ -41,6 +41,11 @@ module ApplicationHelper
     end
   end
 
+  # Admin pages refresh live for administrators (specs/admin.md).
+  def live_admin_page?
+    user_signed_in? && current_user.admin? && current_section == :admin
+  end
+
   # Hidden fields of the menu bar search (queues.md): on a ticket list it
   # searches within the list's view, filters and sort; elsewhere all tickets.
   def search_scope_params

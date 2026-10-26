@@ -112,6 +112,15 @@ Operator requests, in order:
   Chrome: idle queue refreshed after a reply; with the assign menu open
   it waited and refreshed once the menu closed.
 
+- Admin pages live refresh (operator: "the admin pages should refresh
+  live too"): stream `[:admin]` through `AdminChannel` (administrators
+  only); `RefreshesAdminPages` concern on User, Organization and
+  Membership broadcasts after commit, and `Ticket#refresh_pages` does too
+  (dashboard counts); the layout subscribes and sets refresh scroll
+  preserve on admin pages (`live_admin_page?`). Checked in headless
+  Chrome: the users list refreshed after another user signed in and
+  replied; a half-typed new user form waited and kept its text.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

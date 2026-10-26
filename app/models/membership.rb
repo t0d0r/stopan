@@ -1,6 +1,8 @@
 # A user belongs to an organization. Requesters open tickets only for
 # organizations they belong to, and see them only while they still do.
 class Membership < ApplicationRecord
+  include RefreshesAdminPages
+
   belongs_to :user
   belongs_to :organization
 

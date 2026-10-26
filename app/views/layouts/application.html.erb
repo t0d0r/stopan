@@ -12,6 +12,7 @@
       nothing stays cached after sign-out or after a ticket changes. %>
   <meta name="turbo-cache-control" content="no-cache">
   <%= yield :head %>
+  <% if live_admin_page? %><%= turbo_refresh_scroll_tag :preserve %><% end %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_include_tag "turbo.min", type: "module", "data-turbo-track": "reload" %>
   <%# data-turbo-eval=false: Turbo shows an error page by swapping the whole
@@ -68,6 +69,7 @@
   </main>
   <% if user_signed_in? %>
     <%= turbo_stream_from current_user, :notifications, channel: NotificationsChannel %>
+    <% if live_admin_page? %><%= turbo_stream_from :admin, channel: AdminChannel %><% end %>
     <%= render "partials/confirm_dialog" %>
   <% end %>
 </body>
