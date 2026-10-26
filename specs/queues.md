@@ -107,6 +107,28 @@ they belong to more than one), status, last activity.
 Empty states say what to do next ("You have no open tickets. Need help?
 Open a new ticket.").
 
+## Live updates
+
+Operator, 2026-10-26: "the queue should refresh live too". An open ticket
+list (`/tickets`, the start page) reloads itself within about a second
+when tickets change, keeping its view, filters, page (the URL) and scroll
+position:
+
+- **Staff queue:** stream `[:queue, :staff]`, told after every ticket
+  event (new tickets, replies, notes, status, priority, assignee,
+  sharing).
+- **My tickets:** stream `[requester, :tickets]` of each requester, told
+  after non-internal events of their own tickets (a new ticket, public
+  replies, status changes); internal changes send nothing to requesters.
+- `TicketListsChannel` accepts the staff stream only for staff and a
+  requester stream only for its signed-in owner.
+- Signal only: `<turbo-stream action="refresh">` (debounced per stream by
+  turbo-rails); the list is fetched again over HTTP through
+  `Ticket.visible_to`.
+- A refresh waits while the page is busy - an assign menu or the
+  notification panel is open, a field has focus or typed text (the menu
+  bar search) - as on the ticket page (timeline.md), and runs once idle.
+
 ## Pagination
 
 25 per page, `page` parameter (1-based, invalid values mean 1), "Previous"

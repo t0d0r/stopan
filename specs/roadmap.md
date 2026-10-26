@@ -10,7 +10,7 @@ before it is built. The "foundation" column says what already exists.
 | SMTP | **specified in notifications.md (phase 2)** | Devise mailer sender from `MAILER_SENDER` |
 | SLAs | first-response and resolution targets per priority, breach warnings | `priority`, `created_at`, first staff `replied` event, `resolved_at` |
 | automation | auto-close resolved tickets after N days, triggers, macros (canned replies) | status transitions in one place (`Ticket::TRANSITIONS`, `Ticket#change_status`) |
-| live updates | refresh the queue and ticket lists when tickets change | done: notification panel (notifications.md), shared pages (sharing.md), ticket page (timeline.md) |
+| live updates | later: partial updates (Turbo Stream replace of one row) instead of page refreshes for busy queues | done: notification panel (notifications.md), shared pages (sharing.md), ticket page (timeline.md), ticket lists (queues.md) |
 | API | JSON API with tokens for integrations | policies and scopes are independent of HTML controllers |
 | integrations | chat, monitoring alerts, CRM | - |
 | reporting | volume, backlog, response and resolution times, agent load | events table |
