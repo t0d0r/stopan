@@ -1,7 +1,7 @@
 #!/bin/sh
 # Creates .env from .env.example when it is missing, and fills empty values
-# that can be generated safely: SECRET_KEY_BASE, ADMIN_EMAIL, ADMIN_USERNAME
-# and a random ADMIN_PASSWORD. Values already set are never changed.
+# that can be generated safely: SECRET_KEY_BASE, ADMIN_EMAIL, ADMIN_USERNAME,
+# a random ADMIN_PASSWORD and a random DEMO_PASSWORD (development demo users). Values already set are never changed.
 # Secrets are written only to .env (mode 600) and never printed.
 set -eu
 cd "$(dirname "$0")/.."
@@ -35,3 +35,4 @@ fill SECRET_KEY_BASE "$(openssl rand -hex 64)"
 fill ADMIN_EMAIL "admin@localhost"
 fill ADMIN_USERNAME "admin"
 fill ADMIN_PASSWORD "$(openssl rand -hex 12)"
+fill DEMO_PASSWORD "$(openssl rand -hex 12)"

@@ -67,6 +67,16 @@ agent, three requesters and a handful of tickets with replies, notes and
 status changes, all with `example.com` addresses. It needs `DEMO_PASSWORD`
 in the environment (used for every demo user, never printed) and refuses to
 run in production. Running it again does nothing if the demo data exists.
+The development container (`make docker-dev`, docker.md) runs it on every
+start with `DEMO_PASSWORD` from `.env`, which `bin/setup-env` generates.
+
+| user | role | organization |
+|------|------|--------------|
+| Maria Ivanova, maria.agent@example.com | agent | - |
+| Petar Georgiev, petar.agent@example.com | agent | - |
+| Anna Petrova, anna@example.com | requester | Acme Bakery |
+| Boris Dimitrov, boris@example.com | requester | Acme Bakery |
+| Chris Taylor, chris@example.com | requester | Globex Logistics |
 
 ## Acceptance
 

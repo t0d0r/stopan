@@ -96,6 +96,16 @@ its own commit 254b538; the frozen-lockfile fix, spec and notes are in
 the follow-up commit. The dev container is left running on
 127.0.0.1:3000 (`make docker-dev-down` stops it).
 
+## Demo data in the dev container (2026-10-26 evening)
+
+The operator asked for users and organizations besides the admin, for
+development only. The existing `stopan:demo` task (2 organizations, 2
+agents, 3 requesters, 3 tickets; refuses production) now runs on every
+dev container start when `DEMO_PASSWORD` is set; `bin/setup-env`
+generates it in `.env`. Verified: data created, `anna@example.com` signs
+in (303) and opens the ticket list (200). The dev database also ran the
+parallel session's uncommitted sharing migration (mounted source).
+
 ## First stop (2026-10-25)
 
 Stopped at a non-bypassable access blocker before any server change: the

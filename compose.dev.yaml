@@ -8,7 +8,9 @@
 #
 # Gems, the development database and tmp/ live in volumes, apart from the
 # host's vendor/bundle, storage/ and tmp/ used by make run. The admin user is
-# seeded from ADMIN_* in .env (bin/setup-env). See specs/docker.md.
+# seeded from ADMIN_* in .env, the demo organizations, users and tickets
+# (stopan:demo) with DEMO_PASSWORD from .env (bin/setup-env). See
+# specs/docker.md.
 name: stopan-dev
 
 services:
@@ -23,6 +25,7 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
     volumes:
       - .:/rails
       - bundle:/usr/local/bundle

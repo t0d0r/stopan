@@ -32,6 +32,7 @@ USER 1000:1000
 WORKDIR /rails
 
 # Install gems when the Gemfile changed, create, migrate and seed the
-# database, then start Puma on all interfaces of the container.
+# database, add the demo data when DEMO_PASSWORD is set (stopan:demo does
+# nothing if it exists), then start Puma on all interfaces of the container.
 EXPOSE 3000
-CMD ["sh", "-c", "bundle check >/dev/null || bundle install && bin/rails db:prepare && exec bin/rails server -b 0.0.0.0 -p 3000"]
+CMD ["sh", "-c", "bundle check >/dev/null || bundle install && bin/rails db:prepare && { [ -z \"$DEMO_PASSWORD\" ] || bin/rails stopan:demo; } && exec bin/rails server -b 0.0.0.0 -p 3000"]

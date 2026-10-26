@@ -74,7 +74,7 @@ docker-down: ## stop the docker compose app (data stays in the storage volume)
 docker-logs: ## follow the docker compose app logs
 	docker compose logs -f web
 
-docker-dev: ## run development mode in docker on http://localhost:3000 from the source tree; code changes apply live
+docker-dev: ## run development mode in docker on http://localhost:3000 from the source tree with demo data; code changes apply live
 	@bin/setup-env
 	docker compose -f compose.dev.yaml up -d --build
 	@echo "http://localhost:$${DEV_PORT:-3000} (first start installs gems; make docker-dev-logs to watch)"
