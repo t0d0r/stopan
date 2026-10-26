@@ -273,6 +273,27 @@ en:
         other: "The organization and its %{count} memberships will be deleted. The users stay."
       delete_organization_button: "Delete organization"
 
+    notifications:
+      title: "Notifications"
+      button:
+        zero: "Notifications, none unread"
+        one: "Notifications, 1 unread"
+        other: "Notifications, %{count} unread"
+      count:
+        one: "1 notification"
+        other: "%{count} notifications"
+      unread: "Unread"
+      empty: "No notifications yet."
+      read_all: "Mark all as read"
+      all: "All notifications"
+      kinds:
+        created: "%{actor} opened a new ticket"
+        replied: "%{actor} replied"
+        replied_status: "%{actor} replied and set the status to %{status}"
+        noted: "%{actor} added an internal note"
+        assigned: "%{actor} assigned the ticket to you"
+        status_changed: "%{actor} changed the status to %{status}"
+
     share:
       title: "Sharing"
       hint: "Anyone with the link can read the description and the public replies, without signing in. Internal notes are never shown."
@@ -361,6 +382,7 @@ en:
     ticket_assigned: "Ticket %{reference} is now assigned to %{name}."
     ticket_unassigned: "Ticket %{reference} is now unassigned."
     share_created: "Share link created."
+    notifications_read: "All notifications are marked as read."
     share_stopped: "Sharing stopped."
     share_wrong_password: "Wrong password."
     share_too_many_attempts: "Too many attempts. Try again in a few minutes."

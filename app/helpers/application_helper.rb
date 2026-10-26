@@ -47,6 +47,24 @@ module ApplicationHelper
     @filter ? @filter.params_with(q: nil, page: nil) : { view: "all" }
   end
 
+  # Unread count and newest notifications for the menu bar panel.
+  def notification_panel
+    scope = Notification.visible_to(current_user)
+    { unread: scope.unread.count, latest: scope.newest_first.includes(:actor, :ticket).limit(8).to_a }
+  end
+
+  # "Maria Ivanova replied" (specs/notifications.md "Notification panel").
+  def notification_sentence(notification)
+    actor = notification.actor&.display_name || t("ui.timeline.system")
+    status = notification.status && t("ui.statuses.#{notification.status}")
+    if notification.kind == "status_changed" || (notification.kind == "replied" && status)
+      key = notification.kind == "replied" ? "replied_status" : "status_changed"
+      t("ui.notifications.kinds.#{key}", actor: actor, status: status)
+    else
+      t("ui.notifications.kinds.#{notification.kind}", actor: actor)
+    end
+  end
+
   def role_label(user)
     t("ui.roles.#{user.role}")
   end

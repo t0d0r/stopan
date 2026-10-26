@@ -3,6 +3,10 @@
 # in one transaction; they are collected on their ticket and handed over
 # once, after the transaction commits.
 class TicketNotifier
+  # The event a notification of each kind jumps to.
+  EVENT_ACTIONS = { created: "created", replied: "replied", noted: "noted", assigned: "assignee_changed",
+                    status_changed: "status_changed" }.freeze
+
   def self.collect(event)
     batch = event.ticket.notification_batch
     if batch.empty?
@@ -35,8 +39,10 @@ class TicketNotifier
     @events = events
   end
 
+  # Stores the in-app notification and queues the email for each recipient.
   def deliver_later
     notifications.each do |recipient, kind|
+      store(recipient, kind)
       TicketMailer.with(recipient: recipient, ticket: @ticket, event_ids: @events.map(&:id)).public_send(kind).deliver_later
     end
   end
@@ -52,6 +58,13 @@ class TicketNotifier
   end
 
   private
+
+  def store(recipient, kind)
+    visible = TicketEvent.visible_to(recipient).where(id: @events.map(&:id)).order(:id).to_a
+    status = visible.find { |event| event.action == "status_changed" }&.to_value
+    Notification.create!(user: recipient, ticket: @ticket, actor: actor, kind: kind.to_s, status: status,
+                         event: visible.find { |event| event.action == EVENT_ACTIONS.fetch(kind) } || visible.first)
+  end
 
   def actor
     @events.first.actor

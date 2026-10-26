@@ -160,6 +160,23 @@ function setUpCopyButtons() {
   });
 }
 
+// Menu bar dropdowns (the notification panel) close on a click outside
+// and on Escape, which returns focus to their button.
+function setUpDropdowns(dropdowns) {
+  if (dropdowns.length === 0) return;
+  document.addEventListener("click", (event) => {
+    dropdowns.forEach((dropdown) => { if (dropdown.open && !dropdown.contains(event.target)) dropdown.open = false; });
+  }, { signal: pageSignal });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    dropdowns.forEach((dropdown) => {
+      if (!dropdown.open) return;
+      dropdown.open = false;
+      dropdown.querySelector("summary").focus();
+    });
+  }, { signal: pageSignal });
+}
+
 function setUpPage() {
   pageAbort?.abort();
   pageAbort = new AbortController();
@@ -170,6 +187,7 @@ function setUpPage() {
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
+  setUpDropdowns(document.querySelectorAll("details[data-dropdown]"));
   document.querySelectorAll("select[data-requester-organizations]").forEach(setUpRequesterOrganizations);
 
   // Theme and text size apply at once; the cookie keeps them for the next page.

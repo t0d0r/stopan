@@ -6,6 +6,7 @@ class User < ApplicationRecord
          :trackable, :validatable, :lockable
 
   has_many :memberships, dependent: :destroy
+  has_many :notifications, dependent: :delete_all
   has_many :organizations, -> { order(:name) }, through: :memberships
   has_many :requested_tickets, class_name: "Ticket", foreign_key: :requester_id,
            inverse_of: :requester, dependent: :restrict_with_error

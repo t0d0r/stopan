@@ -50,6 +50,18 @@ Operator requests, in order:
     icon in ticket lists, "Sharing" panel on the admin dashboard;
   - `FileSending` concern shared by both attachment controllers.
 
+- Notification panel (operator: "let there be a notification panel"):
+  `notifications` table; `TicketNotifier#deliver_later` stores one row per
+  recipient next to the email (same recipients, kinds and checks); bell
+  with unread count in the menu bar, `<details>` dropdown with the 8
+  newest, `/notifications` page (50 per page), `GET /notifications/:id`
+  marks read and jumps to `#event-<id>`, opening a ticket marks its
+  notifications read, "Mark all as read"; rows show kind, actor, new
+  status, ticket number and subject - never reply or note text;
+  `Notification.visible_to` re-checks ticket visibility and hides `noted`
+  from non-staff; 200 newest kept per user. Under 560px the panel spans
+  the screen under the menu bar.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
@@ -83,6 +95,8 @@ menu and Take; open /tickets/new and pick a requester.
   production needs a deploy by the operator (migration
   `AddSharingToTickets`).
 - Sharing later: expiry dates, view counts (todo).
+- Notification panel later: live push (todo); production needs the
+  `CreateNotifications` migration with the next deploy.
 
 ## Security Note
 

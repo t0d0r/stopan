@@ -1,0 +1,30 @@
+<% content_for :title, t("ui.notifications.title") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.notifications.title") %></h1>
+  <% if @notifications.any?(&:unread?) %>
+    <%= button_to t("ui.notifications.read_all"), read_all_notifications_path, method: :patch, class: "btn" %>
+  <% end %>
+</div>
+
+<section class="sticky sticky--yellow panel panel--form" aria-labelledby="notifications-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.notifications.title") %></span></header>
+  <div class="panel__body">
+    <h2 class="sr-only" id="notifications-title"><%= t("ui.notifications.title") %></h2>
+    <% if @notifications.any? %>
+      <ul class="notify__list notify__list--page">
+        <% @notifications.each do |notification| %>
+          <li><%= render "notifications/item", notification: notification %></li>
+        <% end %>
+      </ul>
+      <nav class="pagination" aria-label="<%= t("ui.pagination.label") %>">
+        <span class="pagination__summary"><%= t("ui.notifications.count", count: @total) %></span>
+        <span class="pagination__links">
+          <% if @page > 1 %><%= link_to t("ui.pagination.previous"), notifications_path(page: @page - 1), rel: "prev", class: "btn" %><% end %>
+          <% if @more %><%= link_to t("ui.pagination.next"), notifications_path(page: @page + 1), rel: "next", class: "btn" %><% end %>
+        </span>
+      </nav>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.notifications.empty") %></p>
+    <% end %>
+  </div>
+</section>

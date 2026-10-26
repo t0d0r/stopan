@@ -1,0 +1,29 @@
+<%# Menu bar bell and panel (specs/notifications.md "Notification panel"). %>
+<% panel = notification_panel %>
+<details class="notify" data-dropdown>
+  <summary class="tool-button notify__button" title="<%= t("ui.notifications.title") %>"
+           aria-label="<%= t("ui.notifications.button", count: panel[:unread]) %>">
+    <%= icon :bell, size: 15 %>
+    <% if panel[:unread].positive? %>
+      <span class="notify__count" aria-hidden="true"><%= panel[:unread] > 9 ? "9+" : panel[:unread] %></span>
+    <% end %>
+  </summary>
+  <div class="notify__panel sticky sticky--yellow">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.notifications.title") %></span></header>
+    <% if panel[:latest].any? %>
+      <ul class="notify__list">
+        <% panel[:latest].each do |notification| %>
+          <li><%= render "notifications/item", notification: notification %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="notify__empty"><%= t("ui.notifications.empty") %></p>
+    <% end %>
+    <footer class="notify__footer">
+      <% if panel[:unread].positive? %>
+        <%= button_to t("ui.notifications.read_all"), read_all_notifications_path, method: :patch, class: "link-button" %>
+      <% end %>
+      <%= link_to t("ui.notifications.all"), notifications_path %>
+    </footer>
+  </div>
+</details>

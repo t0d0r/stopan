@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_201747) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_202818) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -58,6 +58,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_201747) do
     t.index ["organization_id"], name: "index_memberships_on_organization_id"
     t.index ["user_id", "organization_id"], name: "index_memberships_on_user_id_and_organization_id", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "ticket_id", null: false
+    t.integer "actor_id"
+    t.integer "event_id"
+    t.string "kind", null: false
+    t.string "status"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+    t.index ["ticket_id"], name: "index_notifications_on_ticket_id"
+    t.index ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at"
+    t.index ["user_id", "read_at"], name: "index_notifications_on_user_id_and_read_at"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -140,6 +156,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_201747) do
   add_foreign_key "comments", "users", column: "author_id"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
+  add_foreign_key "notifications", "ticket_events", column: "event_id"
+  add_foreign_key "notifications", "tickets"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "ticket_events", "comments"
   add_foreign_key "ticket_events", "tickets"
   add_foreign_key "ticket_events", "users", column: "actor_id"

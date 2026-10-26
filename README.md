@@ -45,7 +45,9 @@ The screenshots use the fictional data from `make demo`.
   status changes, assignees about replies, notes and assignment, and staff
   can opt in to every new ticket; never about their own actions, never
   internal content to requesters, in each user's language. SMTP from
-  `SMTP_*` environment variables (`specs/notifications.md`).
+  `SMTP_*` environment variables. The same notifications appear in the
+  app under a bell in the menu bar, with an unread count
+  (`specs/notifications.md`).
 - **Assignment** - one-click "Take" and an assignee menu in the queue
   (`specs/tickets.md`).
 - **Sharing** - a secret read-only link to a ticket, optionally with a

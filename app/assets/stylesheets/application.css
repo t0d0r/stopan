@@ -1544,6 +1544,141 @@ form.button_to {
   border-radius: 0 0 4px 4px;
 }
 
+/* Notification bell and panel (notifications.md "Notification panel"). */
+.notify {
+  position: relative;
+}
+
+.notify__button {
+  position: relative;
+}
+
+.notify__count {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: #d6453b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.notify__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: -60px;
+  z-index: 60;
+  width: 370px;
+  max-width: calc(100vw - 32px);
+  box-shadow: var(--shadow-lift);
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.notify__list {
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+}
+
+.notify__list--page {
+  padding: 0;
+}
+
+.notify__list li + li {
+  border-top: 1px solid var(--rule);
+}
+
+.notify-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+
+.menubar .notify-item {
+  color: var(--ink);
+}
+
+.notify-item:hover,
+.notify-item:focus-visible {
+  background: var(--bar);
+  outline: none;
+  text-decoration: none;
+}
+
+.notify-item__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.notify-item__ticket {
+  overflow: hidden;
+  color: var(--ink-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notify-item__time {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.notify-item.is-unread .notify-item__sentence {
+  font-weight: 600;
+}
+
+.notify-item__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.notify__empty {
+  margin: 0;
+  padding: 14px;
+  color: var(--ink-soft);
+}
+
+.notify__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.menubar .notify__footer a,
+.notify__footer .link-button {
+  color: var(--accent);
+}
+
+.notify__footer a:only-child {
+  margin-left: auto;
+}
+
+.notify__footer a,
+.notify__footer .link-button {
+  white-space: nowrap;
+}
+
 /* Sharing panel (sharing.md). */
 .sharing__hint,
 .sharing__status {
@@ -2179,6 +2314,20 @@ form.button_to {
 
   .menubar__search .search-field {
     height: 28px;
+  }
+
+  /* The panel hangs from the whole menu bar (a sticky, so the containing
+     block) and spans the screen. */
+  .notify {
+    position: static;
+  }
+
+  .notify__panel {
+    top: calc(100% + 4px);
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
   }
 
   .composer__submit {

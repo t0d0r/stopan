@@ -1,0 +1,12 @@
+<%= link_to notification_path(notification), class: class_names("notify-item", "is-unread": notification.unread?) do %>
+  <% if notification.actor %><%= user_avatar notification.actor %><% else %><span class="avatar avatar--empty" aria-hidden="true"></span><% end %>
+  <span class="notify-item__text">
+    <span class="notify-item__sentence">
+      <% if notification.unread? %><span class="sr-only"><%= t("ui.notifications.unread") %>:</span><% end %>
+      <%= notification_sentence(notification) %>
+    </span>
+    <span class="notify-item__ticket"><span class="ticket-number"><%= notification.ticket.reference %></span> <%= notification.ticket.subject %></span>
+    <span class="notify-item__time"><%= time_ago notification.created_at %></span>
+  </span>
+  <% if notification.unread? %><span class="notify-item__dot" aria-hidden="true"></span><% end %>
+<% end %>

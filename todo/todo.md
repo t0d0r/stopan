@@ -63,6 +63,8 @@
 - [x] sharing spec (specs/sharing.md)
 - [x] share a ticket by link with an optional password; public page with only public content; admin list (specs/sharing.md)
 - [ ] sharing later: link expiry dates, view counts (specs/roadmap.md)
+- [x] in-app notification panel: bell with unread count, dropdown, notifications page (specs/notifications.md "Notification panel")
+- [ ] notification panel later: live push of new notifications (with live updates, specs/roadmap.md)
 
 ## Later (specs/roadmap.md)
 

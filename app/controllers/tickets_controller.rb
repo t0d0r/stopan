@@ -8,6 +8,7 @@ class TicketsController < ApplicationController
   end
 
   def show
+    current_user.notifications.unread.where(ticket: @ticket).update_all(read_at: Time.current)
     @comment = Comment.new
     prepare_timeline
   end
