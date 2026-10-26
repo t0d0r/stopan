@@ -49,6 +49,7 @@
 
 ## Later (specs/roadmap.md)
 
+- [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)
 - [ ] email ingestion with Action Mailbox (specs/roadmap.md)
 - [ ] auto-close resolved tickets after N days (specs/roadmap.md)
 - [ ] SLAs per priority (specs/roadmap.md)

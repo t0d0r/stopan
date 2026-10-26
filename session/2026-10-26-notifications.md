@@ -76,6 +76,11 @@ test/controllers/notifications_controller_test.rb.
 - Development: `make run`, act as two users (for example the demo agent
   and requester), read the emails in `tmp/mails/`.
 
+- Rate limiting by IP was considered and postponed: in production the
+  client address passes Apache, pasta and Thruster, and it is not verified
+  that Rails sees the real client IP; a wrong guess would turn a per-IP
+  limit into a global one. Recorded as a todo with that check first.
+
 ## Next step
 
 Next roadmap item: auto-close resolved tickets after N days (specs first;
