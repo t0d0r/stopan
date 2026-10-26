@@ -66,6 +66,20 @@ off the server. The remote user itself still has to be created in the
 panel by the operator with those values (needs an admin login). Rollback:
 delete the file and directory.
 
+## How g0no's ISPConfig site was made (checked 2026-10-26)
+
+The operator asked to repeat what was done for g0no. Read-only findings:
+
+- g0no was deployed on 2026-10-19 with a hand-written Apache vhost and
+  certbot (g0no repo specs/deploy.md), not as an ISPConfig site.
+- Its ISPConfig record (domain 24) appeared on 2026-10-25 09:51 as
+  `sys_datalog` entry 617, with an empty record id (`domain_id:`), empty
+  `added_by` and no `added_date`. Panel and Remote API inserts fill these;
+  no remote user existed then or since. So the record was most likely
+  written directly into dbispconfig, the method the operator forbade for
+  Stopan.
+- It therefore cannot be repeated within the rules. No change was made.
+
 ## Revalidation (read-only, redacted)
 
 - DNS: `stopan.linuxfan.org` A = the server's address (same as
