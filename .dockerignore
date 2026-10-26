@@ -49,3 +49,6 @@
 /.dockerignore
 /Dockerfile*
 /compose.yaml
+
+# Screenshots for the README.
+/docs/

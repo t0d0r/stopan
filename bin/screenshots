@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+// Takes the README screenshots (specs/ui.md) from a running development
+// server with the `make demo` data, using headless Chrome over the DevTools
+// protocol. Needs Node 22+ (built-in fetch and WebSocket) and Chrome.
+//
+//   DEMO_PASSWORD=... bin/screenshots [base-url]   (default http://127.0.0.1:3000)
+//
+// CHROME overrides the Chrome binary. The password is read from the
+// environment and never printed.
+import { spawn } from "node:child_process";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+const base = (process.argv[2] || "http://127.0.0.1:3000").replace(/\/$/, "");
+const password = process.env.DEMO_PASSWORD;
+const chromePath = process.env.CHROME || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const outdir = "docs/screenshots";
+
+if (!password) {
+  console.error("DEMO_PASSWORD is not set (the password given to make demo)");
+  process.exit(1);
+}
+
+// file, demo user, viewport width and height, pixel ratio, language, dark theme, path
+const shots = [
+  [ "queue.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/" ],
+  [ "ticket-agent.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/tickets/1001" ],
+  [ "ticket-requester-bg-phone.png", "anna@example.com", 390, 844, 2, "bg", false, "/tickets/1001" ],
+  [ "admin-users-dark.png", "admin@example.com", 1280, 820, 1, "en", true, "/admin/users" ]
+];
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function withChrome(lang, run) {
+  const profile = mkdtempSync(join(tmpdir(), "stopan-chrome-"));
+  const port = 9300 + Math.floor(Math.random() * 500);
+  const chrome = spawn(chromePath, [
+    "--headless=new", `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`,
+    "--no-first-run", "--hide-scrollbars", `--lang=${lang}`, "about:blank"
+  ], { stdio: "ignore" });
+  try {
+    let target;
+    for (let i = 0; i < 50 && !target; i++) {
+      await sleep(200);
+      try {
+        const list = await (await fetch(`http://127.0.0.1:${port}/json`)).json();
+        target = list.find((t) => t.type === "page");
+      } catch {}
+    }
+    if (!target) throw new Error(`Chrome did not start (${chromePath})`);
+    await run(await connect(target.webSocketDebuggerUrl));
+  } finally {
+    const exited = new Promise((resolve) => chrome.once("exit", resolve));
+    chrome.kill();
+    await exited;
+    rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+  }
+}
+
+async function connect(url) {
+  const ws = new WebSocket(url);
+  await new Promise((resolve) => ws.addEventListener("open", resolve));
+  let id = 0;
+  const pending = new Map();
+  const waiters = [];
+  ws.addEventListener("message", (event) => {
+    const msg = JSON.parse(event.data);
+    if (msg.id && pending.has(msg.id)) { pending.get(msg.id)(msg); pending.delete(msg.id); }
+    if (msg.method) waiters.filter((w) => w.method === msg.method).forEach((w) => w.resolve(msg));
+  });
+  const send = (method, params = {}) => new Promise((resolve) => {
+    const n = ++id;
+    pending.set(n, resolve);
+    ws.send(JSON.stringify({ id: n, method, params }));
+  });
+  const once = (method) => new Promise((resolve) => waiters.push({ method, resolve }));
+  const evaluate = async (expression) =>
+    (await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true })).result?.result?.value;
+  const visit = async (path) => {
+    const loaded = once("Page.loadEventFired");
+    await send("Page.navigate", { url: base + path });
+    await loaded;
+    await sleep(400);
+  };
+  return { send, evaluate, visit, close: () => ws.close() };
+}
+
+for (const [file, login, width, height, scale, lang, dark, path] of shots) {
+  await withChrome(lang, async (page) => {
+    await page.send("Page.enable");
+    await page.send("Network.setExtraHTTPHeaders", { headers: { "Accept-Language": lang } });
+    await page.send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: scale, mobile: width < 500 });
+    await page.send("Emulation.setEmulatedMedia", {
+      features: [ { name: "prefers-color-scheme", value: dark ? "dark" : "light" } ]
+    });
+
+    await page.visit("/users/sign_in");
+    await page.evaluate(`document.querySelector("#user_email").value = ${JSON.stringify(login)};
+      document.querySelector("#user_password").value = ${JSON.stringify(password)};
+      document.querySelector("#user_password").form.submit(); true`);
+    await sleep(1500);
+
+    await page.visit(path);
+    if (new URL(await page.evaluate("location.href")).pathname === "/users/sign_in") {
+      throw new Error(`sign-in failed for ${login}; run make demo first`);
+    }
+    const overflow = await page.evaluate("document.documentElement.scrollWidth > window.innerWidth");
+    const shot = await page.send("Page.captureScreenshot", { format: "png" });
+    writeFileSync(join(outdir, file), Buffer.from(shot.result.data, "base64"));
+    console.log(`${outdir}/${file}${overflow ? " (horizontal overflow!)" : ""}`);
+    page.close();
+  });
+}

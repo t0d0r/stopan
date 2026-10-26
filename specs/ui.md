@@ -95,6 +95,20 @@ The locale follows the browser's `Accept-Language` (first supported
 language, default English). `test/i18n/locales_test.rb` checks that both
 files have the same keys.
 
+## Screenshots
+
+The README shows four screenshots in `docs/screenshots/` (excluded from the
+Docker image): the agent queue, the agent's ticket page, the same ticket
+for its requester on a 390px phone in Bulgarian, and the admin users list
+in the dark theme. They use only the fictional `make demo` data.
+
+`make screenshots` refreshes them: start the development server with the
+demo data, then run it with `DEMO_PASSWORD` (the password given to `make
+demo`) and optionally `STOPAN_URL` (default `http://127.0.0.1:3000`). It
+drives headless Chrome over the DevTools protocol (`bin/screenshots`,
+Node 22+ for the built-in WebSocket; `CHROME` overrides the binary), warns
+on horizontal overflow and compresses with `pngquant` when installed.
+
 ## Security Note
 
 User text is always rendered escaped. CSS and JS are served from the app;

@@ -11,6 +11,16 @@ a dark theme and three text sizes, and keeps the macOS Stickies look of the
 notes app it started from (g0no). Turbo Drive makes page changes feel
 instant.
 
+![Agent queue with views, filters and three tickets](docs/screenshots/queue.png)
+
+| Ticket page for an agent | Requester on a phone, in Bulgarian |
+|---|---|
+| ![Ticket timeline with a public reply, an internal note and audit entries](docs/screenshots/ticket-agent.png) | ![The same ticket seen by its requester, without the internal note](docs/screenshots/ticket-requester-bg-phone.png) |
+
+![Admin users list in the dark theme](docs/screenshots/admin-users-dark.png)
+
+The screenshots use the fictional data from `make demo`.
+
 ## Features
 
 - **Roles** - requester, agent, administrator (`specs/roles.md`).

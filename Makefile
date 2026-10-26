@@ -4,7 +4,7 @@
 
 IMAGE ?= stopan:latest
 
-.PHONY: help ruby deps build test lint audit check run demo clean docker-build docker-up docker-down docker-logs deploy
+.PHONY: help ruby deps build test lint audit check run demo screenshots clean docker-build docker-up docker-down docker-logs deploy
 
 help: ## list the targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -38,6 +38,11 @@ run: build ## build, create the admin user from .env if missing, start http://lo
 demo: build ## add example organizations, users and tickets (development only; needs DEMO_PASSWORD)
 	@test -n "$(DEMO_PASSWORD)" || { echo "DEMO_PASSWORD is not set, e.g. DEMO_PASSWORD=choose-one make demo"; exit 1; }
 	bin/rails stopan:demo
+
+screenshots: ## refresh docs/screenshots from a running dev server with demo data (needs DEMO_PASSWORD, Chrome, Node; STOPAN_URL)
+	@test -n "$(DEMO_PASSWORD)" || { echo "DEMO_PASSWORD is not set (the password given to make demo)"; exit 1; }
+	bin/screenshots $(or $(STOPAN_URL),http://127.0.0.1:3000)
+	@if command -v pngquant >/dev/null; then for f in docs/screenshots/*.png; do pngquant --force --skip-if-larger --quality 80-95 --output "$$f" -- "$$f"; done; fi
 
 clean: ## remove caches, logs, compiled assets and test uploads (keeps databases in storage/)
 	rm -rf tmp/cache tmp/storage/* public/assets

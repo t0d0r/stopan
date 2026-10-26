@@ -19,7 +19,7 @@
 - [x] demo data task, README rewrite (specs/auth.md)
 - [x] own account page translated, self-deletion disabled (specs/auth.md)
 - [x] Unicode case-insensitive search for Bulgarian text (specs/queues.md)
-- [ ] screenshots of queue, ticket and admin pages in README (specs/ui.md)
+- [x] screenshots of queue, ticket and admin pages in README, `make screenshots` (specs/ui.md)
 - [x] translated Devise password reset and sign-up pages: check every string in bg (specs/auth.md)
 - [x] translated password reset email in the request language (specs/auth.md)
 
@@ -44,6 +44,7 @@
 - [ ] reporting (specs/roadmap.md)
 - [ ] JSON API (specs/roadmap.md)
 - [ ] headless browser system tests (specs/roadmap.md)
+- [ ] admin users list: hide Delete for users with ticket history instead of refusing on submit (specs/admin.md)
 - [ ] build and check the Stopan Docker image (specs/docker.md)
 - [ ] add gitleaks as a pre-commit hook (../AGENTS.md)
 - [ ] regenerate the local .env copied from g0no (specs/auth.md)
