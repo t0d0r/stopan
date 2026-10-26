@@ -89,6 +89,8 @@ async function connect(url) {
 for (const [file, login, width, height, scale, lang, dark, path] of shots) {
   await withChrome(lang, async (page) => {
     await page.send("Page.enable");
+    // Extra headers (Accept-Language) apply only once the Network domain is on.
+    await page.send("Network.enable");
     await page.send("Network.setExtraHTTPHeaders", { headers: { "Accept-Language": lang } });
     await page.send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: scale, mobile: width < 500 });
     await page.send("Emulation.setEmulatedMedia", {
