@@ -1682,6 +1682,11 @@ form.button_to {
   white-space: nowrap;
 }
 
+/* Shown while a live refresh waits for the user (timeline.md). */
+.live-notice {
+  margin: 0 0 12px;
+}
+
 /* Sharing panel (sharing.md). */
 .sharing__hint,
 .sharing__status {

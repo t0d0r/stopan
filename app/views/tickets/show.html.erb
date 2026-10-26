@@ -1,5 +1,7 @@
 <% content_for :title, "#{@ticket.reference} #{@ticket.subject_was || @ticket.subject}" %>
 <% staff = current_user.staff? %>
+<% turbo_refreshes_with scroll: :preserve %>
+<%= turbo_stream_from(*@ticket.page_stream(current_user), channel: TicketsChannel, data: { ticket: @ticket.number }) %>
 <div class="ticket-page">
   <header class="ticket-head">
     <p class="ticket-head__crumbs">
@@ -42,6 +44,7 @@
       </div>
     </article>
 
+    <p class="callout live-notice" data-live-notice hidden role="status"><%= t("ui.ticket.changed_elsewhere") %></p>
     <h2 class="section-heading" id="timeline-title"><%= t("ui.timeline.title") %></h2>
     <ol class="timeline" aria-labelledby="timeline-title">
       <% @events.each do |event| %>

@@ -216,8 +216,48 @@ function registerStreamActions() {
 
 registerStreamActions();
 
+// Live page refreshes (specs/timeline.md, specs/sharing.md) never throw
+// away work in progress: while the page is busy the refresh waits, a
+// notice says so, and it runs once the page is idle (checked every second).
+function pageIsBusy() {
+  const active = document.activeElement;
+  if (active && active.matches("input:not([type=hidden]):not([readonly]), textarea, select")) return true;
+  if (document.querySelector("details[open], dialog[open]")) return true;
+  return Array.from(document.querySelectorAll("input:not([type=hidden]), textarea, select")).some((field) => {
+    if (field.type === "file") return field.files.length > 0;
+    if (field.type === "checkbox" || field.type === "radio") return field.checked !== field.defaultChecked;
+    if (field.tagName === "SELECT") {
+      // Without a selected attribute a single select starts on its first option.
+      const options = Array.from(field.options);
+      if (!field.multiple && !options.some((option) => option.defaultSelected)) return field.selectedIndex > 0;
+      return options.some((option) => option.selected !== option.defaultSelected);
+    }
+    return field.value !== field.defaultValue;
+  });
+}
+
+let heldRefresh = null;
+
+document.addEventListener("turbo:before-stream-render", (event) => {
+  if (event.target.getAttribute("action") !== "refresh") return;
+  const render = event.detail.render;
+  event.detail.render = async (stream) => {
+    if (!pageIsBusy()) return render(stream);
+    if (heldRefresh) return;
+    document.querySelectorAll("[data-live-notice]").forEach((notice) => { notice.hidden = false; });
+    heldRefresh = setInterval(() => {
+      if (pageIsBusy()) return;
+      clearInterval(heldRefresh);
+      heldRefresh = null;
+      render(stream);
+    }, 1000);
+  };
+});
+
 function setUpPage() {
   registerStreamActions();
+  clearInterval(heldRefresh);
+  heldRefresh = null;
   pageAbort?.abort();
   pageAbort = new AbortController();
   pageSignal = pageAbort.signal;

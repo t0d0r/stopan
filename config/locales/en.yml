@@ -156,6 +156,7 @@ en:
       nobody: "Nobody"
 
     ticket:
+      changed_elsewhere: "This ticket has changed elsewhere. The page will update when you finish what you are doing here."
       details: "Ticket details"
       description: "Original request"
       opened_by: "Opened by %{name}"

@@ -89,6 +89,20 @@ Operator requests, in order:
   Checked in headless Chrome: an anonymous shared page showed a new agent
   reply without a reload; the bell still updates live.
 
+- Ticket page live refresh (operator: "the ticket page should refresh
+  live too"): two streams per ticket, `[ticket, :page, :staff]` (every
+  event) and `[ticket, :page, :public]` (non-internal events), so a
+  requester's page gets no signal for internal notes; `TicketsChannel`
+  re-checks `Ticket.visible_to` and staff-ness on subscribe
+  (`ApplicationCable::OwnStream` shared with `NotificationsChannel`);
+  `TicketEvent` after commit calls `Ticket#refresh_pages`. In the browser
+  a refresh waits while the page is busy (typed text, changed select,
+  chosen file, focused field, open menu or dialog) and shows a notice;
+  a select without a `selected` attribute counts as unchanged on its
+  first option (that bug made every page look busy). Checked in headless
+  Chrome: idle page updated, typing kept the draft and showed the notice,
+  clearing the draft let the refresh run.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

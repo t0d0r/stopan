@@ -10,8 +10,12 @@ class TicketEvent < ApplicationRecord
   validates :action, inclusion: { in: ACTIONS }
 
   after_create { TicketNotifier.collect(self) }
-  # Public changes reload an open shared page (specs/sharing.md).
-  after_create_commit { ticket.refresh_shared_page unless internal? }
+  # Open ticket pages reload (specs/timeline.md), and public changes also
+  # reload an open shared page (specs/sharing.md).
+  after_create_commit do
+    ticket.refresh_pages(internal: internal?)
+    ticket.refresh_shared_page unless internal?
+  end
 
   def self.visible_to(user)
     return none unless user

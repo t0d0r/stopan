@@ -146,6 +146,19 @@ class Ticket < ApplicationRecord
     [ self, :share, Digest::SHA256.hexdigest(token.to_s) ]
   end
 
+  # Stream of the ticket page for this user: staff hear every change,
+  # requesters only public ones (specs/timeline.md "Live updates").
+  def page_stream(user)
+    [ self, :page, user.staff? ? :staff : :public ]
+  end
+
+  # Tells open ticket pages to reload themselves; internal changes reach
+  # only staff pages. The signal carries no content.
+  def refresh_pages(internal:)
+    Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :staff)
+    Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :public) unless internal
+  end
+
   # Tells an open shared page to reload itself (specs/sharing.md); the
   # signal carries no content.
   def refresh_shared_page(token = share_token)
