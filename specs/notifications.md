@@ -128,9 +128,12 @@ notification arrives or the user reads notifications in another tab.
   panel is open the refresh waits until it is closed, so a list the user
   is reading does not change under the pointer. The new `<details>`
   replaces the old one.
-- **Connections need a signed-in, active user**
-  (`ApplicationCable::Connection` reads the Devise session from Warden and
-  rejects others). Action Cable accepts only the app's own origin
+- **Only the owner may subscribe.** Pages subscribe through
+  `NotificationsChannel`, which accepts only the signed-in, active user's
+  own `[user, :notifications]` stream (the connection identifies the user
+  from the Devise session through Warden; deactivated users count as
+  visitors). Connections themselves are open, because shared ticket pages
+  (sharing.md) are public. Action Cable accepts only the app's own origin
   (`allow_same_origin_as_host`, the default).
 - **Adapter:** `async` (`config/cable.yml`), one Puma process; several
   processes would need solid_cable or Redis.

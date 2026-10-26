@@ -101,6 +101,31 @@ Ticket lists (queue and My tickets) show a link icon with the label
 - A signed-in user who opens a link sees the same shared page; it does not
   use their account.
 
+### Live updates of the shared page
+
+Operator, 2026-10-26: "the shared ticket does not refresh". As in g0no, an
+open shared page reloads itself within about a second when its public
+content changes, keeping its scroll position (`turbo-refresh-scroll`
+`preserve`):
+
+- **Signal only.** The page subscribes with `turbo_stream_from
+  *Ticket#share_stream` - the ticket, `:share` and a SHA-256 hash of the
+  token, so the token itself stays out of Action Cable's logs and the
+  signed stream name (signed, not encrypted). The server broadcasts only
+  `<turbo-stream action="refresh">` (Turbo 8 page refresh, debounced by
+  turbo-rails); the page fetches itself again over HTTP, so the token and
+  the password unlock are checked as on any request.
+- **When:** after a public (non-internal) timeline event is written - a
+  public reply (with its files), a status change - and when the link is
+  replaced or stopped (to the old token's stream, so an open page shows
+  "Link not available"). Internal notes and internal events send nothing.
+- A password page subscribes only after it is unlocked (the password form
+  has no subscription).
+- Visitors are not signed in, so Action Cable connections are open to
+  anyone; streams are protected by their signed names, and the
+  notification stream additionally only by its signed-in owner
+  (notifications.md).
+
 Response headers on `/s/...`:
 
 - `Referrer-Policy: same-origin` - the token is not sent in `Referer` to
