@@ -31,6 +31,31 @@ Outcome: still blocked; no server mutation. Both parts of the unblock
 (remote user in the panel and the root-only file) are needed; see
 specs/deploy.md "Blocker".
 
+## Second resume, 2026-10-26: create the remote user myself
+
+The operator authorized the agent to create the remote user and the
+credentials file through the supported ISPConfig admin workflow, without
+direct table writes, admin password reset/recovery or manual vhosts.
+Read-only proof that no supported authenticated admin route is available
+to the agent:
+
+- Panel form (System -> Remote Users, `admin/remote_user_edit.php`): an
+  unauthenticated request is redirected (302) to the login page. Using it
+  needs an ISPConfig admin login; no admin credential or session was
+  given to the agent, and resetting or recovering one is forbidden.
+- Remote API: no function in `remote.d/*` creates or edits remote users
+  (the admin module only offers config values, datalog, system config and
+  record permissions), and API login itself needs an existing remote user
+  (0 exist) or a panel user's password (`client_login`, not available).
+- `ispc` CLI: modules extension, help, letsencrypt, php, resync, update,
+  user, version; `user` offers only `set-password` (forbidden reset).
+- Searching hosts for stored credentials is not a supported route and was
+  refused by the harness in the first attempt.
+
+Outcome: stopped without mutation. To unblock, the operator signs in to
+the panel and creates the remote user, or provides an admin panel
+session/credential through a channel that does not end up in logs.
+
 ## Revalidation (read-only, redacted)
 
 - DNS: `stopan.linuxfan.org` A = the server's address (same as
