@@ -1,13 +1,80 @@
-# 2026-10-25 - deploy Stopan to stopan.linuxfan.org (Job 4)
+# 2026-10-25/26 - deploy Stopan to stopan.linuxfan.org (Job 4)
 
-## Why the session ended
+## Closeout (2026-10-26 ~10:45 server time)
+
+Why the session ended: the deployment is complete and validated.
+
+Outcome: Stopan e553a58 is live at https://stopan.linuxfan.org, served by
+the ISPConfig-managed site 25 (created with `sites_web_domain_add` through
+the Remote API) proxying to the rootless Podman container of the new
+`stopan` user on 127.0.0.1:3183. g0no was not changed.
+
+State changes on the server, in order (resources: specs/deploy.md
+"Deployed resources"; rollback: specs/deploy.md "Rollback"):
+
+1. `/root/.config/stopan/` (700) and `ispconfig-remote.env` (600) with a
+   server-generated password (agent, ~09:45).
+2. `/root/stopan/` (700): `bin/ispconfig-create-remote-user`,
+   `bin/ispconfig-remote`, `deploy/ispconfig-site.json` (agent, 10:11).
+3. ISPConfig remote user `stopan_deploy` (id 2), created through the
+   panel form by the operator running the script (datalog 618, 10:12).
+4. System user `stopan` (uid 994), subids 2100000:65536, linger (10:13).
+5. `~stopan/stopan.env` (600, secrets generated on the server),
+   `~stopan/storage`, the quadlet; `/root/stopan/admin-password.txt` (600).
+6. `make deploy`: port 3183 proved free (0 listeners) right before;
+   image `localhost/stopan:e553a58`; `stopan.service` started 10:15:57.
+7. `sites_web_domain_add` -> domain_id 25 (datalog 619, 10:20); the first
+   call was rejected (missing `pm_process_idle_timeout`/`pm_max_requests`)
+   and created nothing.
+8. ISPConfig cron wrote the vhost and web25 and obtained the Let's
+   Encrypt certificate through certbot (10:21).
+9. Restart tests: `systemctl --user restart stopan` and
+   `systemctl restart user@994.service`.
+
+Validation (redacted): see specs/deploy.md "Verified". Summary: DNS ok;
+http -> https 301; certificate CN/SAN stopan.linuxfan.org, Let's Encrypt,
+chain OK, valid to 2027-01-24; HSTS, CSP, frame, nosniff, secure HttpOnly
+cookie; `/up` 200; admin sign-in -> `/admin` and queue 200; loopback-only
+listener; container healthy, processes as `stopan`; service active after
+both restarts; `apache2ctl configtest` OK; g0no `/up` 200 throughout.
+
+Corrections:
+
+- The earlier note "How g0no's ISPConfig site was made" concluded that
+  g0no's record was written directly into dbispconfig. That was wrong:
+  Stopan's own Remote API insert (datalog 619) has the same empty
+  `domain_id:` and empty `added_by`, so g0no's record (datalog 617) is
+  consistent with a Remote API insert by an earlier remote user (id 1,
+  since deleted).
+- The first test sign-in failed because the form body came from `jq -r`
+  (trailing newline in the password). The same bug in
+  `bin/ispconfig-create-remote-user` left a trailing newline in the remote
+  user's function list; fixed in the script (`jq -j`).
+
+Open / risks:
+
+- Full server reboot not tested (would interrupt all sites).
+- Operator: sign in, change the admin email/password, delete
+  `/root/stopan/admin-password.txt`; re-save the remote user in the panel;
+  delete the remote user when no longer needed.
+- No backups of `/srv/stopan/storage` yet; SMTP not configured.
+- Commits are local only: `git push` has no GitHub credentials on the
+  workstation; the branch also carries another session's commits.
+
+Commit: the commit that adds this closeout (see `git log`); deployed
+revision e553a58.
+
+Next step: operator tasks above; then set up backups of
+`/srv/stopan/storage`.
+
+## First stop (2026-10-25)
 
 Stopped at a non-bypassable access blocker before any server change: the
 ISPConfig Remote API has no account, and no panel credentials or session
 were available through a supported channel. The assignment forbids
 creating the account (or the site) through MySQL or a hand-written vhost.
 
-## Outcome
+## Outcome (2026-10-25)
 
 Not deployed. No mutation on the server. The deployment is designed and
 its artifacts are in the repository (specs/deploy.md), ready to run once
@@ -78,7 +145,7 @@ proves an API login with `sites_web_domain_get`. Installed with
 `sudo /root/stopan/bin/ispconfig-create-remote-user`. Also fixed
 `bin/ispconfig-remote` reading its JSON from stdin (`-`).
 
-## How g0no's ISPConfig site was made (checked 2026-10-26)
+## How g0no's ISPConfig site was made (2026-10-26; WRONG, see Closeout)
 
 The operator asked to repeat what was done for g0no. Read-only findings:
 

@@ -10,11 +10,11 @@ vhost, which also obtains the Let's Encrypt certificate.
 
 ## Status
 
-**Not deployed. Blocked on ISPConfig Remote API access (2026-10-25).**
-See "Blocker" below. Nothing has been changed on the server.
-Rechecked 2026-10-26: neither the remote user nor the credentials file
-exists yet. The same day the agent proved it has no supported
-authenticated route to create the remote user itself (session note).
+**Deployed 2026-10-26, revision e553a58.** https://stopan.linuxfan.org
+is served by ISPConfig site 25 (`web25`) proxying to the rootless
+container of the `stopan` user. See "Deployed resources" and "Verified".
+The deployment waited on ISPConfig Remote API access on 2026-10-25/26
+("Remote API access history").
 
 ## Layout
 
@@ -49,11 +49,12 @@ Generated on the server with umask 077 and never copied off it:
 `SECRET_KEY_BASE` (`openssl rand -hex 64`) and `ADMIN_PASSWORD`
 (`openssl rand -base64 24`). `APP_HOST=stopan.linuxfan.org`,
 `MAILER_SENDER=no-reply@stopan.linuxfan.org`, `ADMIN_USERNAME=admin`,
-`ADMIN_EMAIL` an operator-chosen address, `RAILS_FORCE_SSL=true`,
+`ADMIN_EMAIL=admin@stopan.linuxfan.org` (no address was given; change it
+at the account page), `RAILS_FORCE_SSL=true`,
 `RAILS_ASSUME_SSL=true`, `REGISTRATION_OPEN=false` (docker.md, auth.md).
-The admin password is handed to the operator on the server only (a mode
-600 file owned by root, deleted after the first sign-in and password
-change); it is never printed in a terminal log.
+The admin password is handed to the operator on the server only, in
+`/root/stopan/admin-password.txt` (root, mode 600); delete it after the
+first sign-in and password change. It is never printed in a terminal log.
 
 ## ISPConfig Remote API
 
@@ -69,11 +70,24 @@ environment and stdin only, never through command arguments.
 
 The remote user needs the function group "Sites Domain functions"
 (`sites_web_domain_get`, `_add`, `_update`, `_delete`), and is limited to
-access from `127.0.0.1`.
+access from `127.0.0.1`. The user `stopan_deploy` exists with exactly
+that (created in the panel 2026-10-26, datalog 618).
 
-Not yet run against the server (no remote user exists).
+Bodies for `curl --data-binary @-` are built with `jq -j`: `jq -r` adds
+a trailing newline, which becomes part of the last form value. The first
+run of `bin/ispconfig-create-remote-user` had that bug, so the stored
+function list ends in a newline and `sites_web_domain_set_status` (the
+last entry) does not match; re-save the remote user in the panel to fix
+it. The other four functions work.
 
-## Blocker (2026-10-25)
+`sites_web_domain_add` validates the PHP-FPM fields even for `php=no`:
+`pm_process_idle_timeout` and `pm_max_requests` are required (values
+copied from the g0no record).
+
+Scripts and the site JSON are kept on the server in `/root/stopan`
+(root, 700).
+
+## Remote API access history (2026-10-25/26)
 
 - The ISPConfig `remote_user` table is empty: no Remote API account exists.
 - No ISPConfig panel credentials or authenticated session were provided to
@@ -84,7 +98,7 @@ Not yet run against the server (no remote user exists).
   `web_domain` rows; a hand-written vhost; `ispc user set-password admin`
   (it would change the operator's panel password).
 
-To unblock, the operator either:
+This blocked the deployment until 2026-10-26. The options offered were:
 
 1. creates the remote user in the ISPConfig panel (System -> Remote Users ->
    Add): a new username, a generated password, "Remote Access" enabled,
@@ -116,7 +130,8 @@ As root on the server unless noted:
 2. `useradd --system --user-group --create-home --home-dir /srv/stopan --shell /usr/sbin/nologin stopan`,
    `chmod 750 /srv/stopan`,
    `usermod --add-subuids <free range> --add-subgids <free range> stopan`
-   (65536 ids not overlapping any range in `/etc/subuid` and `/etc/subgid`),
+   (65536 ids not overlapping any range in `/etc/subuid` and `/etc/subgid`;
+   used: 2100000-2165535),
    `loginctl enable-linger stopan`.
 3. As `stopan` (`runuser -l stopan -s /bin/bash`), umask 077: create
    `~/storage`, `~/.config/containers/systemd`, `~/stopan.env` (Settings);
@@ -126,10 +141,12 @@ As root on the server unless noted:
    on `127.0.0.1:3183`. The entrypoint migrates and seeds the database.
 5. Copy `bin/ispconfig-remote` and `deploy/ispconfig-site.json` to the server
    and run `bin/ispconfig-remote sites_web_domain_add deploy/ispconfig-site.json`.
-   It prints the new `domain_id`; record it here.
+   It prints the new `domain_id`: 25.
 6. Wait for the ISPConfig server cron (one minute) to write the vhost
    (`/etc/apache2/sites-enabled/100-stopan.linuxfan.org.vhost`) and to
-   obtain the certificate; `sites_web_domain_get` with `primary_id` shows
+   obtain the certificate (certbot, webroot of the ISPConfig ACME alias,
+   `/etc/letsencrypt/live/stopan.linuxfan.org_ecc/`); it took about one
+   minute; `sites_web_domain_get` with `primary_id` shows
    the stored record. If Let's Encrypt fails, ISPConfig turns SSL off in
    the record; fix the cause and set it again with `sites_web_domain_update`.
 
@@ -163,6 +180,46 @@ newest revision images.
 - g0no (`g0no.linuxfan.org`, `g0no.service`, `127.0.0.1:3182`) is unchanged
   and still answers.
 
+## Deployed resources (2026-10-26)
+
+| resource | value |
+|----------|-------|
+| ISPConfig site | domain_id 25, client 1, system user `web25`, `/var/www/clients/client1/web25`, SSL + Let's Encrypt + rewrite to HTTPS, proxy in Apache directives |
+| vhost (ISPConfig-generated) | `/etc/apache2/sites-available/stopan.linuxfan.org.vhost`, enabled as `100-stopan.linuxfan.org.vhost` |
+| certificate | Let's Encrypt (ECDSA) for `stopan.linuxfan.org`, `/etc/letsencrypt/live/stopan.linuxfan.org_ecc/`, renewal by `certbot.timer` (`/etc/letsencrypt/renewal/stopan.linuxfan.org_ecc.conf`) |
+| system user | `stopan` uid 994 / gid 991, home `/srv/stopan` (750), subuid/subgid 2100000:65536, linger on |
+| unit | `~stopan/.config/containers/systemd/stopan.container` -> user unit `stopan.service` |
+| image | `localhost/stopan:e553a58` = `:latest` |
+| data / settings | `/srv/stopan/storage` (700), `/srv/stopan/stopan.env` (600) |
+| listener | `127.0.0.1:3183` only |
+| Remote API user | `stopan_deploy`, 127.0.0.1, Sites Domain functions |
+| root-only files | `/root/.config/stopan/ispconfig-remote.env` (600, dir 700), `/root/stopan/` (700: scripts, site JSON, `admin-password.txt`) |
+
+## Verified (2026-10-26)
+
+- DNS A = the server, no AAAA. `http://` -> 301 `https://`.
+- Certificate: subject and SAN `stopan.linuxfan.org`, issuer Let's Encrypt
+  YE1, chain verifies, valid 2026-10-26 to 2027-01-24.
+- Headers on `/users/sign_in`: HSTS (max-age 63072000, includeSubDomains),
+  CSP (self only, `frame-ancestors 'none'`), `X-Frame-Options`,
+  `X-Content-Type-Options: nosniff`, `Referrer-Policy`; session cookie
+  `secure; httponly; samesite=lax`. Nothing relaxed.
+- `/up` 200 (public and loopback); `/` and `/users/sign_up` redirect to
+  sign-in; admin sign-in through Apache reaches `/admin` and the queue
+  (200); the stylesheet is served as readable `text/css`.
+- Only `127.0.0.1:3183` listens (0 public listeners); processes (conmon,
+  pasta, catatonit, thrust, ruby) run as `stopan`; container healthy,
+  user 1000:1000, `no-new-privileges`, no added capabilities.
+- `stopan.service` active, `Restart=always`, generated from the quadlet,
+  linger on; `apache2ctl configtest` OK; the proxy directives are in the
+  ISPConfig record, so resyncs keep them.
+- Restart: `systemctl --user restart stopan` -> `/up` 200 within seconds;
+  boot path: `systemctl restart user@994.service` (stopan's manager only)
+  -> service started by linger and `/up` 200. A full server reboot was not
+  done (it would interrupt every other site).
+- g0no `/up` 200 and its listener on 3182 before and after; nothing of
+  g0no was changed.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:
@@ -171,8 +228,7 @@ Resources the deployment creates, and how to remove them in order:
    `~/.config/containers/systemd/stopan.container`; `systemctl --user daemon-reload`.
    To roll back only a release: tag an older `localhost/stopan:<rev>` as
    `latest` and restart.
-2. Website: `bin/ispconfig-remote sites_web_domain_delete` with
-   `{"primary_id": <domain_id>}`. ISPConfig removes the vhost, the site
+2. Website: `echo '{"primary_id": 25}' | sudo /root/stopan/bin/ispconfig-remote sites_web_domain_delete -`. ISPConfig removes the vhost, the site
    directory `/var/www/clients/client1/web<id>` and the certificate
    configuration on its next cron run. Never delete the vhost file by hand.
 3. Data: back up `~stopan/storage` if it is kept, then

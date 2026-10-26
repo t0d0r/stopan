@@ -31,6 +31,8 @@
     "backup_copies": 1,
     "enable_pagespeed": "n",
     "active": "y",
-    "apache_directives": "<IfModule pagespeed_module>\n\tModPagespeed off\n</IfModule>\nProxyRequests Off\nProxyPreserveHost On\nProxyTimeout 60\nRequestHeader set X-Forwarded-Proto \"https\"\nProxyPass /.well-known/acme-challenge/ !\nProxyPass / http://127.0.0.1:3183/ retry=0\nProxyPassReverse / http://127.0.0.1:3183/\n"
+    "apache_directives": "<IfModule pagespeed_module>\n\tModPagespeed off\n</IfModule>\nProxyRequests Off\nProxyPreserveHost On\nProxyTimeout 60\nRequestHeader set X-Forwarded-Proto \"https\"\nProxyPass /.well-known/acme-challenge/ !\nProxyPass / http://127.0.0.1:3183/ retry=0\nProxyPassReverse / http://127.0.0.1:3183/\n",
+    "pm_process_idle_timeout": 10,
+    "pm_max_requests": 0
   }
 }

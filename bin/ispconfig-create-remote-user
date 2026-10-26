@@ -45,7 +45,7 @@ export ISPC_ADMIN_USER ISPC_ADMIN_PASSWORD
 
 # Sign in like the login page does.
 panel_curl -o /dev/null "$panel/login/"
-jq -rn '"username=\(env.ISPC_ADMIN_USER|@uri)&password=\(env.ISPC_ADMIN_PASSWORD|@uri)&s_mod=login&s_pg=index"' |
+jq -jn '"username=\(env.ISPC_ADMIN_USER|@uri)&password=\(env.ISPC_ADMIN_PASSWORD|@uri)&s_mod=login&s_pg=index"' |
   panel_curl -o /dev/null --data-binary @- "$panel/login/index.php"
 unset ISPC_ADMIN_PASSWORD
 
@@ -61,7 +61,7 @@ CSRF_KEY=$(hidden _csrf_key)
 [ -n "$CSRF_ID" ] && [ -n "$CSRF_KEY" ] || die "CSRF fields not found in the form"
 export CSRF_ID CSRF_KEY FUNCTIONS=$functions
 
-jq -rn '[
+jq -jn '[
     "id=", "remote_userid=",
     "_csrf_id=\(env.CSRF_ID|@uri)", "_csrf_key=\(env.CSRF_KEY|@uri)",
     "remote_username=\(env.ISPC_REMOTE_USER|@uri)",
