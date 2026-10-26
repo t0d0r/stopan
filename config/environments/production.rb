@@ -58,16 +58,29 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "localhost") }
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "localhost"),
+                                               protocol: config.force_ssl ? "https" : "http" }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
+  # Outgoing email from SMTP_* environment variables (specs/notifications.md).
+  # Without SMTP_ADDRESS no email is sent at all.
+  if ENV["SMTP_ADDRESS"].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV["SMTP_ADDRESS"],
+      port: Integer(ENV.fetch("SMTP_PORT", "587")),
+      domain: ENV["SMTP_DOMAIN"].presence,
+      user_name: ENV["SMTP_USERNAME"].presence,
+      password: ENV["SMTP_PASSWORD"].presence,
+      authentication: (ENV.fetch("SMTP_AUTHENTICATION", "plain").to_sym if ENV["SMTP_USERNAME"].present?),
+      tls: ENV["SMTP_TLS"] == "true",
+      enable_starttls_auto: ENV["SMTP_TLS"] != "true",
+      open_timeout: 5,
+      read_timeout: 10
+    }.compact
+  else
+    config.action_mailer.perform_deliveries = false
+    config.after_initialize { Rails.logger.warn("SMTP_ADDRESS is not set; Stopan sends no email") }
+  end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
