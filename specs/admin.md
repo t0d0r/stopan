@@ -46,6 +46,26 @@ Rules:
 
 Destructive actions ask in the confirm dialog, naming what will be lost.
 
+## Live updates
+
+Operator, 2026-10-26: "the admin pages should refresh live too". Every
+open admin page (dashboard, users, organizations, their forms) reloads
+itself within about a second when its data may have changed, keeping its
+URL and scroll position:
+
+- **Stream `[:admin]`**, told after a user, organization or membership is
+  created, changed or deleted (sign-ins and lockouts change users too, so
+  "last sign-in" stays current) and after every ticket event (the
+  dashboard's counts, busiest organizations and shared tickets).
+- `AdminChannel` accepts it only for administrators.
+- Signal only (`<turbo-stream action="refresh">`, debounced per stream);
+  the page is fetched again over HTTP with the admin check.
+- A refresh waits while the page is busy (typed or changed fields, a
+  focused field, the confirm dialog or a menu open), as on the ticket page
+  (timeline.md), so a half-filled user or organization form is never
+  reset. A page of a record deleted meanwhile shows "not found" after the
+  refresh.
+
 ## Acceptance
 
 `test/controllers/admin/*_test.rb`: access control, CRUD, self-protection,
