@@ -32,6 +32,8 @@ up to 5 attached files.
 | `status_changed` | status changes (manual or automatic) | old / new status | no |
 | `priority_changed` | priority changes | old / new priority | yes |
 | `assignee_changed` | assignee changes | old / new user id (blank = unassigned) | yes |
+| `shared` | share link created or replaced (sharing.md) | to: `password` for a password link, else blank | yes |
+| `unshared` | sharing stopped | - | yes |
 
 Assignee values are stored as user ids and shown with the user's current
 display name; users that appear in history cannot be deleted (only

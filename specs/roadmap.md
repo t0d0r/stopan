@@ -22,6 +22,7 @@ before it is built. The "foundation" column says what already exists.
 | satisfaction survey | CSAT after resolve | - |
 | multi-tenancy | several independent service desks in one installation | - |
 | attachments | inline image previews (sandboxed), virus scanning | download-only serving, type/size allow-list |
+| sharing | **specified in sharing.md**; later: link expiry dates, view counts, several links per ticket | public timeline scope (`internal = false`) |
 | spam handling | admin deletion of spam tickets with an audit entry | - |
 | browser system tests | headless Chrome tests for JS behaviour | flow tests run through Rails integration tests |
 | deployment | production hosting for Stopan (container, proxy, TLS, backups) | Dockerfile and compose file |

@@ -45,6 +45,7 @@ the role, and cannot be chosen as assignee.
 | download an attachment | only files on records they can see | any | any |
 | change status | only "mark as resolved" on own new/open/pending ticket | any allowed transition (tickets.md) | same as agent |
 | change priority, assignee | no | yes | yes |
+| share a ticket by link (sharing.md) | own ticket, in own organization | any ticket | any ticket; also sees and stops every shared link |
 | open `/admin` | no | no | yes |
 | manage users, roles, memberships, organizations | no | no | yes |
 

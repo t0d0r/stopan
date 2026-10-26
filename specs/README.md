@@ -15,6 +15,7 @@
 | [docker.md](docker.md) | Docker image, compose file and environment variables |
 | [deploy.md](deploy.md) | production on stopan.linuxfan.org: ISPConfig site, rootless Podman, setup, verification, rollback |
 | [notifications.md](notifications.md) | email notifications: recipients, which email, visibility rules, language, SMTP settings, delivery |
+| [sharing.md](sharing.md) | share a ticket by secret link, optionally with a password: who may share, what the public page shows, headers, rate limit |
 | [roadmap.md](roadmap.md) | later phases: notifications, ingestion, SLAs, automation, API, reporting, groups, ... |
 
 ## Security Note

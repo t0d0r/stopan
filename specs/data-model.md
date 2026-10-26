@@ -44,6 +44,9 @@ declared in the database.
 | assignee_id | FK users, optional, indexed |
 | organization_id | FK organizations, required, indexed |
 | resolved_at, closed_at | datetime |
+| share_token | string, unique index, NULL when not shared (sharing.md) |
+| share_password_digest | string, bcrypt, NULL for an open link |
+| shared_at | datetime |
 | created_at, updated_at | indexed `updated_at` for the default sort |
 
 Files: `has_many_attached :files`.
