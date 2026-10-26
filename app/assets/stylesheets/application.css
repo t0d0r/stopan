@@ -1282,14 +1282,17 @@ form.button_to {
 
 /* ---------- ticket lists ---------- */
 
+/* Views as a row of tabs above the list, like the admin tabs. */
 .queue {
   display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  gap: 20px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
 }
 
 .queue__views ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1298,12 +1301,12 @@ form.button_to {
 .view-link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
-  padding: 6px 10px;
+  padding: 5px 10px;
   border-radius: 6px;
   color: var(--desk-ink);
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .view-link:hover {
@@ -2252,19 +2255,13 @@ form.button_to {
 
 @media (max-width: 760px) {
   .queue {
-    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
 
   .queue__views ul {
-    display: flex;
-    gap: 4px;
+    flex-wrap: nowrap;
     overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .view-link {
-    white-space: nowrap;
+    padding: 2px 2px 6px;
   }
 
   .col-org,

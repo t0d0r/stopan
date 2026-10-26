@@ -6,8 +6,11 @@ list query starts from `Ticket.visible_to(current_user)`.
 
 ## Agent queue (staff)
 
-Layout: a column of views on the left (a row of tabs under 760px), the
-filter bar and the table on the right. The search field is in the menu bar
+Layout: a horizontal row of view tabs under the page title, like the
+admin section tabs (operator, 2026-10-26), then the list panel with the
+filter bar and the table at full width. The row wraps on wide screens;
+under 760px it scrolls sideways and the current view is scrolled into
+sight. The search field is in the menu bar
 (see "Search" below).
 
 ### Views (`view` parameter)

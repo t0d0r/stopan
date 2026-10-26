@@ -44,8 +44,9 @@ Turbo Drive for page changes.
 
 ## Pages
 
-- **Queue** (staff): coloured views column + filter bar + table in a
-  sticky panel in the current view's colour (queues.md). Under 760px the views become a scrollable tab row and
+- **Queue** (staff): a coloured row of view tabs, then the filter bar and
+  table in a sticky panel in the current view's colour (queues.md). Under
+  760px the tab row scrolls sideways and
   table columns other than number, subject and status are hidden.
 - **My tickets** (requester): coloured tabs, "New ticket" button, table in
   a sticky panel in the current tab's colour (yellow, green, gray).

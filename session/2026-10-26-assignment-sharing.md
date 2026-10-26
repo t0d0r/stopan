@@ -73,6 +73,11 @@ Operator requests, in order:
   to end in headless Chrome: an agent's reply posted from another session
   moved the requester's bell from 0 to 1 without a reload.
 
+- Queue views moved from the left column to a horizontal tab row under
+  the title (operator: "like the admin menu"); the list panel is full
+  width; under 760px the row scrolls sideways and scrolls the current view
+  into sight. README screenshots refreshed.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
