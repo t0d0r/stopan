@@ -66,6 +66,7 @@
     <% end %>
   </main>
   <% if user_signed_in? %>
+    <%= turbo_stream_from current_user, :notifications %>
     <%= render "partials/confirm_dialog" %>
   <% end %>
 </body>

@@ -1,6 +1,6 @@
 <%# Menu bar bell and panel (specs/notifications.md "Notification panel"). %>
 <% panel = notification_panel %>
-<details class="notify" data-dropdown>
+<details class="notify" id="notifications" data-dropdown data-notifications data-panel-url="<%= panel_notifications_path %>">
   <summary class="tool-button notify__button" title="<%= t("ui.notifications.title") %>"
            aria-label="<%= t("ui.notifications.button", count: panel[:unread]) %>">
     <%= icon :bell, size: 15 %>

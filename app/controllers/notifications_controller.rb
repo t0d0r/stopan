@@ -11,15 +11,21 @@ class NotificationsController < ApplicationController
     @more = @total > @page * PER_PAGE
   end
 
+  # The bell and panel alone, fetched again after a live signal.
+  def panel
+    response.headers["Cache-Control"] = "no-store"
+    render partial: "partials/notifications"
+  end
+
   # Marks the notification read and opens the ticket at its event.
   def show
     notification = Notification.visible_to(current_user).find(params[:id])
-    notification.update!(read_at: Time.current) if notification.unread?
+    Notification.mark_read(current_user, Notification.where(id: notification.id))
     redirect_to ticket_path(notification.ticket, anchor: ("event-#{notification.event_id}" if notification.event_id))
   end
 
   def read_all
-    current_user.notifications.unread.update_all(read_at: Time.current)
+    Notification.mark_read(current_user)
     redirect_back_or_to notifications_path, allow_other_host: false, notice: t("flash.notifications_read")
   end
 end

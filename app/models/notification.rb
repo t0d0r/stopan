@@ -17,12 +17,26 @@ class Notification < ApplicationRecord
   scope :newest_first, -> { order(created_at: :desc, id: :desc) }
 
   after_create_commit :prune
+  after_create_commit { self.class.broadcast_changed(user) }
 
   # What the user may see now: tickets still visible to them, and no
   # staff-only kinds for requesters.
   def self.visible_to(user)
     scope = where(user: user, ticket_id: Ticket.visible_to(user).select(:id))
     user.staff? ? scope : scope.where.not(kind: STAFF_KINDS)
+  end
+
+  # Tells the user's open pages to fetch the panel again; the signal carries
+  # no content (specs/notifications.md "Live updates of the panel").
+  def self.broadcast_changed(user)
+    Turbo::StreamsChannel.broadcast_action_later_to(user, :notifications, action: "notifications_refresh",
+                                                                          target: "notifications")
+  end
+
+  # Marks the user's unread notifications in scope read and tells their
+  # other pages.
+  def self.mark_read(user, scope = all)
+    broadcast_changed(user) if scope.where(user: user).unread.update_all(read_at: Time.current).positive?
   end
 
   def unread?

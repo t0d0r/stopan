@@ -62,6 +62,17 @@ Operator requests, in order:
   from non-staff; 200 newest kept per user. Under 560px the panel spans
   the screen under the menu bar.
 
+- Live notification panel (operator: "make live updates of the
+  notifications"): `ApplicationCable::Connection` accepts only signed-in,
+  active users (Warden); layouts subscribe with `turbo_stream_from
+  current_user, :notifications`; `Notification.broadcast_changed` sends a
+  content-free `notifications_refresh` Turbo Stream after a notification
+  is created and after reads (`Notification.mark_read`); `application.js`
+  registers the custom action, coalesces signals (300 ms), waits while
+  the panel is open and swaps in `GET /notifications/panel`. Checked end
+  to end in headless Chrome: an agent's reply posted from another session
+  moved the requester's bell from 0 to 1 without a reload.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
@@ -95,8 +106,9 @@ menu and Take; open /tickets/new and pick a requester.
   production needs a deploy by the operator (migration
   `AddSharingToTickets`).
 - Sharing later: expiry dates, view counts (todo).
-- Notification panel later: live push (todo); production needs the
-  `CreateNotifications` migration with the next deploy.
+- Production: the next deploy runs the `AddSharingToTickets` and
+  `CreateNotifications` migrations; the Apache vhost needs
+  `upgrade=websocket` for live panel updates (todo, operator).
 
 ## Security Note
 

@@ -64,7 +64,8 @@
 - [x] share a ticket by link with an optional password; public page with only public content; admin list (specs/sharing.md)
 - [ ] sharing later: link expiry dates, view counts (specs/roadmap.md)
 - [x] in-app notification panel: bell with unread count, dropdown, notifications page (specs/notifications.md "Notification panel")
-- [ ] notification panel later: live push of new notifications (with live updates, specs/roadmap.md)
+- [x] live updates of the notification panel over Action Cable (specs/notifications.md "Live updates of the panel")
+- [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 
 ## Later (specs/roadmap.md)
 

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   patch "users/notifications", to: "users/notifications#update", as: :user_notifications
   resources :notifications, only: %i[index show] do
     patch :read_all, on: :collection
+    get :panel, on: :collection
   end
 
   # Tickets are addressed by their number (Ticket#to_param).

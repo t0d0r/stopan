@@ -161,15 +161,16 @@ function setUpCopyButtons() {
 }
 
 // Menu bar dropdowns (the notification panel) close on a click outside
-// and on Escape, which returns focus to their button.
-function setUpDropdowns(dropdowns) {
-  if (dropdowns.length === 0) return;
+// and on Escape, which returns focus to their button. They are looked up on
+// each event, because a live refresh replaces the notification panel.
+function setUpDropdowns() {
+  const dropdowns = () => document.querySelectorAll("details[data-dropdown]");
   document.addEventListener("click", (event) => {
-    dropdowns.forEach((dropdown) => { if (dropdown.open && !dropdown.contains(event.target)) dropdown.open = false; });
+    dropdowns().forEach((dropdown) => { if (dropdown.open && !dropdown.contains(event.target)) dropdown.open = false; });
   }, { signal: pageSignal });
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
-    dropdowns.forEach((dropdown) => {
+    dropdowns().forEach((dropdown) => {
       if (!dropdown.open) return;
       dropdown.open = false;
       dropdown.querySelector("summary").focus();
@@ -177,7 +178,46 @@ function setUpDropdowns(dropdowns) {
   }, { signal: pageSignal });
 }
 
+// Live notification panel (specs/notifications.md): the server only says
+// that something changed; the panel is fetched again over HTTP, so the
+// usual sign-in and visibility checks apply. Signals are coalesced, and an
+// open panel is left alone until it is closed.
+let notificationsTimer = null;
+
+function scheduleNotificationsRefresh() {
+  clearTimeout(notificationsTimer);
+  notificationsTimer = setTimeout(refreshNotifications, 300);
+}
+
+async function refreshNotifications() {
+  const current = document.querySelector("[data-notifications]");
+  if (!current) return;
+  if (current.open) {
+    current.addEventListener("toggle", scheduleNotificationsRefresh, { once: true });
+    return;
+  }
+  let response;
+  try {
+    response = await fetch(current.dataset.panelUrl, { headers: { Accept: "text/html" }, credentials: "same-origin" });
+  } catch {
+    return;
+  }
+  if (!response.ok) return;
+  const template = document.createElement("template");
+  template.innerHTML = (await response.text()).trim();
+  const fresh = template.content.querySelector("[data-notifications]");
+  const latest = document.querySelector("[data-notifications]");
+  if (fresh && latest && !latest.open) latest.replaceWith(fresh);
+}
+
+function registerStreamActions() {
+  if (window.Turbo?.StreamActions) window.Turbo.StreamActions.notifications_refresh = scheduleNotificationsRefresh;
+}
+
+registerStreamActions();
+
 function setUpPage() {
+  registerStreamActions();
   pageAbort?.abort();
   pageAbort = new AbortController();
   pageSignal = pageAbort.signal;
@@ -187,7 +227,7 @@ function setUpPage() {
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
-  setUpDropdowns(document.querySelectorAll("details[data-dropdown]"));
+  setUpDropdowns();
   document.querySelectorAll("select[data-requester-organizations]").forEach(setUpRequesterOrganizations);
 
   // Theme and text size apply at once; the cookie keeps them for the next page.
