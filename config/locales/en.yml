@@ -179,6 +179,9 @@ en:
       priority_changed: "%{actor} changed the priority from %{from} to %{to}"
       assigned: "%{actor} assigned the ticket to %{to}"
       unassigned: "%{actor} removed the assignee"
+      shared: "%{actor} shared the ticket by link"
+      shared_password: "%{actor} shared the ticket by link with a password"
+      unshared: "%{actor} stopped sharing the ticket"
 
     composer:
       title: "Add to this ticket"
@@ -197,6 +200,12 @@ en:
       closed: "This ticket is closed. If you need more help, open a new ticket."
 
     admin:
+      shared_tickets:
+        one: "1 ticket shared by link"
+        other: "%{count} tickets shared by link"
+      no_shared_tickets: "No ticket is shared by link."
+      share_open: "Open link"
+      share_password: "With password"
       title: "Admin"
       sections: "Admin sections"
       overview: "Overview"
@@ -264,6 +273,31 @@ en:
         other: "The organization and its %{count} memberships will be deleted. The users stay."
       delete_organization_button: "Delete organization"
 
+    share:
+      title: "Sharing"
+      hint: "Anyone with the link can read the description and the public replies, without signing in. Internal notes are never shown."
+      password: "Password (optional)"
+      password_hint: "At least %{min} characters. Without one, the link alone opens the page."
+      create: "Create share link"
+      replace: "Create a new link"
+      new_link: "New link or password"
+      status_open: "Open link, shared"
+      status_password: "Link with password, shared"
+      link: "Share link"
+      copy: "Copy link"
+      copied: "Copied"
+      stop: "Stop sharing"
+      stop_title: "Stop sharing this ticket?"
+      stop_body: "The link stops working at once for everyone who has it."
+      shared_by_link: "Shared by link"
+      shared_ticket: "Shared ticket"
+      public_note: "A read-only copy of ticket %{reference}, shared by link."
+      locked_title: "This ticket is protected"
+      locked_hint: "Enter the password you were given with the link."
+      unlock: "Open"
+      missing_title: "Link not available"
+      missing_hint: "This link does not exist or is no longer shared. Ask the person who sent it for a new one."
+
     forbidden:
       title: "Not allowed"
       body: "Your role does not allow this action."
@@ -326,6 +360,10 @@ en:
     ticket_taken: "Ticket %{reference} is now assigned to you."
     ticket_assigned: "Ticket %{reference} is now assigned to %{name}."
     ticket_unassigned: "Ticket %{reference} is now unassigned."
+    share_created: "Share link created."
+    share_stopped: "Sharing stopped."
+    share_wrong_password: "Wrong password."
+    share_too_many_attempts: "Too many attempts. Try again in a few minutes."
     assignee_invalid: "Tickets can only be assigned to active agents and administrators."
     ticket_resolved: "Ticket %{reference} is marked as resolved."
     reply_sent: "Your reply was sent."
@@ -362,6 +400,7 @@ en:
         role: "Role"
       ticket:
         subject: "Subject"
+        share_password: "Share password"
         description: "Description"
         status: "Status"
         priority: "Priority"

@@ -1,0 +1,42 @@
+<% content_for :title, "#{@ticket.reference} #{@ticket.subject}" %>
+<div class="ticket-page ticket-page--shared">
+  <header class="ticket-head">
+    <p class="callout shared-note"><%= icon :link %> <%= t("ui.share.public_note", reference: @ticket.reference) %></p>
+    <h1 class="ticket-head__title"><%= @ticket.subject %></h1>
+    <p class="ticket-head__meta">
+      <span class="ticket-number"><%= @ticket.reference %></span>
+      <%= status_pill @ticket.status %>
+      <span><%= t("ui.ticket.opened_by", name: @ticket.requester.display_name) %> <%= time_ago @ticket.created_at %></span>
+    </p>
+  </header>
+
+  <div class="ticket-main">
+    <article class="sticky sticky--yellow message message--description" id="description">
+      <header class="sticky__bar">
+        <span class="sticky__caption"><%= t("ui.ticket.description") %></span>
+      </header>
+      <div class="message__body">
+        <p class="message__meta">
+          <strong><%= @ticket.requester.display_name %></strong>
+          <span class="role-tag"><%= role_label(@ticket.requester) %></span>
+          <%= time_ago @ticket.created_at %>
+        </p>
+        <div class="ticket-text"><%= ticket_text @ticket.description %></div>
+        <% if @ticket.files.attached? %>
+          <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
+            <% @ticket.files.each do |file| %>
+              <li><%= attachment_link @ticket, file, share_token: @ticket.share_token %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </article>
+
+    <h2 class="section-heading" id="timeline-title"><%= t("ui.timeline.title") %></h2>
+    <ol class="timeline" aria-labelledby="timeline-title">
+      <% @events.each do |event| %>
+        <%= render "tickets/event", event: event, ticket: @ticket, share_token: @ticket.share_token %>
+      <% end %>
+    </ol>
+  </div>
+</div>

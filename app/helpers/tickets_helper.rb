@@ -47,12 +47,15 @@ module TicketsHelper
     when "assignee_changed"
       to = event.to_value.present? ? assignee_name(event.to_value) : nil
       to ? t("ui.timeline.assigned", actor: actor, to: to) : t("ui.timeline.unassigned", actor: actor)
+    when "shared"
+      event.to_value == "password" ? t("ui.timeline.shared_password", actor: actor) : t("ui.timeline.shared", actor: actor)
+    when "unshared" then t("ui.timeline.unshared", actor: actor)
     end
   end
 
   def event_icon(event)
     { "created" => :spark, "status_changed" => :status, "priority_changed" => :flag,
-      "assignee_changed" => :user }.fetch(event.action, :spark)
+      "assignee_changed" => :user, "shared" => :link, "unshared" => :link }.fetch(event.action, :spark)
   end
 
   def assignee_name(user_id)
@@ -60,8 +63,10 @@ module TicketsHelper
     @assignee_names[user_id] ||= User.find_by(id: user_id)&.display_name || t("ui.timeline.removed_user")
   end
 
-  def attachment_link(ticket, attachment)
-    link_to ticket_attachment_path(ticket, attachment), class: "file-link", data: { turbo: false } do
+  # On a shared page (share_token) files go through the share link.
+  def attachment_link(ticket, attachment, share_token: nil)
+    path = share_token ? shared_ticket_file_path(share_token, attachment) : ticket_attachment_path(ticket, attachment)
+    link_to path, class: "file-link", data: { turbo: false } do
       icon(:clip) + tag.span(attachment.filename.to_s, class: "file-link__name") +
         tag.span(number_to_human_size(attachment.byte_size), class: "file-link__size")
     end

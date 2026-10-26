@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       patch :assign
     end
     resources :comments, only: :create
+    resource :share, only: %i[create destroy], controller: "ticket_shares"
     resources :attachments, only: :show
   end
 
@@ -20,6 +21,11 @@ Rails.application.routes.draw do
     end
     resources :memberships, only: :destroy
   end
+
+  # Shared tickets, no sign-in (specs/sharing.md).
+  get "s/:token" => "shared_tickets#show", as: :shared_ticket
+  post "s/:token" => "shared_tickets#unlock", as: :unlock_shared_ticket
+  get "s/:token/files/:id" => "shared_tickets#file", as: :shared_ticket_file
 
   patch "preferences" => "preferences#update", as: :preferences
 

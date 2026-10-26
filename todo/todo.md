@@ -60,7 +60,9 @@
 - [x] one-click Take and an assign menu in the queue, Take on the ticket page (specs/tickets.md "Assigning", specs/queues.md)
 - [x] staff new ticket form lists only the chosen requester's organizations (specs/tickets.md "Creating")
 - [x] screenshots: Accept-Language was never sent, so the Bulgarian screenshot was English (specs/ui.md)
-- [ ] share a ticket by link, like g0no (spec first: specs/sharing.md)
+- [x] sharing spec (specs/sharing.md)
+- [x] share a ticket by link with an optional password; public page with only public content; admin list (specs/sharing.md)
+- [ ] sharing later: link expiry dates, view counts (specs/roadmap.md)
 
 ## Later (specs/roadmap.md)
 

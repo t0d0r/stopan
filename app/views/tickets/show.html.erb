@@ -17,6 +17,7 @@
   <aside class="ticket-side" aria-label="<%= t("ui.ticket.details") %>">
     <%= render "tickets/properties", ticket: @ticket %>
     <%= render "tickets/requester_card", ticket: @ticket %>
+    <% if policy.share? %><%= render "tickets/sharing", ticket: @ticket %><% end %>
   </aside>
 
   <div class="ticket-main">

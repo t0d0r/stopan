@@ -1544,6 +1544,73 @@ form.button_to {
   border-radius: 0 0 4px 4px;
 }
 
+/* Sharing panel (sharing.md). */
+.sharing__hint,
+.sharing__status {
+  margin: 0 0 10px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.sharing__link {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.sharing__link .field-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.sharing__link .btn {
+  flex: none;
+}
+
+.sharing .button_to {
+  display: block;
+}
+
+.sharing__new {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.sharing__new summary {
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.sharing__new .share-form {
+  margin-top: 8px;
+}
+
+.share-form .field {
+  margin-bottom: 8px;
+}
+
+.shared-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0;
+}
+
+.ticket-page--shared {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "head"
+    "main";
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.ticket-link .icon {
+  color: var(--ink-soft);
+  vertical-align: -1px;
+}
+
 .btn--take {
   gap: 4px;
   padding: 2px 9px;

@@ -35,6 +35,21 @@ Operator requests, in order:
   without it Accept-Language was never sent and the "Bulgarian" README
   screenshot was English. Screenshots refreshed.
 
+- Sharing (specs/sharing.md, modelled on g0no's note sharing):
+  - `tickets.share_token` (unique), `share_password_digest`, `shared_at`;
+    `Ticket#share!` / `#unshare!` write with `update_columns` (no
+    `updated_at` bump) and record internal `shared` / `unshared` events;
+  - `TicketSharesController` (POST/DELETE `/tickets/:number/share`):
+    staff, or the requester for their own ticket (`TicketPolicy#share?`);
+  - `SharedTicketsController` at `/s/:token`: requester view only
+    (description, public replies, non-internal events; no priority,
+    assignee, organization or emails), password form with a session
+    unlock fingerprint, rate limit 10 per 5 minutes per token, files of
+    the ticket and public replies only, private headers;
+  - Sharing panel on the ticket page (copy link, stop, new link), link
+    icon in ticket lists, "Sharing" panel on the admin dashboard;
+  - `FileSending` concern shared by both attachment controllers.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
@@ -57,13 +72,24 @@ bin/screenshots, docs/screenshots/*.png.
 `make check`; `make run`, open /tickets as an agent and use the assignee
 menu and Take; open /tickets/new and pick a requester.
 
+- Sharing: requesters may share their own tickets (they own the
+  conversation); the rate limit key is the token, not the IP, because the
+  production client IP is not confirmed yet; a shared page shows no
+  organization name, so an outsider learns as little as possible.
+
 ## Next
 
-Ticket sharing by link (like g0no's note sharing): write specs/sharing.md
-first - who may share, what a shared page shows (never internal notes or
-internal events), optional password, revocation, rate limits.
+- Rebuild the Docker image (`make docker-up`) to see the changes on :3000;
+  production needs a deploy by the operator (migration
+  `AddSharingToTickets`).
+- Sharing later: expiry dates, view counts (todo).
 
 ## Security Note
+
+Sharing makes ticket text readable without sign-in: only the public part is
+ever rendered (tests assert no internal note text, emails, organization or
+internal events), tokens are 32 base58 characters, replaced links die at
+once, and the token appears in access logs because it is in the path.
 
 Assignment is staff only (403 for requesters) and only active staff can
 be assignees; the redirect back follows only same-host referers

@@ -46,6 +46,11 @@ The screenshots use the fictional data from `make demo`.
   can opt in to every new ticket; never about their own actions, never
   internal content to requesters, in each user's language. SMTP from
   `SMTP_*` environment variables (`specs/notifications.md`).
+- **Assignment** - one-click "Take" and an assignee menu in the queue
+  (`specs/tickets.md`).
+- **Sharing** - a secret read-only link to a ticket, optionally with a
+  password; it shows only the public conversation, never internal notes;
+  administrators see and stop every shared link (`specs/sharing.md`).
 - **Admin** - dashboard, users (roles, memberships, deactivation),
   organizations and members (`specs/admin.md`).
 - **Secure defaults** - scoped queries everywhere (404 for tickets you may

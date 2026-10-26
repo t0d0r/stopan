@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_201747) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -95,10 +95,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_000001) do
     t.datetime "closed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "share_token"
+    t.string "share_password_digest"
+    t.datetime "shared_at"
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
     t.index ["number"], name: "index_tickets_on_number", unique: true
     t.index ["organization_id"], name: "index_tickets_on_organization_id"
     t.index ["requester_id"], name: "index_tickets_on_requester_id"
+    t.index ["share_token"], name: "index_tickets_on_share_token", unique: true
     t.index ["status"], name: "index_tickets_on_status"
     t.index ["updated_at"], name: "index_tickets_on_updated_at"
   end

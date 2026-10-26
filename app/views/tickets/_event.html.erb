@@ -19,7 +19,7 @@
         <% if comment.files.attached? %>
           <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
             <% comment.files.each do |file| %>
-              <li><%= attachment_link ticket, file %></li>
+              <li><%= attachment_link ticket, file, share_token: local_assigns[:share_token] %></li>
             <% end %>
           </ul>
         <% end %>

@@ -136,6 +136,30 @@ function setUpRequesterOrganizations(requester) {
   update();
 }
 
+// "Copy link" buttons copy the value of the field they name; the field
+// itself is selected on focus, so copying also works by hand.
+function setUpCopyButtons() {
+  document.querySelectorAll("[data-copy]").forEach((button) => {
+    const field = document.getElementById(button.dataset.copy);
+    const label = button.querySelector("[data-copy-label]");
+    if (!field || !label) return;
+    const original = label.textContent;
+    button.addEventListener("click", async () => {
+      field.select();
+      try {
+        await navigator.clipboard.writeText(field.value);
+      } catch {
+        document.execCommand("copy");
+      }
+      label.textContent = button.dataset.copiedLabel;
+      setTimeout(() => { label.textContent = original; }, 2000);
+    });
+  });
+  document.querySelectorAll("input[data-select-on-focus]").forEach((field) => {
+    field.addEventListener("focus", () => field.select());
+  });
+}
+
 function setUpPage() {
   pageAbort?.abort();
   pageAbort = new AbortController();
@@ -145,6 +169,7 @@ function setUpPage() {
   setUpConfirm(document.querySelector("[data-confirm-dialog]"));
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
+  setUpCopyButtons();
   document.querySelectorAll("select[data-requester-organizations]").forEach(setUpRequesterOrganizations);
 
   // Theme and text size apply at once; the cookie keeps them for the next page.

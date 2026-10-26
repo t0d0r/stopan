@@ -40,6 +40,11 @@ class TicketPolicy
     ticket.resolvable_by_requester? && (user.staff? || own?)
   end
 
+  # Share links (specs/sharing.md): staff, or the requester for their own ticket.
+  def share?
+    user.staff? || own?
+  end
+
   def see_internal?
     user.staff?
   end

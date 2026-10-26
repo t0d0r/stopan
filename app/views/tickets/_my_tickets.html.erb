@@ -40,7 +40,7 @@
             <% filter.tickets.each do |ticket| %>
               <tr id="<%= dom_id(ticket) %>" class="ticket-row">
                 <td class="num ticket-number"><%= ticket.reference %></td>
-                <td class="text"><%= link_to ticket.subject, ticket_path(ticket), class: "ticket-link" %></td>
+                <td class="text"><%= link_to ticket_path(ticket), class: "ticket-link" do %><%= ticket.subject %><% if ticket.shared? %> <%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %><% end %></td>
                 <% if several_orgs %><td class="text col-org"><%= ticket.organization.name %></td><% end %>
                 <td><%= status_pill ticket.status %></td>
                 <td class="date col-updated"><%= time_ago ticket.updated_at %></td>

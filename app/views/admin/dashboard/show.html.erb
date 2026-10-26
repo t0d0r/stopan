@@ -68,3 +68,33 @@
     </div>
   </section>
 </div>
+
+<section class="sticky sticky--purple panel" aria-labelledby="shared-title">
+  <header class="sticky__bar"><%= icon :link, size: 11 %><span class="sticky__caption"><%= t("ui.share.title") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="shared-title"><%= t("ui.admin.shared_tickets", count: @shared_tickets.size) %></h2>
+    <% if @shared_tickets.any? %>
+      <div class="table-scroll">
+        <table class="ledger table-shared">
+          <tbody>
+            <% @shared_tickets.each do |ticket| %>
+              <tr id="<%= dom_id(ticket, :shared) %>">
+                <td class="num ticket-number"><%= ticket.reference %></td>
+                <td class="text"><%= link_to ticket.subject, ticket_path(ticket, anchor: "sharing") %></td>
+                <td><%= ticket.share_password? ? t("ui.admin.share_password") : t("ui.admin.share_open") %></td>
+                <td class="date"><%= time_ago ticket.shared_at %></td>
+                <td class="action">
+                  <%= button_to t("ui.share.stop"), ticket_share_path(ticket), method: :delete, class: "link-button btn--danger",
+                                form: { data: confirm_data(title: t("ui.share.stop_title"), body: t("ui.share.stop_body"),
+                                                           button: t("ui.share.stop")) } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.admin.no_shared_tickets") %></p>
+    <% end %>
+  </div>
+</section>

@@ -15,6 +15,7 @@ class Ticket < ApplicationRecord
     "closed" => %w[open]
   }.freeze
   FIRST_NUMBER = 1001
+  SHARE_PASSWORD_LENGTH = 6..72
   # Fields whose changes are written to the timeline, and whether the
   # requester may see them (specs/timeline.md).
   TRACKED = { "status" => false, "priority" => true, "assignee_id" => true }.freeze
@@ -25,6 +26,11 @@ class Ticket < ApplicationRecord
   has_many :comments, -> { order(:created_at, :id) }, inverse_of: :ticket, dependent: :restrict_with_error
   has_many :events, -> { order(:created_at, :id) }, class_name: "TicketEvent", inverse_of: :ticket,
            dependent: :restrict_with_error
+
+  # The share password is optional (specs/sharing.md).
+  has_secure_password :share_password, validations: false, reset_token: false
+
+  scope :shared, -> { where.not(share_token: nil) }
 
   # Who makes the change being saved; events name them. Falls back to the
   # signed-in user of the request.
@@ -91,6 +97,43 @@ class Ticket < ApplicationRecord
 
   def resolvable_by_requester?
     UNSOLVED.include?(status)
+  end
+
+  def shared?
+    share_token.present?
+  end
+
+  def share_password?
+    share_password_digest.present?
+  end
+
+  # Makes a new share link, so sharing again revokes the old one
+  # (specs/sharing.md). The columns are written without touching updated_at:
+  # sharing is not activity on the ticket. Returns false for a bad password.
+  def share!(actor:, password: nil)
+    password = password.presence
+    if password && !SHARE_PASSWORD_LENGTH.cover?(password.length)
+      errors.add(:share_password, password.length < SHARE_PASSWORD_LENGTH.min ? :too_short : :too_long,
+                 count: password.length < SHARE_PASSWORD_LENGTH.min ? SHARE_PASSWORD_LENGTH.min : SHARE_PASSWORD_LENGTH.max)
+      return false
+    end
+
+    self.share_password = password
+    transaction do
+      update_columns(share_token: SecureRandom.base58(32), share_password_digest: share_password_digest,
+                     shared_at: Time.current)
+      events.create!(action: "shared", actor: actor, internal: true, to_value: ("password" if password))
+    end
+    true
+  end
+
+  def unshare!(actor:)
+    return unless shared?
+
+    transaction do
+      update_columns(share_token: nil, share_password_digest: nil, shared_at: nil)
+      events.create!(action: "unshared", actor: actor, internal: true)
+    end
   end
 
   # Saves property changes made by staff (or the system) in one transaction;

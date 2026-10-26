@@ -1,0 +1,10 @@
+<%= form_with url: ticket_share_path(ticket), method: :post, class: "stack-form share-form" do %>
+  <div class="field">
+    <%= label_tag "share_password_#{ticket.shared? ? 'new' : 'first'}", t("ui.share.password") %>
+    <%= password_field_tag :share_password, nil, id: "share_password_#{ticket.shared? ? 'new' : 'first'}",
+                           class: "field-input", autocomplete: "new-password",
+                           minlength: Ticket::SHARE_PASSWORD_LENGTH.min, maxlength: Ticket::SHARE_PASSWORD_LENGTH.max %>
+    <small class="field-hint"><%= t("ui.share.password_hint", min: Ticket::SHARE_PASSWORD_LENGTH.min) %></small>
+  </div>
+  <%= submit_tag submit, class: "btn btn--primary btn--block", name: nil %>
+<% end %>
