@@ -1,7 +1,7 @@
 class TicketsController < ApplicationController
   include TicketTimeline
 
-  before_action :set_ticket, only: %i[show update resolve]
+  before_action :set_ticket, only: %i[show update resolve assign]
 
   def index
     @filter = TicketFilter.new(current_user, params)
@@ -51,7 +51,29 @@ class TicketsController < ApplicationController
     redirect_to @ticket, notice: t("flash.ticket_resolved", reference: @ticket.reference)
   end
 
+  # One-click assignment from the queue and the ticket page; taking a new
+  # ticket starts work on it (specs/tickets.md "Assigning").
+  def assign
+    authorize! policy.update?
+    assignee = User.staff.active.find_by(id: params[:assignee_id]) if params[:assignee_id].present?
+    if params[:assignee_id].present? && assignee.nil?
+      return redirect_back_or_to(@ticket, allow_other_host: false, alert: t("flash.assignee_invalid"))
+    end
+
+    changes = { assignee_id: assignee&.id }
+    changes[:status] = "open" if assignee == current_user && @ticket.status == "new"
+    @ticket.apply_changes!(changes, actor: current_user)
+    redirect_back_or_to @ticket, allow_other_host: false, notice: assignment_notice(assignee)
+  end
+
   private
+
+  def assignment_notice(assignee)
+    if assignee.nil? then t("flash.ticket_unassigned", reference: @ticket.reference)
+    elsif assignee == current_user then t("flash.ticket_taken", reference: @ticket.reference)
+    else t("flash.ticket_assigned", reference: @ticket.reference, name: assignee.display_name)
+    end
+  end
 
   def set_ticket
     @ticket = find_visible_ticket(params[:id])

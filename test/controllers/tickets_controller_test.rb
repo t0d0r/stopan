@@ -158,6 +158,16 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select "#ticket_subject[aria-invalid=true]"
   end
 
+  test "the staff form lists each requester's organizations for the organization select" do
+    sign_in users(:agent)
+    get new_ticket_url
+    assert_select "select#ticket_requester_id[data-requester-organizations=ticket_organization_id]" do
+      assert_select "option[value='#{users(:anna).id}'][data-organizations='#{organizations(:acme).id}']"
+      assert_select "option[value='#{users(:carl).id}'][data-organizations='#{organizations(:globex).id}']"
+    end
+    assert_select "#organization-hint[data-choose-text]"
+  end
+
   test "staff open a ticket for a requester with priority and assignee" do
     sign_in users(:agent)
     get new_ticket_url

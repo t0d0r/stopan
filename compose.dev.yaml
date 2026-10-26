@@ -1,0 +1,35 @@
+# Runs Stopan in development mode from the source tree on
+# http://localhost:3000 (DEV_PORT). The source is mounted, so code, view and
+# CSS changes apply on the next page load; the container stays up.
+#
+#   make docker-dev        start (or update) in the background
+#   make docker-dev-logs   follow the logs
+#   make docker-dev-down   stop (data stays in the volumes)
+#
+# Gems, the development database and tmp/ live in volumes, apart from the
+# host's vendor/bundle, storage/ and tmp/ used by make run. The admin user is
+# seeded from ADMIN_* in .env (bin/setup-env). See specs/docker.md.
+name: stopan-dev
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: stopan-dev:latest
+    ports:
+      - "127.0.0.1:${DEV_PORT:-3000}:3000"
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+    volumes:
+      - .:/rails
+      - bundle:/usr/local/bundle
+      - storage:/rails/storage
+      - tmp:/rails/tmp
+
+volumes:
+  bundle:
+  storage:
+  tmp:

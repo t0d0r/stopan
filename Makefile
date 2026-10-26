@@ -4,10 +4,10 @@
 
 IMAGE ?= stopan:latest
 
-.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-check docker-up docker-down docker-logs deploy
+.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-check docker-up docker-down docker-logs docker-dev docker-dev-restart docker-dev-logs docker-dev-down deploy
 
 help: ## list the targets
-	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-14s %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-18s %s\n", $$1, $$2}'
 
 ruby: ## check that Ruby 4 is first on PATH (macOS ships Ruby 2.6)
 	@ruby -e 'exit(RUBY_VERSION.to_i >= 4 ? 0 : 1)' || { echo "Ruby $$(ruby -e 'print RUBY_VERSION') found; Stopan needs Ruby 4 (.ruby-version). With Homebrew: export PATH=/opt/homebrew/opt/ruby/bin:\$$PATH"; exit 1; }
@@ -73,6 +73,20 @@ docker-down: ## stop the docker compose app (data stays in the storage volume)
 
 docker-logs: ## follow the docker compose app logs
 	docker compose logs -f web
+
+docker-dev: ## run development mode in docker on http://localhost:3000 from the source tree; code changes apply live
+	@bin/setup-env
+	docker compose -f compose.dev.yaml up -d --build
+	@echo "http://localhost:$${DEV_PORT:-3000} (first start installs gems; make docker-dev-logs to watch)"
+
+docker-dev-restart: ## restart the development container after Gemfile or config/ changes
+	docker compose -f compose.dev.yaml restart dev
+
+docker-dev-logs: ## follow the development container logs
+	docker compose -f compose.dev.yaml logs -f dev
+
+docker-dev-down: ## stop the development container (gems, database and tmp stay in volumes)
+	docker compose -f compose.dev.yaml down
 
 deploy: ## ship HEAD to the server, build and restart there (needs DEPLOY_HOST; specs/deploy.md)
 	@bin/deploy

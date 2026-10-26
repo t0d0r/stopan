@@ -1,0 +1,26 @@
+<%# One-click assignee change in the queue (queues.md, tickets.md "Assigning"). %>
+<details class="assign-menu" data-assign-menu>
+  <summary class="assign-menu__button">
+    <span class="sr-only"><%= t("ui.assign.menu_label", reference: ticket.reference) %>:</span>
+    <% if ticket.assignee %>
+      <%= user_avatar ticket.assignee %><span><%= ticket.assignee.display_name %></span>
+    <% else %>
+      <span class="avatar avatar--empty" aria-hidden="true">?</span><span class="sr-only"><%= t("ui.unassigned") %></span>
+    <% end %>
+    <%= icon :down, size: 12 %>
+  </summary>
+  <%= form_with url: assign_ticket_path(ticket), method: :patch, class: "assign-menu__list sticky sticky--yellow" do %>
+    <% staff.sort_by { |user| user == current_user ? 0 : 1 }.each do |user| %>
+      <%= button_tag type: "submit", name: "assignee_id", value: user.id, class: "assign-menu__item",
+                     disabled: user.id == ticket.assignee_id do %>
+        <%= user_avatar user %><span><%= user == current_user ? t("ui.assign.me") : user.display_name %></span>
+        <% if user.id == ticket.assignee_id %><%= icon :check, size: 12 %><% end %>
+      <% end %>
+    <% end %>
+    <%= button_tag type: "submit", name: "assignee_id", value: "", class: "assign-menu__item assign-menu__item--nobody",
+                   disabled: ticket.assignee_id.nil? do %>
+      <span><%= t("ui.assign.nobody") %></span>
+      <% if ticket.assignee_id.nil? %><%= icon :check, size: 12 %><% end %>
+    <% end %>
+  <% end %>
+</details>

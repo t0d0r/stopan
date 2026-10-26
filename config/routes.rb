@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :tickets, only: %i[index show new create update] do
     member do
       patch :resolve
+      patch :assign
     end
     resources :comments, only: :create
     resources :attachments, only: :show

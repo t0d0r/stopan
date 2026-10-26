@@ -3,6 +3,7 @@
   <div class="panel__body">
     <h2 class="sr-only" id="properties-title"><%= t("ui.ticket.properties") %></h2>
     <% if policy.update? %>
+      <%= render "take_button", ticket: ticket, block: true %>
       <%= form_with model: ticket, class: "properties-form" do |f| %>
         <%= form_errors ticket if ticket.errors.any? && controller_name == "tickets" %>
         <div class="field">

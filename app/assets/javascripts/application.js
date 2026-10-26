@@ -75,6 +75,67 @@ function setUpComposer(composer) {
   composer.querySelectorAll("[data-composer-mode]").forEach((radio) => radio.addEventListener("change", update));
 }
 
+// Assign menus in the queue float under their button, so the table's scroll
+// box does not clip them; one is open at a time (specs/queues.md). Without
+// JavaScript the <details> opens inside the cell.
+function setUpAssignMenus(menus) {
+  if (menus.length === 0) return;
+  const closeAll = (except) => menus.forEach((menu) => { if (menu !== except) menu.open = false; });
+
+  menus.forEach((menu) => {
+    const list = menu.querySelector(".assign-menu__list");
+    menu.classList.add("is-floating");
+    menu.addEventListener("toggle", () => {
+      if (!menu.open) return;
+      closeAll(menu);
+      const box = menu.querySelector("summary").getBoundingClientRect();
+      const below = box.bottom + 4 + list.offsetHeight <= window.innerHeight;
+      list.style.top = `${below ? box.bottom + 4 : Math.max(8, box.top - 4 - list.offsetHeight)}px`;
+      list.style.left = `${Math.max(8, Math.min(box.left, window.innerWidth - list.offsetWidth - 8))}px`;
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest("details[data-assign-menu]")) closeAll();
+  }, { signal: pageSignal });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    const open = Array.from(menus).find((menu) => menu.open);
+    if (!open) return;
+    open.open = false;
+    open.querySelector("summary").focus();
+  }, { signal: pageSignal });
+  window.addEventListener("scroll", () => closeAll(), { signal: pageSignal, capture: true, passive: true });
+  window.addEventListener("resize", () => closeAll(), { signal: pageSignal });
+}
+
+// Staff new ticket form: the organization select lists only the chosen
+// requester's organizations (specs/tickets.md "Creating").
+function setUpRequesterOrganizations(requester) {
+  const organization = document.getElementById(requester.dataset.requesterOrganizations);
+  const hint = document.getElementById("organization-hint");
+  if (!organization) return;
+
+  const update = () => {
+    const chosen = requester.selectedOptions[0];
+    const allowed = chosen && chosen.value ? (chosen.dataset.organizations || "").split(" ") : null;
+    const fitting = [];
+    organization.querySelectorAll("option").forEach((option) => {
+      if (!option.value) return;
+      const fits = allowed !== null && allowed.includes(option.value);
+      option.hidden = !fits;
+      option.disabled = !fits;
+      if (fits) fitting.push(option);
+    });
+    if (organization.selectedOptions[0]?.disabled) organization.value = "";
+    if (fitting.length === 1) organization.value = fitting[0].value;
+    organization.disabled = allowed === null;
+    if (hint) hint.textContent = allowed === null ? hint.dataset.chooseText : hint.dataset.defaultText;
+  };
+  requester.addEventListener("change", update);
+  update();
+}
+
 function setUpPage() {
   pageAbort?.abort();
   pageAbort = new AbortController();
@@ -83,6 +144,8 @@ function setUpPage() {
   document.querySelectorAll("textarea[data-autogrow]").forEach(autoGrow);
   setUpConfirm(document.querySelector("[data-confirm-dialog]"));
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
+  setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
+  document.querySelectorAll("select[data-requester-organizations]").forEach(setUpRequesterOrganizations);
 
   // Theme and text size apply at once; the cookie keeps them for the next page.
   document.querySelectorAll("form[data-preference]").forEach((form) => {

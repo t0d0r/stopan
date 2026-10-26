@@ -1,0 +1,8 @@
+<%# "Take": assign an unsolved ticket to yourself in one click (tickets.md "Assigning"). %>
+<% if ticket.unsolved? && ticket.assignee_id != current_user.id %>
+  <%= button_to assign_ticket_path(ticket), method: :patch, params: { assignee_id: current_user.id },
+                class: "btn btn--take#{' btn--block' if local_assigns[:block]}",
+                title: t("ui.assign.take_label", reference: ticket.reference) do %>
+    <%= icon :user, size: 12 %> <%= t("ui.assign.take") %><span class="sr-only"> <%= ticket.reference %></span>
+  <% end %>
+<% end %>

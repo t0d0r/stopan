@@ -1,3 +1,4 @@
+<% staff = User.staff.active.ordered.to_a %>
 <div class="desk__header">
   <h1 class="desk__title"><%= t("ui.queue.title") %></h1>
   <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
@@ -40,7 +41,7 @@
           <%= label_tag :assignee, t("ui.fields.assignee") %>
           <%= select_tag :assignee,
                          options_for_select([ [ t("ui.queue.assignee_me"), "me" ], [ t("ui.queue.assignee_none"), "none" ] ] +
-                                            User.staff.active.ordered.map { |u| [ u.display_name, u.id.to_s ] }, filter.assignee),
+                                            staff.map { |u| [ u.display_name, u.id.to_s ] }, filter.assignee),
                          include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.assignee), data: { auto_submit: true } %>
         </div>
         <div class="filters__field">
@@ -87,11 +88,10 @@
                   <td><%= status_pill ticket.status %></td>
                   <td class="col-priority"><%= priority_pill ticket.priority %></td>
                   <td class="text col-assignee">
-                    <% if ticket.assignee %>
-                      <span class="assignee"><%= user_avatar ticket.assignee %><%= ticket.assignee.display_name %></span>
-                    <% else %>
-                      <span class="muted"><%= t("ui.unassigned") %></span>
-                    <% end %>
+                    <div class="assignee">
+                      <%= render "assign_menu", ticket: ticket, staff: staff %>
+                      <%= render "take_button", ticket: ticket if ticket.assignee_id.nil? %>
+                    </div>
                   </td>
                   <td class="date col-updated"><%= time_ago ticket.updated_at %></td>
                 </tr>

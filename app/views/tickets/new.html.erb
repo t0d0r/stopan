@@ -12,16 +12,22 @@
           <div class="field-row">
             <div class="field">
               <%= f.label :requester_id, t("ui.fields.requester") %>
-              <%= f.collection_select :requester_id, User.active.with_membership.ordered, :id, :display_name,
-                                      { include_blank: t("ui.new_ticket.choose") },
-                                      class: "select", required: true, aria: { invalid: invalid?(@ticket, :requester) } %>
+              <%= f.select :requester_id,
+                           User.active.with_membership.ordered.includes(:memberships).map { |user|
+                             [ user.display_name, user.id, { data: { organizations: user.memberships.map(&:organization_id).join(" ") } } ]
+                           },
+                           { include_blank: t("ui.new_ticket.choose") },
+                           class: "select", required: true, aria: { invalid: invalid?(@ticket, :requester) },
+                           data: { requester_organizations: "ticket_organization_id" } %>
             </div>
             <div class="field">
               <%= f.label :organization_id, t("ui.fields.organization") %>
               <%= f.collection_select :organization_id, Organization.ordered, :id, :name,
                                       { include_blank: t("ui.new_ticket.choose") },
                                       class: "select", required: true, aria: { invalid: invalid?(@ticket, :organization) } %>
-              <small class="field-hint"><%= t("ui.new_ticket.organization_hint") %></small>
+              <small class="field-hint" id="organization-hint"
+                     data-choose-text="<%= t("ui.new_ticket.organization_choose_requester") %>"
+                     data-default-text="<%= t("ui.new_ticket.organization_hint") %>"><%= t("ui.new_ticket.organization_hint") %></small>
             </div>
           </div>
         <% elsif current_user.organizations.size > 1 %>

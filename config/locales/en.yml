@@ -143,9 +143,17 @@ en:
       intro_staff: "Open a ticket on behalf of a requester, for example after a phone call."
       choose: "Choose..."
       organization_hint: "The requester must be a member of this organization."
+      organization_choose_requester: "Choose the requester first; only their organizations are listed."
       subject_hint: "A short summary, for example: Printer on the 2nd floor does not print."
       description_hint: "What happened, what you expected, and anything you already tried."
       submit: "Open ticket"
+
+    assign:
+      take: "Take"
+      take_label: "Take ticket %{reference}"
+      menu_label: "Change the assignee of %{reference}"
+      me: "Me"
+      nobody: "Nobody"
 
     ticket:
       details: "Ticket details"
@@ -315,6 +323,10 @@ en:
   flash:
     ticket_created: "Ticket %{reference} was created."
     ticket_updated: "Ticket %{reference} was updated."
+    ticket_taken: "Ticket %{reference} is now assigned to you."
+    ticket_assigned: "Ticket %{reference} is now assigned to %{name}."
+    ticket_unassigned: "Ticket %{reference} is now unassigned."
+    assignee_invalid: "Tickets can only be assigned to active agents and administrators."
     ticket_resolved: "Ticket %{reference} is marked as resolved."
     reply_sent: "Your reply was sent."
     note_added: "Internal note added."

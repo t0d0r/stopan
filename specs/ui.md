@@ -54,7 +54,8 @@ Turbo Drive for page changes.
   subject and status pill; the description as the first sticky; the
   timeline; the composer. Side: "Properties" panel (status, priority,
   assignee as selects with "Update" for staff, plain values for
-  requesters), "Requester" panel (name, email, organization; staff only see
+  requesters; staff also get a one-click "Take" button above the form
+  when the ticket is not theirs), "Requester" panel (name, email, organization; staff only see
   email) and dates. Requesters see "Mark as resolved" when allowed. Under
   900px the side panel comes after the header.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow

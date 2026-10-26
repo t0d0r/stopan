@@ -146,9 +146,17 @@ bg:
       intro_staff: "Подайте заявка от името на заявител, например след телефонно обаждане."
       choose: "Изберете..."
       organization_hint: "Заявителят трябва да е член на тази организация."
+      organization_choose_requester: "Първо изберете заявителя; показват се само неговите организации."
       subject_hint: "Кратко описание, например: Принтерът на втория етаж не печата."
       description_hint: "Какво се случи, какво очаквахте и какво вече опитахте."
       submit: "Подай заявката"
+
+    assign:
+      take: "Поеми"
+      take_label: "Поеми заявка %{reference}"
+      menu_label: "Смяна на отговорника на %{reference}"
+      me: "Аз"
+      nobody: "Никой"
 
     ticket:
       details: "Данни за заявката"
@@ -318,6 +326,10 @@ bg:
   flash:
     ticket_created: "Заявка %{reference} е създадена."
     ticket_updated: "Заявка %{reference} е обновена."
+    ticket_taken: "Заявка %{reference} вече е възложена на вас."
+    ticket_assigned: "Заявка %{reference} вече е възложена на %{name}."
+    ticket_unassigned: "Заявка %{reference} вече няма отговорник."
+    assignee_invalid: "Заявки могат да се възлагат само на активни агенти и администратори."
     ticket_resolved: "Заявка %{reference} е отбелязана като решена."
     reply_sent: "Отговорът ви е изпратен."
     note_added: "Вътрешната бележка е добавена."

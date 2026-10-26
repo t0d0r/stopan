@@ -72,6 +72,17 @@ internal notes and reopen the ticket (`closed` -> `open`).
 - **Staff** form: the same plus requester (active users with at least one
   membership), organization, priority and assignee. The server checks that
   the requester belongs to the organization.
+- **Organizations of the chosen requester only** (staff form): the
+  organization select lists only the organizations the chosen requester is
+  a member of, so staff never see or pick an organization the requester is
+  not part of. Each requester option carries the ids of their
+  organizations (`data-organizations`); when the requester changes, the
+  other organizations' options are hidden and disabled, an organization
+  that no longer fits is unselected, and a requester with exactly one
+  organization gets it selected. Until a requester is chosen the
+  organization select is disabled and its hint says to choose the
+  requester first. Without JavaScript every organization is listed; the
+  server check above always decides.
 - After create: redirect to the ticket with "Ticket #1001 was created."
 - A `created` event is written in the same transaction (timeline.md).
 
@@ -84,6 +95,30 @@ page with the errors). Requesters get 403.
 
 `PATCH /tickets/:number/resolve` is the requester's "Mark as resolved"
 (also allowed for staff).
+
+## Assigning (staff)
+
+Taking a ticket or handing it to someone must be one click, from the queue
+and from the ticket page.
+
+`PATCH /tickets/:number/assign` with `assignee_id`: an active staff user's
+id, or blank for nobody. Requesters get 403.
+
+- **Take:** assigning a ticket to yourself. A `new` ticket you take becomes
+  `open` ("In progress") in the same transaction, because you are now
+  working on it. Assigning to someone else, or to nobody, leaves the
+  status alone.
+- Every change writes the usual events (an assignee event, and a status
+  event when the status changed); assigning the current assignee again
+  records nothing. Notifications follow specs/notifications.md (the new
+  assignee is told, never the actor).
+- An invalid assignee (a requester, a deactivated user, an unknown id)
+  changes nothing and shows an alert.
+- After the change the user goes back to the page they came from when the
+  `Referer` is a page of this app (so the queue keeps its view, filters
+  and page), otherwise to the ticket. Flash: "Ticket #1001 is now assigned
+  to you." / "... assigned to Maria Ivanova." / "Ticket #1001 is now
+  unassigned."
 
 ## Deleting
 

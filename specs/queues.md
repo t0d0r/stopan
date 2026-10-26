@@ -78,6 +78,21 @@ assignee has a small round badge with their initials in a paper colour
 picked from their user id, so the same person always has the same colour
 (the name is next to it; the badge is decorative, `aria-hidden`).
 
+Assigning from the queue (tickets.md "Assigning"):
+
+- The assignee cell is a menu button showing the badge and name (or
+  "Unassigned") with a caret. It opens a small sticky with one button per
+  choice: "Me" first, the other active staff, then "Nobody"; the current
+  assignee is marked and disabled. One click assigns.
+- Unassigned unsolved tickets show an empty "?" badge (screen readers hear
+  "Unassigned") and a one-click "Take" button next to it. Taking over
+  someone else's ticket is "Me" in the menu (a Take button on every row
+  squeezed the subject column).
+- The menu is a `<details>` element. With JavaScript it floats over the
+  table under its button (so the table's scroll box does not clip it) and
+  closes on a click outside, Escape, scrolling or opening another menu;
+  without JavaScript it opens inside the cell.
+
 ## My tickets (requester)
 
 Tabs: `open` (new, open, pending; default, yellow), `solved` (resolved,

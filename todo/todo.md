@@ -55,6 +55,13 @@
 - [x] show the `open` status as "In progress" / "В процес" (specs/tickets.md)
 - [x] admin users and organizations lists: filters without the Apply / Search button (specs/admin.md)
 
+## Assignment and sharing (2026-10-26)
+
+- [x] one-click Take and an assign menu in the queue, Take on the ticket page (specs/tickets.md "Assigning", specs/queues.md)
+- [x] staff new ticket form lists only the chosen requester's organizations (specs/tickets.md "Creating")
+- [x] screenshots: Accept-Language was never sent, so the Bulgarian screenshot was English (specs/ui.md)
+- [ ] share a ticket by link, like g0no (spec first: specs/sharing.md)
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)
