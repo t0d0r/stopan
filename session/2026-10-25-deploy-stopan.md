@@ -13,6 +13,24 @@ Not deployed. No mutation on the server. The deployment is designed and
 its artifacts are in the repository (specs/deploy.md), ready to run once
 the operator provides a remote API user.
 
+## Resume attempt, 2026-10-26 08:01 server time
+
+The operator reported the credentials file in place at
+`/root/.config/stopan/ispconfig-remote.env`. Revalidated read-only before
+any change:
+
+- The file does not exist; `/root/.config/stopan/` does not exist; no file
+  named `ispconfig-remote*.env` was created anywhere on the root
+  filesystem since 2026-10-25 22:00.
+- ISPConfig `remote_user` still has 0 rows, so no remote user was created
+  in the panel either.
+- Unchanged: DNS A record correct, no stopan `web_domain` row or vhost, no
+  `stopan` user, 127.0.0.1:3183 free, g0no `/up` 200.
+
+Outcome: still blocked; no server mutation. Both parts of the unblock
+(remote user in the panel and the root-only file) are needed; see
+specs/deploy.md "Blocker".
+
 ## Revalidation (read-only, redacted)
 
 - DNS: `stopan.linuxfan.org` A = the server's address (same as

@@ -12,6 +12,8 @@ vhost, which also obtains the Let's Encrypt certificate.
 
 **Not deployed. Blocked on ISPConfig Remote API access (2026-10-25).**
 See "Blocker" below. Nothing has been changed on the server.
+Rechecked 2026-10-26: neither the remote user nor the credentials file
+exists yet.
 
 ## Layout
 
