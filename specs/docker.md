@@ -21,7 +21,32 @@ One service, `web`, published on `${PORT:-3000}`, with a named volume
 `storage`. Configuration comes from `.env` (template: `.env.example`), which
 `make docker-up` creates with generated secrets when missing
 (`bin/setup-env`).
-Targets: `make docker-up`, `docker-down`, `docker-logs`, `docker-build`.
+Targets: `make docker-up`, `docker-down`, `docker-logs`, `docker-build`,
+`docker-check`.
+
+## Build context (`.dockerignore`)
+
+The image gets only what the app runs: no `.env*`, git data, agent or
+editor folders (`.hermes`, `.claude`), git hooks, `specs/`, `todo/`,
+`session/`, `docs/`, `test/`, `deploy/` or host gems (`vendor/bundle`).
+
+## Smoke test (`make docker-check`)
+
+Builds the image, then `bin/docker-check` runs it with throwaway secrets
+(generated, never printed, `.env` is not read) and a throwaway volume on
+`127.0.0.1:${PORT:-3190}` and fails unless:
+
+- none of the excluded files above is in `/rails` and the image does not
+  run as root;
+- `/up` answers 200 within 60 seconds;
+- the sign-in page has the Stopan title and its fingerprinted stylesheet
+  is served;
+- the seeded admin signs in (303) and `/admin` answers 200;
+- after `docker restart` `/up` answers again and the database still holds
+  exactly the one seeded user (seeding is idempotent, data is in the
+  volume).
+
+The container and volume are removed afterwards, also on failure.
 
 ## Environment variables
 
@@ -38,9 +63,11 @@ Targets: `make docker-up`, `docker-down`, `docker-logs`, `docker-build`.
 
 ## Verified
 
-Inherited from g0no, where the image was verified on 2026-10-18. The Stopan
-image has not been built yet (todo). Stopan has no production deployment;
-g0no's server files (Podman unit, Apache vhost, `bin/deploy`) were removed.
+2026-10-26: `stopan:latest` built (Docker 29, arm64, `ruby:4.0.7-slim`;
+about 150 MB compressed, 600 MB unpacked) and `make docker-check` passed;
+the healthcheck reported `healthy`, the security headers (CSP,
+`nosniff`, `X-Frame-Options`, `httponly` session cookie) were present.
+Production deployment is designed separately in specs/deploy.md.
 
 ## Security Note
 

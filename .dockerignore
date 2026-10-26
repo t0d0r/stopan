@@ -52,3 +52,15 @@
 
 # Screenshots for the README.
 /docs/
+
+# Ignore agent and editor working folders, git hooks and other VCS files.
+/.hermes
+/.claude
+/.githooks
+/.hgignore
+/.github
+
+# Ignore tests and server deployment files; the image only runs the app.
+/test
+/deploy
+/AGENTS.md

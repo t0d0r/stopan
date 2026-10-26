@@ -31,8 +31,21 @@ not touched.
   done here), `make secrets` scans history and staged changes and is part
   of `make lint`. History scan: 10 commits, no leaks. Hook verified in a
   throwaway repository: clean commit passes, a fake token is refused.
+- Docker image (specs/docker.md): first Stopan build (`make
+  docker-build`, about 150 MB compressed). The build context had copied in
+  the untracked `.hermes/` agent folder, `test/`, `deploy/`, `.githooks`
+  and `.hgignore`; `.dockerignore` now excludes them. New
+  `bin/docker-check` / `make docker-check`: throwaway secrets and volume
+  on 127.0.0.1:3190, checks image contents and non-root user, `/up`,
+  sign-in page and stylesheet, admin sign-in and `/admin`, restart
+  persistence; removes everything afterwards. Passed; healthcheck
+  `healthy`, CSP and other headers present.
 
 ## Decisions
+
+- Excluding `deploy/` from the image does not affect `bin/deploy`: it
+  ships the repository with `git archive`, and only the image build
+  context skips those files.
 
 - Mail strings live under a top-level `mailer` scope (not `ui`), and the
   parity test checks it.
@@ -54,19 +67,24 @@ config/initializers/devise.rb, config/locales/{en,bg,rails.bg}.yml,
 test/integration/account_pages_bulgarian_test.rb,
 test/i18n/locales_test.rb, specs/auth.md, todo/todo.md, this note;
 README.md, docs/screenshots/*, bin/screenshots, Makefile, .dockerignore,
-specs/ui.md, .githooks/pre-commit, specs/overview.md.
+specs/ui.md, .githooks/pre-commit, specs/overview.md, bin/docker-check,
+specs/docker.md.
 
 ## How to verify
 
 - `make check` - RuboCop, Brakeman, gitleaks and all tests (131 runs).
 - `make hooks` once per clone for the gitleaks pre-commit hook.
+- `make docker-check` - build the image and smoke-test it (needs Docker).
 - `make run`, open the sign-in page with the browser set to Bulgarian.
 - `DEMO_PASSWORD=... STOPAN_URL=http://127.0.0.1:3000 make screenshots`
   with the dev server running and demo data loaded.
 
 ## Next step
 
-Build and check the Docker image (specs/docker.md).
+Phase 2: write specs/notifications.md (email on public replies and status
+changes, reusing `TicketEvent.visible_to`; SMTP from environment
+variables), then implement it. The deployment stays blocked on the
+operator.
 
 ## Security Note
 

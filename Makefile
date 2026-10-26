@@ -4,7 +4,7 @@
 
 IMAGE ?= stopan:latest
 
-.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-up docker-down docker-logs deploy
+.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-check docker-up docker-down docker-logs deploy
 
 help: ## list the targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -60,6 +60,9 @@ clean: ## remove caches, logs, compiled assets and test uploads (keeps databases
 
 docker-build: ## build the production Docker image
 	docker build -t $(IMAGE) .
+
+docker-check: docker-build ## build the image and smoke-test it with throwaway secrets (no .env; PORT default 3190)
+	bin/docker-check $(IMAGE)
 
 docker-up: ## build and start the app with docker compose on http://localhost:3000
 	@bin/setup-env

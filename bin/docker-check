@@ -1,0 +1,67 @@
+#!/bin/sh
+# Smoke test of the production image (specs/docker.md): runs it with
+# throwaway secrets and a throwaway volume on a loopback port, checks the
+# image contents, /up, the sign-in page, a sign-in as the seeded admin,
+# the admin page and a restart, then removes the container and volume.
+# Never reads .env; the generated secrets are not printed.
+#
+#   bin/docker-check [image]   (default stopan:latest; PORT default 3190)
+set -eu
+
+image=${1:-stopan:latest}
+port=${PORT:-3190}
+name=stopan-check-$$
+base=http://127.0.0.1:$port
+jar=$(mktemp)
+password=$(openssl rand -hex 16)
+
+cleanup() {
+  docker rm -f "$name" >/dev/null 2>&1 || true
+  docker volume rm "$name" >/dev/null 2>&1 || true
+  rm -f "$jar"
+}
+trap cleanup EXIT
+
+fail() { echo "docker-check: FAIL - $*" >&2; docker logs --tail 30 "$name" >&2 2>&1 || true; exit 1; }
+
+wait_up() {
+  i=0
+  until [ "$(curl -s -o /dev/null -w '%{http_code}' "$base/up")" = 200 ]; do
+    i=$((i + 1)); [ "$i" -le 60 ] || fail "/up did not answer 200 within 60 s"
+    sleep 1
+  done
+}
+
+echo "image contents"
+leftovers=$(docker run --rm --entrypoint sh "$image" -c \
+  'cd /rails && ls -d .env* .git .hermes .claude test specs session todo docs deploy vendor/bundle 2>/dev/null || true')
+[ -z "$leftovers" ] || fail "files that do not belong in the image: $leftovers"
+[ "$(docker run --rm --entrypoint id "$image" -u)" != 0 ] || fail "image runs as root"
+
+echo "start $image on $base"
+docker volume create "$name" >/dev/null
+docker run -d --name "$name" -p "127.0.0.1:$port:80" -v "$name:/rails/storage" \
+  -e SECRET_KEY_BASE="$(openssl rand -hex 64)" -e RAILS_FORCE_SSL=false -e RAILS_ASSUME_SSL=false \
+  -e ADMIN_USERNAME=admin -e ADMIN_EMAIL=admin@example.com -e ADMIN_PASSWORD="$password" \
+  "$image" >/dev/null
+wait_up
+
+echo "sign in as the seeded admin"
+page=$(curl -s -c "$jar" -b "$jar" "$base/users/sign_in")
+echo "$page" | grep -q "<title>Stopan</title>" || fail "sign-in page has no Stopan title"
+css=$(echo "$page" | grep -o '/assets/application-[^"]*\.css' | head -1)
+[ "$(curl -s -o /dev/null -w '%{http_code}' "$base$css")" = 200 ] || fail "stylesheet $css not served"
+token=$(echo "$page" | sed -n 's/.*<meta name="csrf-token" content="\([^"]*\)".*/\1/p')
+status=$(curl -s -o /dev/null -w '%{http_code}' -c "$jar" -b "$jar" \
+  --data-urlencode "authenticity_token=$token" --data-urlencode "user[email]=admin" \
+  --data-urlencode "user[password]=$password" "$base/users/sign_in")
+[ "$status" = 303 ] || fail "sign-in answered $status, expected 303"
+[ "$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" "$base/admin")" = 200 ] || fail "admin page not reachable"
+
+echo "restart keeps the data"
+docker restart "$name" >/dev/null
+wait_up
+users=$(docker exec "$name" bin/rails runner 'print User.count' 2>/dev/null)
+[ "$users" = 1 ] || fail "expected 1 user after restart, found $users"
+
+echo "docker-check: OK ($image)"
