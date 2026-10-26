@@ -10,6 +10,12 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "#organization_#{organizations(:acme).id} td.num", text: "2", minimum: 1
   end
 
+  test "the organization search has no button" do
+    get admin_organizations_url
+    assert_select "form.filters[data-filter-form] input[type=search][name=q]"
+    assert_select "form.filters input[type=submit]", 0
+  end
+
   test "creates, shows and updates an organization" do
     assert_difference("Organization.count") do
       post admin_organizations_url, params: { organization: { name: "  Initech  ", notes: "Printers everywhere." } }

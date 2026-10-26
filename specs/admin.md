@@ -13,7 +13,7 @@ Links to the user and organization lists.
 
 | route | behaviour |
 |-------|-----------|
-| `GET /admin/users` | table: name, username, email, role, organizations, status (active / deactivated), last sign-in; filter by role, search by name/username/email |
+| `GET /admin/users` | table: name, username, email, role, organizations, status (active / deactivated), last sign-in; filter by role, search by name/username/email; the role select applies on change and the search on Enter, with no Apply button (only a `<noscript>` one); a set role filter is highlighted (queues.md) |
 | `GET /admin/users/new`, `POST /admin/users` | name, username, email, password + confirmation, role, organizations (checkboxes) |
 | `GET /admin/users/:id/edit`, `PATCH /admin/users/:id` | same fields plus "Deactivated"; a blank password keeps the current one |
 | `DELETE /admin/users/:id` | only for users with no tickets (as requester or assignee), no comments and no ticket events; otherwise refused with "has ticket history; deactivate instead". The list shows the Delete button only for other users without history (`User.ids_with_ticket_history`, one query per table); the server check stays for requests made anyway |
@@ -36,7 +36,7 @@ Rules:
 
 | route | behaviour |
 |-------|-----------|
-| `GET /admin/organizations` | table: name, members, unsolved tickets, all tickets; search by name |
+| `GET /admin/organizations` | table: name, members, unsolved tickets, all tickets; search by name (Enter, no button) |
 | `GET /admin/organizations/new`, `POST` | name (required, unique case-insensitively, at most 120 characters), notes (optional, staff-only text) |
 | `GET /admin/organizations/:id` | details, member list with role and "Remove", "Add member" (select of users not yet members) |
 | `GET /admin/organizations/:id/edit`, `PATCH` | name, notes |

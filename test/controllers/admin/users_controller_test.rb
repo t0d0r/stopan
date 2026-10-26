@@ -15,6 +15,15 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_select ".table-users tbody tr", 1
   end
 
+  test "the user filters apply without a button" do
+    get admin_users_url(role: "agent")
+    assert_select "form.filters[data-filter-form]" do
+      assert_select "select#role.is-set[data-auto-submit]"
+      assert_select "noscript input[type=submit]"
+      assert_select "> .filters__actions", 0
+    end
+  end
+
   test "offers Delete only for other users without ticket history" do
     get admin_users_url
     assert_select "#user_#{users(:drifter).id} form[action=?]", admin_user_path(users(:drifter))

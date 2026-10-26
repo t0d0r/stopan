@@ -11,13 +11,13 @@
       <h2 class="section-title" id="organizations-title"><%= t("ui.admin.organizations_count", count: @organizations.size) %></h2>
       <%= link_to t("ui.admin.new_organization"), new_admin_organization_path, class: "btn btn--primary" %>
     </div>
-    <%= form_with url: admin_organizations_path, method: :get, class: "filters filters--compact" do %>
+    <%= form_with url: admin_organizations_path, method: :get, class: "filters filters--compact",
+                                                      data: { filter_form: true, turbo_action: "replace" } do %>
       <div class="filters__search search-field">
         <%= icon :search %>
         <%= label_tag :q, t("ui.admin.search_organizations"), class: "sr-only" %>
         <%= search_field_tag :q, @query, class: "search-field__input", placeholder: t("ui.admin.search_organizations") %>
       </div>
-      <div class="filters__actions"><%= submit_tag t("ui.queue.search"), class: "btn", name: nil %></div>
     <% end %>
     <% if @organizations.any? %>
       <div class="table-scroll">

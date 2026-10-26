@@ -11,7 +11,8 @@
       <h2 class="section-title" id="users-title"><%= t("ui.admin.users_count", count: @users.size) %></h2>
       <%= link_to t("ui.admin.new_user"), new_admin_user_path, class: "btn btn--primary" %>
     </div>
-    <%= form_with url: admin_users_path, method: :get, class: "filters filters--compact", data: { filter_form: true } do %>
+    <%= form_with url: admin_users_path, method: :get, class: "filters filters--compact",
+                                              data: { filter_form: true, turbo_action: "replace" } do %>
       <div class="filters__search search-field">
         <%= icon :search %>
         <%= label_tag :q, t("ui.admin.search_users"), class: "sr-only" %>
@@ -20,9 +21,9 @@
       <div class="filters__field">
         <%= label_tag :role, t("ui.fields.role") %>
         <%= select_tag :role, options_for_select(User::ROLES.map { |r| [ t("ui.roles.#{r}"), r ] }, @role),
-                       include_blank: t("ui.queue.any"), class: "select", data: { auto_submit: true } %>
+                       include_blank: t("ui.queue.any"), class: class_names("select", "is-set": @role), data: { auto_submit: true } %>
       </div>
-      <div class="filters__actions"><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></div>
+      <noscript><div class="filters__actions"><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></div></noscript>
     <% end %>
     <div class="table-scroll">
       <table class="ledger table-users">

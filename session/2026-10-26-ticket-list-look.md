@@ -40,13 +40,19 @@ search into the header, and let the filters work without the Apply button.
   chose a rename over a new status). Only the translations, spec, README
   and test strings changed; the stored value and URLs stay `open`.
 
+- Admin lists: the users list role filter applies on change (Apply only
+  in `<noscript>`, set role highlighted), the organizations search has no
+  Search button (Enter submits); both clear the search with the field's x.
+  Restored the `.filters .search-field` style the admin search still needs
+  (removed by mistake with the queue search). Dropped the unused
+  `ui.queue.search` key.
+
 ## Decisions
 
 - "Header" = the menu bar, so search is reachable from every page, as in
   g0no's original menu bar search.
 - Search does not search as you type: Turbo replaces the body and the field
   would lose focus; Enter is enough.
-- Admin users list keeps its Apply button for now (todo item).
 
 ## Files
 
@@ -64,7 +70,6 @@ config/locales/{en,bg}.yml, test/controllers/tickets_controller_test.rb.
 
 ## Next
 
-- Same auto-applying filters for the admin users list (todo).
 - Roadmap: auto-close resolved tickets (needs a scheduler; with Solid
   Queue).
 

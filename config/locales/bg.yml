@@ -106,7 +106,6 @@ bg:
         all: "Всички заявки"
       search_label: "Търсене в заявките"
       search_placeholder: "Търсене в тема, текст или #номер"
-      search: "Търсене"
       any: "Всички"
       assignee_me: "Аз"
       assignee_none: "Никой"

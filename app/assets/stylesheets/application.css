@@ -1366,6 +1366,18 @@ form.button_to {
   border-bottom: 1px solid var(--rule);
 }
 
+.filters .search-field {
+  flex: 1 1 220px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--ink-soft);
+}
+
+.filters .search-field__input {
+  color: var(--ink);
+  font-size: 14px;
+}
+
 .filters__field {
   display: flex;
   flex-direction: column;
