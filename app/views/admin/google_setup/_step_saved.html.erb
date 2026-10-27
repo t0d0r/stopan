@@ -1,0 +1,16 @@
+<% if @gmail_organizations.any? %>
+  <p><%= t("ui.google_setup.saved.done") %></p>
+  <ul class="share-list">
+    <% @gmail_organizations.each do |organization| %>
+      <li class="share-list__item">
+        <p class="share-list__title"><strong><%= organization.name %></strong></p>
+        <p class="share-list__meta"><%= organization.mailbox_address %></p>
+        <%= link_to t("ui.google_setup.done.test"), admin_organization_path(organization, anchor: "mail"), class: "btn" %>
+      </li>
+    <% end %>
+  </ul>
+  <p class="field-hint"><%= t("ui.google_setup.done.test_hint") %></p>
+<% else %>
+  <p><%= t("ui.google_setup.saved.none") %></p>
+<% end %>
+<%= render "admin/google_setup/nav", back: "mailbox" %>

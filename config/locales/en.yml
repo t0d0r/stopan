@@ -697,19 +697,24 @@ en:
       new_tab: "opens in a new tab"
       copy: "Copy"
       steps:
-        s1: "Your Google account"
-        s2: "Project and consent screen"
-        s3: "Mail access"
-        s4: "OAuth client"
-        s5: "Connect a mailbox"
-        s6: "Done"
-      s1:
+        account: "Your Google account"
+        project: "Project and consent screen"
+        access: "Mail access"
+        client: "OAuth client"
+        connect: "Connect a mailbox"
+        done: "Done"
+        app_password: "App password"
+        mailbox: "Connect a mailbox"
+        saved: "Done"
+      account:
         intro: "Stopan reads and sends an organization's mail through its Google account. First, which kind of Google account holds the mailboxes?"
         workspace: "Google Workspace (your own domain)"
         workspace_hint: "Recommended. Only mailboxes of your Workspace can connect, and Google does not need to review anything."
         gmail: "Personal Gmail"
         gmail_hint: "Fine for trying it out: Google keeps such apps in testing, so you reconnect the mailbox every 7 days."
-      s2:
+        app_password: "Gmail with an app password (no Google Cloud)"
+        app_password_hint: "Quickest: no Google Cloud project, and no reconnecting every 7 days. Needs 2-Step Verification on the account; a Workspace administrator may have turned app passwords off."
+      project:
         project: "Create a Google Cloud project for Stopan (or pick one you already have) and give it any name."
         open_project: "Create a project"
         branding: "Open the consent screen (Branding), click Get started and fill in these values:"
@@ -720,13 +725,13 @@ en:
         audience_external: "When it asks for the Audience, choose External and finish the form. Then open Audience and, under Test users, add the Gmail address of the mailbox you will connect."
         open_audience: "Open Audience"
         testing_note: "Google keeps this app in Testing, so its sign-in works for 7 days. Stopan then shows Needs reconnecting, and you connect again here in one click."
-      s3:
+      access:
         open: "Open Data access and click Add or remove scopes."
         open_scopes: "Open Data access"
         add: "Paste this scope into Manually add scopes, click Add to table, Update and then Save:"
         scope: "Scope"
         why: "IMAP and SMTP need full mail access; Google has no narrower scope for them."
-      s4:
+      client:
         open: "Open Clients and create a client."
         open_clients: "Create a client"
         fill: "Choose Web application as the type, then fill in:"
@@ -734,16 +739,32 @@ en:
         redirect: "Authorized redirect URI (under Authorized redirect URIs, Add URI)"
         paste: "Click Create. Google shows the Client ID and the Client secret: paste them here."
         save: "Save and continue"
-      s5:
+      connect:
         intro: "Connect each organization that should use a Google mailbox. Google asks you to sign in and agree."
         not_connected: "Not connected"
         no_organizations: "There are no organizations yet. Add one first."
         sign_in_as: "Sign in at Google as the mailbox itself (for example support@...), not as yourself."
-      s6:
+      done:
         done: "Done. These organizations now take in and send mail through their Google account:"
         test: "Test it"
         test_hint: "On the organization page, Send a test email and Check the mailbox confirm that it works."
         none: "No organization is connected yet. Go back and connect one."
+      app_password:
+        sign_in: "Sign in to Google as the mailbox itself (for example support@...) and turn on 2-Step Verification if it is not on yet."
+        open_twosv: "Open 2-Step Verification"
+        create: "Create an app password and give it this name:"
+        open_apppasswords: "Open App passwords"
+        name: "App name"
+        shown_once: "Google shows a password of 16 letters only once. Copy it; you paste it in the next step."
+        unavailable: "If Google says the setting is not available for your account, 2-Step Verification is off or your Workspace administrator has turned app passwords off. Then go back and choose Google Workspace."
+      mailbox:
+        intro: "Choose the organization and paste the Gmail address and the app password. Stopan fills in the Gmail servers for sending and for the mailbox."
+        app_password_hint: "Stored encrypted and never shown again. Spaces are removed."
+        replaces_google: "An organization connected to a Google account is disconnected from it first."
+        save: "Save and continue"
+      saved:
+        done: "Done. These organizations take in and send mail through Gmail with an app password:"
+        none: "No organization uses an app password yet. Go back and add one."
     prefs:
       dark: "Dark theme"
       light: "Light theme"
@@ -866,6 +887,7 @@ en:
     google_failed: "Connecting with Google did not work. Check the client ID, secret and redirect URI, and try again."
     google_disconnected: "Google disconnected. Mail for this organization is off."
     google_client_saved: "Google client saved. Now connect a mailbox."
+    gmail_app_password_saved: "%{organization} now uses Gmail with the app password."
     mailbox_disabled: "Turn on this organization's mailbox first."
     organization_deleted: "Organization %{name} was deleted."
     organization_has_tickets: "%{name} has tickets and cannot be deleted."
@@ -892,6 +914,10 @@ en:
         email: "Email"
         subject: "Subject"
         description: "Description"
+      gmail_app_password:
+        organization: "Organization"
+        email: "Gmail address"
+        app_password: "App password"
 
   activerecord:
     models:

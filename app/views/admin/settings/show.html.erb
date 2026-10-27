@@ -75,7 +75,7 @@
     <p><%= @setting.google_ready? ? t("ui.admin.settings.google_ready", count: MailConnection.count) : t("ui.admin.settings.google_not_set_up") %></p>
     <div class="form-actions">
       <%= link_to (@setting.google_ready? ? t("ui.admin.settings.google_open_wizard") : t("ui.admin.settings.google_start_wizard")),
-                  admin_google_setup_path(step: @setting.google_ready? ? 5 : 1), class: "btn btn--primary" %>
+                  admin_google_setup_path(step: (@setting.google_ready? ? "connect" : "account")), class: "btn btn--primary" %>
     </div>
   </div>
 </section>

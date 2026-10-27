@@ -700,19 +700,24 @@ bg:
       new_tab: "отваря се в нов раздел"
       copy: "Копирай"
       steps:
-        s1: "Вашият Google акаунт"
-        s2: "Проект и екран за съгласие"
-        s3: "Достъп до пощата"
-        s4: "OAuth клиент"
-        s5: "Свързване на кутия"
-        s6: "Готово"
-      s1:
+        account: "Вашият Google акаунт"
+        project: "Проект и екран за съгласие"
+        access: "Достъп до пощата"
+        client: "OAuth клиент"
+        connect: "Свързване на кутия"
+        done: "Готово"
+        app_password: "App password"
+        mailbox: "Свързване на кутия"
+        saved: "Готово"
+      account:
         intro: "Stopan чете и праща пощата на организацията през нейния Google акаунт. Първо: какъв е Google акаунтът на пощенските кутии?"
         workspace: "Google Workspace (ваш собствен домейн)"
         workspace_hint: "Препоръчително. Свързват се само кутии от вашия Workspace и Google не трябва да одобрява нищо."
         gmail: "Личен Gmail"
         gmail_hint: "Става за проба: Google държи такива приложения в тестов режим, затова кутията се свързва отново на всеки 7 дни."
-      s2:
+        app_password: "Gmail с app password (без Google Cloud)"
+        app_password_hint: "Най-бързо: без проект в Google Cloud и без повторно свързване на всеки 7 дни. Изисква включена 2-Step Verification; администраторът на Workspace може да е забранил app passwords."
+      project:
         project: "Създайте проект в Google Cloud за Stopan (или изберете съществуващ) с произволно име."
         open_project: "Създай проект"
         branding: "Отворете екрана за съгласие (Branding), натиснете Get started и попълнете тези стойности:"
@@ -723,13 +728,13 @@ bg:
         audience_external: "Когато пита за Audience, изберете External и завършете формата. После отворете Audience и под Test users добавете Gmail адреса на кутията, която ще свържете."
         open_audience: "Отвори Audience"
         testing_note: "Google държи приложението в тестов режим и входът важи 7 дни. Тогава Stopan показва Трябва да се свърже отново и свързвате пак тук с едно щракване."
-      s3:
+      access:
         open: "Отворете Data access и натиснете Add or remove scopes."
         open_scopes: "Отвори Data access"
         add: "Поставете този обхват в Manually add scopes, натиснете Add to table, Update и после Save:"
         scope: "Обхват (scope)"
         why: "IMAP и SMTP изискват пълен достъп до пощата; Google няма по-тесен обхват за тях."
-      s4:
+      client:
         open: "Отворете Clients и създайте клиент."
         open_clients: "Създай клиент"
         fill: "Изберете Web application за тип и попълнете:"
@@ -737,16 +742,32 @@ bg:
         redirect: "Authorized redirect URI (в Authorized redirect URIs, Add URI)"
         paste: "Натиснете Create. Google показва Client ID и Client secret: поставете ги тук."
         save: "Запази и продължи"
-      s5:
+      connect:
         intro: "Свържете всяка организация, която ще ползва Google кутия. Google ще поиска вход и съгласие."
         not_connected: "Не е свързана"
         no_organizations: "Още няма организации. Първо добавете една."
         sign_in_as: "В Google влезте като самата пощенска кутия (например support@...), а не като себе си."
-      s6:
+      done:
         done: "Готово. Тези организации вече приемат и пращат поща през своя Google акаунт:"
         test: "Пробвай"
         test_hint: "На страницата на организацията Изпрати тестово писмо и Провери кутията потвърждават, че работи."
         none: "Още няма свързана организация. Върнете се и свържете една."
+      app_password:
+        sign_in: "Влезте в Google като самата пощенска кутия (например support@...) и включете 2-Step Verification, ако още не е включена."
+        open_twosv: "Отвори 2-Step Verification"
+        create: "Създайте app password с това име:"
+        open_apppasswords: "Отвори App passwords"
+        name: "Име на приложението"
+        shown_once: "Google показва парола от 16 букви само веднъж. Копирайте я; поставяте я в следващата стъпка."
+        unavailable: "Ако Google каже, че настройката не е достъпна за акаунта, 2-Step Verification е изключена или администраторът на Workspace е забранил app passwords. Тогава се върнете и изберете Google Workspace."
+      mailbox:
+        intro: "Изберете организацията и поставете Gmail адреса и app password. Stopan попълва сървърите на Gmail за изпращане и за кутията."
+        app_password_hint: "Пази се криптиран и не се показва повече. Интервалите се премахват."
+        replaces_google: "Организация, свързана с Google акаунт, първо се откача от него."
+        save: "Запази и продължи"
+      saved:
+        done: "Готово. Тези организации приемат и пращат поща през Gmail с app password:"
+        none: "Още никоя организация не ползва app password. Върнете се и добавете една."
     prefs:
       dark: "Тъмна тема"
       light: "Светла тема"
@@ -869,6 +890,7 @@ bg:
     google_failed: "Свързването с Google не успя. Проверете Client ID, secret и redirect URI и опитайте пак."
     google_disconnected: "Google е прекъснат. Пощата на организацията е изключена."
     google_client_saved: "Google клиентът е запазен. Сега свържете кутия."
+    gmail_app_password_saved: "%{organization} вече ползва Gmail с app password."
     mailbox_disabled: "Първо включете пощенската кутия на организацията."
     organization_deleted: "Организация %{name} е изтрита."
     organization_has_tickets: "%{name} има заявки и не може да бъде изтрита."
@@ -895,6 +917,10 @@ bg:
         email: "Имейл"
         subject: "Тема"
         description: "Описание"
+      gmail_app_password:
+        organization: "Организация"
+        email: "Gmail адрес"
+        app_password: "App password"
 
   activerecord:
     models:

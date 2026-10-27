@@ -90,7 +90,7 @@ class Admin::MailOauthControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", admin_organization_google_connect_path(@org), 0
     assert_select "a.btn[href=?]", admin_google_setup_path, "Set up Google"
     get admin_organization_google_connect_url(@org)
-    assert_redirected_to admin_google_setup_url(step: 4)
+    assert_redirected_to admin_google_setup_url(step: "client")
     assert_match(/Google client ID and secret/, flash[:alert])
   end
 
@@ -119,11 +119,11 @@ class Admin::MailOauthControllerTest < ActionDispatch::IntegrationTest
     get admin_organization_google_connect_url(@org, return_to: "wizard")
     query = URI.decode_www_form(URI(response.location).query).to_h
     get admin_mail_oauth_callback_url(state: query["state"], code: "abc")
-    assert_redirected_to admin_google_setup_url(step: 6)
+    assert_redirected_to admin_google_setup_url(step: "done")
 
     get admin_organization_google_connect_url(@org, return_to: "wizard")
     query = URI.decode_www_form(URI(response.location).query).to_h
     get admin_mail_oauth_callback_url(state: query["state"], error: "access_denied")
-    assert_redirected_to admin_google_setup_url(step: 5)
+    assert_redirected_to admin_google_setup_url(step: "connect")
   end
 end

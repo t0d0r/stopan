@@ -48,4 +48,11 @@ class MailConnection < ApplicationRecord
   def forget_token
     TOKENS.delete(id)
   end
+
+  # Revokes the refresh token at Google (best effort) and deletes the connection.
+  def disconnect!
+    self.class.client.revoke(refresh_token)
+    forget_token
+    destroy!
+  end
 end

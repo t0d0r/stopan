@@ -1,15 +1,15 @@
 <ol class="wizard-list">
   <li>
-    <p><%= t("ui.google_setup.s4.open") %></p>
-    <%= render "admin/google_setup/external", url: "https://console.cloud.google.com/auth/clients/create", label: t("ui.google_setup.s4.open_clients") %>
+    <p><%= t("ui.google_setup.client.open") %></p>
+    <%= render "admin/google_setup/external", url: "https://console.cloud.google.com/auth/clients/create", label: t("ui.google_setup.client.open_clients") %>
   </li>
   <li>
-    <p><%= t("ui.google_setup.s4.fill") %></p>
-    <%= render "admin/google_setup/copy_field", id: "wizard-client-name", label: t("ui.google_setup.s4.name"), value: "Stopan" %>
-    <%= render "admin/google_setup/copy_field", id: "wizard-redirect", label: t("ui.google_setup.s4.redirect"), value: admin_mail_oauth_callback_url %>
+    <p><%= t("ui.google_setup.client.fill") %></p>
+    <%= render "admin/google_setup/copy_field", id: "wizard-client-name", label: t("ui.google_setup.client.name"), value: "Stopan" %>
+    <%= render "admin/google_setup/copy_field", id: "wizard-redirect", label: t("ui.google_setup.client.redirect"), value: admin_mail_oauth_callback_url %>
   </li>
   <li>
-    <p><%= t("ui.google_setup.s4.paste") %></p>
+    <p><%= t("ui.google_setup.client.paste") %></p>
     <%= form_with model: @setting, url: admin_google_setup_path, method: :patch, class: "stack-form" do |f| %>
       <%= form_errors @setting %>
       <div class="field">
@@ -27,8 +27,8 @@
         </small>
       </div>
       <div class="wizard__nav">
-        <%= link_to t("ui.google_setup.back"), admin_google_setup_path(step: 3), class: "btn" %>
-        <%= f.submit t("ui.google_setup.s4.save"), class: "btn btn--primary" %>
+        <%= link_to t("ui.google_setup.back"), admin_google_setup_path(step: "access"), class: "btn" %>
+        <%= f.submit t("ui.google_setup.client.save"), class: "btn btn--primary" %>
       </div>
     <% end %>
   </li>

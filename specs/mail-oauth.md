@@ -141,7 +141,52 @@ progress list ("Step 2 of 6") and Back / Next:
    mailbox".
 
 Steps 5 and 6 need a saved client; before that the wizard sends the
-administrator back to step 4. `/admin/settings` no longer holds the
+administrator back to step 4.
+
+### App password path
+
+Operator, 2026-10-27: "add the app password step to the wizard", after
+asking why a mail program such as Thunderbird or Mail.app needs no
+Google Cloud setup (their makers registered one verified client for all
+users; a self-hosted Stopan has no such shared client). A Gmail or
+Workspace account with 2-Step Verification can instead sign in to IMAP
+and SMTP with an app password; Google kept app passwords when it ended
+password sign-in for third-party apps in March 2025. A Workspace
+administrator may have turned them off.
+
+Step 1 offers a third choice, "Gmail with an app password (no Google
+Cloud)": quickest, no project, works for personal Gmail without the
+7-day limit. It has its own four steps:
+
+1. **Your Google account** (the same choice).
+2. **App password:** sign in to Google as the mailbox, link to turn on
+   2-Step Verification (`myaccount.google.com/signinoptions/twosv`), link
+   to create an app password (`myaccount.google.com/apppasswords`) with
+   the name "Stopan" to copy; Google shows the 16-letter password once.
+   If that page says the setting is not available, 2-Step Verification
+   is off or the Workspace administrator turned app passwords off; then
+   the Workspace choice is the way.
+3. **Connect a mailbox:** a form with the organization, the Gmail
+   address and the app password (write-only; spaces as Google shows
+   them are removed). Saving sets the organization to sign in with a
+   password, both parts on, `smtp.gmail.com:587` STARTTLS and
+   `imap.gmail.com:993` SSL, the address as both usernames, the app
+   password as both passwords, and keeps a From and mailbox address
+   already set (else the Gmail address). An organization connected to a
+   Google account through OAuth is disconnected first (the token is
+   revoked at Google, as with "Disconnect Google").
+4. **Done:** the organizations that use Gmail with a password, with
+   links to their pages for "Send a test email" and "Check the mailbox";
+   Back leads to step 3 to add another.
+
+Steps are named in the address (`?step=client`), not numbered, as the
+two paths have different steps; an OAuth step asked for while the app
+password path is chosen switches back to the OAuth path (the callback
+returns to `step=connect` and `step=done`).
+
+### Settings and organization page
+
+`/admin/settings` no longer holds the
 Google fields: its Google panel shows the state ("Not set up",
 "Ready, N organizations connected") and a button to the wizard. The
 organization page shows "Set up Google" (to the wizard) when no client

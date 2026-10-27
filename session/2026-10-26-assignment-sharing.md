@@ -647,6 +647,21 @@ menu and Take; open /tickets/new and pick a requester.
   button); the organization page shows "Set up Google" without a client.
   Google cannot create the OAuth client by API, so those clicks remain
   in Google Cloud.
+- Wizard app password path (operator, 2026-10-27, after asking why
+  Thunderbird and Mail.app need no Google Cloud: their makers registered
+  one verified client for everyone): step 1 has a third choice "Gmail with
+  an app password (no Google Cloud)" with its own steps account ->
+  app_password (links to 2-Step Verification and App passwords) ->
+  mailbox (form: organization, Gmail address, app password) -> saved.
+  `GmailAppPassword` (ActiveModel) fills the organization with
+  smtp.gmail.com:587 STARTTLS / imap.gmail.com:993 SSL and the password,
+  keeps From and mailbox address, and revokes an OAuth connection first
+  (`MailConnection#disconnect!`, also used by "Disconnect Google"). Steps
+  are now named in the URL (`?step=client`); a step of the other path
+  switches the path. Not yet checked in a browser at phone width.
+- Mailbox polling: every `MAILBOX_POLL_SECONDS` (default 120 s), only when
+  `MAILBOX_POLLING=true`; per specs/deploy.md that is still not set in
+  production, so there only "Check the mailbox" fetches mail.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

@@ -8,7 +8,7 @@ module Admin
 
     def start
       organization = Organization.find(params[:organization_id])
-      return redirect_to admin_google_setup_path(step: 4), alert: t("flash.google_not_configured") unless google_configured?
+      return redirect_to admin_google_setup_path(step: "client"), alert: t("flash.google_not_configured") unless google_configured?
 
       state = SecureRandom.urlsafe_base64(32)
       verifier = GoogleOauth.verifier
@@ -28,13 +28,13 @@ module Admin
       organization = Organization.find(pending["organization_id"])
       # From the setup wizard, back to it (specs/mail-oauth.md "Setup wizard").
       wizard = pending["wizard"]
-      back = wizard ? admin_google_setup_path(step: 5) : admin_organization_path(organization)
+      back = wizard ? admin_google_setup_path(step: "connect") : admin_organization_path(organization)
       return redirect_to back, alert: t("flash.google_denied") if params[:error].present? || params[:code].blank?
 
       account = MailConnection.client.exchange(code: params[:code], verifier: pending["verifier"],
                                                redirect_uri: admin_mail_oauth_callback_url)
       connect(organization, account)
-      redirect_to (wizard ? admin_google_setup_path(step: 6) : admin_organization_path(organization)),
+      redirect_to (wizard ? admin_google_setup_path(step: "done") : admin_organization_path(organization)),
                   notice: t("flash.google_connected", email: account[:email])
     rescue GoogleOauth::Error => e
       Rails.logger.warn("Google mail connect for organization #{organization&.id} failed: #{e.message}")
@@ -43,11 +43,7 @@ module Admin
 
     def destroy
       organization = Organization.find(params[:organization_id])
-      if (connection = organization.mail_connection)
-        MailConnection.client.revoke(connection.refresh_token)
-        connection.forget_token
-        connection.destroy!
-      end
+      organization.mail_connection&.disconnect!
       organization.update!(mail_auth: "password", smtp_enabled: false, imap_enabled: false)
       redirect_to admin_organization_path(organization), notice: t("flash.google_disconnected")
     end

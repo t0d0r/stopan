@@ -1,0 +1,30 @@
+<% if @organizations.any? %>
+  <p><%= t("ui.google_setup.mailbox.intro") %></p>
+  <%= form_with model: @app_password, scope: :gmail_app_password, url: mailbox_admin_google_setup_path, method: :patch, class: "stack-form" do |f| %>
+    <%= form_errors @app_password %>
+    <div class="field">
+      <%= f.label :organization_id, t("activemodel.attributes.gmail_app_password.organization") %>
+      <%= f.collection_select :organization_id, @organizations, :id, :name, {}, class: "select",
+                              aria: { invalid: invalid?(@app_password, :organization_id) } %>
+    </div>
+    <div class="field">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: "field-input", autocomplete: "off", spellcheck: false, placeholder: "support@gmail.com",
+                        aria: { invalid: invalid?(@app_password, :email) } %>
+    </div>
+    <div class="field">
+      <%= f.label :app_password %>
+      <%= f.password_field :app_password, value: nil, class: "field-input", autocomplete: "new-password", spellcheck: false,
+                           aria: { describedby: "wizard-app-password-hint", invalid: invalid?(@app_password, :app_password) } %>
+      <small class="field-hint" id="wizard-app-password-hint"><%= t("ui.google_setup.mailbox.app_password_hint") %></small>
+    </div>
+    <p class="field-hint"><%= t("ui.google_setup.mailbox.replaces_google") %></p>
+    <div class="wizard__nav">
+      <%= link_to t("ui.google_setup.back"), admin_google_setup_path(step: "app_password"), class: "btn" %>
+      <%= f.submit t("ui.google_setup.mailbox.save"), class: "btn btn--primary" %>
+    </div>
+  <% end %>
+<% else %>
+  <p class="panel__empty"><%= t("ui.google_setup.connect.no_organizations") %></p>
+  <%= render "admin/google_setup/nav", back: "app_password" %>
+<% end %>

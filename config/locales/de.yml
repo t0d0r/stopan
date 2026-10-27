@@ -700,19 +700,24 @@ de:
       new_tab: "öffnet in einem neuen Tab"
       copy: "Kopieren"
       steps:
-        s1: "Ihr Google-Konto"
-        s2: "Projekt und Zustimmungsbildschirm"
-        s3: "Zugriff auf E-Mail"
-        s4: "OAuth-Client"
-        s5: "Postfach verbinden"
-        s6: "Fertig"
-      s1:
+        account: "Ihr Google-Konto"
+        project: "Projekt und Zustimmungsbildschirm"
+        access: "Zugriff auf E-Mail"
+        client: "OAuth-Client"
+        connect: "Postfach verbinden"
+        done: "Fertig"
+        app_password: "App-Passwort"
+        mailbox: "Postfach verbinden"
+        saved: "Fertig"
+      account:
         intro: "Stopan liest und sendet die E-Mail einer Organisation über ihr Google-Konto. Zuerst: Welche Art Google-Konto haben die Postfächer?"
         workspace: "Google Workspace (eigene Domain)"
         workspace_hint: "Empfohlen. Nur Postfächer Ihres Workspace können sich verbinden, und Google muss nichts prüfen."
         gmail: "Privates Gmail"
         gmail_hint: "Gut zum Ausprobieren: Google hält solche Apps im Testmodus, daher verbinden Sie das Postfach alle 7 Tage neu."
-      s2:
+        app_password: "Gmail mit App-Passwort (ohne Google Cloud)"
+        app_password_hint: "Am schnellsten: kein Google-Cloud-Projekt und kein Neuverbinden alle 7 Tage. Erfordert die Bestätigung in zwei Schritten; ein Workspace-Administrator kann App-Passwörter abgeschaltet haben."
+      project:
         project: "Legen Sie in Google Cloud ein Projekt für Stopan an (oder wählen Sie ein vorhandenes) mit beliebigem Namen."
         open_project: "Projekt anlegen"
         branding: "Öffnen Sie den Zustimmungsbildschirm (Branding), klicken Sie auf Get started und tragen Sie diese Werte ein:"
@@ -723,13 +728,13 @@ de:
         audience_external: "Wenn nach der Audience gefragt wird, wählen Sie External und schließen Sie das Formular ab. Öffnen Sie dann Audience und fügen Sie unter Test users die Gmail-Adresse des Postfachs hinzu, das Sie verbinden."
         open_audience: "Audience öffnen"
         testing_note: "Google hält diese App im Testmodus, die Anmeldung gilt 7 Tage. Danach zeigt Stopan Muss neu verbunden werden, und Sie verbinden hier mit einem Klick neu."
-      s3:
+      access:
         open: "Öffnen Sie Data access und klicken Sie auf Add or remove scopes."
         open_scopes: "Data access öffnen"
         add: "Fügen Sie diesen Scope unter Manually add scopes ein, klicken Sie auf Add to table, Update und dann Save:"
         scope: "Scope"
         why: "IMAP und SMTP brauchen vollen Zugriff auf die E-Mail; Google hat dafür keinen engeren Scope."
-      s4:
+      client:
         open: "Öffnen Sie Clients und legen Sie einen Client an."
         open_clients: "Client anlegen"
         fill: "Wählen Sie als Typ Web application und tragen Sie ein:"
@@ -737,16 +742,32 @@ de:
         redirect: "Authorized redirect URI (unter Authorized redirect URIs, Add URI)"
         paste: "Klicken Sie auf Create. Google zeigt Client-ID und Client-Secret: Fügen Sie beide hier ein."
         save: "Speichern und weiter"
-      s5:
+      connect:
         intro: "Verbinden Sie jede Organisation, die ein Google-Postfach nutzen soll. Google fragt nach Anmeldung und Zustimmung."
         not_connected: "Nicht verbunden"
         no_organizations: "Es gibt noch keine Organisationen. Legen Sie zuerst eine an."
         sign_in_as: "Melden Sie sich bei Google als das Postfach selbst an (zum Beispiel support@...), nicht als Sie selbst."
-      s6:
+      done:
         done: "Fertig. Diese Organisationen empfangen und senden E-Mails jetzt über ihr Google-Konto:"
         test: "Testen"
         test_hint: "Auf der Seite der Organisation bestätigen Test-E-Mail senden und Postfach prüfen, dass es funktioniert."
         none: "Noch keine Organisation verbunden. Gehen Sie zurück und verbinden Sie eine."
+      app_password:
+        sign_in: "Melden Sie sich bei Google als das Postfach selbst an (zum Beispiel support@...) und schalten Sie die Bestätigung in zwei Schritten ein, falls sie noch aus ist."
+        open_twosv: "Bestätigung in zwei Schritten öffnen"
+        create: "Erstellen Sie ein App-Passwort mit diesem Namen:"
+        open_apppasswords: "App-Passwörter öffnen"
+        name: "App-Name"
+        shown_once: "Google zeigt ein Passwort aus 16 Buchstaben nur einmal. Kopieren Sie es; Sie fügen es im nächsten Schritt ein."
+        unavailable: "Meldet Google, dass die Einstellung für Ihr Konto nicht verfügbar ist, ist die Bestätigung in zwei Schritten aus oder Ihr Workspace-Administrator hat App-Passwörter abgeschaltet. Gehen Sie dann zurück und wählen Sie Google Workspace."
+      mailbox:
+        intro: "Wählen Sie die Organisation und fügen Sie Gmail-Adresse und App-Passwort ein. Stopan trägt die Gmail-Server für Versand und Postfach ein."
+        app_password_hint: "Wird verschlüsselt gespeichert und nie wieder angezeigt. Leerzeichen werden entfernt."
+        replaces_google: "Eine mit einem Google-Konto verbundene Organisation wird zuerst davon getrennt."
+        save: "Speichern und weiter"
+      saved:
+        done: "Fertig. Diese Organisationen empfangen und senden E-Mails über Gmail mit App-Passwort:"
+        none: "Noch keine Organisation nutzt ein App-Passwort. Gehen Sie zurück und fügen Sie eine hinzu."
     prefs:
       dark: "Dunkles Design"
       light: "Helles Design"
@@ -869,6 +890,7 @@ de:
     google_failed: "Die Verbindung mit Google hat nicht funktioniert. Prüfen Sie Client-ID, Secret und Redirect-URI und versuchen Sie es erneut."
     google_disconnected: "Google getrennt. Die E-Mail dieser Organisation ist aus."
     google_client_saved: "Google-Client gespeichert. Verbinden Sie jetzt ein Postfach."
+    gmail_app_password_saved: "%{organization} nutzt jetzt Gmail mit dem App-Passwort."
     mailbox_disabled: "Schalten Sie zuerst das Postfach dieser Organisation ein."
     organization_deleted: "Organisation %{name} wurde gelöscht."
     organization_has_tickets: "%{name} hat Tickets und kann nicht gelöscht werden."
@@ -895,6 +917,10 @@ de:
         email: "E-Mail"
         subject: "Betreff"
         description: "Beschreibung"
+      gmail_app_password:
+        organization: "Organisation"
+        email: "Gmail-Adresse"
+        app_password: "App-Passwort"
 
   activerecord:
     models:
