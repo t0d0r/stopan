@@ -555,8 +555,9 @@ menu and Take; open /tickets/new and pick a requester.
   check box; switching translation on without a key is a validation
   error; `DEEPL_API_KEY` is only a fallback. Checked in Chrome: the key
   never comes back in the page and is filtered from the log.
-- The next deploy runs `CreateTranslations` and
-  `AddDeeplApiKeyToAppSettings`; then an admin enters the key.
+- Deployed ff0f444 (2026-10-27) after a backup
+  (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
+  to enter the DeepL key in /admin/settings.
 - Production runs cbf319b (2026-10-27). If users still see 403/404 on
   some action, read the site's Apache error log for the ModSecurity rule
   id first (specs/deploy.md "ModSecurity false positives").

@@ -446,6 +446,26 @@ shared pages; no migrations. Backup `~stopan/backups/pre-deploy-8f4eb97.sqlite3`
 `/up` 200, `/cable` 101, the four security headers. Rollback: tag
 `localhost/stopan:8f4eb97` as `latest` and restart.
 
+## Update 2026-10-27 (revision ff0f444)
+
+Operator: "yes, deploy". The "Translate" button with the DeepL key in
+/admin/settings, the language group "EN BG DE".
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-0f52988.sqlite3`
+  (mode 600; 4 users, 2 tickets, schema 20261027230000).
+- `make deploy`: `CreateTranslations` and `AddDeeplApiKeyToAppSettings`
+  ran (schema 20261028100000), both additive.
+- Checked: healthy; no pending migrations; `translations` exists,
+  `app_settings.deepl_api_key` exists, translation is off; users and
+  tickets kept; `/up` 200; `http://` -> 301; `/admin/settings` redirects
+  to sign-in; a POST to `/tickets/1001/translations` without a CSRF token
+  is refused (422); the language group on sign-in; `/cable` 101; the
+  four security headers; only `127.0.0.1:3183`; g0no `/up` 200.
+- Next: an administrator enters the DeepL key and switches translation
+  on in /admin/settings.
+- Rollback: tag `localhost/stopan:0f52988` as `latest` and restart; the
+  new table and column can stay.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:
