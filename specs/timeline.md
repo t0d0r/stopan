@@ -14,7 +14,9 @@ up to 5 attached files.
   staff.
 - An **internal note** (`internal = true`) is visible to staff only. Only
   staff can write one; a requester's `internal` parameter is ignored.
-- Comments cannot be edited or deleted (`readonly?` once saved).
+- Comments cannot be deleted. Their text can be edited (see "Editing"
+  below); nothing else about a saved comment changes (`readonly?` except
+  inside `Comment#edit!`).
 - Creating a comment touches the ticket's `updated_at`.
 
 ## Events
@@ -54,6 +56,57 @@ scope, so internal text never reaches a requester's HTML.
 - Every entry has an anchor (`#event-<id>`) and a `<time datetime>` element.
 - Attachments of a comment are listed under its body as download links with
   size.
+
+## Editing
+
+Requested by the operator on 2026-10-27: "an option to edit replies and
+original requests".
+
+| what | requester | agent / admin |
+|------|-----------|---------------|
+| the request (subject and description) | own ticket (`TicketPolicy#own?`), not closed | any ticket |
+| a public reply | own reply on own ticket, not closed | any reply |
+| an internal note | never visible | any note |
+
+Staff may edit anyone's text, so they can correct or redact (for example a
+password a customer pasted); every edit is kept and shown (below), so this
+cannot hide who wrote what.
+
+- **Only the text.** Subject and description of the request; the body of
+  a reply or note. Files, author, visibility (`internal`), and times stay
+  as they are. Same validation as on create (subject 1-200 characters,
+  text 1-20,000). Saving unchanged text changes nothing.
+- **Routes:** `GET/PATCH /tickets/:number/description(/edit)`
+  (`TicketDescriptionsController`) and `GET/PATCH
+  /tickets/:number/comments/:id(/edit)` (`CommentsController#edit`,
+  `#update`). The ticket is loaded through `Ticket.visible_to`, the
+  comment through `Comment.visible_to` on that ticket (404 otherwise); the
+  policy (`TicketPolicy#edit_description?`, `#edit_comment?(comment)`)
+  decides the rest (403).
+- **UI:** an "Edit" link with a pencil icon in the message's meta line for
+  users who may edit it. With JavaScript the text turns into a form in
+  place (a Turbo frame around the text); without it the edit page shows
+  the same form. "Save" goes back to the ticket at the message with a
+  notice ("Reply updated." / "Internal note updated." / "Request
+  updated."); "Cancel" restores the text. Errors re-render the form
+  (422).
+- **Marked as edited.** An edited message shows "edited by <name> <time>"
+  in its meta line, for everyone who can see the message (also on a
+  shared page), so a requester knows when staff changed their text.
+  Columns `edited_at` and `edited_by_id` on `tickets` and `comments`.
+- **Earlier versions are kept** in `revisions` (one row per edit: the
+  record, the text before the edit, who made the edit and when; the
+  subject too for the request). Staff see them under an edited message in
+  a collapsed "Earlier versions (n)" list, newest first, each headed
+  "Before the edit by <name> <time>". Requesters and shared pages never
+  see earlier versions, also of their own text.
+- **Not activity.** An edit writes no timeline event, sends no email or
+  notification and does not change the ticket's `updated_at` (queue
+  order): it corrects what was said, it does not say something new.
+- **Live:** an edit refreshes open pages like an event would: the staff
+  ticket page always; for the request or a public reply also the
+  requester's page, the requester's list, the queue and the shared page;
+  for an internal note only staff pages.
 
 ## Composer
 
@@ -108,8 +161,18 @@ the right stream; public and internal events reach the right streams).
 events for every change, immutability, the requester filter, and that a
 requester's page contains no internal note text.
 
+Editing: `test/models/revision_test.rb` (edits keep the previous text,
+unchanged text is a no-op, validation, no event, `updated_at` untouched)
+and `test/controllers/edits_controller_test.rb` (who may edit what per
+role, closed tickets, internal notes hidden from requesters, earlier
+versions only for staff, the edited marker on the shared page, live
+signals).
+
 ## Security Note
 
 The internal flag is decided on the server from the author's role, never
-trusted from the form for requesters. Keep any future export or email of a
+trusted from the form for requesters. Edits never change it. Earlier
+versions keep the old text, so redacting a secret by editing hides it
+from requesters and shared pages but not from staff or the database;
+removing it everywhere needs an administrator at the database. Keep any future export or email of a
 timeline on the same `visible_to` scope.

@@ -96,6 +96,12 @@ page with the errors). Requesters get 403.
 `PATCH /tickets/:number/resolve` is the requester's "Mark as resolved"
 (also allowed for staff).
 
+## Editing the request
+
+Subject and description can be edited by staff, and by the requester on
+their own ticket while it is not closed; earlier versions are kept for
+staff and the message is marked as edited (timeline.md "Editing").
+
 ## Assigning (staff)
 
 Taking a ticket or handing it to someone must be one click, from the queue

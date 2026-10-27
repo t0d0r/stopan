@@ -47,6 +47,7 @@ declared in the database.
 | share_token | string, unique index, NULL when not shared (sharing.md) |
 | share_password_digest | string, bcrypt, NULL for an open link |
 | shared_at | datetime |
+| edited_at, edited_by_id | last edit of subject or description (FK users, nullable; timeline.md "Editing") |
 | created_at, updated_at | indexed `updated_at` for the default sort |
 
 Files: `has_many_attached :files`.
@@ -54,8 +55,17 @@ Files: `has_many_attached :files`.
 ## comments
 
 `ticket_id` (FK), `author_id` (FK users), `body` (text), `internal`
-(boolean, default false), `created_at`, `updated_at`. Index on
-`[ticket_id, created_at]`. Files: `has_many_attached :files`.
+(boolean, default false), `created_at`, `updated_at`, `edited_at`,
+`edited_by_id` (FK users, nullable). Index on `[ticket_id, created_at]`.
+Files: `has_many_attached :files`.
+
+## revisions
+
+Earlier versions of edited text (timeline.md "Editing"): `record_type`,
+`record_id` (a ticket or a comment), `editor_id` (FK users: who made the
+edit that replaced this text), `subject` (tickets only), `body` (the text
+before the edit), `created_at` (when the edit was made). Index on
+`[record_type, record_id, created_at]`. Only ever inserted.
 
 ## ticket_events
 
@@ -80,10 +90,11 @@ The standard three tables. Blobs are served only by
 ## Deletion rules
 
 - users: `restrict_with_error` on requested tickets, assigned tickets,
-  comments and events, so history keeps its people. Memberships are
+  comments, events and revisions they edited, so history keeps its
+  people. Memberships are
   deleted with the user.
 - organizations: `restrict_with_error` on tickets; memberships deleted.
-- tickets, comments, events: not deletable in the app.
+- tickets, comments, events, revisions: not deletable in the app.
 
 ## Security Note
 

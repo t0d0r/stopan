@@ -41,6 +41,9 @@ the role, and cannot be chosen as assignee.
 | set priority / assignee on create | no | yes | yes |
 | public reply | own ticket, not closed | any ticket, not closed | same as agent |
 | internal note | no | any ticket (also closed) | same as agent |
+| edit the request's subject and description (timeline.md "Editing") | own ticket, not closed | any ticket | same as agent |
+| edit a reply or note | own public reply on own ticket, not closed | any reply or note | same as agent |
+| see earlier versions of edited text | no | yes | yes |
 | attach files | to own ticket and own replies | to tickets, replies and notes | same as agent |
 | download an attachment | only files on records they can see | any | any |
 | change status | only "mark as resolved" on own new/open/pending ticket | any allowed transition (tickets.md) | same as agent |

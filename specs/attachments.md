@@ -30,8 +30,9 @@ reply or internal note (to the comment). Storage is Active Storage
   sends it in chunks (and a proxy can take over with X-Sendfile) instead of
   loading it into memory; other services fall back to `send_data`.
   `X-Content-Type-Options: nosniff` comes from the Rails defaults.
-- Comments are immutable, so `config.active_storage.touch_attachment_records`
-  is false (attaching a file must not touch its record).
+- Files of a saved comment never change (only its text can be edited), so
+  `config.active_storage.touch_attachment_records` is false (attaching a
+  file must not touch its record).
 
 ## Preview
 

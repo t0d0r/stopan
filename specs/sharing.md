@@ -31,7 +31,9 @@ form that changes the ticket. A note at the top says it is a read-only copy
 shared by link.
 
 The page shows the ticket as it is now: later public replies and status
-changes appear on it; internal notes and internal events never do.
+changes appear on it; internal notes and internal events never do. Edited
+text shows its current version with the "edited by" marker, never earlier
+versions (timeline.md "Editing").
 
 ## Model
 
