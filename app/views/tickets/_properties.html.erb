@@ -9,6 +9,7 @@
         <div class="field">
           <%= f.label :status, t("ui.fields.status") %>
           <%= f.select :status, status_options(ticket), {}, class: "select" %>
+          <%= postpone_note(ticket) %>
         </div>
         <div class="field">
           <%= f.label :priority, t("ui.fields.priority") %>

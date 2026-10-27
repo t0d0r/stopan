@@ -1,0 +1,22 @@
+<% content_for :title, t("ui.admin.settings.title") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.admin.settings.title") %></h1>
+  <%= render "admin/tabs" %>
+</div>
+
+<section class="sticky sticky--purple panel panel--form" aria-labelledby="postpone-title" id="auto-postpone">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.postpone_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="postpone-title"><%= t("ui.admin.settings.postpone_title") %></h2>
+    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+      <%= form_errors @setting %>
+      <div class="field">
+        <%= f.label :auto_postpone_days, t("ui.admin.settings.postpone_days") %>
+        <%= f.number_field :auto_postpone_days, class: "field-input", min: 0, max: 3650, required: true,
+                           aria: { describedby: "postpone-hint", invalid: invalid?(@setting, :auto_postpone_days) } %>
+        <small class="field-hint" id="postpone-hint"><%= t("ui.admin.settings.postpone_hint") %></small>
+      </div>
+      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
+    <% end %>
+  </div>
+</section>

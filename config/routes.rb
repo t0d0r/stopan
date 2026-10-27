@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     end
     resources :memberships, only: :destroy
     resources :messages, only: %i[new create]
+    resource :settings, only: %i[show update]
   end
 
   # Shared tickets, no sign-in (specs/sharing.md).

@@ -3309,6 +3309,51 @@ turbo-frame {
   background: var(--bar);
 }
 
+/* Round stamp: the card moves to Not now soon (like Fizzy's "closes in"). */
+.postpone-stamp {
+  position: absolute;
+  top: 26px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: 2px solid color-mix(in srgb, #8c6bd6 70%, #fff);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #5b3fae;
+  line-height: 1;
+  text-align: center;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.postpone-stamp__top,
+.postpone-stamp__unit {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.postpone-stamp__number {
+  margin: 2px 0;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.board-card:has(.postpone-stamp) .board-card__title {
+  padding-right: 58px;
+}
+
+.postpone-note {
+  margin: 4px 0 0;
+  color: #5b3fae;
+  font-size: 12px;
+}
+
 /* Golden cards: urgent tickets, always on top (like Fizzy's golden tickets). */
 .board-card.is-golden {
   border-color: #e2b71f;

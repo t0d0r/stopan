@@ -3,6 +3,7 @@
 <article class="board-card<%= " is-golden" if ticket.priority == "urgent" %>" id="<%= dom_id(ticket, :card) %>" draggable="true"
          data-board-card data-ticket="<%= ticket.number %>" data-status="<%= ticket.status %>" data-priority="<%= ticket.priority %>"
          data-allowed="<%= allowed.join(" ") %>" data-move-url="<%= move_ticket_path(ticket) %>">
+  <%= postpone_stamp(ticket) %>
   <div class="board-card__strip">
     <span class="board-card__number"><%= ticket.reference %></span>
     <span class="board-card__sep" aria-hidden="true">|</span>

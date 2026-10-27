@@ -9,3 +9,10 @@ namespace :stopan do
     end
   end
 end
+
+namespace :stopan do
+  desc "Postpone tickets without activity for the set number of days (specs/board.md)"
+  task postpone_inactive: :environment do
+    puts "#{AutoPostpone.run} ticket(s) moved to Not now"
+  end
+end

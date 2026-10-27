@@ -94,6 +94,32 @@ module TicketsHelper
   end
 
   # On a shared page (share_token) files go through the share link.
+  # Round stamp on a card due to be postponed within a week, like Fizzy's
+  # "closes in" (specs/board.md "Automatic postponing").
+  def postpone_stamp(ticket)
+    left = AutoPostpone.days_left(ticket, postpone_days)
+    return unless left && left <= AutoPostpone::STAMP_DAYS
+
+    label = left.zero? ? t("ui.board.stamp_today") : t("ui.board.stamp_days", count: left)
+    tag.span(class: "postpone-stamp", title: label, aria: { label: label }) do
+      tag.span(t("ui.board.stamp_top"), class: "postpone-stamp__top") +
+        tag.span(left.zero? ? t("ui.board.stamp_now") : left, class: "postpone-stamp__number") +
+        tag.span(left.zero? ? "" : t("ui.board.stamp_unit", count: left), class: "postpone-stamp__unit")
+    end
+  end
+
+  # "Moves to Not now in 3 days" for staff on the ticket page.
+  def postpone_note(ticket)
+    left = AutoPostpone.days_left(ticket, postpone_days)
+    return unless left && left <= AutoPostpone::STAMP_DAYS
+
+    tag.p(left.zero? ? t("ui.board.note_today") : t("ui.board.note_days", count: left), class: "postpone-note")
+  end
+
+  def postpone_days
+    @postpone_days ||= AutoPostpone.days
+  end
+
   # "edited by Maria 5 minutes ago" on an edited request or comment
   # (specs/timeline.md "Editing").
   def edited_note(record)

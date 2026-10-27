@@ -281,6 +281,12 @@ en:
         confirm_body: "It appears in the notifications of everyone chosen and cannot be taken back."
         to_label: "Send a message to %{name}"
         to_members: "Send a message to the members"
+      settings:
+        title: "Settings"
+        postpone_caption: "Not now"
+        postpone_title: "Automatic postponing"
+        postpone_days: "Postpone tickets after this many days without activity"
+        postpone_hint: "New, in progress and pending tickets nobody touched for this long move to Not now, once an hour. 0 turns it off. Cards due within a week show a stamp on the board."
       public_form:
         title: "Public request page"
         enabled: "Anyone can send a request without an account at this organization's page"
@@ -365,6 +371,19 @@ en:
         one: "and 1 more in the list"
         other: "and %{count} more in the list"
       move_failed: "The ticket could not be moved: %{error}"
+      stamp_top: "Not now in"
+      stamp_now: "today"
+      stamp_unit:
+        one: "day"
+        other: "days"
+      stamp_days:
+        one: "Moves to Not now in 1 day without activity"
+        other: "Moves to Not now in %{count} days without activity"
+      stamp_today: "Moves to Not now today without activity"
+      note_days:
+        one: "Moves to Not now in 1 day without activity."
+        other: "Moves to Not now in %{count} days without activity."
+      note_today: "Moves to Not now today without activity."
     public_request:
       title: "Contact %{name} support"
       intro: "Describe your question or problem. We reply by email; you do not need an account."
@@ -599,6 +618,7 @@ en:
     impersonation_stopped: "You are back in your own account."
     impersonation_ended: "The impersonation ended. Please sign in again."
     impersonation_account_locked: "The account settings cannot be changed while impersonating."
+    settings_saved: "Settings saved."
     ticket_moved: "Ticket %{reference} moved to %{status}."
     message_sent:
       one: "Message sent to 1 user."
@@ -677,6 +697,8 @@ en:
         imap_password: "IMAP password"
         imap_folder: "Folder"
         mailbox_address: "Mailbox address"
+      app_setting:
+        auto_postpone_days: "Days without activity"
         slug: "URL name"
         public_intro: "Intro text"
     errors:
