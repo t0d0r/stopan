@@ -466,6 +466,20 @@ Operator: "yes, deploy". The "Translate" button with the DeepL key in
 - Rollback: tag `localhost/stopan:0f52988` as `latest` and restart; the
   new table and column can stay.
 
+## Update 2026-10-27 (revision d757d14)
+
+Operator: "do it and then deploy". The reports page with the burndown
+chart and the "Board" pill; no migrations.
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-ff0f444.sqlite3`
+  (mode 600; 4 users, 2 tickets, schema 20261028100000).
+- Checked: healthy; no pending migrations; `/reports` and
+  `/tickets/board` redirect to sign-in; the report computes on the
+  production data (burndown's last point equals the open count);
+  `/up` 200; `http://` -> 301; `/cable` 101; the four security headers;
+  g0no `/up` 200.
+- Rollback: tag `localhost/stopan:ff0f444` as `latest` and restart.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

@@ -6,7 +6,7 @@ before it is built. The "foundation" column says what already exists.
 | area | idea | foundation in phase 1 |
 |------|------|-----------------------|
 | email notifications | **specified in notifications.md (phase 2)**; later: per-user preferences, digests, durable queue (Solid Queue) | events table records every change; `visible_to` decides what a requester may be told |
-| email ingestion | **specified in organization-mail.md (IMAP per organization)**; later: OAuth2 for Google / Microsoft 365, POP3, moving processed mail, spam scoring | `Ticket.create` path and comment creation are model methods, not controller code |
+| email ingestion | **specified in organization-mail.md (IMAP per organization)**; OAuth2 for Google / Microsoft 365 planned in mail-oauth.md; later: POP3, moving processed mail, spam scoring | `Ticket.create` path and comment creation are model methods, not controller code |
 | SMTP | **specified in notifications.md (phase 2)** | Devise mailer sender from `MAILER_SENDER` |
 | SLAs | first-response and resolution targets per priority, breach warnings | `priority`, `created_at`, first staff `replied` event, `done_at` |
 | automation | triggers, macros (canned replies) | status transitions in one place (`Ticket::TRANSITIONS`, `Ticket#change_status`) |

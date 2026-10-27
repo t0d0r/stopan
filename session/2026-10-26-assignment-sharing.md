@@ -580,6 +580,14 @@ menu and Take; open /tickets/new and pick a requester.
   wraps under 1180px, the search shrinks first (flex-shrink 100), the
   right-hand tools never shrink (names capped at 14em), and the pills
   wrap on phones (before, "Admin" was cut off at 390px).
+- Deployed d757d14 (reports with burndown, Board pill) after a backup
+  (`pre-deploy-ff0f444.sqlite3`).
+- Planned Google and Microsoft accounts for organization mail
+  (specs/mail-oauth.md): keep IMAP/SMTP with XOAUTH2, delegated OAuth
+  code flow with PKCE, one app per provider in /admin/settings, refresh
+  tokens encrypted in `mail_connections`; four phases in todo. Waiting
+  for the operator's answers (which accounts first, who registers the
+  apps, Google Internal vs verified External, outgoing via the account).
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.
