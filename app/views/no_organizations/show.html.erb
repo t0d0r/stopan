@@ -1,0 +1,9 @@
+<% content_for :title, t("ui.no_organization.title") %>
+<div class="sticky sticky--yellow auth">
+  <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
+  <div class="auth__body">
+    <h2><%= t("ui.no_organization.title") %></h2>
+    <p><%= t("ui.no_organization.body") %></p>
+    <%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "btn btn--block" %>
+  </div>
+</div>

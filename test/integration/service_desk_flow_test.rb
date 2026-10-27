@@ -64,7 +64,9 @@ class ServiceDeskFlowTest < ActionDispatch::IntegrationTest
 
     sign_in eve
     get new_ticket_url
-    assert_select ".callout", /not part of an organization/
+    assert_redirected_to no_organization_url
+    follow_redirect!
+    assert_select "h2", "Not part of an organization yet"
 
     sign_in users(:admin)
     post admin_organization_memberships_url(organizations(:globex)), params: { membership: { user_id: eve.id } }

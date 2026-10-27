@@ -25,7 +25,7 @@
     <%= link_to root_path, class: "menubar__brand", aria: { label: "Stopan" } do %>
       <%= image_tag "/icon.svg", alt: "", width: 18, height: 18 %><span class="menubar__name">Stopan</span>
     <% end %>
-    <% if user_signed_in? %>
+    <% if user_signed_in? && !without_organization? %>
       <nav class="menubar__nav" aria-label="<%= t("ui.nav.label") %>">
         <%= nav_link current_user.staff? ? t("ui.nav.queue") : t("ui.nav.my_tickets"), tickets_path, dot: "yellow",
                      current: current_section == :tickets %>
@@ -37,7 +37,7 @@
       <%= render "partials/search" %>
     <% end %>
     <div class="menubar__right">
-      <% if user_signed_in? %><%= render "partials/notifications" %><% end %>
+      <% if user_signed_in? && !without_organization? %><%= render "partials/notifications" %><% end %>
       <%= render "partials/preferences" %>
       <% if user_signed_in? %>
         <%= link_to edit_user_registration_path, class: "menubar__user", title: t("ui.account") do %>
@@ -74,7 +74,7 @@
     <% end %>
   </main>
   <% if user_signed_in? %>
-    <%= turbo_stream_from current_user, :notifications, channel: NotificationsChannel %>
+    <% unless without_organization? %><%= turbo_stream_from current_user, :notifications, channel: NotificationsChannel %><% end %>
     <% if live_admin_page? %><%= turbo_stream_from :admin, channel: AdminChannel %><% end %>
     <%= render "partials/confirm_dialog" %>
   <% end %>

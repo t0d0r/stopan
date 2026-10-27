@@ -9,6 +9,8 @@ class SharedTicketsController < ApplicationController
   UNLOCKED_LIMIT = 20
 
   skip_before_action :authenticate_user!
+  # Shared pages are public, whoever is signed in (specs/roles.md).
+  skip_before_action :require_organization
   before_action :set_private_headers
   before_action :set_ticket
   before_action :require_unlocked, except: :unlock

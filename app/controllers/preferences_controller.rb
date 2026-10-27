@@ -7,6 +7,7 @@ class PreferencesController < ApplicationController
   WIDTHS = %w[normal wide].freeze
 
   skip_before_action :authenticate_user!
+  skip_before_action :require_organization
 
   def update
     remember :theme, params[:theme].presence_in(THEMES)

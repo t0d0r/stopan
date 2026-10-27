@@ -77,12 +77,33 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".queue__views", 0
   end
 
-  test "requesters without an organization are told to ask an administrator" do
+  test "requesters without an organization see only the notice" do
     sign_in users(:drifter)
+    [ tickets_url, new_ticket_url, notifications_url, board_url, ticket_url(tickets(:printer)) ].each do |url|
+      get url
+      assert_redirected_to no_organization_url, url
+    end
+    get panel_notifications_url, headers: { "Accept" => "application/json" }
+    assert_response :forbidden
+
+    get no_organization_url
+    assert_response :success
+    assert_select "h2", "Not part of an organization yet"
+    assert_select "form[action=?] button", destroy_user_session_path
+    assert_select ".menubar__nav, .menubar__search, #notifications", 0
+    assert_select "turbo-cable-stream-source", 0
+
+    get edit_user_registration_url
+    assert_response :success
+  end
+
+  test "members and staff never see the notice page" do
+    sign_in users(:anna)
+    get no_organization_url
+    assert_redirected_to root_url
+    sign_in users(:agent_two)
     get tickets_url
-    assert_select ".callout", /not part of an organization/
-    get new_ticket_url
-    assert_select "form.stack-form", 0
+    assert_response :success
   end
 
   test "a requester reads a colleague's ticket without the composer, never another organization's" do
@@ -155,7 +176,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference "Ticket.count" do
       post tickets_url, params: { ticket: { subject: "x", description: "y" } }
     end
-    assert_response :unprocessable_content
+    assert_redirected_to no_organization_url
   end
 
   test "invalid tickets re-render the form with errors" do

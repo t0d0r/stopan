@@ -347,6 +347,9 @@ en:
       not_ended: "ended by sign-out"
       banner: "You are signed in as %{name} (%{role}) by impersonation."
       back: "Back to my account"
+    no_organization:
+      title: "Not part of an organization yet"
+      body: "Your account is not part of an organization yet, so there is nothing to show. Please contact your service desk administrator."
     board:
       title: "Board"
       list: "List"

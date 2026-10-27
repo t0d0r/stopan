@@ -49,7 +49,7 @@ class TicketSharesControllerTest < ActionDispatch::IntegrationTest
     memberships(:anna_acme).destroy
     sign_in users(:anna)
     post ticket_share_url(tickets(:printer))
-    assert_response :not_found
+    assert_redirected_to no_organization_url
     assert_not tickets(:printer).reload.shared?
   end
 

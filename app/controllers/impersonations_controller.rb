@@ -1,6 +1,8 @@
 # Ends an impersonation and signs the administrator back in
 # (specs/admin.md "Impersonation").
 class ImpersonationsController < ApplicationController
+  skip_before_action :require_organization
+
   def destroy
     admin = impersonator
     user = current_user

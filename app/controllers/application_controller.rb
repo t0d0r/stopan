@@ -6,14 +6,30 @@ class ApplicationController < ActionController::Base
   around_action :switch_locale
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :check_impersonation
+  before_action :require_organization, unless: :devise_controller?
   before_action { Current.user = current_user }
   before_action :remember_locale
 
   rescue_from NotAuthorized, with: :forbidden
 
-  helper_method :impersonator
+  helper_method :impersonator, :without_organization?
 
   private
+
+  # A requester without a membership sees nothing but a notice
+  # (specs/roles.md); staff are never limited by membership.
+  def without_organization?
+    return @without_organization if defined?(@without_organization)
+
+    @without_organization = user_signed_in? && current_user.requester? && !current_user.memberships.exists?
+  end
+
+  def require_organization
+    return unless without_organization?
+    return head(:forbidden) if request.format.json?
+
+    redirect_to no_organization_path
+  end
 
   # The administrator behind an impersonation (specs/admin.md
   # "Impersonation"), or nil.

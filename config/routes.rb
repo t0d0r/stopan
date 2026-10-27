@@ -64,6 +64,8 @@ Rails.application.routes.draw do
   post "magic/:token" => "magic_links#create_session", as: :magic_link_session
 
   delete "impersonation" => "impersonations#destroy", as: :impersonation
+  # The only page of a requester without an organization (specs/roles.md).
+  get "no-organization" => "no_organizations#show", as: :no_organization
 
   patch "preferences" => "preferences#update", as: :preferences
 

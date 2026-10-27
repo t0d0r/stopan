@@ -363,6 +363,13 @@ Operator requests, in order:
   Chrome: drag of #1005 New -> In progress kept after reload, counts
   updated, Move menu, phone scrolls inside the board.
 
+- Requesters without an organization see nothing (operator):
+  `require_organization` before action redirects them to /no-organization
+  (403 for JSON), menu bar empty, no notification stream; Devise pages,
+  sign-out, preferences, shared pages and an admin's way back from
+  impersonation stay allowed; admin messages skip them. Staff are not
+  affected (said so to the operator). Checked in headless Chrome.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

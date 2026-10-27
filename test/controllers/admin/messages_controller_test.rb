@@ -38,7 +38,10 @@ class Admin::MessagesControllerTest < ActionDispatch::IntegrationTest
   test "roles, organizations and everyone reach active users, never the sender" do
     users(:boris).update!(deactivated_at: Time.current)
     post admin_messages_url, params: { admin_message: { recipients: "role:requester", text: "Hi requesters" } }
-    assert_equal User.active.where(role: "requester").pluck(:id).sort, Notification.where(message: "Hi requesters").pluck(:user_id).sort
+    # Requesters without an organization are left out (roles.md).
+    expected = User.active.where(role: "requester").joins(:memberships).distinct.pluck(:id).sort
+    assert_equal expected, Notification.where(message: "Hi requesters").pluck(:user_id).sort
+    assert_not Notification.exists?(message: "Hi requesters", user: users(:drifter))
 
     post admin_messages_url, params: { admin_message: { recipients: "organization:#{organizations(:acme).id}", text: "Hi Acme" } }
     assert_not Notification.where(message: "Hi Acme", user: users(:boris)).exists?
@@ -46,7 +49,8 @@ class Admin::MessagesControllerTest < ActionDispatch::IntegrationTest
 
     post admin_messages_url, params: { admin_message: { recipients: "all", text: "Hi all" } }
     assert_not Notification.where(message: "Hi all", user: users(:admin)).exists?
-    assert_equal User.active.where.not(id: users(:admin).id).count, Notification.where(message: "Hi all").count
+    reachable = User.active.where.not(id: users(:admin).id).reject { |user| user.requester? && user.memberships.none? }
+    assert_equal reachable.size, Notification.where(message: "Hi all").count
   end
 
   test "empty text, no recipients and foreign return paths are refused" do
