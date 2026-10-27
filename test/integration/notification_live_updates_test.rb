@@ -1,9 +1,10 @@
 require "test_helper"
 require "turbo/broadcastable/test_helper"
 
-# Live updates of the notification panel (specs/notifications.md "Live
-# updates of the panel"): a content-free signal per user, and the panel
-# fetched again over HTTP.
+# Live updates of the notification panel and page (specs/notifications.md
+# "Live updates of the panel" and "... of the notifications page"): a
+# content-free signal per user, and the panel or page fetched again over
+# HTTP.
 class NotificationLiveUpdatesTest < ActionDispatch::IntegrationTest
   include Turbo::Broadcastable::TestHelper
 
@@ -26,6 +27,25 @@ class NotificationLiveUpdatesTest < ActionDispatch::IntegrationTest
     assert_equal [ "notifications_refresh" ], signals.map { |stream| stream["action"] }
     assert_empty signals.first.at("template").inner_html.strip
     assert_empty signals_to(users(:agent)) { tickets(:printer).add_comment(author: users(:agent), body: "Again") }
+  end
+
+  test "a signal from a request carries its Turbo request id, others none" do
+    signals = signals_to(users(:anna)) { tickets(:printer).add_comment(author: users(:agent), body: "Please try a new roll.") }
+    assert_nil signals.first["request-id"]
+
+    sign_in users(:anna)
+    signals = signals_to(users(:anna)) do
+      patch read_all_notifications_url, headers: { "X-Turbo-Request-Id" => "tab-request-1" }
+    end
+    assert_equal [ "tab-request-1" ], signals.map { |stream| stream["request-id"] }
+  end
+
+  test "the notifications page refreshes itself on the signal, keeping its scroll position" do
+    sign_in users(:anna)
+    get notifications_url
+    assert_select "[data-notifications-page]"
+    assert_select "meta[name=turbo-refresh-scroll][content=preserve]"
+    assert_select "turbo-cable-stream-source[channel=NotificationsChannel]"
   end
 
   test "reading notifications signals the user's other pages, once" do

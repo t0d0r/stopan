@@ -181,15 +181,28 @@ function setUpDropdowns() {
 // Live notification panel (specs/notifications.md): the server only says
 // that something changed; the panel is fetched again over HTTP, so the
 // usual sign-in and visibility checks apply. Signals are coalesced, and an
-// open panel is left alone until it is closed.
+// open panel is left alone until it is closed. The notifications page
+// reloads itself instead, unless only this tab's own request caused it.
 let notificationsTimer = null;
+let notificationsRequestId;
 
 function scheduleNotificationsRefresh() {
+  const requestId = this?.getAttribute?.("request-id") || "";
+  if (notificationsTimer === null) notificationsRequestId = requestId;
+  else if (notificationsRequestId !== requestId) notificationsRequestId = "";
   clearTimeout(notificationsTimer);
   notificationsTimer = setTimeout(refreshNotifications, 300);
 }
 
 async function refreshNotifications() {
+  notificationsTimer = null;
+  if (document.querySelector("[data-notifications-page]")) {
+    const stream = document.createElement("turbo-stream");
+    stream.setAttribute("action", "refresh");
+    if (notificationsRequestId) stream.setAttribute("request-id", notificationsRequestId);
+    window.Turbo?.renderStreamMessage(stream.outerHTML);
+    return;
+  }
   const current = document.querySelector("[data-notifications]");
   if (!current) return;
   if (current.open) {

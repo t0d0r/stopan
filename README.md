@@ -46,8 +46,8 @@ The screenshots use the fictional data from `make demo`.
   can opt in to every new ticket; never about their own actions, never
   internal content to requesters, in each user's language. SMTP from
   `SMTP_*` environment variables. The same notifications appear in the
-  app under a bell in the menu bar, with an unread count that updates
-  live over Action Cable (`specs/notifications.md`).
+  app under a bell in the menu bar and on a notifications page, both
+  updating live over Action Cable (`specs/notifications.md`).
 - **Assignment** - one-click "Take" and an assignee menu in the queue
   (`specs/tickets.md`).
 - **Sharing** - a secret read-only link to a ticket, optionally with a

@@ -27,10 +27,12 @@ class Notification < ApplicationRecord
   end
 
   # Tells the user's open pages to fetch the panel again; the signal carries
-  # no content (specs/notifications.md "Live updates of the panel").
+  # no content (specs/notifications.md "Live updates of the panel"), only
+  # the Turbo request id, so the tab that caused it does not reload twice.
   def self.broadcast_changed(user)
     Turbo::StreamsChannel.broadcast_action_later_to(user, :notifications, action: "notifications_refresh",
-                                                                          target: "notifications")
+                                                                          target: "notifications",
+                                                                          attributes: { "request-id": Turbo.current_request_id }.compact)
   end
 
   # Marks the user's unread notifications in scope read and tells their

@@ -121,6 +121,17 @@ Operator requests, in order:
   Chrome: the users list refreshed after another user signed in and
   replied; a half-typed new user form waited and kept its text.
 
+- Notifications page live refresh (2026-10-27, operator: "the
+  notifications page should refresh live too"): no new stream; on
+  `/notifications` (`data-notifications-page`) the coalesced
+  `notifications_refresh` signal runs a local Turbo page refresh instead
+  of the panel fetch, with scroll preserve and the usual busy wait. The
+  signal now carries `request-id` (`Turbo.current_request_id`), so the
+  tab's own "Mark all as read" does not reload again and drop its notice.
+  Checked in headless Chrome: the page refreshed after a reply; after its
+  own "Mark all as read" it kept the notice and did not reload; with the
+  bell panel open it waited and refreshed once the panel closed.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
@@ -137,6 +148,10 @@ _take_button,_queue,_properties,new}.html.erb,
 app/assets/{javascripts/application.js,stylesheets/application.css},
 config/locales/{en,bg}.yml, test/controllers/{assignments,tickets}_controller_test.rb,
 bin/screenshots, docs/screenshots/*.png.
+Notifications page live refresh: specs/notifications.md,
+app/models/notification.rb, app/views/notifications/index.html.erb,
+app/assets/javascripts/application.js,
+test/integration/notification_live_updates_test.rb.
 
 ## Verify
 

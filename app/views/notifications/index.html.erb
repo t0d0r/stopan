@@ -1,4 +1,5 @@
 <% content_for :title, t("ui.notifications.title") %>
+<% turbo_refreshes_with scroll: :preserve %>
 <div class="desk__header">
   <h1 class="desk__title"><%= t("ui.notifications.title") %></h1>
   <% if @notifications.any?(&:unread?) %>
@@ -6,7 +7,7 @@
   <% end %>
 </div>
 
-<section class="sticky sticky--yellow panel panel--form" aria-labelledby="notifications-title">
+<section class="sticky sticky--yellow panel panel--form" aria-labelledby="notifications-title" data-notifications-page>
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.notifications.title") %></span></header>
   <div class="panel__body">
     <h2 class="sr-only" id="notifications-title"><%= t("ui.notifications.title") %></h2>
