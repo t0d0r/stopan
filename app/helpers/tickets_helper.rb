@@ -311,6 +311,19 @@ module TicketsHelper
     VIEW_COLORS.fetch(view, "gray")
   end
 
+  # "Name <address>" as [name, address]; a bare address has no name.
+  def mail_party(value)
+    match = value.to_s.match(/\A(.*?)\s*<([^<>]+)>\z/)
+    match ? [ match[1].delete_prefix('"').delete_suffix('"'), match[2] ] : [ nil, value.to_s ]
+  end
+
+  # The Date header with the sender's offset, or nil when missing or broken.
+  def mail_header_time(value)
+    Time.iso8601(value.to_s) if value.present?
+  rescue ArgumentError
+    nil
+  end
+
   # Initials on a paper colour picked from the user id, so a person keeps
   # their colour. Decorative: the name is always shown next to it.
   def user_avatar(user)

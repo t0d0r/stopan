@@ -160,6 +160,32 @@ short links, markdown.md "Plain text links"):
   addresses. Messages from the app and the web form keep the plain text
   layout.
 
+### Mail details
+
+Operator, 2026-10-27: "tickets from mail should have a section at the
+start with the important things from the mail headers".
+
+- When a mail becomes a new ticket, `tickets.mail_headers` (JSON) keeps:
+  `from`, `to` and `cc` (lists), `reply_to`, `date` (ISO 8601, with the
+  sender's offset), `subject` (the original, before `Re:`/`Fwd:` were
+  stripped) and `message_id`. Addresses as "Name <address>" (decoded) or
+  the bare address; at most 20 per list and 300 characters per value.
+  Empty fields are left out. Tickets made before this have none and show
+  nothing.
+- On the ticket page, **staff only**, the request starts (above its
+  heading, outside the in-place edit frame) with a message header in the
+  manner of a mail program such as Roundcube (operator: "nicer
+  formatting, like Roundcube"): the requester's avatar, the sender's name
+  in bold with the address after it, the date at the right (short
+  format), a line "To: ..." and "Cc: ..." (separated by a middle dot), and a "Details" disclosure
+  (`<details>`) with From, To, Cc, Reply-To (only when different from
+  From), the full date with the sender's UTC offset, the original
+  Subject and the Message-ID. A tinted band across the top of the note;
+  on phones the date goes under the sender and the details stack.
+- Not on shared pages, not for requesters and not in emails: the headers
+  name other recipients.
+- Replies that come in by mail keep no headers yet (todo).
+
 ## Not in this phase
 
 OAuth2 sign-in to mail providers (Google, Microsoft 365), POP3, moving

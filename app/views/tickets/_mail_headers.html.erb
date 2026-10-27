@@ -1,0 +1,54 @@
+<%# The mail the ticket came from, shown like a mail program's message
+    header (Roundcube): sender with avatar, date, recipients, and the rest
+    under "Details". Staff only (specs/organization-mail.md "Mail details").
+    Locals: ticket. %>
+<% headers = ticket.mail_headers %>
+<% name, address = mail_party(Array(headers["from"]).first) %>
+<% sent = mail_header_time(headers["date"]) %>
+<section class="mail-headers" aria-label="<%= t("ui.mail_headers.title") %>">
+  <div class="mail-headers__top">
+    <%= user_avatar ticket.requester %>
+    <div class="mail-headers__who">
+      <p class="mail-headers__from">
+        <strong><%= name.presence || address %></strong>
+        <% if name.present? %><span class="mail-headers__address">&lt;<%= address %>&gt;</span><% end %>
+      </p>
+      <p class="mail-headers__to">
+        <% if headers["to"].present? %><span><%= t("ui.mail_headers.to") %>: <%= headers["to"].join(", ") %></span><% end %>
+        <% if headers["cc"].present? %><span><%= t("ui.mail_headers.cc") %>: <%= headers["cc"].join(", ") %></span><% end %>
+      </p>
+    </div>
+    <% if sent %>
+      <time class="mail-headers__date" datetime="<%= headers["date"] %>"><%= l(sent, format: :short) %></time>
+    <% end %>
+  </div>
+  <details class="mail-headers__details">
+    <summary><%= t("ui.mail_headers.details") %></summary>
+    <dl class="mail-headers__list">
+      <dt><%= t("ui.mail_headers.from") %></dt>
+      <dd><%= Array(headers["from"]).join(", ") %></dd>
+      <% %w[to cc].each do |field| %>
+        <% if headers[field].present? %>
+          <dt><%= t("ui.mail_headers.#{field}") %></dt>
+          <dd><%= headers[field].join(", ") %></dd>
+        <% end %>
+      <% end %>
+      <% if headers["reply_to"].present? && !Array(headers["from"]).include?(headers["reply_to"]) %>
+        <dt><%= t("ui.mail_headers.reply_to") %></dt>
+        <dd><%= headers["reply_to"] %></dd>
+      <% end %>
+      <% if sent %>
+        <dt><%= t("ui.mail_headers.date") %></dt>
+        <dd><%= l(sent, format: :long) %> (UTC<%= sent.strftime("%:z") %>)</dd>
+      <% end %>
+      <% if headers["subject"].present? %>
+        <dt><%= t("ui.mail_headers.subject") %></dt>
+        <dd><%= headers["subject"] %></dd>
+      <% end %>
+      <% if headers["message_id"].present? %>
+        <dt><%= t("ui.mail_headers.message_id") %></dt>
+        <dd class="mail-headers__id"><%= headers["message_id"] %></dd>
+      <% end %>
+    </dl>
+  </details>
+</section>

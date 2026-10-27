@@ -175,6 +175,16 @@ en:
       me: "Me"
       nobody: "Nobody"
 
+    mail_headers:
+      title: "Mail details"
+      details: "Details"
+      from: "From"
+      to: "To"
+      cc: "Cc"
+      reply_to: "Reply-To"
+      date: "Date"
+      subject: "Subject"
+      message_id: "Message-ID"
     ticket:
       show_whole: "Show the whole request"
       collapse: "Collapse the request"

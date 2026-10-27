@@ -141,7 +141,9 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] automatic mail fetching on /admin/settings: on/off and every 1-15 minutes, applies without restart; on in dev (operator, 2026-10-27; specs/organization-mail.md "Fetching")
 - [ ] production: turn on "Fetch new mail automatically" in /admin/settings after the next deploy
 - [x] mail-shaped display for messages with source email (rules, quotes, softer footer and signature) and short links for addresses in all plain text (operator, 2026-10-27; specs/organization-mail.md "Display of mail", specs/markdown.md "Plain text links")
-- [ ] mail later: keep the original HTML part and offer "Show original" (sanitized, remote images blocked) for newsletters with complex layout
+- [x] mail details for staff at the start of a mail ticket, Roundcube-style header (operator, 2026-10-27; specs/organization-mail.md "Mail details")
+- [~] mail HTML view like Roundcube: sanitized HTML part in a sandboxed frame, remote images blocked until allowed (operator, 2026-10-27)
+- [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")
 - [x] requesters see only their own tickets; "My organizations" tab, organization list stream and colleague notice removed (operator, 2026-10-27; specs/roles.md)
 - [x] long original request collapses with "Show the whole request" (operator, 2026-10-27; specs/timeline.md "Long requests collapse")
 - [x] timeline order: oldest or newest first, site default in /admin/settings and per browser on the account page; newest first puts the composer on top (operator, 2026-10-27; specs/timeline.md "Order of the timeline")

@@ -89,7 +89,8 @@ class MailboxMessage
       end
       Membership.find_or_create_by!(user: user, organization: organization)
       Ticket.create!(subject: ticket_subject, description: body_text(reply: false, rejected: rejected), files: files,
-                     requester: user, organization: organization, actor: user, source: "email")
+                     requester: user, organization: organization, actor: user, source: "email",
+                     mail_headers: mail_headers)
     end
     PublicRequestMailer.with(ticket: ticket).received.deliver_later if created
     :ticket
@@ -103,6 +104,33 @@ class MailboxMessage
   def sender_name
     name = Array(mail[:from]&.display_names).first.to_s.strip
     (name.presence || sender.split("@").first).first(100)
+  end
+
+  HEADER_LIMIT = 300
+  ADDRESS_LIMIT = 20
+
+  # The important headers for staff (specs/organization-mail.md "Mail
+  # details"); empty ones are left out.
+  def mail_headers
+    {
+      "from" => addresses(:from), "to" => addresses(:to), "cc" => addresses(:cc),
+      "reply_to" => addresses(:reply_to).first, "date" => mail.date&.iso8601,
+      "subject" => mail.subject.to_s.squish.first(HEADER_LIMIT).presence,
+      "message_id" => mail.message_id.to_s.first(HEADER_LIMIT).presence
+    }.compact_blank
+  end
+
+  # "Name <address>" or the bare address, decoded.
+  def addresses(name)
+    field = mail[name]
+    return [] unless field.respond_to?(:addrs)
+
+    field.addrs.first(ADDRESS_LIMIT).map do |address|
+      display = address.display_name.to_s.strip
+      (display.present? ? "#{display} <#{address.address}>" : address.address.to_s).first(HEADER_LIMIT)
+    end
+  rescue Mail::Field::ParseError
+    []
   end
 
   def ticket_subject

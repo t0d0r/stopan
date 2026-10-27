@@ -2668,6 +2668,115 @@ turbo-frame {
   border-top: 1px dashed var(--rule);
 }
 
+/* The mail a ticket came from, like a mail program's message header
+   (specs/organization-mail.md "Mail details"). */
+.mail-headers {
+  margin: -12px -16px 12px;
+  padding: 10px 16px 6px;
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--bar) 35%, transparent);
+  font-size: 13px;
+}
+
+.mail-headers__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mail-headers__top .avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.mail-headers__who {
+  flex: 1;
+  min-width: 0;
+}
+
+.mail-headers__from,
+.mail-headers__to {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.mail-headers__from strong {
+  font-size: 14px;
+}
+
+.mail-headers__address,
+.mail-headers__to,
+.mail-headers__date {
+  color: var(--ink-soft);
+}
+
+.mail-headers__to span + span::before {
+  content: "\00b7";
+  margin: 0 6px;
+}
+
+.mail-headers__date {
+  flex: none;
+  white-space: nowrap;
+}
+
+.mail-headers__details summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin-left: 42px;
+  color: var(--accent);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mail-headers__list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 12px;
+  margin: 4px 0 6px 42px;
+}
+
+.mail-headers__list dt {
+  color: var(--ink-soft);
+}
+
+.mail-headers__list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.mail-headers__id {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .mail-headers__top {
+    flex-wrap: wrap;
+  }
+
+  .mail-headers__date {
+    order: 3;
+    width: 100%;
+    padding-left: 42px;
+  }
+
+  .mail-headers__details summary {
+    min-height: 44px;
+  }
+
+  .mail-headers__list {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+  }
+
+  .mail-headers__list dd {
+    margin-bottom: 4px;
+  }
+}
+
 /* A long original request, cut with a button to open it (specs/timeline.md "Long requests collapse"). */
 .ticket-text.is-collapsed {
   max-height: var(--collapsed-height, 35vh);

@@ -12,6 +12,7 @@
                edit_path: (edit_ticket_description_path(@ticket) if editable),
                markdown_path: (markdown_ticket_description_path(@ticket) if editable), width_box: true %>
     <div class="message__body">
+      <% if staff && @ticket.mail_headers.present? %><%= render "tickets/mail_headers", ticket: @ticket %><% end %>
       <%= turbo_frame_tag "description-text" do %>
         <%= render "tickets/note_heading", ticket: @ticket, priority: staff %>
         <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>

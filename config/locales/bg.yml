@@ -178,6 +178,16 @@ bg:
       me: "Аз"
       nobody: "Никой"
 
+    mail_headers:
+      title: "Данни на писмото"
+      details: "Детайли"
+      from: "От"
+      to: "До"
+      cc: "Копие"
+      reply_to: "Отговор до"
+      date: "Дата"
+      subject: "Тема"
+      message_id: "Message-ID"
     ticket:
       show_whole: "Покажи цялата заявка"
       collapse: "Сгъни заявката"

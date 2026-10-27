@@ -695,6 +695,13 @@ menu and Take; open /tickets/new and pick a requester.
   The toggle is a full-width strip in the note's title strip colour
   (var(--bar)), small centred caption and chevron, like a fold; checked
   in Notes (light) and Omarchy (dark).
+- Mail details: `tickets.mail_headers` (JSON; migration
+  `AddMailHeadersToTickets`) filled by `MailboxMessage#mail_headers` for
+  new tickets (from/to/cc lists, reply_to, date ISO 8601, original
+  subject, message_id; decoded, capped). `tickets/_mail_headers` shows a
+  Roundcube-like header to staff only (avatar, sender, date, To/Cc,
+  Details disclosure). Dev ticket #1010 got sample headers by hand (it
+  predates the column). Next: the HTML view (todo).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

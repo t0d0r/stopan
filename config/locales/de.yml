@@ -178,6 +178,16 @@ de:
       me: "Ich"
       nobody: "Niemand"
 
+    mail_headers:
+      title: "Angaben zur E-Mail"
+      details: "Details"
+      from: "Von"
+      to: "An"
+      cc: "Kopie"
+      reply_to: "Antwort an"
+      date: "Datum"
+      subject: "Betreff"
+      message_id: "Message-ID"
     ticket:
       show_whole: "Ganze Anfrage anzeigen"
       collapse: "Anfrage einklappen"
