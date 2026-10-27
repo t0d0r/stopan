@@ -40,15 +40,31 @@ Rules:
 |-------|-----------|
 | `GET /admin/organizations` | table: name, members, unsolved tickets, all tickets; search by name (Enter, no button) |
 | `GET /admin/organizations/new`, `POST` | name (required, unique case-insensitively, at most 120 characters), notes (optional, staff-only text) |
-| `GET /admin/organizations/:id` | details (with the public form's address and copy button when on, and the mailbox status: last check, messages taken in, last error), member list with role and "Remove", "Add member" (select of users not yet members) |
+| `GET /admin/organizations/:id` | details (with the public form's address and copy button when on, and the mailbox status: last check, messages taken in, last error), member list with role and "Remove", "Add members" (a picker, below) |
 | `GET /admin/organizations/:id/edit`, `PATCH` | name, notes, URL name (`slug`), public form on/off and intro (public-form.md), the "Mail" panel with SMTP and mailbox settings (organization-mail.md) |
 | `POST /admin/organizations/:id/mail_test` | send a test email through the organization's SMTP to the signed-in admin |
 | `POST /admin/organizations/:id/mailbox_check` | log in to the organization's mailbox and report the unseen count |
 | `DELETE /admin/organizations/:id` | only without tickets; memberships are removed with it |
-| `POST /admin/organizations/:id/memberships` | add a member (`user_id`) |
+| `POST /admin/organizations/:id/memberships` | add members (`user_ids[]`, or one `membership[user_id]`) |
 | `DELETE /admin/memberships/:id` | remove a member; their access to that organization's tickets ends at once |
 
 Destructive actions ask in the confirm dialog, naming what will be lost.
+
+### Adding members
+
+Operator, 2026-10-27: "not a popup but something with a better
+visualisation" (the native select of users). Under the member list,
+"Add members" is a picker:
+
+- a search field that narrows the list as you type (name, email or
+  role, any case), and a scrolling list of the active users who are not
+  members yet (at most 320px tall), one row each: a check box, the
+  avatar, the name, the email and the role pill; clicking a row ticks it;
+- "Add selected (2)" adds every ticked user at once and is disabled
+  while none is ticked; "No user matches" when the search finds nobody;
+- without JavaScript the full list shows with its check boxes and the
+  button works the same;
+- on phones rows are 44px tall and the email goes under the name.
 
 ### Flush all tickets of an organization
 

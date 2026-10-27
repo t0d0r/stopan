@@ -1,0 +1,31 @@
+<%# Pick users to add as members (specs/admin.md "Adding members"): a
+    search that narrows the list as you type, check boxes, one button.
+    Locals: organization, candidates. %>
+<%= form_with url: admin_organization_memberships_path(organization), method: :post, class: "member-picker",
+              data: { member_picker: true, button_one: t("ui.admin.picker.add_one"), button_other: t("ui.admin.picker.add_other") } do %>
+  <h3 class="section-title" id="member-picker-title"><%= t("ui.admin.picker.title") %></h3>
+  <div class="member-picker__search" hidden data-picker-search-wrap>
+    <%= label_tag "member-picker-search", t("ui.admin.picker.search"), class: "sr-only" %>
+    <%= search_field_tag "member-picker-search", nil, class: "field-input", autocomplete: "off", spellcheck: false,
+                         placeholder: t("ui.admin.picker.search"), data: { picker_search: true }, name: nil %>
+  </div>
+  <ul class="member-picker__list" aria-labelledby="member-picker-title">
+    <% candidates.each do |user| %>
+      <li class="member-picker__row" data-picker-row data-search="<%= [ user.display_name, user.email, role_label(user) ].join(" ").downcase %>">
+        <label class="member-picker__label">
+          <%= check_box_tag "user_ids[]", user.id, false, id: "pick-user-#{user.id}", data: { picker_check: true } %>
+          <%= user_avatar user %>
+          <span class="member-picker__who">
+            <span class="member-picker__name"><%= user.display_name %></span>
+            <span class="member-picker__email"><%= user.email %></span>
+          </span>
+          <span class="role-pill role-pill--<%= user.role %>"><%= role_label(user) %></span>
+        </label>
+      </li>
+    <% end %>
+  </ul>
+  <p class="panel__empty" hidden data-picker-empty><%= t("ui.admin.picker.no_match") %></p>
+  <div class="form-actions form-actions--start">
+    <%= submit_tag t("ui.admin.picker.add"), name: nil, class: "btn btn--primary", data: { picker_submit: true } %>
+  </div>
+<% end %>

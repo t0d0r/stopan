@@ -348,6 +348,13 @@ de:
       done: "Dieses Ticket ist erledigt. Wenn Sie antworten, wird es wieder geöffnet."
 
     admin:
+      picker:
+        title: "Mitglieder hinzufügen"
+        search: "Nach Name, E-Mail oder Rolle suchen"
+        no_match: "Kein Benutzer passt."
+        add: "Ausgewählte hinzufügen"
+        add_one: "1 ausgewählte Person hinzufügen"
+        add_other: "%{count} ausgewählte hinzufügen"
       flush:
         caption: "Gefahrenzone"
         title: "Alle Tickets dieser Organisation löschen"
@@ -1043,6 +1050,8 @@ de:
     google_failed: "Die Verbindung mit Google hat nicht funktioniert. Prüfen Sie Client-ID, Secret und Redirect-URI und versuchen Sie es erneut."
     google_disconnected: "Google getrennt. Die E-Mail dieser Organisation ist aus."
     google_client_saved: "Google-Client gespeichert. Verbinden Sie jetzt ein Postfach."
+    members_added: "%{count} Mitglieder hinzugefügt."
+    members_none_chosen: "Wählen Sie zuerst mindestens einen Benutzer aus."
     flush_name_mismatch: "Der Name stimmt nicht. Nichts wurde gelöscht."
     flushed:
       zero: "%{name} hatte keine Tickets zum Löschen."

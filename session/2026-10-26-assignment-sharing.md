@@ -789,6 +789,10 @@ menu and Take; open /tickets/new and pick a requester.
   from/to, source, files) parsed and kept in params_with (menu bar search,
   pagination, bulk list); SQL in constants (Brakeman). A `<details>` in the
   filter bar with its own Search button. Checked on dev.
+- Member picker (operator: "not a popup but something with a better
+  visualisation"): `admin/organizations/_member_picker` (search narrows rows,
+  check boxes, "Add N selected"), `MembershipsController#create` takes
+  `user_ids[]` (API too). Checked on dev without adding anyone.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

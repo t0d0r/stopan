@@ -751,6 +751,40 @@ function setUpFlushConfirm() {
   });
 }
 
+// The member picker on an organization page (specs/admin.md "Adding
+// members"): typing narrows the list, the button counts the ticked users.
+function setUpMemberPicker() {
+  document.querySelectorAll("[data-member-picker]").forEach((form) => {
+    const search = form.querySelector("[data-picker-search]");
+    const rows = [...form.querySelectorAll("[data-picker-row]")];
+    const empty = form.querySelector("[data-picker-empty]");
+    const submit = form.querySelector("[data-picker-submit]");
+    form.querySelector("[data-picker-search-wrap]").hidden = false;
+    const count = () => {
+      const ticked = rows.filter((row) => row.querySelector("[data-picker-check]").checked).length;
+      submit.disabled = ticked === 0;
+      const label = ticked === 1 ? form.dataset.buttonOne : form.dataset.buttonOther;
+      submit.value = label.replace("%{count}", ticked);
+      rows.forEach((row) => row.classList.toggle("is-picked", row.querySelector("[data-picker-check]").checked));
+    };
+    const narrow = () => {
+      const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      rows.forEach((row) => {
+        const match = words.every((word) => row.dataset.search.includes(word));
+        row.hidden = !match;
+        if (match) shown += 1;
+      });
+      empty.hidden = shown > 0;
+    };
+    search.addEventListener("input", narrow, { signal: pageSignal });
+    // Enter in the search field must not add anyone.
+    search.addEventListener("keydown", (event) => { if (event.key === "Enter") event.preventDefault(); }, { signal: pageSignal });
+    form.addEventListener("change", count, { signal: pageSignal });
+    count();
+  });
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -770,6 +804,7 @@ function setUpPage() {
   setUpLongRequest();
   setUpBulkActions();
   setUpFlushConfirm();
+  setUpMemberPicker();
   setUpDoubleClickEdit();
   setUpTaskLists();
   setUpTranslations();

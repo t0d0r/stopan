@@ -4152,6 +4152,70 @@ turbo-frame {
   margin: 10px 0 0;
 }
 
+/* The member picker of an organization page (specs/admin.md "Adding members"). */
+.member-picker {
+  margin-top: 16px;
+}
+
+.member-picker__search .field-input {
+  width: 100%;
+}
+
+.member-picker__list {
+  max-height: 320px;
+  margin: 8px 0 0;
+  padding: 0;
+  overflow-y: auto;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--field-bg);
+  list-style: none;
+}
+
+.member-picker__row + .member-picker__row {
+  border-top: 1px solid var(--rule);
+}
+
+.member-picker__row.is-picked {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.member-picker__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.member-picker__who {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 0 10px;
+  min-width: 0;
+}
+
+.member-picker__name {
+  font-weight: 600;
+}
+
+.member-picker__email {
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .member-picker__label {
+    min-height: 44px;
+  }
+
+  .member-picker__who {
+    flex-direction: column;
+  }
+}
+
 /* Advanced search under the queue filters (specs/queues.md "Advanced search"). */
 .advanced-search {
   flex-basis: 100%;

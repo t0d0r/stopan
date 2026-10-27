@@ -53,6 +53,26 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_empty Ticket.visible_to(users(:carl).reload)
   end
 
+  test "the member picker lists non-members with check boxes and adds several at once (specs/admin.md)" do
+    org = organizations(:globex)
+    get admin_organization_url(org)
+    assert_select "form[data-member-picker][action=?]", admin_organization_memberships_path(org) do
+      assert_select "[data-picker-search-wrap][hidden] input[type=search][data-picker-search]:not([name])"
+      assert_select "li[data-picker-row] input[type=checkbox][name='user_ids[]'][value=?]", users(:drifter).id.to_s
+      assert_select "li[data-picker-row] input[value=?]", users(:carl).id.to_s, count: 0
+      assert_select "li[data-picker-row][data-search*=?]", users(:drifter).email.downcase
+    end
+    assert_select "select[name='membership[user_id]']", 0
+
+    newcomer = User.create!(name: "New Comer", email: "new@example.com", password: "s3cret-pass-1", role: "requester")
+    assert_difference("Membership.count", 2) do
+      post admin_organization_memberships_url(org), params: { user_ids: [ users(:drifter).id, newcomer.id ] }
+    end
+    assert_equal "2 members added.", flash[:notice]
+    post admin_organization_memberships_url(org), params: { user_ids: [ "" ] }
+    assert_equal "Tick at least one user first.", flash[:alert]
+  end
+
   test "agents cannot manage memberships" do
     sign_in users(:agent)
     assert_no_difference("Membership.count") do

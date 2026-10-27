@@ -153,7 +153,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] soft delete of tickets by staff (page, bulk, API); admins review and restore them under Admin > Deleted tickets (operator, 2026-10-27; specs/tickets.md "Deleting")
 - [x] person profile with statistics for staff, opened from "Requester" on the ticket page; queue filter by requester (operator, 2026-10-27; specs/people.md)
 - [x] advanced search in the queue: all words, also in replies, requester, created and activity dates, source, attachments (operator, 2026-10-27; specs/queues.md "Advanced search")
-- [ ] organization page: a better "Add member" picker than the native select (operator, 2026-10-27)
+- [x] organization page: member picker with live search and check boxes, several at once (operator, 2026-10-27; specs/admin.md "Adding members")
 - [x] admin: flush all tickets of an organization after typing its name, keeping its settings; numbers never reused (operator, 2026-10-27; specs/admin.md "Flush all tickets of an organization")
 - [x] requester email on the ticket page and the profile copies on click instead of opening the mail program (operator, 2026-10-27; specs/ui.md "Emails copy on click")
 - [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")

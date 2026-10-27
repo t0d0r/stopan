@@ -34,11 +34,7 @@
         <p class="panel__empty"><%= t("ui.admin.no_members") %></p>
       <% end %>
       <% if @candidates.any? %>
-        <%= form_with model: Membership.new, url: admin_organization_memberships_path(@organization), class: "inline-form" do |f| %>
-          <%= f.label :user_id, t("ui.admin.add_member"), class: "inline-form__label" %>
-          <%= f.collection_select :user_id, @candidates, :id, :display_name, {}, class: "select" %>
-          <%= f.submit t("ui.admin.add"), class: "btn" %>
-        <% end %>
+        <%= render "admin/organizations/member_picker", organization: @organization, candidates: @candidates %>
       <% end %>
     </div>
   </section>

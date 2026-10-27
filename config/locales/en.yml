@@ -345,6 +345,13 @@ en:
       done: "This ticket is done. If you reply, it opens again."
 
     admin:
+      picker:
+        title: "Add members"
+        search: "Search by name, email or role"
+        no_match: "No user matches."
+        add: "Add selected"
+        add_one: "Add 1 selected"
+        add_other: "Add %{count} selected"
       flush:
         caption: "Danger zone"
         title: "Delete all tickets of this organization"
@@ -1040,6 +1047,8 @@ en:
     google_failed: "Connecting with Google did not work. Check the client ID, secret and redirect URI, and try again."
     google_disconnected: "Google disconnected. Mail for this organization is off."
     google_client_saved: "Google client saved. Now connect a mailbox."
+    members_added: "%{count} members added."
+    members_none_chosen: "Tick at least one user first."
     flush_name_mismatch: "The name did not match. Nothing was deleted."
     flushed:
       zero: "%{name} had no tickets to delete."
