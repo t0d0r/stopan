@@ -210,6 +210,15 @@ Operator requests, in order:
   queue"): even rows of the queue and My tickets get a translucent dark
   tint, so it suits every view colour and the dark theme.
 
+- Plan item 4 done: earlier versions show each edit word by word
+  (`TextDiff` from g0no, `diff_html`, red struck `<del>`, green `<ins>`,
+  subject diffs for the request) and staff can "Restore this version"
+  (`RevisionsController#restore`, confirm dialog, an ordinary edit).
+  Found in the browser: CRLF from text areas made every line a change, so
+  descriptions and comment bodies are now stored with LF and diffs treat
+  CRLF as LF. Checked in headless Chrome: diff marks, confirm text,
+  restore with notice and a new earlier version.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

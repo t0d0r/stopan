@@ -89,7 +89,7 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     get ticket_url(@ticket)
     assert_select "#event-#{@own_reply.event.id} .revisions summary", "1 earlier version"
-    assert_select "#event-#{@own_reply.event.id} .revisions__item", /Before the edit by Maria Agent.*It still prints blank pages\./m
+    assert_select "#event-#{@own_reply.event.id} .revisions__item", /Before the edit by Maria Agent.*It still prints blank/m
   end
 
   test "the shared page shows the current text and the marker, never earlier versions" do

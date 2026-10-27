@@ -87,7 +87,10 @@ cannot hide who wrote what.
 - **Only the text.** Subject and description of the request; the body of
   a reply or note. Files, author, visibility (`internal`), and times stay
   as they are. Same validation as on create (subject 1-200 characters,
-  text 1-20,000). Saving unchanged text changes nothing.
+  text 1-20,000). Saving unchanged text changes nothing. Line ends are
+  stored as LF (browsers send CRLF from text areas; descriptions and
+  comment bodies are normalized on save, and diffs compare CRLF as LF),
+  so a form saved without changes is a no-op.
 - **Routes:** `GET/PATCH /tickets/:number/description(/edit)`
   (`TicketDescriptionsController`) and `GET/PATCH
   /tickets/:number/comments/:id(/edit)` (`CommentsController#edit`,

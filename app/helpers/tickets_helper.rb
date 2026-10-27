@@ -99,6 +99,18 @@ module TicketsHelper
     end
   end
 
+  # What an edit changed, word by word: removed words in <del>, added in
+  # <ins> (specs/timeline.md "Editing").
+  def diff_html(old_text, new_text)
+    safe_join(TextDiff.diff(old_text, new_text).map do |kind, text|
+      case kind
+      when :del then tag.del(text)
+      when :ins then tag.ins(text)
+      else text
+      end
+    end)
+  end
+
   # Copies the text of the message it sits in ([data-message-text]); shown
   # by application.js (specs/ui.md "Copy box").
   def copy_box

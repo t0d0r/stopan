@@ -33,7 +33,7 @@
         <%= turbo_frame_tag "description-text" do %>
           <%= message_text @ticket %>
         <% end %>
-        <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket %><% end %>
+        <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket, ticket: @ticket %><% end %>
         <% if @ticket.files.attached? %>
           <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
             <% @ticket.files.each do |file| %>

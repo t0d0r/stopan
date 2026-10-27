@@ -39,6 +39,15 @@ class RevisionTest < ActiveSupport::TestCase
     assert_empty @reply.revisions
   end
 
+  test "line ends from a browser form do not count as a change" do
+    assert @reply.edit(editor: users(:anna), body: "My pasword is hunter2")
+    reply = @ticket.add_comment(author: users(:anna), body: "One\r\ntwo")
+    assert_equal "One\ntwo", reply.body
+    assert reply.edit(editor: users(:anna), body: "One\r\ntwo")
+    assert_not reply.reload.edited?
+    assert_equal [ [ :same, "a\nb" ] ], TextDiff.diff("a\nb", "a\r\nb")
+  end
+
   test "a comment stays read-only outside an edit" do
     @reply.edit(editor: users(:anna), body: "Changed")
     assert_raises(ActiveRecord::ReadOnlyRecord) { @reply.update!(body: "Sneaky") }

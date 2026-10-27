@@ -14,7 +14,7 @@
         <%= turbo_frame_tag dom_id(comment, :text) do %>
           <%= message_text comment %>
         <% end %>
-        <% if !shared && policy.see_revisions? %><%= render "tickets/revisions", record: comment %><% end %>
+        <% if !shared && policy.see_revisions? %><%= render "tickets/revisions", record: comment, ticket: ticket %><% end %>
         <% if comment.files.attached? %>
           <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
             <% comment.files.each do |file| %>

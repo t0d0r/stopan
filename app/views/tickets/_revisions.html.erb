@@ -1,14 +1,32 @@
 <%# Earlier versions of an edited request or comment, staff only
-    (specs/timeline.md "Editing"). Locals: record. %>
-<% if record.revisions.any? %>
+    (specs/timeline.md "Editing"): what each edit changed, word by word,
+    and a restore button. Locals: record, ticket. %>
+<% revisions = record.revisions.to_a %>
+<% if revisions.any? %>
+  <% request = record.is_a?(Ticket) %>
+  <% current = request ? [ record.subject, record.description ] : [ nil, record.body ] %>
   <details class="revisions">
-    <summary><%= t("ui.edit.earlier_versions", count: record.revisions.size) %></summary>
+    <summary><%= t("ui.edit.earlier_versions", count: revisions.size) %></summary>
     <ol class="revisions__list">
-      <% record.revisions.each do |revision| %>
+      <% revisions.each_with_index do |revision, index| %>
+        <% after = index.zero? ? current : [ revisions[index - 1].subject, revisions[index - 1].body ] %>
         <li class="revisions__item">
           <p class="revisions__meta"><%= t("ui.edit.before_edit_by", name: revision.editor.display_name) %> <%= time_ago revision.created_at %></p>
-          <% if revision.subject.present? %><p class="revisions__subject"><%= revision.subject %></p><% end %>
-          <div class="ticket-text"><%= ticket_text revision.body %></div>
+          <% if request && revision.subject != after[0] %>
+            <p class="revisions__subject revision-diff"><%= diff_html(revision.subject, after[0]) %></p>
+          <% end %>
+          <div class="revision-diff"><%= diff_html(revision.body, after[1]) %></div>
+          <p class="revisions__actions">
+            <% if [ (revision.subject if request), revision.body ] == current %>
+              <span class="revisions__same"><%= t("ui.edit.same_as_current") %></span>
+            <% else %>
+              <%= button_to t("ui.edit.restore"), restore_ticket_revision_path(ticket, revision), class: "btn btn--small",
+                            form: { data: confirm_data(title: t("ui.edit.restore_title"),
+                                                       body: t("ui.edit.restore_body", name: revision.editor.display_name,
+                                                                                       time: l(revision.created_at, format: :long)),
+                                                       button: t("ui.edit.restore")) } %>
+            <% end %>
+          </p>
         </li>
       <% end %>
     </ol>

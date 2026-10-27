@@ -7,7 +7,9 @@ class Comment < ApplicationRecord
   belongs_to :author, class_name: "User", inverse_of: :comments
   has_one :event, class_name: "TicketEvent", dependent: :restrict_with_error
 
-  normalizes :body, with: ->(body) { body.strip }
+  # Browsers send text area lines as CRLF; storing LF keeps an unchanged
+  # edit a no-op and diffs clean (specs/timeline.md "Editing").
+  normalizes :body, with: ->(body) { body.gsub(/\r\n?/, "\n").strip }
 
   validates :body, presence: true, length: { maximum: 20_000 }
   validate :only_staff_write_internal_notes

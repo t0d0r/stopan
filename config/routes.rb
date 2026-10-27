@@ -15,6 +15,9 @@ Rails.application.routes.draw do
     resources :comments, only: %i[create edit update] do
       patch :markdown, on: :member
     end
+    resources :revisions, only: [] do
+      post :restore, on: :member
+    end
     resource :description, only: %i[edit update], controller: "ticket_descriptions" do
       patch :markdown
     end

@@ -38,6 +38,8 @@ class Ticket < ApplicationRecord
   attr_accessor :actor
 
   normalizes :subject, with: ->(subject) { subject.squish }
+  # Lines are stored with LF, as browsers send CRLF (specs/timeline.md).
+  normalizes :description, with: ->(description) { description.gsub(/\r\n?/, "\n") }
 
   validates :subject, presence: true, length: { maximum: 200 }
   validates :description, presence: true, length: { maximum: 20_000 }
