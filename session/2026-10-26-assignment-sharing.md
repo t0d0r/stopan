@@ -425,6 +425,9 @@ Operator requests, in order:
 - README screenshots refreshed with `make screenshots` against a scratch
   database with the `make demo` data (removed afterwards); a fifth one,
   `board.png`, shows the board; specs/ui.md "Screenshots" lists five.
+- The menu bar marks "Queue" on the board as well (`current_section`
+  counts the boards controller as :tickets); `board.png` retaken with the
+  demo tickets aged 25 minutes so card times fit on one line.
 
 ## Decisions
 

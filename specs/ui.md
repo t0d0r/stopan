@@ -17,7 +17,8 @@ Turbo Drive for page changes.
   "Stopan" (icon only under 560px), then section pills with a paper-colour
   square: "Queue" (staff, yellow) or "My tickets" (requesters, yellow),
   "New ticket" (green), "Admin" (admins, grey). The current section has
-  `aria-current="page"`. Then the ticket search field (signed-in users,
+  `aria-current="page"`; the board (board.md) is part of "Queue", like
+  the list and the ticket pages. Then the ticket search field (signed-in users,
   queues.md "Search"; on its own full-width row under 560px). Right: the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
