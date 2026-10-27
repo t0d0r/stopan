@@ -24,8 +24,17 @@ statuses.
   collapse box. Which columns are expanded is remembered per browser
   (`localStorage`, a convenience; without it the defaults apply).
 - An **expanded column** has a header with the status name and the count,
-  and its cards below, at least 290px wide. The board scrolls sideways
-  inside itself when the columns do not fit; the page never does.
+  and its cards below, at least 290px wide.
+- **Scrolling** (operator, 2026-10-27: "make better scroll"): the board
+  spans the whole window width (not the desk's 1120px) and fits the
+  window's height from its top to the bottom edge (recomputed on resize),
+  so its sideways scrollbar is always in view; each expanded column
+  scrolls its own cards up and down under its fixed header. Scrollbars
+  are thin and tinted; sideways scrolling snaps gently to column starts.
+  While a card is dragged within 80px of the board's left or right edge,
+  the board scrolls that way. The page itself never scrolls sideways.
+- Columns without cards start collapsed, unless the user expanded them
+  (the remembered choice wins).
 - Resolved and Closed show the 50 most recently active cards, with "and
   N more in the list" linking to the queue's Solved view; the other
   columns show every card. Counts are the full numbers.

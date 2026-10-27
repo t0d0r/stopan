@@ -665,7 +665,29 @@ function setUpBoard(board) {
   const transitions = JSON.parse(board.dataset.transitions || "{}");
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(key)); } catch {}
-  if (Array.isArray(saved)) columns.forEach((column) => column.classList.toggle("is-collapsed", !saved.includes(column.dataset.status)));
+  if (Array.isArray(saved)) {
+    columns.forEach((column) => column.classList.toggle("is-collapsed", !saved.includes(column.dataset.status)));
+  } else {
+    // Without a remembered choice, empty columns start collapsed.
+    columns.forEach((column) => { if (!column.querySelector("[data-board-card]")) column.classList.add("is-collapsed"); });
+  }
+
+  // The board fits the window from its top to the bottom edge, so its
+  // sideways scrollbar stays in view (specs/board.md "Scrolling").
+  const fit = () => {
+    const top = board.getBoundingClientRect().top + window.scrollY;
+    board.style.setProperty("--board-height", `${Math.max(320, window.innerHeight - top - 12)}px`);
+  };
+  fit();
+  window.addEventListener("resize", fit, { signal: pageSignal });
+
+  // Dragging near the left or right edge scrolls the board that way.
+  board.addEventListener("dragover", (event) => {
+    if (!dragged) return;
+    const box = board.getBoundingClientRect();
+    if (event.clientX < box.left + 80) board.scrollLeft -= 18;
+    else if (event.clientX > box.right - 80) board.scrollLeft += 18;
+  }, { signal: pageSignal });
   const save = () => {
     try {
       localStorage.setItem(key, JSON.stringify(columns.filter((c) => !c.classList.contains("is-collapsed")).map((c) => c.dataset.status)));
