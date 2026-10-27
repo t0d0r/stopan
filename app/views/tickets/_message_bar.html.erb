@@ -1,0 +1,19 @@
+<%# Title strip of a request, reply or note with all its details and boxes
+    (specs/timeline.md "Message title strip"). Locals: record, author, kind,
+    icon_name, and optionally internal, edit_path, frame, markdown_path. %>
+<header class="sticky__bar message__bar">
+  <%= icon icon_name, size: 11 %>
+  <span class="message__kind"><%= kind %></span>
+  <span class="message__details">
+    <strong class="message__author"><%= author.display_name %></strong>
+    <span class="role-tag"><%= role_label(author) %></span>
+    <%= time_ago record.created_at %>
+    <% if local_assigns[:internal] %><span class="internal-tag"><%= t("ui.timeline.internal_only") %></span><% end %>
+    <%= edited_note record %>
+  </span>
+  <span class="message__boxes">
+    <% if local_assigns[:edit_path] %><%= edit_link edit_path, frame: frame %><% end %>
+    <% if local_assigns[:markdown_path] %><%= markdown_box markdown_path, on: record.markdown? %><% end %>
+    <%= copy_box %>
+  </span>
+</header>

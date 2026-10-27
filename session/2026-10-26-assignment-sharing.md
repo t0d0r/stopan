@@ -193,6 +193,12 @@ Operator requests, in order:
   anchors). Checked in headless Chrome: lists, task boxes, quote, table,
   links in a new tab, script dropped; toggling and saving keep the scroll.
 
+- Message title strip (operator: author, role, time and "edited by" into
+  the header of the original request): `tickets/_message_bar` for the
+  request, replies, notes and shared pages; Edit became a pencil box next
+  to the Markdown and Copy boxes. Checked at 1280px (light and dark) and
+  390px (wraps, no horizontal scroll).
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

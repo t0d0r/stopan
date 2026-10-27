@@ -24,20 +24,12 @@
 
   <div class="ticket-main">
     <article class="sticky sticky--yellow message message--description" id="description">
-      <header class="sticky__bar">
-        <span class="sticky__box sticky__box--spacer" aria-hidden="true"></span>
-        <span class="sticky__caption"><%= t("ui.ticket.description") %></span>
-        <% if policy.edit_description? %><%= markdown_box markdown_ticket_description_path(@ticket), on: @ticket.markdown? %><% end %>
-        <%= copy_box %>
-      </header>
+      <% editable = policy.edit_description? %>
+      <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
+                 icon_name: :note, frame: "description-text",
+                 edit_path: (edit_ticket_description_path(@ticket) if editable),
+                 markdown_path: (markdown_ticket_description_path(@ticket) if editable) %>
       <div class="message__body">
-        <p class="message__meta">
-          <strong><%= @ticket.requester.display_name %></strong>
-          <span class="role-tag"><%= role_label(@ticket.requester) %></span>
-          <%= time_ago @ticket.created_at %>
-          <%= edited_note @ticket %>
-          <% if policy.edit_description? %><%= edit_link edit_ticket_description_path(@ticket), frame: "description-text" %><% end %>
-        </p>
         <%= turbo_frame_tag "description-text" do %>
           <%= message_text @ticket %>
         <% end %>

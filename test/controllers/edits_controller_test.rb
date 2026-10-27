@@ -74,7 +74,15 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a.edit-link[href=?]", edit_ticket_description_path(@ticket)
     assert_select "a.edit-link[href=?][data-turbo-frame=?]", edit_ticket_comment_path(@ticket, @own_reply), "text_comment_#{@own_reply.id}"
     assert_select "a.edit-link[href=?]", edit_ticket_comment_path(@ticket, @staff_reply), 0
-    assert_select "#event-#{@own_reply.event.id} .edited-tag", /edited by Maria Agent/
+    assert_select "#event-#{@own_reply.event.id} .message__bar .edited-tag", /edited by Maria Agent/
+    assert_select "#description .message__bar" do
+      assert_select ".message__kind", "Original request"
+      assert_select ".message__author", users(:anna).display_name
+      assert_select ".role-tag"
+      assert_select "time"
+      assert_select ".message__boxes a.edit-link[aria-label=Edit]"
+    end
+    assert_select ".message__body .message__author", 0
     assert_select ".revisions", 0
     assert_not_includes response.body, "It still prints blank pages."
 
