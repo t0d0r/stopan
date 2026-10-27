@@ -235,6 +235,16 @@ Operator requests, in order:
   the AddSharingToTickets, CreateNotifications, AddEditing and
   AddMarkdownToMessages migrations, `upgrade=websocket`, SMTP).
 
+- Shared page width and g0no-style editing (operator: shared tickets
+  should scale, the widen button was not found, g0no's editing is
+  stylish): a later `.ticket-page` rule had kept two columns on shared
+  pages (messages narrower than the header); now one 820px column, full
+  desk when wide. Width box also in the original request's title strip
+  (`partials/_width_box`). In-place fields are borderless on the paper
+  with a dashed rule, small buttons, "Ctrl+Enter saves, Esc cancels".
+  Checked in headless Chrome: shared page 820 -> 1568px with the box,
+  restyled form, Ctrl+Enter saved.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

@@ -86,6 +86,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] earlier versions with word-by-word changes (green / red) and "Restore this version" for staff (g0no history.md, TextDiff)
 - [x] wide ticket view, a per-user preference like theme and text size (g0no "Wide notes")
 - [x] clickable Markdown task lists for users who may edit; clicks by one person within 10 minutes form one revision (g0no markdown.md "Task lists")
+- [x] shared page one column that follows the width switch; width box on the original request; g0no-style in-place editing (specs/ui.md, specs/timeline.md)
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 
 ## Later (specs/roadmap.md)

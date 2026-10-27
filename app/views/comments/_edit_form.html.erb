@@ -1,15 +1,11 @@
-<%# Locals: ticket, comment. Saving reloads the whole page (_top) with a
-    notice; Cancel loads the text back into the frame. %>
-<%= form_with model: comment, url: ticket_comment_path(ticket, comment), method: :patch, class: "stack-form edit-form",
+<%# Locals: ticket, comment. The text area sits on the paper like g0no's
+    note editing (specs/timeline.md "Editing"). Saving reloads the whole
+    page (_top) with a notice; Cancel loads the text back into the frame. %>
+<%= form_with model: comment, url: ticket_comment_path(ticket, comment), method: :patch, class: "edit-form",
               data: { turbo_frame: "_top" } do |f| %>
   <%= form_errors comment %>
-  <div class="field">
-    <%= f.label :body, t("ui.edit.text"), class: "sr-only" %>
-    <%= f.text_area :body, rows: 5, class: "field-input", required: true, maxlength: 20_000, autofocus: true,
-                    data: { autogrow: true }, aria: { invalid: comment.errors[:body].any? } %>
-  </div>
-  <div class="edit-form__actions">
-    <%= link_to t("ui.cancel"), ticket_path(ticket, anchor: "event-#{comment.event.id}"), class: "btn" %>
-    <button type="submit" class="btn btn--primary"><%= t("ui.edit.save") %></button>
-  </div>
+  <%= f.label :body, t("ui.edit.text"), class: "sr-only" %>
+  <%= f.text_area :body, rows: 3, class: "edit-field edit-field--text", required: true, maxlength: 20_000,
+                  autofocus: true, data: { autogrow: true }, aria: { invalid: comment.errors[:body].any? } %>
+  <%= render "comments/edit_actions", cancel: ticket_path(ticket, anchor: "event-#{comment.event.id}") %>
 <% end %>

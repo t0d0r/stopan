@@ -28,7 +28,7 @@
       <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
                  icon_name: :note, frame: "description-text",
                  edit_path: (edit_ticket_description_path(@ticket) if editable),
-                 markdown_path: (markdown_ticket_description_path(@ticket) if editable) %>
+                 markdown_path: (markdown_ticket_description_path(@ticket) if editable), width_box: true %>
       <div class="message__body">
         <%= turbo_frame_tag "description-text" do %>
           <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>

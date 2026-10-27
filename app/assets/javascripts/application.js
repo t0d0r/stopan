@@ -497,11 +497,17 @@ function setUpDoubleClickEdit() {
     link.click();
   }, { signal: pageSignal });
 
-  // Escape cancels an unchanged edit form; a changed one is left alone.
+  // Ctrl/Cmd+Enter saves an edit form. Escape cancels an unchanged one; a
+  // changed one is left alone.
   document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
     const form = event.target.closest?.("form.edit-form");
     if (!form) return;
+    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      form.requestSubmit();
+      return;
+    }
+    if (event.key !== "Escape") return;
     const changed = [...form.querySelectorAll("input:not([type=hidden]), textarea")].some((field) => field.value !== field.defaultValue);
     if (!changed) form.querySelector(".edit-form__actions a")?.click();
   }, { signal: pageSignal });

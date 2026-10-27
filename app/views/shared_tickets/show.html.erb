@@ -17,7 +17,7 @@
   <div class="ticket-main">
     <article class="sticky sticky--yellow message message--description" id="description">
       <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
-                 icon_name: :note %>
+                 icon_name: :note, width_box: true %>
       <div class="message__body">
         <%= message_text @ticket %>
         <% if @ticket.files.attached? %>

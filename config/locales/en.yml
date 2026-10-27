@@ -280,6 +280,7 @@ en:
     edit:
       edit: "Edit"
       edit_hint: "Edit (or double-click the text)"
+      keys_hint: "Ctrl+Enter saves, Esc cancels"
       save: "Save"
       text: "Text"
       edited_by: "edited by %{name}"

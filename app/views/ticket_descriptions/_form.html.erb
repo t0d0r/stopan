@@ -1,20 +1,14 @@
-<%# Locals: ticket. Saving reloads the whole page (_top), so the title
-    and the notice update too. %>
-<%= form_with model: ticket, url: ticket_description_path(ticket), method: :patch, class: "stack-form edit-form",
+<%# Locals: ticket. The fields sit on the paper like g0no's note editing
+    (specs/timeline.md "Editing"). Saving reloads the whole page (_top), so
+    the title and the notice update too. %>
+<%= form_with model: ticket, url: ticket_description_path(ticket), method: :patch, class: "edit-form",
               data: { turbo_frame: "_top" } do |f| %>
   <%= form_errors ticket %>
-  <div class="field">
-    <%= f.label :subject, t("ui.fields.subject") %>
-    <%= f.text_field :subject, class: "field-input", required: true, maxlength: 200,
-                     aria: { invalid: ticket.errors[:subject].any? } %>
-  </div>
-  <div class="field">
-    <%= f.label :description, t("ui.fields.description") %>
-    <%= f.text_area :description, rows: 6, class: "field-input", required: true, maxlength: 20_000, autofocus: true,
-                    data: { autogrow: true }, aria: { invalid: ticket.errors[:description].any? } %>
-  </div>
-  <div class="edit-form__actions">
-    <%= link_to t("ui.cancel"), ticket_path(ticket, anchor: "description"), class: "btn" %>
-    <button type="submit" class="btn btn--primary"><%= t("ui.edit.save") %></button>
-  </div>
+  <%= f.label :subject, t("ui.fields.subject"), class: "sr-only" %>
+  <%= f.text_field :subject, class: "edit-field edit-field--subject", required: true, maxlength: 200,
+                   placeholder: t("ui.fields.subject"), aria: { invalid: ticket.errors[:subject].any? } %>
+  <%= f.label :description, t("ui.fields.description"), class: "sr-only" %>
+  <%= f.text_area :description, rows: 3, class: "edit-field edit-field--text", required: true, maxlength: 20_000,
+                  autofocus: true, data: { autogrow: true }, aria: { invalid: ticket.errors[:description].any? } %>
+  <%= render "comments/edit_actions", cancel: ticket_path(ticket, anchor: "description") %>
 <% end %>

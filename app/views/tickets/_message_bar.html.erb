@@ -1,6 +1,7 @@
 <%# Title strip of a request, reply or note with all its details and boxes
     (specs/timeline.md "Message title strip"). Locals: record, author, kind,
-    icon_name, and optionally internal, edit_path, frame, markdown_path. %>
+    icon_name, and optionally internal, edit_path, frame, markdown_path,
+    width_box (the width switch, on the original request). %>
 <header class="sticky__bar message__bar">
   <%= icon icon_name, size: 11 %>
   <span class="message__kind"><%= kind %></span>
@@ -15,5 +16,6 @@
     <% if local_assigns[:edit_path] %><%= edit_link edit_path, frame: frame %><% end %>
     <% if local_assigns[:markdown_path] %><%= markdown_box markdown_path, on: record.markdown? %><% end %>
     <%= copy_box %>
+    <% if local_assigns[:width_box] %><%= render "partials/width_box" %><% end %>
   </span>
 </header>

@@ -23,7 +23,8 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, organizations(:acme).name
     assert_select ".pill--priority", 0
     assert_select ".timeline__item--internal", 0
-    assert_select "main form", 0
+    assert_select "main form:not([data-preference])", 0
+    assert_select ".message__bar form[data-preference] button.width-toggle", 2
     assert_equal "same-origin", response.headers["Referrer-Policy"]
     assert_equal "noindex, nofollow", response.headers["X-Robots-Tag"]
     assert_equal "no-store", response.headers["Cache-Control"]

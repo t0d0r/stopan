@@ -1,0 +1,6 @@
+<%# Hint and small buttons under an in-place edit form. Locals: cancel. %>
+<div class="edit-form__actions">
+  <small class="edit-form__hint"><%= t("ui.edit.keys_hint") %></small>
+  <%= link_to t("ui.cancel"), cancel, class: "btn btn--small" %>
+  <button type="submit" class="btn btn--primary btn--small"><%= t("ui.edit.save") %></button>
+</div>

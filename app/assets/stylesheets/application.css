@@ -413,12 +413,13 @@ form.button_to {
   max-width: 1920px;
 }
 
-.width-toggle--to-normal,
-:root[data-width="wide"] .width-toggle--to-wide {
+/* Doubled classes: the boxes also carry .sticky__box, defined later. */
+.width-toggle.width-toggle--to-normal,
+:root[data-width="wide"] .width-toggle.width-toggle--to-wide {
   display: none;
 }
 
-:root[data-width="wide"] .width-toggle--to-normal {
+:root[data-width="wide"] .width-toggle.width-toggle--to-normal {
   display: inline-flex;
 }
 
@@ -1909,13 +1910,19 @@ form.button_to {
   margin-top: 0;
 }
 
-.ticket-page--shared {
+/* Shared page (ui.md): one column, 820px or the full desk when wide. The
+   doubled class beats the two-column .ticket-page rule further down. */
+.ticket-page.ticket-page--shared {
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     "head"
     "main";
   max-width: 820px;
   margin: 0 auto;
+}
+
+:root[data-width="wide"] .ticket-page.ticket-page--shared {
+  max-width: none;
 }
 
 .ticket-link .icon {
@@ -2318,19 +2325,56 @@ turbo-frame {
   margin-left: auto;
 }
 
-.edit-form .field {
-  margin-bottom: 10px;
+/* In-place editing like g0no's notes: the fields sit on the paper in the
+   text's own font, with only a dashed rule under them. */
+.edit-field {
+  display: block;
+  width: 100%;
+  padding: 2px 0;
+  border: 0;
+  border-bottom: 1px dashed var(--rule);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  outline: none;
 }
 
-.edit-form textarea.field-input {
-  min-height: 7em;
-  resize: vertical;
+.edit-field:focus {
+  border-bottom-color: var(--ink-soft);
+}
+
+.edit-field--subject {
+  margin-bottom: 8px;
+  font: 600 17px/1.35 var(--font);
+}
+
+.edit-field--text {
+  min-height: 3em;
+  resize: none;
+  font: 15px/1.5 var(--font);
+}
+
+.edit-field[aria-invalid="true"] {
+  border-bottom-color: #b3261e;
 }
 
 .edit-form__actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
+  margin-top: 8px;
+}
+
+.edit-form__hint {
+  margin-right: auto;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.box-form {
+  display: inline-flex;
+  margin: 0;
 }
 
 .edit-page {

@@ -1,0 +1,8 @@
+<%# Width switch as a title strip box (specs/ui.md "Width switch"); only the
+    button for the other width shows, like the one in the menu bar. %>
+<%= form_with url: preferences_path, method: :patch, class: "box-form", data: { preference: true } do %>
+  <button type="submit" name="width" value="wide" class="sticky__box sticky__box--icon width-toggle width-toggle--to-wide"
+          title="<%= t("ui.prefs.wide") %>" aria-label="<%= t("ui.prefs.wide") %>"><%= icon :widen, size: 10 %></button>
+  <button type="submit" name="width" value="normal" class="sticky__box sticky__box--icon width-toggle width-toggle--to-normal"
+          title="<%= t("ui.prefs.narrow") %>" aria-label="<%= t("ui.prefs.narrow") %>"><%= icon :narrow, size: 10 %></button>
+<% end %>
