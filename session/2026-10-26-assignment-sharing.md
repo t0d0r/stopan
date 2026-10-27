@@ -807,6 +807,9 @@ menu and Take; open /tickets/new and pick a requester.
   specs/overview.md "Ingress diagram" says to keep it in sync.
 - Deployed 50475d3 (documentation only) after backup `pre-deploy-59175fa.sqlite3`;
   all checks fine. Backups on the server now go up to pre-deploy-59175fa.
+- Pushed main to origin (GitHub) on the operator's request after a gitleaks
+  scan of the 44 unpushed commits and a check for real addresses from the dev
+  mailbox (none; only fictional test data).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);
