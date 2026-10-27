@@ -70,9 +70,17 @@ Turbo Drive for page changes.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
   sticky.
 - **Account pages:** a small yellow sticky centred on the desk.
-- **Flash messages:** small stickies at the top right (at the bottom
-  under 560px, where the menu bar has several rows) (yellow "Notice", pink
-  "Attention"); notices fade after 6 seconds unless hovered or focused.
+- **Flash messages:** stickies (yellow "Notice", pink "Attention") in a
+  band at the top of the desk, under the menu bar and any banner, centred
+  and at most 560px wide, on every screen size (operator, 2026-10-27:
+  "slide from right to left, stay in the centre, sweep to the left when
+  they go"). They slide in from the right edge to the centre (0.5 s), and
+  when they go (the close box, or 6 seconds for notices unless hovered or
+  focused; alerts stay until closed) they sweep out to the left (0.45 s)
+  and the band then closes smoothly, so the page below moves up without a
+  jump. The band clips them sideways, so the page never scrolls
+  horizontally. With reduced motion they appear and disappear without
+  movement.
 - **Confirm dialog:** a yellow sticky with a red "!" badge, a question, what
   will happen, Cancel and a red action button (`ApplicationHelper#confirm_data`).
 - **Forbidden page (403):** a small pink sticky with a sentence and a link

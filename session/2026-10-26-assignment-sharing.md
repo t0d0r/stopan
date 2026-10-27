@@ -302,6 +302,14 @@ Operator requests, in order:
   then set TRUSTED_PROXIES and MAILBOX_POLLING in stopan.env and try a
   real mailbox.
 
+- Flash messages (operator: slide in from the right, stay in the centre
+  band under the menu bar, sweep out to the left): the stack is now in
+  the page flow at the top of the desk, centred, 560px; slide-in from the
+  right, sweep to the left, then the band collapses; clipped sideways;
+  no movement with reduced motion. Checked in headless Chrome: left 613
+  while sliding, 360 centred at 1280px, -840 while leaving, heading moved
+  up from 132 to 68 after, no horizontal scroll.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

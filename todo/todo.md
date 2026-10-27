@@ -87,6 +87,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] IMAP mailbox per organization: poller, new tickets and replies from mail (specs/organization-mail.md)
 - [ ] operator: set TRUSTED_PROXIES and MAILBOX_POLLING in production when used (specs/deploy.md)
 - [x] admins can impersonate a user, with a clear banner and a way back (specs/admin.md "Impersonation")
+- [x] flash messages slide in from the right to the centre band and sweep out to the left (specs/ui.md)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

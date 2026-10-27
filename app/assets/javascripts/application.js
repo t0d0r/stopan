@@ -570,12 +570,23 @@ function setUpPage() {
     });
   });
 
-  // Notices fade out after a few seconds (not while hovered or focused);
-  // alerts stay until closed.
+  // Notices go after a few seconds (not while hovered or focused); alerts
+  // stay until closed. Going: a sweep to the left, then the band closes
+  // (specs/ui.md "Flash messages").
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll("[data-flash]").forEach((flash) => {
+    let leaving = false;
     const dismiss = () => {
+      if (leaving) return;
+      leaving = true;
+      if (reducedMotion) return flash.remove();
       flash.classList.add("is-leaving");
-      setTimeout(() => flash.remove(), 400);
+      setTimeout(() => {
+        flash.style.height = `${flash.offsetHeight}px`;
+        void flash.offsetHeight;
+        flash.classList.add("is-collapsing");
+        setTimeout(() => flash.remove(), 260);
+      }, 450);
     };
     const close = flash.querySelector("[data-dismiss]");
     if (close) close.addEventListener("click", dismiss);
