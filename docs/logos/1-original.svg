@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 72">
+  <!-- Stopan logo, candidate 1: the mark from stopan.png redrawn as vector,
+       teal ink, with the STOPAN wordmark -->
+  <circle cx="32" cy="17.7" r="8.6" fill="#024146"/>
+  <path d="M32 27 56 43.5V55H39.35V43.2L32 38l-7.35 5.2V55H8V43.5z" fill="#024146"/>
+  <text x="32" y="66.4" text-anchor="middle" textLength="48" lengthAdjust="spacingAndGlyphs" font-family="Avenir Next, Futura, -apple-system, Helvetica, Arial, sans-serif" font-weight="700" font-size="10.4" fill="#024146">STOPAN</text>
+</svg>

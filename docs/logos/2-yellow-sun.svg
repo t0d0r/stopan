@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Stopan logo, candidate 2: the head becomes a yellow sun in the
+       sticky strip colour over the teal house -->
+  <circle cx="32" cy="17.7" r="8.6" fill="#f5e270" stroke="#c7b04f" stroke-width="1.2"/>
+  <path d="M32 27 56 43.5V55H39.35V43.2L32 38l-7.35 5.2V55H8V43.5z" fill="#024146"/>
+</svg>

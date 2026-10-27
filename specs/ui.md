@@ -53,6 +53,32 @@ Turbo Drive for page changes.
 
 - **Font:** the system font. Ticket numbers use tabular figures.
 
+## Logo
+
+Operator, 2026-10-27: "adopt stopan.png to visual app style, generate
+several logos, I will review them". `stopan.png` (repository root) is the
+new brand: a teal (`#024146`) circle over a house with a door, and the
+word STOPAN under it. Until a candidate is chosen, the app keeps the
+yellow sticky icon in `public/icon.svg`.
+
+- The mark is redrawn as vector on a 64-unit grid: circle `cx 32, cy
+  17.7, r 8.6`; house `M32 27 56 43.5V55H39.35V43.2L32 38l-7.35
+  5.2V55H8V43.5z`.
+- Candidates in `docs/logos/`: 1 original (teal, with wordmark), 2 yellow
+  sun (head in the yellow strip colour), 3 sticky icon (mark on today's
+  yellow sticky), 4 paper house (the house as a yellow sticky, roof as
+  title strip), 5 teal tile (mark in paper yellow on a teal tile), 6
+  Omarchy (outline mark on a Tokyo Night tile), 7 menu bar lockup (mark
+  and STOPAN side by side, ink follows `currentColor`).
+- Rules for the chosen logo: it reads at 16 px (tab icon) and 18 px
+  (menu bar) on the light and the dark desk; teal ink alone is too dark
+  on the dark desk, so a teal mark needs a light ink there (`#d6e9e6`).
+  Logos stay static SVG (no scripts, links or external references) and
+  are served from the app, as the CSP requires. Wordmark text becomes
+  paths before use so it does not depend on the system's fonts.
+- Open: which candidate goes where (tab icon, menu bar, Omarchy theme,
+  email header).
+
 ## Pages
 
 - **Queue** (staff): a coloured row of view tabs, then the filter bar and

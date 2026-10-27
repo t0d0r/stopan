@@ -185,6 +185,13 @@ approved "go in this order", all done 2026-10-27):
 - [x] ticket header inside the request note: bold number before the subject, no breadcrumb (specs/ui.md "Ticket page")
 - [x] add `upgrade=websocket` to the production Apache ProxyPass through the ISPConfig API; /cable upgrades with 101 (specs/deploy.md "WebSocket proxy")
 
+## Logo (2026-10-27, specs/ui.md "Logo")
+
+- [x] redraw the mark from stopan.png as SVG and draw seven candidates in the app's style (docs/logos/)
+- [~] operator: pick a candidate (or a mix: tab icon, menu bar, Omarchy)
+- [ ] use the chosen logo: public/icon.svg, icon.png, apple-touch-icon.png, favicon.ico, menu bar brand, email header; wordmark text to paths
+- [ ] refresh the README screenshots after the logo changes (specs/ui.md "Screenshots")
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)
