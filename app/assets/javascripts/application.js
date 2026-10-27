@@ -202,12 +202,19 @@ function setUpCopyBoxes() {
     button.addEventListener("click", async () => {
       const text = message.querySelector("[data-message-text]");
       if (!text) return;
-      // Addresses shown with a short label are copied in full (specs/markdown.md "Plain text links").
-      const links = [...text.querySelectorAll("a[data-address]")];
-      const labels = links.map((link) => link.textContent);
-      links.forEach((link) => { link.textContent = link.getAttribute("href"); });
-      const copied = text.innerText.trim();
-      links.forEach((link, index) => { link.textContent = labels[index]; });
+      // The mail's HTML view copies the text it shows (organization-mail.md "HTML view").
+      const frame = message.querySelector("[data-mail-pane='html']:not([hidden]) iframe");
+      let copied;
+      if (frame?.contentDocument?.body) {
+        copied = frame.contentDocument.body.innerText.trim();
+      } else {
+        // Addresses shown with a short label are copied in full (specs/markdown.md "Plain text links").
+        const links = [...text.querySelectorAll("a[data-address]")];
+        const labels = links.map((link) => link.textContent);
+        links.forEach((link) => { link.textContent = link.getAttribute("href"); });
+        copied = text.innerText.trim();
+        links.forEach((link, index) => { link.textContent = labels[index]; });
+      }
       await copyText(copied);
       button.classList.add("is-copied");
       button.title = button.dataset.copied;
@@ -610,10 +617,11 @@ const openedRequests = new Set();
 
 function setUpLongRequest() {
   const article = document.querySelector("[data-long-request]");
-  const text = article?.querySelector("[data-message-text]");
+  // The mail's HTML view when it is shown, else the text (organization-mail.md "HTML view").
+  const text = article?.querySelector("[data-mail-pane='html']:not([hidden])") || article?.querySelector("[data-message-text]");
   if (!text) return;
   article.querySelector(".long-request__toggle")?.remove();
-  text.classList.remove("is-collapsed");
+  article.querySelectorAll(".is-collapsed").forEach((node) => node.classList.remove("is-collapsed"));
   const height = Math.round(Math.max(window.innerHeight * 0.35, 200));
   if (text.scrollHeight <= height * 1.3) return;
 
@@ -639,6 +647,37 @@ function setUpLongRequest() {
   show(openedRequests.has(key));
 }
 
+// The mail's HTML in a sealed frame with tabs to the text
+// (specs/organization-mail.md "HTML view"). The frame may be read from
+// here (allow-same-origin, no scripts inside), so it grows to its content.
+function setUpMailView() {
+  document.querySelectorAll("[data-mail-view]").forEach((view) => {
+    const tabs = view.querySelector("[data-mail-tabs]");
+    const frame = view.querySelector("[data-mail-frame]");
+    const panes = { html: view.querySelector("[data-mail-pane='html']"), text: document.getElementById("mail-pane-text") };
+    const fit = () => {
+      const root = frame.contentDocument?.documentElement;
+      if (!root || frame.contentDocument.URL === "about:blank") return;
+      // Shrink first: a document is never shorter than its frame.
+      frame.style.height = "1px";
+      frame.style.height = `${root.scrollHeight + 2}px`;
+    };
+    const show = (name) => {
+      Object.entries(panes).forEach(([key, pane]) => { if (pane) pane.hidden = key !== name; });
+      tabs.querySelectorAll("[data-mail-tab]").forEach((tab) => tab.setAttribute("aria-selected", String(tab.dataset.mailTab === name)));
+      if (name === "html") fit();
+      setUpLongRequest();
+    };
+    tabs.hidden = false;
+    frame.addEventListener("load", () => { fit(); setUpLongRequest(); }, { signal: pageSignal });
+    tabs.addEventListener("click", (event) => {
+      const tab = event.target.closest("[data-mail-tab]");
+      if (tab) show(tab.dataset.mailTab);
+    }, { signal: pageSignal });
+    show("html");
+  });
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -654,6 +693,7 @@ function setUpPage() {
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
   setUpCopyBoxes();
+  setUpMailView();
   setUpLongRequest();
   setUpDoubleClickEdit();
   setUpTaskLists();
@@ -888,7 +928,10 @@ function setUpBoard(board) {
 // text area is set up to grow here.
 document.addEventListener("turbo:frame-load", (event) => {
   event.target.querySelectorAll("textarea[data-autogrow]").forEach(autoGrow);
-  if (event.target.id === "description-text") setUpLongRequest();
+  if (event.target.id === "description-text") {
+    setUpMailView();
+    setUpLongRequest();
+  }
 });
 
 // Turbo fires turbo:load after the first page and after every visit. If

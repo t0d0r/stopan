@@ -1,0 +1,19 @@
+<%# The mail as HTML in a sealed frame, with tabs to the text (specs/organization-mail.md
+    "HTML view"). Remote images load only after "Show images". Locals: ticket. %>
+<% images = params[:mail_images] == "1" %>
+<div class="mail-view" data-mail-view>
+  <div class="mail-view__tabs" role="tablist" aria-label="<%= t("ui.mail_view.tabs_label") %>" hidden data-mail-tabs>
+    <button type="button" role="tab" class="mail-view__tab" aria-selected="true" aria-controls="mail-pane-html" data-mail-tab="html"><%= t("ui.mail_view.html") %></button>
+    <button type="button" role="tab" class="mail-view__tab" aria-selected="false" aria-controls="mail-pane-text" data-mail-tab="text"><%= t("ui.mail_view.text") %></button>
+  </div>
+  <div class="mail-view__pane" id="mail-pane-html" role="tabpanel" data-mail-pane="html">
+    <% if !images && MailHtml.remote_images?(ticket.mail_html) %>
+      <p class="mail-view__images">
+        <%= icon :eye, size: 12 %> <%= t("ui.mail_view.images_blocked") %>
+        <%= link_to t("ui.mail_view.show_images"), ticket_path(ticket, mail_images: 1, anchor: "description") %>
+      </p>
+    <% end %>
+    <iframe class="mail-frame" src="<%= ticket_mail_path(ticket, images: (1 if images)) %>" title="<%= t("ui.mail_view.frame_title") %>"
+            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin" referrerpolicy="no-referrer" data-mail-frame></iframe>
+  </div>
+</div>

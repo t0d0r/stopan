@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_160000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -208,6 +208,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_150000) do
     t.string "source", default: "app", null: false
     t.integer "stage_id"
     t.json "mail_headers"
+    t.text "mail_html"
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
     t.index ["edited_by_id"], name: "index_tickets_on_edited_by_id"
     t.index ["number"], name: "index_tickets_on_number", unique: true

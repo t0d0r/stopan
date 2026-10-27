@@ -178,6 +178,13 @@ de:
       me: "Ich"
       nobody: "Niemand"
 
+    mail_view:
+      frame_title: "Die E-Mail, wie sie gesendet wurde"
+      tabs_label: "E-Mail anzeigen als"
+      html: "HTML"
+      text: "Text"
+      images_blocked: "Externe Bilder sind zum Schutz Ihrer Privatsphäre blockiert."
+      show_images: "Bilder anzeigen"
     mail_headers:
       title: "Angaben zur E-Mail"
       details: "Details"

@@ -178,6 +178,13 @@ bg:
       me: "Аз"
       nobody: "Никой"
 
+    mail_view:
+      frame_title: "Писмото, както е изпратено"
+      tabs_label: "Покажи писмото като"
+      html: "HTML"
+      text: "Текст"
+      images_blocked: "Външните картинки са блокирани, за да пазят поверителността ви."
+      show_images: "Покажи картинките"
     mail_headers:
       title: "Данни на писмото"
       details: "Детайли"

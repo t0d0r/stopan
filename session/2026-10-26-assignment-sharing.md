@@ -701,7 +701,21 @@ menu and Take; open /tickets/new and pick a requester.
   subject, message_id; decoded, capped). `tickets/_mail_headers` shows a
   Roundcube-like header to staff only (avatar, sender, date, To/Cc,
   Details disclosure). Dev ticket #1010 got sample headers by hand (it
-  predates the column). Next: the HTML view (todo).
+  predates the column).
+- Mail HTML view (operator: "nicer formatting like Roundcube"):
+  `tickets.mail_html` (migration `AddMailHtmlToTickets`) holds the HTML
+  part cleaned by `MailHtml.clean` (Nokogiri: active elements and on*
+  removed, links http/https/mailto with target/rel, images http(s)/data
+  only, styles kept, max 1 MB). `TicketMailsController#show`
+  (`/tickets/:number/mail`) serves it with its own CSP (default-src
+  'none', style-src 'unsafe-inline', img-src data: [+ https: http: with
+  ?images=1], frame-ancestors 'self', sandbox without scripts),
+  no-referrer, no-store; Rails' CSP is off for that action only. The
+  ticket page shows HTML/Text tabs, the blocked-images bar and a frame
+  sized to its content (shrink, then scrollHeight); collapse and copy
+  follow the shown pane. Checked on dev #1010 with a sample newsletter
+  (no real mailbox read): scripts 0, remote image blocked until "Show
+  images", copy gives the frame's text.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

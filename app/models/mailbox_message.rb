@@ -90,7 +90,7 @@ class MailboxMessage
       Membership.find_or_create_by!(user: user, organization: organization)
       Ticket.create!(subject: ticket_subject, description: body_text(reply: false, rejected: rejected), files: files,
                      requester: user, organization: organization, actor: user, source: "email",
-                     mail_headers: mail_headers)
+                     mail_headers: mail_headers, mail_html: mail_html)
     end
     PublicRequestMailer.with(ticket: ticket).received.deliver_later if created
     :ticket
@@ -118,6 +118,13 @@ class MailboxMessage
       "subject" => mail.subject.to_s.squish.first(HEADER_LIMIT).presence,
       "message_id" => mail.message_id.to_s.first(HEADER_LIMIT).presence
     }.compact_blank
+  end
+
+  # The cleaned HTML part, for the ticket page's mail view (specs/organization-mail.md
+  # "HTML view").
+  def mail_html
+    part = mail.multipart? ? mail.html_part : (mail if mail.mime_type == "text/html")
+    MailHtml.clean(utf8(part.decoded)) if part
   end
 
   # "Name <address>" or the bare address, decoded.

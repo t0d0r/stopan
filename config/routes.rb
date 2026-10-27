@@ -31,6 +31,8 @@ Rails.application.routes.draw do
       patch :task
     end
     resource :share, only: %i[create destroy], controller: "ticket_shares"
+    # The HTML of the mail a ticket came from, in a sealed frame (organization-mail.md "HTML view").
+    resource :mail, only: :show, controller: "ticket_mails"
     resources :translations, only: :create
     resources :attachments, only: :show do
       get :preview, on: :member

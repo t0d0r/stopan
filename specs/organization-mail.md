@@ -186,6 +186,50 @@ start with the important things from the mail headers".
   name other recipients.
 - Replies that come in by mail keep no headers yet (todo).
 
+### HTML view
+
+Operator, 2026-10-27: "can these tickets have nicer formatting, like
+Roundcube". Mail programs show the HTML part of a mail; the text part of
+a newsletter is often an afterthought.
+
+- **Kept at intake:** for a new ticket, the mail's HTML part (or the
+  whole mail when it is HTML only) is cleaned and stored in
+  `tickets.mail_html`, at most 1 MB after cleaning (larger: not kept).
+  The text part stays the description, as before; replies keep no HTML
+  yet.
+- **Cleaning** (Nokogiri, before storing): `script`, `iframe`, `frame`,
+  `object`, `embed`, `applet`, `form`, `input`, `button`, `textarea`,
+  `select`, `base`, `meta`, `link` and `noscript` elements are removed,
+  and every `on*` attribute; links keep only `http`, `https` and
+  `mailto` targets and open in a new tab with `rel="noopener noreferrer
+  nofollow"`; images keep only `http`, `https` and `data:image/` sources
+  (`cid:` inline images lose their source and show their alt text).
+  Styles (`style` elements and attributes) stay, so the layout survives.
+- **Shown in a sealed frame:** `GET /tickets/:number/mail` returns the
+  cleaned HTML in a small document of its own (white page, the mail's
+  styles, images at most the frame width), to anyone who may see the
+  ticket (staff, the ticket's requester; 404 otherwise; never on shared
+  pages). Its own headers: `Content-Security-Policy: default-src 'none';
+  style-src 'unsafe-inline'; img-src data:; font-src data:;
+  frame-ancestors 'self'; base-uri 'none'; form-action 'none'; sandbox
+  allow-popups allow-popups-to-escape-sandbox allow-same-origin`,
+  `Referrer-Policy: no-referrer`, `Cache-Control: private, no-store`. No
+  script can run there, nothing outside loads, forms cannot send.
+- **Remote images are blocked** by default, as in Roundcube: when the
+  mail has `http(s)` images, a bar above the frame says "Remote images
+  are blocked to protect your privacy" with "Show images", which
+  reloads the frame with `?images=1` (then `img-src data: https: http:`).
+  The choice holds for that page view only.
+- **On the ticket page**, the request of such a ticket shows two small
+  tabs "HTML" and "Text" above the text (HTML first). The frame
+  (`sandbox="allow-popups allow-popups-to-escape-sandbox
+  allow-same-origin"`, `referrerpolicy="no-referrer"`) grows to its
+  content's height; the long request collapse (timeline.md) applies to
+  it too. "Text" shows the description as before (mail layout, short
+  links). The copy box copies the text of the view that is shown.
+  Without JavaScript the frame shows at a fixed height with its own
+  scroll bar and the text below it.
+
 ## Not in this phase
 
 OAuth2 sign-in to mail providers (Google, Microsoft 365), POP3, moving

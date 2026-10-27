@@ -15,7 +15,10 @@
       <% if staff && @ticket.mail_headers.present? %><%= render "tickets/mail_headers", ticket: @ticket %><% end %>
       <%= turbo_frame_tag "description-text" do %>
         <%= render "tickets/note_heading", ticket: @ticket, priority: staff %>
-        <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>
+        <% if @ticket.mail_html.present? %><%= render "tickets/mail_view", ticket: @ticket %><% end %>
+        <div class="mail-view__pane" id="mail-pane-text" data-mail-pane="text">
+          <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>
+        </div>
       <% end %>
       <% if translation_offered? %><%= render "tickets/translation", message: @ticket, ticket: @ticket %><% end %>
       <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket, ticket: @ticket %><% end %>

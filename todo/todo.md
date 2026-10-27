@@ -142,7 +142,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [ ] production: turn on "Fetch new mail automatically" in /admin/settings after the next deploy
 - [x] mail-shaped display for messages with source email (rules, quotes, softer footer and signature) and short links for addresses in all plain text (operator, 2026-10-27; specs/organization-mail.md "Display of mail", specs/markdown.md "Plain text links")
 - [x] mail details for staff at the start of a mail ticket, Roundcube-style header (operator, 2026-10-27; specs/organization-mail.md "Mail details")
-- [~] mail HTML view like Roundcube: sanitized HTML part in a sandboxed frame, remote images blocked until allowed (operator, 2026-10-27)
+- [x] mail HTML view like Roundcube: cleaned HTML part in a sealed frame (own CSP, sandbox), remote images blocked until "Show images", HTML/Text tabs (operator, 2026-10-27; specs/organization-mail.md "HTML view")
+- [ ] mail HTML later: inline cid: images from the attachments, HTML of replies
 - [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")
 - [x] requesters see only their own tickets; "My organizations" tab, organization list stream and colleague notice removed (operator, 2026-10-27; specs/roles.md)
 - [x] long original request collapses with "Show the whole request" (operator, 2026-10-27; specs/timeline.md "Long requests collapse")

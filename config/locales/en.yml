@@ -175,6 +175,13 @@ en:
       me: "Me"
       nobody: "Nobody"
 
+    mail_view:
+      frame_title: "The mail as it was sent"
+      tabs_label: "Show the mail as"
+      html: "HTML"
+      text: "Text"
+      images_blocked: "Remote images are blocked to protect your privacy."
+      show_images: "Show images"
     mail_headers:
       title: "Mail details"
       details: "Details"
