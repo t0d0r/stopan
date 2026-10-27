@@ -805,6 +805,8 @@ menu and Take; open /tickets/new and pick a requester.
 - README "How tickets come in": Mermaid flowchart of the four channels and their
   checks (rendered in headless Chrome with mermaid 11.4.1 to check the syntax);
   specs/overview.md "Ingress diagram" says to keep it in sync.
+- Deployed 50475d3 (documentation only) after backup `pre-deploy-59175fa.sqlite3`;
+  all checks fine. Backups on the server now go up to pre-deploy-59175fa.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

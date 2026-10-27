@@ -540,6 +540,19 @@ one table only).
   deploy are not brought back by a rollback; flushed ones only from the
   backup.
 
+## Update 2026-10-27 (revision 50475d3)
+
+Operator: "yes, deploy". Documentation only since 59175fa (README
+screenshots in English, the ingress diagram, the deploy record); no
+application change, no migrations.
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-59175fa.sqlite3`
+  (mode 600; 4 users, 2 tickets, schema 20261028190000).
+- Checked: healthy; schema 20261028190000, no pending migrations; users
+  and tickets kept; `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  `/cable` 101; the four security headers; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:59175fa` as `latest` and restart.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

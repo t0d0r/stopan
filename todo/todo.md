@@ -158,6 +158,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [ ] operator: try the API through Apache with a personal token (PATCH/DELETE and JSON bodies vs ModSecurity); switch on mail fetching in /admin/settings
 - [x] README screenshots refreshed, all in English (Chrome with an English environment); the phone shot is now ticket-requester-phone.png (operator, 2026-10-27; specs/ui.md "Screenshots")
 - [x] README: Mermaid diagram of how tickets come in (ingress workflow) (operator, 2026-10-27; specs/overview.md "Ingress diagram")
+- [x] production: deployed 50475d3 (documentation only) after a database backup (specs/deploy.md)
 - [x] admin: flush all tickets of an organization after typing its name, keeping its settings; numbers never reused (operator, 2026-10-27; specs/admin.md "Flush all tickets of an organization")
 - [x] requester email on the ticket page and the profile copies on click instead of opening the mail program (operator, 2026-10-27; specs/ui.md "Emails copy on click")
 - [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")
