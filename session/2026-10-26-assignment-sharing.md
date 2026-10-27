@@ -751,6 +751,9 @@ menu and Take; open /tickets/new and pick a requester.
   renders "Label: value" lines into `data-copy-header` on the request
   article (shared page: subject, status, shared link only); the copy box
   prepends it with an empty line. Checked on dev #1094.
+  Mistake: 057e9e0 was committed while make check failed (`make check |
+  tail -1 && git commit` takes tail's exit code); the failing board test
+  caught the stage shown to requesters, fixed in the next commit.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

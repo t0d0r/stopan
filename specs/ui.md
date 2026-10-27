@@ -159,7 +159,7 @@ Turbo Drive for page changes.
   the copy box of the original request puts a block of facts before the
   text, one per line as "Label: value" in the reader's language, then an
   empty line and the text. On the ticket page: "#1094 Subject",
-  status (and stage), priority, assignee (or "Unassigned"), requester
+  status (and stage, for staff), priority, assignee (or "Unassigned"), requester
   (with the email for staff), organization, created, the ticket's link,
   and for staff the mail's From, To, Cc and Date when the ticket came
   from a mailbox. On a shared page: "#1094 Subject", status and the

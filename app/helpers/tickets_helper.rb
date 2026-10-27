@@ -316,7 +316,8 @@ module TicketsHelper
   # it shows.
   def ticket_copy_header(ticket, shared: false)
     status = status_name(ticket.status)
-    status += " (#{ticket.stage.name})" if ticket.stage
+    # Stages are for staff only (specs/board.md).
+    status += " (#{ticket.stage.name})" if ticket.stage && !shared && current_user&.staff?
     facts = { t("ui.fields.status") => status }
     if shared
       facts[t("ui.fields.link")] = shared_ticket_url(ticket.share_token)
