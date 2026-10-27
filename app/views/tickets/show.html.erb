@@ -2,6 +2,15 @@
 <% staff = current_user.staff? %>
 <% turbo_refreshes_with scroll: :preserve %>
 <%= turbo_stream_from(*@ticket.page_stream(current_user), channel: TicketsChannel, data: { ticket: @ticket.number }) %>
+<%# A deleted ticket, open for an administrator to review and restore (specs/tickets.md "Deleting"). %>
+<% if @ticket.deleted? %>
+  <div class="callout callout--danger deleted-banner" role="status">
+    <span><%= t("ui.ticket.deleted_banner_html", name: @ticket.deleted_by&.display_name || t("ui.timeline.removed_user"), time: time_ago(@ticket.deleted_at)) %></span>
+    <% if policy.restore? %>
+      <%= button_to t("ui.ticket.restore"), restore_admin_deleted_ticket_path(@ticket), method: :patch, class: "btn btn--primary" %>
+    <% end %>
+  </div>
+<% end %>
 <div class="ticket-page">
   <%# The request as one note: strip, "#1001 Subject", pills, text (ui.md). %>
   <article class="sticky sticky--yellow message message--description ticket-head" id="description"
@@ -21,7 +30,7 @@
           <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>
         </div>
       <% end %>
-      <% if translation_offered? %><%= render "tickets/translation", message: @ticket, ticket: @ticket %><% end %>
+      <% if translation_offered? && !@ticket.deleted? %><%= render "tickets/translation", message: @ticket, ticket: @ticket %><% end %>
       <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket, ticket: @ticket %><% end %>
       <% if @ticket.files.attached? %>
         <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">

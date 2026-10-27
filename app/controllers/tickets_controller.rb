@@ -1,13 +1,14 @@
 class TicketsController < ApplicationController
   include TicketTimeline
 
-  before_action :set_ticket, only: %i[show update resolve assign move]
+  before_action :set_ticket, only: %i[update resolve assign move destroy]
 
   def index
     @filter = TicketFilter.new(current_user, params)
   end
 
   def show
+    @ticket = find_ticket_for_page(params[:id])
     Notification.mark_read(current_user, Notification.where(ticket: @ticket))
     @comment = Comment.new
     prepare_timeline
@@ -67,6 +68,14 @@ class TicketsController < ApplicationController
     end
   end
 
+  # Soft delete (specs/tickets.md "Deleting"): gone for everyone; only
+  # administrators can open and restore it.
+  def destroy
+    authorize! policy.delete?
+    @ticket.soft_delete!(actor: current_user)
+    redirect_to tickets_path, notice: t("flash.ticket_deleted", reference: @ticket.reference)
+  end
+
   # The requester's "Mark as done".
   def resolve
     authorize! policy.resolve?
@@ -100,6 +109,14 @@ class TicketsController < ApplicationController
 
   def set_ticket
     @ticket = find_visible_ticket(params[:id])
+  end
+
+  # Administrators may also open a deleted ticket, read-only, to review
+  # and restore it (specs/tickets.md "Deleting").
+  def find_ticket_for_page(number)
+    return find_visible_ticket(number) unless current_user.admin?
+
+    Ticket.find_by!(number: number.to_s)
   end
 
   # Requesters choose only the text, the organization and files; the server

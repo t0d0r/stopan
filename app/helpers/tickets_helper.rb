@@ -175,6 +175,8 @@ module TicketsHelper
     when "shared"
       event.to_value == "password" ? t("ui.timeline.shared_password", actor: actor) : t("ui.timeline.shared", actor: actor)
     when "unshared" then t("ui.timeline.unshared", actor: actor)
+    when "deleted" then t("ui.timeline.deleted", actor: actor)
+    when "restored" then t("ui.timeline.restored", actor: actor)
     when "stage_changed"
       if event.to_value.present? then t("ui.timeline.stage_changed", actor: actor, stage: event.to_value)
       else t("ui.timeline.stage_cleared", actor: actor, stage: event.from_value)
@@ -184,7 +186,8 @@ module TicketsHelper
 
   def event_icon(event)
     { "created" => :spark, "status_changed" => :status, "priority_changed" => :flag,
-      "assignee_changed" => :user, "shared" => :link, "unshared" => :link, "stage_changed" => :flag }.fetch(event.action, :spark)
+      "assignee_changed" => :user, "shared" => :link, "unshared" => :link, "stage_changed" => :flag,
+      "deleted" => :status, "restored" => :status }.fetch(event.action, :spark)
   end
 
   def assignee_name(user_id)

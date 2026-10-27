@@ -54,7 +54,8 @@ class MailboxMessage
 
   def referenced_ticket
     numbers = [ mail.subject.to_s[REFERENCE, 1], *references.filter_map { |ref| ref[REFERENCE_HEADER, 1] } ].compact
-    organization.tickets.find_by(number: numbers.first) if numbers.any?
+    # A deleted ticket is not replied to; the mail starts a new one (tickets.md "Deleting").
+    organization.tickets.where(deleted_at: nil).find_by(number: numbers.first) if numbers.any?
   end
 
   def references

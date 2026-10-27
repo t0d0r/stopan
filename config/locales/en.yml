@@ -205,6 +205,9 @@ en:
         one: "You have the most tokens allowed (%{count}). Revoke one to make another."
         other: "You have the most tokens allowed (%{count}). Revoke one to make another."
     bulk:
+      delete: "Delete"
+      delete_title: "Delete the selected tickets?"
+      delete_body: "They disappear for everyone. An administrator can bring them back from Admin > Deleted tickets."
       title: "Bulk actions"
       selected:
         one: "%{count} selected"
@@ -238,6 +241,11 @@ en:
       subject: "Subject"
       message_id: "Message-ID"
     ticket:
+      delete: "Delete ticket"
+      delete_title: "Delete %{reference}?"
+      delete_body: "The ticket disappears for everyone, its share link stops. An administrator can bring it back from Admin > Deleted tickets."
+      deleted_banner_html: "This ticket was deleted by %{name} %{time}. Only administrators can see it."
+      restore: "Restore"
       show_whole: "Show the whole request"
       collapse: "Collapse the request"
       assigned_to: "Assigned to"
@@ -252,6 +260,8 @@ en:
       resolve_body: "Use this when your problem is solved. You can still reply later, which opens the ticket again."
 
     timeline:
+      deleted: "%{actor} deleted the ticket"
+      restored: "%{actor} restored the ticket"
       orders:
         oldest_first: "Oldest first"
         newest_first: "Newest first"
@@ -294,6 +304,18 @@ en:
       done: "This ticket is done. If you reply, it opens again."
 
     admin:
+      deleted:
+        title: "Deleted tickets"
+        caption:
+          zero: "No deleted tickets"
+          one: "1 deleted ticket"
+          other: "%{count} deleted tickets"
+        intro: "Tickets deleted by staff. Nobody else sees them; open one to review it, or restore it as it was."
+        by: "Deleted by"
+        when: "Deleted"
+        actions: "Actions"
+        more: "Older deletions"
+        empty: "No ticket has been deleted."
       shared_tickets:
         one: "1 ticket shared by link"
         other: "%{count} tickets shared by link"
@@ -966,6 +988,12 @@ en:
     google_failed: "Connecting with Google did not work. Check the client ID, secret and redirect URI, and try again."
     google_disconnected: "Google disconnected. Mail for this organization is off."
     google_client_saved: "Google client saved. Now connect a mailbox."
+    ticket_deleted: "Ticket %{reference} deleted. An administrator can restore it."
+    ticket_restored: "Ticket %{reference} restored."
+    bulk_deleted:
+      zero: "No ticket was deleted."
+      one: "1 ticket deleted."
+      other: "%{count} tickets deleted."
     bulk_updated:
       zero: "No ticket needed a change."
       one: "1 ticket changed."

@@ -19,11 +19,13 @@ class TicketPolicy
   end
 
   def reply?
+    return false if ticket.deleted?
+
     user.staff? || own?
   end
 
   def note?
-    user.staff?
+    user.staff? && !ticket.deleted?
   end
 
   def comment?
@@ -31,25 +33,40 @@ class TicketPolicy
   end
 
   def update?
-    user.staff?
+    user.staff? && !ticket.deleted?
+  end
+
+  # Soft delete (specs/tickets.md "Deleting"): staff who may update it.
+  def delete?
+    update?
+  end
+
+  # Bringing a deleted ticket back: administrators only.
+  def restore?
+    user.admin? && ticket.deleted?
   end
 
   def resolve?
-    ticket.resolvable_by_requester? && (user.staff? || own?)
+    !ticket.deleted? && ticket.resolvable_by_requester? && (user.staff? || own?)
   end
 
   # Share links (specs/sharing.md): staff, or the requester for their own ticket.
   def share?
+    return false if ticket.deleted?
+
     user.staff? || own?
   end
 
   # Editing text (specs/timeline.md "Editing"): staff any request, reply or
   # note; the requester their own request and own public replies.
   def edit_description?
+    return false if ticket.deleted?
+
     user.staff? || own?
   end
 
   def edit_comment?(comment)
+    return false if ticket.deleted?
     return true if user.staff?
 
     comment.author_id == user.id && !comment.internal? && own?

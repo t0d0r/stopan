@@ -7,7 +7,8 @@ module Api
         require_staff!
         list = params.permit(list: TicketBulkUpdate::LIST_FILTERS)[:list] if params[:scope] == "list"
         bulk = TicketBulkUpdate.new(user: current_user, changes: params.fetch(:changes, {}).permit(:status, :priority, :assignee),
-                                    numbers: params[:numbers], list: list || ({} if params[:scope] == "list"))
+                                    numbers: params[:numbers], list: list || ({} if params[:scope] == "list"),
+                                    delete: flag(params[:delete]))
         return render_error(:invalid, :unprocessable_content, message: I18n.t("flash.bulk_nothing_chosen")) unless bulk.changes?
 
         bulk.run

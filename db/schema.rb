@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_180000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -223,7 +223,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_170000) do
     t.integer "stage_id"
     t.json "mail_headers"
     t.text "mail_html"
+    t.datetime "deleted_at"
+    t.integer "deleted_by_id"
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
+    t.index ["deleted_at"], name: "index_tickets_on_deleted_at"
+    t.index ["deleted_by_id"], name: "index_tickets_on_deleted_by_id"
     t.index ["edited_by_id"], name: "index_tickets_on_edited_by_id"
     t.index ["number"], name: "index_tickets_on_number", unique: true
     t.index ["organization_id"], name: "index_tickets_on_organization_id"
@@ -297,6 +301,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_170000) do
   add_foreign_key "tickets", "organizations"
   add_foreign_key "tickets", "stages", on_delete: :nullify
   add_foreign_key "tickets", "users", column: "assignee_id"
+  add_foreign_key "tickets", "users", column: "deleted_by_id"
   add_foreign_key "tickets", "users", column: "edited_by_id"
   add_foreign_key "tickets", "users", column: "requester_id"
 end

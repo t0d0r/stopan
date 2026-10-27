@@ -1124,6 +1124,33 @@ form.button_to {
   background: #96201a;
 }
 
+/* "Delete ticket" at the end of the Properties panel: quiet until hovered
+   (specs/tickets.md "Deleting"). */
+.btn--destructive-quiet {
+  margin-top: 12px;
+  border-color: rgba(179, 38, 30, 0.35);
+  background: transparent;
+  color: var(--danger);
+}
+
+.btn--destructive-quiet:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* A deleted ticket opened by an administrator; beats the desk callout. */
+.desk > .callout.deleted-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 0 0 16px;
+  border-left-color: var(--danger);
+  background: #fcd4e6;
+  color: #2b2a26;
+}
+
 .auth__hint {
   margin: -8px 0 16px;
   color: var(--ink-soft);

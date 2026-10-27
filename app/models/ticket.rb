@@ -33,6 +33,7 @@ class Ticket < ApplicationRecord
   belongs_to :organization
   # The board stage within the status (specs/board.md "Stages").
   belongs_to :stage, optional: true
+  belongs_to :deleted_by, class_name: "User", optional: true
   has_many :comments, -> { order(:created_at, :id) }, inverse_of: :ticket, dependent: :restrict_with_error
   has_many :events, -> { order(:created_at, :id) }, class_name: "TicketEvent", inverse_of: :ticket,
            dependent: :restrict_with_error
@@ -41,6 +42,8 @@ class Ticket < ApplicationRecord
   has_secure_password :share_password, validations: false, reset_token: false
 
   scope :shared, -> { where.not(share_token: nil) }
+  # Soft-deleted tickets (specs/tickets.md "Deleting"), for administrators only.
+  scope :deleted, -> { where.not(deleted_at: nil) }
 
   # Who makes the change being saved; events name them. Falls back to the
   # signed-in user of the request.
@@ -75,9 +78,10 @@ class Ticket < ApplicationRecord
   # (specs/roles.md).
   def self.visible_to(user)
     return none unless user
-    return all if user.admin?
+    # Deleted tickets are gone for everyone (specs/tickets.md "Deleting").
+    return where(deleted_at: nil) if user.admin?
 
-    scope = where(organization_id: user.memberships.select(:organization_id))
+    scope = where(deleted_at: nil, organization_id: user.memberships.select(:organization_id))
     user.staff? ? scope : scope.where(requester_id: user.id)
   end
 
@@ -145,6 +149,31 @@ class Ticket < ApplicationRecord
     end
     refresh_shared_page(old_token)
     true
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
+
+  # Soft delete (specs/tickets.md "Deleting"): the ticket disappears for
+  # everyone, its share link stops, an internal event records who did it.
+  def soft_delete!(actor:)
+    return if deleted?
+
+    transaction do
+      unshare!(actor: actor)
+      update_columns(deleted_at: Time.current, deleted_by_id: actor.id)
+      events.create!(action: "deleted", actor: actor, internal: true)
+    end
+  end
+
+  def restore!(actor:)
+    return unless deleted?
+
+    transaction do
+      update_columns(deleted_at: nil, deleted_by_id: nil)
+      events.create!(action: "restored", actor: actor, internal: true)
+    end
   end
 
   def unshare!(actor:)

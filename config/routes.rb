@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   # Statistics for staff (specs/reports.md).
   get "reports" => "reports#show", as: :reports
 
-  resources :tickets, only: %i[index show new create update] do
+  resources :tickets, only: %i[index show new create update destroy] do
     member do
       patch :resolve
       patch :assign
@@ -54,6 +54,10 @@ Rails.application.routes.draw do
       post :mailbox_check, on: :member
     end
     resources :memberships, only: :destroy
+    # Deleted tickets to review and restore (specs/tickets.md "Deleting").
+    resources :deleted_tickets, only: :index, param: :number do
+      patch :restore, on: :member
+    end
     resources :messages, only: %i[new create]
     resource :settings, only: %i[show update]
     # Google accounts for organization mail (specs/mail-oauth.md).
@@ -96,7 +100,7 @@ Rails.application.routes.draw do
       resource :me, only: %i[show update], controller: "me"
       resources :tokens, only: %i[index destroy]
       patch "tickets/bulk", to: "tickets_bulk#update", as: :bulk_tickets
-      resources :tickets, only: %i[index show create update], param: :number do
+      resources :tickets, only: %i[index show create update destroy], param: :number do
         post :resolve, on: :member
         resource :description, only: :update do
           patch :task
@@ -128,6 +132,9 @@ Rails.application.routes.draw do
       resources :memberships, only: :destroy
       resource :settings, only: %i[show update]
       resources :messages, only: :create
+      resources :deleted_tickets, only: :index, param: :number do
+        post :restore, on: :member
+      end
     end
   end
 

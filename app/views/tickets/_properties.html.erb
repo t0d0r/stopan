@@ -51,5 +51,11 @@
         <dd><%= time_ago ticket.done_at %></dd>
       <% end %>
     </dl>
+    <%# Soft delete for staff (specs/tickets.md "Deleting"). %>
+    <% if policy.delete? %>
+      <%= button_to t("ui.ticket.delete"), ticket_path(ticket), method: :delete, class: "btn btn--block btn--destructive-quiet",
+                    form: { data: confirm_data(title: t("ui.ticket.delete_title", reference: ticket.reference),
+                                               body: t("ui.ticket.delete_body"), button: t("ui.ticket.delete")) } %>
+    <% end %>
   </div>
 </section>

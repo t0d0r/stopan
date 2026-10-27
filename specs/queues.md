@@ -127,7 +127,8 @@ they have it too.
   (always shown without JavaScript): "3 selected", and three selects,
   each starting at "no change": Status (every status), Priority (every
   priority), Assignee ("Me", "Nobody", the staff who may be assigned in
-  the user's organizations), then "Apply" and "Clear".
+  the user's organizations), then "Apply" and "Clear", and "Delete"
+  (with a confirmation; a soft delete, tickets.md "Deleting").
 - When every row of the page is selected and the list has more, the bar
   offers "Select all 94 in this list"; then the action applies to every
   ticket of the current view, filters and search (`scope=list`), at most

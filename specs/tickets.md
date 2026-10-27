@@ -161,8 +161,37 @@ id, or blank for nobody. Requesters get 403.
 
 ## Deleting
 
-Tickets are not deleted in this phase (audit history must stay complete).
-Roadmap: spam deletion by admins with an audit entry.
+Operator, 2026-10-27: "agents should be able to delete tickets so they
+are not seen any more; administrators can review deleted tickets and
+bring them back when needed". Deleting is a soft delete: nothing is
+removed from the database, so the audit history stays complete.
+
+- `tickets.deleted_at` and `tickets.deleted_by_id`. Staff who may update
+  a ticket (`TicketPolicy#delete?`: agents in their organizations,
+  administrators) delete it from the ticket page ("Delete ticket" at the
+  bottom of the Properties panel, with a confirmation), from the queue's
+  bulk bar ("Delete" with a confirmation, queues.md "Bulk actions") or
+  through the API (`DELETE /api/v1/tickets/:number`). Requesters cannot.
+- **A deleted ticket is gone for everyone** through `Ticket.visible_to`:
+  queue, board, search, counts, reports, My tickets, notifications
+  (existing ones disappear), files, live streams, magic links and the
+  API answer as if it did not exist (404). Its share link is stopped
+  when it is deleted. A mail reply that refers to it starts a new ticket.
+  Its number is never reused.
+- An internal event "Maria deleted the ticket" / "... restored the
+  ticket" is recorded; no notifications or emails are sent.
+- **Administrators:** a "Deleted tickets" tab in /admin lists them,
+  newest deletion first (number, subject, organization, requester, who
+  deleted it and when), with "Open" and "Restore". "Open" shows the
+  ticket page read-only with a pink banner "Deleted by Maria, 3 hours
+  ago" and a "Restore" button; nothing else can be changed while it is
+  deleted (no replies, edits, status, sharing, translations). Other
+  users get 404 for it. "Restore" clears the deletion, records the event
+  and opens the ticket; it comes back exactly as it was (status,
+  assignee, timeline), without its old share link.
+- API: administrators get `GET /api/v1/deleted_tickets` and
+  `POST /api/v1/deleted_tickets/:number/restore` (api.md).
+- Deleting forever is not offered.
 
 ## Acceptance
 

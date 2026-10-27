@@ -78,6 +78,7 @@ Everyone (within their rights):
 | `GET /api/v1/tickets/:number` | the ticket with its visible timeline (events with their comments), files, share state (for who may share), `mail_headers` (staff) |
 | `PATCH /api/v1/tickets/:number` | staff: `ticket[status, priority, assignee_id, stage_id]` |
 | `POST /api/v1/tickets/:number/resolve` | the requester's "Mark as done" |
+| `DELETE /api/v1/tickets/:number` | staff who may update it: soft delete (tickets.md "Deleting"); 204 |
 | `PATCH /api/v1/tickets/bulk` | staff: `numbers[]` or `scope=list` with the list filters (`view, status, priority, assignee, organization, q`), and `changes[status, priority, assignee]` (`me`, `none` or a user id); returns `updated` (numbers) and `skipped` (number and reason) (queues.md "Bulk actions") |
 | `PATCH /api/v1/tickets/:number/description` | `ticket[subject, description]` (an edit with a revision) and/or `ticket[markdown]` (the switch) |
 | `PATCH /api/v1/tickets/:number/description/task` | `line`, `checked` (Markdown task lists) |
@@ -108,6 +109,7 @@ Administrators only (403 for others):
 | `GET/PATCH /api/v1/settings` | `auto_postpone_days, default_look, mailbox_polling, mailbox_poll_seconds, timeline_order, translation_enabled, deepl_api_key` (write-only; `deepl_api_key_set` tells whether one is stored) |
 | `POST/PATCH/DELETE /api/v1/stages[/:id]`, `POST /api/v1/stages/:id/move` (`direction` up/down) | board stages |
 | `POST /api/v1/messages` | `recipients`, `text`: a message to users' notifications |
+| `GET /api/v1/deleted_tickets`, `POST /api/v1/deleted_tickets/:number/restore` | deleted tickets and restoring one (tickets.md "Deleting") |
 
 Not in the API, as they need a browser: signing in and passwords
 (Devise), the Google connection and wizard, impersonation, themes and

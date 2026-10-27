@@ -29,18 +29,23 @@ function autoGrow(textarea) {
 function setUpConfirm(dialog) {
   let pending = null;
 
-  document.querySelectorAll("form[data-confirm]").forEach((form) => {
+  // A whole form asks (data-confirm), or only one of its submit buttons
+  // does (data-confirm on the button, e.g. "Delete" in the bulk bar).
+  document.querySelectorAll("form[data-confirm], form:has(button[data-confirm]), form#bulk-form").forEach((form) => {
     form.addEventListener("submit", (event) => {
       if (form.dataset.confirmed === "true") return;
+      const asker = form.dataset.confirm ? form : event.submitter?.dataset.confirm ? event.submitter : null;
+      if (!asker) return;
       event.preventDefault();
+      const submitter = event.submitter;
       if (!dialog) {
-        if (window.confirm(form.dataset.confirm)) submitConfirmed(form);
+        if (window.confirm(asker.dataset.confirm)) submitConfirmed(form, submitter);
         return;
       }
-      pending = form;
-      dialog.querySelector("[data-confirm-title]").textContent = form.dataset.confirmTitle || dialog.dataset.defaultTitle;
-      dialog.querySelector("[data-confirm-body]").textContent = form.dataset.confirm;
-      dialog.querySelector("[data-confirm-ok]").textContent = form.dataset.confirmButton || dialog.dataset.defaultButton;
+      pending = { form, submitter };
+      dialog.querySelector("[data-confirm-title]").textContent = asker.dataset.confirmTitle || dialog.dataset.defaultTitle;
+      dialog.querySelector("[data-confirm-body]").textContent = asker.dataset.confirm;
+      dialog.querySelector("[data-confirm-ok]").textContent = asker.dataset.confirmButton || dialog.dataset.defaultButton;
       dialog.returnValue = "";
       dialog.showModal();
       dialog.querySelector("[data-confirm-cancel]").focus();
@@ -51,14 +56,14 @@ function setUpConfirm(dialog) {
   // Escape and the backdrop cancel; only the destructive button confirms.
   dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
   dialog.addEventListener("close", () => {
-    if (dialog.returnValue === "confirm" && pending) submitConfirmed(pending);
+    if (dialog.returnValue === "confirm" && pending) submitConfirmed(pending.form, pending.submitter);
     pending = null;
   });
 }
 
-function submitConfirmed(form) {
+function submitConfirmed(form, submitter) {
   form.dataset.confirmed = "true";
-  form.requestSubmit();
+  form.requestSubmit(submitter?.form === form ? submitter : undefined);
 }
 
 // The reply form switches between a public reply and an internal note: the

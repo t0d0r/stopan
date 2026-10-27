@@ -1,0 +1,51 @@
+<% content_for :title, t("ui.admin.deleted.title") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.admin.deleted.title") %></h1>
+  <%= render "admin/tabs" %>
+</div>
+
+<%# Soft-deleted tickets (specs/tickets.md "Deleting"). %>
+<section class="sticky sticky--pink panel" aria-labelledby="deleted-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.deleted.caption", count: @total) %></span></header>
+  <div class="panel__body">
+    <h2 class="sr-only" id="deleted-title"><%= t("ui.admin.deleted.title") %></h2>
+    <p class="panel__intro"><%= t("ui.admin.deleted.intro") %></p>
+    <% if @tickets.any? %>
+      <div class="table-scroll">
+        <table class="ledger tickets-table deleted-table">
+          <thead>
+            <tr>
+              <th scope="col" class="num"><%= t("ui.fields.number") %></th>
+              <th scope="col"><%= t("ui.fields.subject") %></th>
+              <th scope="col" class="col-org"><%= t("ui.fields.organization") %></th>
+              <th scope="col" class="col-requester"><%= t("ui.fields.requester") %></th>
+              <th scope="col"><%= t("ui.admin.deleted.by") %></th>
+              <th scope="col" class="col-updated"><%= t("ui.admin.deleted.when") %></th>
+              <th scope="col"><span class="sr-only"><%= t("ui.admin.deleted.actions") %></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @tickets.each do |ticket| %>
+              <tr id="<%= dom_id(ticket) %>" class="ticket-row">
+                <td class="num ticket-number"><%= ticket.reference %></td>
+                <td class="text col-subject"><%= link_to ticket.subject, ticket_path(ticket), class: "ticket-link" %></td>
+                <td class="text col-org"><%= ticket.organization.name %></td>
+                <td class="text col-requester"><%= ticket.requester.display_name %></td>
+                <td class="text"><%= ticket.deleted_by&.display_name || t("ui.timeline.removed_user") %></td>
+                <td class="date col-updated"><%= time_ago ticket.deleted_at %></td>
+                <td>
+                  <%= button_to t("ui.ticket.restore"), restore_admin_deleted_ticket_path(ticket), method: :patch, class: "btn" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <% if @total > @page * Admin::DeletedTicketsController::PER_PAGE %>
+        <p><%= link_to t("ui.admin.deleted.more"), admin_deleted_tickets_path(page: @page + 1) %></p>
+      <% end %>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.admin.deleted.empty") %></p>
+    <% end %>
+  </div>
+</section>

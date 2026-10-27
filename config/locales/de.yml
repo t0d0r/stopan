@@ -208,6 +208,9 @@ de:
         one: "Sie haben die Höchstzahl an Tokens (%{count}). Widerrufen Sie eins, um ein neues zu erstellen."
         other: "Sie haben die Höchstzahl an Tokens (%{count}). Widerrufen Sie eins, um ein neues zu erstellen."
     bulk:
+      delete: "Löschen"
+      delete_title: "Die ausgewählten Tickets löschen?"
+      delete_body: "Sie verschwinden für alle. Administratoren können sie unter Verwaltung > Gelöschte Tickets zurückholen."
       title: "Massenaktionen"
       selected:
         one: "%{count} ausgewählt"
@@ -241,6 +244,11 @@ de:
       subject: "Betreff"
       message_id: "Message-ID"
     ticket:
+      delete: "Ticket löschen"
+      delete_title: "%{reference} löschen?"
+      delete_body: "Das Ticket verschwindet für alle, sein Freigabelink endet. Eine Administratorin oder ein Administrator kann es unter Verwaltung > Gelöschte Tickets zurückholen."
+      deleted_banner_html: "Dieses Ticket wurde von %{name} %{time} gelöscht. Nur Administratoren sehen es."
+      restore: "Wiederherstellen"
       show_whole: "Ganze Anfrage anzeigen"
       collapse: "Anfrage einklappen"
       assigned_to: "Zugewiesen an"
@@ -255,6 +263,8 @@ de:
       resolve_body: "Verwenden Sie dies, wenn Ihr Problem gelöst ist. Sie können später trotzdem antworten; dadurch wird das Ticket wieder geöffnet."
 
     timeline:
+      deleted: "%{actor} hat das Ticket gelöscht"
+      restored: "%{actor} hat das Ticket wiederhergestellt"
       orders:
         oldest_first: "Älteste zuerst"
         newest_first: "Neueste zuerst"
@@ -297,6 +307,18 @@ de:
       done: "Dieses Ticket ist erledigt. Wenn Sie antworten, wird es wieder geöffnet."
 
     admin:
+      deleted:
+        title: "Gelöschte Tickets"
+        caption:
+          zero: "Keine gelöschten Tickets"
+          one: "1 gelöschtes Ticket"
+          other: "%{count} gelöschte Tickets"
+        intro: "Vom Team gelöschte Tickets. Niemand sonst sieht sie; öffnen Sie eines zur Prüfung oder stellen Sie es unverändert wieder her."
+        by: "Gelöscht von"
+        when: "Gelöscht"
+        actions: "Aktionen"
+        more: "Ältere Löschungen"
+        empty: "Es wurde kein Ticket gelöscht."
       shared_tickets:
         one: "1 Ticket per Link geteilt"
         other: "%{count} Tickets per Link geteilt"
@@ -969,6 +991,12 @@ de:
     google_failed: "Die Verbindung mit Google hat nicht funktioniert. Prüfen Sie Client-ID, Secret und Redirect-URI und versuchen Sie es erneut."
     google_disconnected: "Google getrennt. Die E-Mail dieser Organisation ist aus."
     google_client_saved: "Google-Client gespeichert. Verbinden Sie jetzt ein Postfach."
+    ticket_deleted: "Ticket %{reference} gelöscht. Administratoren können es wiederherstellen."
+    ticket_restored: "Ticket %{reference} wiederhergestellt."
+    bulk_deleted:
+      zero: "Kein Ticket wurde gelöscht."
+      one: "1 Ticket gelöscht."
+      other: "%{count} Tickets gelöscht."
     bulk_updated:
       zero: "Kein Ticket musste geändert werden."
       one: "1 Ticket geändert."

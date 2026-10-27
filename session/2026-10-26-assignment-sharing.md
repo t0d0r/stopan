@@ -758,6 +758,16 @@ menu and Take; open /tickets/new and pick a requester.
   (`data-translation-show`) that shows the stored translation again;
   hidden state kept per page in memory across live refreshes. Checked on
   dev #1033.
+- Soft delete (operator: agents delete, admins review and restore):
+  `tickets.deleted_at` / `deleted_by_id` (migration `AddDeletedAtToTickets`),
+  `Ticket.visible_to` excludes deleted for everyone, `soft_delete!` stops the
+  share link and records an internal "deleted" event, `restore!`. Policy: all
+  actions false on a deleted ticket, `delete?` = update?, `restore?` admin.
+  Ticket page: "Delete ticket" in Properties; admins open deleted tickets
+  read-only with a banner. `Admin::DeletedTicketsController` (tab "Deleted
+  tickets"), bulk "Delete" (confirm on the button: setUpConfirm now honours
+  data-confirm on a submit button), API DELETE + deleted_tickets. Mail replies
+  to deleted tickets start new ones. Checked on dev with #1010 (restored).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

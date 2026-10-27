@@ -7,7 +7,8 @@ class TicketBulkController < ApplicationController
   def update
     authorize!(current_user.staff?)
     bulk = TicketBulkUpdate.new(user: current_user, changes: params.fetch(:changes, {}).permit(:status, :priority, :assignee),
-                                numbers: params[:numbers], list: (list_params if params[:scope] == "list"))
+                                numbers: params[:numbers], list: (list_params if params[:scope] == "list"),
+                                delete: params[:delete] == "1")
     return redirect_to(back_path, alert: t("flash.bulk_nothing_chosen")) unless bulk.changes?
     return redirect_to(back_path, alert: t("flash.bulk_nothing_selected")) if bulk.tickets.empty?
 
@@ -29,7 +30,7 @@ class TicketBulkController < ApplicationController
   end
 
   def flash_result(bulk)
-    flash[:notice] = t("flash.bulk_updated", count: bulk.updated.size)
+    flash[:notice] = t(bulk.delete? ? "flash.bulk_deleted" : "flash.bulk_updated", count: bulk.updated.size)
     return if bulk.skipped.empty?
 
     shown = bulk.skipped.first(SKIPPED_SHOWN).map { |skip| "#{skip.ticket.reference} (#{skip.reason})" }

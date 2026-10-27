@@ -25,6 +25,9 @@
                                       staff.map { |user| [ user.display_name, user.id.to_s ] }),
                    include_blank: t("ui.bulk.assignee"), id: "bulk_assignee", class: "select" %>
     <%= submit_tag t("ui.bulk.apply"), name: nil, class: "btn btn--primary" %>
+    <%# Soft delete of the selection, after a confirmation (specs/tickets.md "Deleting"). %>
+    <%= button_tag t("ui.bulk.delete"), type: "submit", name: "delete", value: "1", class: "btn btn--destructive-quiet bulk-bar__delete",
+                   data: confirm_data(title: t("ui.bulk.delete_title"), body: t("ui.bulk.delete_body"), button: t("ui.bulk.delete")) %>
     <button type="button" class="btn" data-bulk-clear hidden><%= t("ui.bulk.clear") %></button>
   </div>
 <% end %>

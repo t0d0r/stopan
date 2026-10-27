@@ -12,8 +12,10 @@ class TicketBulkUpdate
 
   # numbers: ticket numbers; list: the list's filter parameters instead
   # (every matching ticket, at most MAX); changes: status, priority and
-  # assignee ("me", "none" or a user id), blanks meaning "no change".
-  def initialize(user:, changes:, numbers: nil, list: nil)
+  # assignee ("me", "none" or a user id), blanks meaning "no change";
+  # delete: soft delete them instead (specs/tickets.md "Deleting").
+  def initialize(user:, changes:, numbers: nil, list: nil, delete: false)
+    @delete = delete
     @user = user
     @numbers = Array(numbers).map(&:to_s).first(MAX)
     @list = list
@@ -24,7 +26,11 @@ class TicketBulkUpdate
   end
 
   def changes?
-    @changes.any?
+    @delete || @changes.any?
+  end
+
+  def delete?
+    @delete
   end
 
   def tickets
@@ -44,6 +50,10 @@ class TicketBulkUpdate
 
   def apply(ticket)
     return skip(ticket, I18n.t("ui.bulk.not_allowed")) unless TicketPolicy.new(user, ticket).update?
+    if @delete
+      ticket.soft_delete!(actor: user)
+      return @updated << ticket
+    end
 
     changes = {}
     changes[:status] = @changes[:status] if @changes[:status] && @changes[:status] != ticket.status

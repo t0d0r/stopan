@@ -4,7 +4,7 @@ module Api
     # tickets, staff changes and the requester's "Mark as done", with the
     # rules of the pages (TicketsController, specs/roles.md).
     class TicketsController < BaseController
-      before_action :set_ticket, only: %i[show update resolve]
+      before_action :set_ticket, only: %i[show update resolve destroy]
 
       def index
         filter = TicketFilter.new(current_user, params)
@@ -49,6 +49,13 @@ module Api
         authorize!(policy_for(@ticket).resolve?)
         @ticket.apply_changes!({ status: Ticket::DONE }, actor: current_user)
         render json: { ticket: ticket_json(@ticket.reload, full: true) }
+      end
+
+      # Soft delete (specs/tickets.md "Deleting").
+      def destroy
+        authorize!(policy_for(@ticket).delete?)
+        @ticket.soft_delete!(actor: current_user)
+        head :no_content
       end
 
       private
