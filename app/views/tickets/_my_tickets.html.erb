@@ -31,7 +31,6 @@
             <tr>
               <th scope="col" class="num"><%= t("ui.fields.number") %></th>
               <th scope="col"><%= t("ui.fields.subject") %></th>
-              <% if filter.view == "organization" %><th scope="col" class="col-requester"><%= t("ui.fields.requester") %></th><% end %>
               <% if several_orgs %><th scope="col" class="col-org"><%= t("ui.fields.organization") %></th><% end %>
               <th scope="col"><%= t("ui.fields.status") %></th>
               <th scope="col" class="col-updated"><%= t("ui.fields.updated") %></th>
@@ -44,7 +43,6 @@
                 <td class="text col-subject">
                   <%= link_to ticket_path(ticket), class: "ticket-link" do %><%= ticket.subject %><% if ticket.shared? %> <%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %><% end %>
                 </td>
-                <% if filter.view == "organization" %><td class="text col-requester"><%= ticket.requester.display_name %></td><% end %>
                 <% if several_orgs %><td class="text col-org"><%= ticket.organization.name %></td><% end %>
                 <td><%= status_pill ticket.status %></td>
                 <td class="date col-updated"><%= time_ago ticket.updated_at %></td>

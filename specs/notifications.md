@@ -43,12 +43,12 @@ the requester the in-app notification only.
 
 **New tickets to the organization's members** (operator, 2026-10-27):
 for a batch with a `created` event, every active member of T's
-organization (requesters and staff members alike), other than A and
-other than those already notified above, gets an in-app notification of
-kind `created` ("Anna Petrova opened a new ticket"), with the live
-signal. No email for these: the panel only, so members are not flooded
-with mail. Requesters can open the ticket because members see their
-organizations' tickets (roles.md).
+organization who may see T, other than A and other than those already
+notified above, gets an in-app notification of kind `created` ("Anna
+Petrova opened a new ticket"), with the live signal. No email for these:
+the panel only, so members are not flooded with mail. Since requesters
+see only their own tickets (roles.md, 2026-10-27), these are the staff
+members; other requesters of the organization get nothing.
 
 ## Which email
 

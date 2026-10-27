@@ -175,11 +175,11 @@ class TicketTest < ActiveSupport::TestCase
     assert big.errors.of_kind?(:files, :too_big)
   end
 
-  test "visible_to: staff see all, requesters every ticket of their organizations" do
+  test "visible_to: staff see all, requesters only their own tickets (specs/roles.md)" do
     assert_equal Ticket.count, Ticket.visible_to(users(:agent)).count
     assert_equal Ticket.count, Ticket.visible_to(users(:admin)).count
-    assert_equal %w[1001 1002 1004], Ticket.visible_to(users(:anna)).order(:number).map(&:to_param)
-    assert_equal [ 1001, 1002, 1004 ], Ticket.visible_to(users(:boris)).order(:number).pluck(:number)
+    assert_equal %w[1001 1004], Ticket.visible_to(users(:anna)).order(:number).map(&:to_param)
+    assert_equal [ 1002 ], Ticket.visible_to(users(:boris)).pluck(:number)
     assert_equal [ 1003 ], Ticket.visible_to(users(:carl)).pluck(:number)
     assert_empty Ticket.visible_to(users(:drifter))
     assert_empty Ticket.visible_to(nil)

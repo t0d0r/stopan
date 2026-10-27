@@ -56,7 +56,4 @@
       </div>
     <% end %>
   </section>
-<% else %>
-  <%# A colleague's ticket: members read it, only its requester and staff reply (roles.md). %>
-  <p class="callout"><%= t("ui.composer.colleague", name: ticket.requester.display_name) %> <%= link_to t("ui.my_tickets.open_new"), new_ticket_path %></p>
 <% end %>

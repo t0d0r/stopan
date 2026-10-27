@@ -1,6 +1,5 @@
 # Refresh signals of the ticket lists (specs/queues.md "Live updates"): the
-# staff queue only for staff, a requester's list only for its owner, an
-# organization's list only for its current members.
+# staff queue only for staff, a requester's list only for its owner.
 class TicketListsChannel < Turbo::StreamsChannel
   include ApplicationCable::OwnStream
 

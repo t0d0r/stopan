@@ -70,13 +70,15 @@ class Ticket < ApplicationRecord
   scope :unsolved, -> { where(status: UNSOLVED) }
   scope :done, -> { where(status: DONE) }
 
-  # Staff see every ticket; a requester sees their own tickets in the
-  # organizations they still belong to (specs/roles.md).
+  # Administrators see every ticket, agents those of their organizations,
+  # requesters only their own in the organizations they still belong to
+  # (specs/roles.md).
   def self.visible_to(user)
     return none unless user
     return all if user.admin?
 
-    where(organization_id: user.memberships.select(:organization_id))
+    scope = where(organization_id: user.memberships.select(:organization_id))
+    user.staff? ? scope : scope.where(requester_id: user.id)
   end
 
   # Write transactions on SQLite are immediate (Rails 8), so reading the
@@ -199,12 +201,9 @@ class Ticket < ApplicationRecord
     self.class.assignable_staff(organization_id)
   end
 
-  # Every list stream a user's ticket list listens to: a requester also
-  # hears about their organizations' tickets (specs/queues.md).
+  # Every list stream a user's ticket list listens to (specs/queues.md).
   def self.list_streams(user)
-    return [ list_stream(user) ] if user.staff?
-
-    [ list_stream(user), *user.organizations.map { |organization| [ organization, :tickets ] } ]
+    [ list_stream(user) ]
   end
 
   # Tells open ticket pages and ticket lists to reload themselves; internal
@@ -217,7 +216,6 @@ class Ticket < ApplicationRecord
 
     Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :public)
     Turbo::StreamsChannel.broadcast_refresh_later_to(requester, :tickets)
-    Turbo::StreamsChannel.broadcast_refresh_later_to(organization, :tickets)
   end
 
   # Tells an open shared page to reload itself (specs/sharing.md); the

@@ -26,7 +26,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference "Comment.count" do
       post ticket_comments_url(tickets(:printer)), params: { comment: { body: "Me too" } }
     end
-    assert_response :forbidden
+    assert_response :not_found
     sign_in users(:carl)
     post ticket_comments_url(tickets(:printer)), params: { comment: { body: "Me too" } }
     assert_response :not_found

@@ -112,17 +112,9 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "a requester reads a colleague's ticket without the composer, never another organization's" do
-    sign_in users(:boris)
-    get ticket_url(tickets(:printer))
-    assert_response :success
-    assert_select "form.composer__form", 0
-    assert_select ".callout", /Only #{tickets(:printer).requester.display_name} and the service desk can reply/
-    assert_select ".message__boxes a.edit-link", 0
-    assert_not_includes response.body, "STAFF-ONLY"
-
+  test "a requester cannot open a colleague's ticket or another organization's (specs/roles.md)" do
     # A 404 response does not keep the test sign-in, so sign in each time.
-    [ tickets(:vpn), 999_999 ].each do |ticket|
+    [ tickets(:printer), tickets(:vpn), 999_999 ].each do |ticket|
       sign_in users(:boris)
       get ticket_url(id: ticket.to_param)
       assert_response :not_found
@@ -242,7 +234,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
   test "requesters cannot update colleagues' tickets or see other organizations'" do
     sign_in users(:boris)
     patch ticket_url(tickets(:printer)), params: { ticket: { status: "done" } }
-    assert_response :forbidden
+    assert_response :not_found
     sign_in users(:carl)
     patch ticket_url(tickets(:printer)), params: { ticket: { status: "done" } }
     assert_response :not_found
@@ -304,21 +296,18 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".ticket-note__assignee", 0
   end
 
-  test "My organizations lists every ticket of the requester's organizations, and the own tabs only theirs" do
+  test "a requester's list has only their own tabs and tickets (specs/roles.md)" do
     sign_in users(:boris)
     get tickets_url(view: "organization")
     assert_response :success
-    assert_select "a.tab[aria-current=page]", /My organizations/
-    numbers = css_select("td.ticket-number").map { |cell| cell.text.strip }
-    assert_equal %w[#1001 #1002 #1004].sort, numbers.sort
-    assert_select "th.col-requester", "Requester"
-    assert_select "td.col-requester", users(:anna).display_name
-
-    get tickets_url(view: "open")
+    assert_select "a.tab", 3
+    assert_select "a.tab[aria-current=page]", /Open/
     assert_select ".col-requester", 0
-    assert_select "turbo-cable-stream-source[channel=TicketListsChannel]", 2
+    assert_select "turbo-cable-stream-source[channel=TicketListsChannel]", 1
 
     get tickets_url(view: "all")
     assert_equal [ "#1002" ], css_select("td.ticket-number").map { |cell| cell.text.strip }
+    get tickets_url(view: "all", q: "Printer")
+    assert_empty css_select("td.ticket-number"), "search finds no colleague's ticket"
   end
 end

@@ -138,12 +138,10 @@ en:
         open: "Open"
         done: "Done"
         all: "All"
-        organization: "My organizations"
       empty:
         open: "You have no open tickets. Need help?"
         done: "No done tickets yet."
         all: "You have not opened any tickets yet. Need help?"
-        organization: "Your organizations have no tickets yet."
       open_new: "Open a new ticket."
       no_organization: "Your account is not part of an organization yet, so you cannot open tickets. Please contact your service desk administrator."
 
@@ -222,7 +220,6 @@ en:
       keep_status: "Keep %{status}"
       send_reply: "Send reply"
       add_note: "Add internal note"
-      colleague: "Only %{name} and the service desk can reply to this ticket of your organization."
       done: "This ticket is done. If you reply, it opens again."
 
     admin:

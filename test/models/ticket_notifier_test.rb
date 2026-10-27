@@ -153,19 +153,20 @@ class TicketNotifierTest < ActiveSupport::TestCase
     assert_includes mail.text_part.body.decoded, "Maria <Ops> & Co replied"
   end
 
-  test "a new ticket reaches the organization's members in the app, without email" do
-    users(:boris).update!(notify_new_tickets: false)
+  test "a new ticket reaches the staff members in the app, without email, and never other requesters" do
+    users(:agent_two).update!(notify_new_tickets: false)
     sent = mails { open_ticket(actor: users(:anna)) }
     ticket = Ticket.order(:id).last
-    assert_not sent.key?(users(:boris).email)
-    note = Notification.find_by!(user: users(:boris), ticket: ticket)
+    assert_not sent.key?(users(:agent_two).email)
+    note = Notification.find_by!(user: users(:agent_two), ticket: ticket)
     assert_equal [ "created", users(:anna) ], [ note.kind, note.actor ]
     assert_not Notification.exists?(user: users(:anna), ticket: ticket)
+    # Requesters see only their own tickets (specs/roles.md).
+    assert_not Notification.exists?(user: users(:boris), ticket: ticket)
     assert_not Notification.exists?(user: users(:carl), ticket: ticket)
-    assert_equal 1, Notification.where(ticket: ticket, user: users(:boris)).count
 
     perform_enqueued_jobs { ticket.add_comment(author: users(:agent), body: "On it") }
-    assert_not Notification.where(ticket: ticket, user: users(:boris)).where.not(kind: "created").exists?
+    assert_not Notification.exists?(user: users(:boris), ticket: ticket)
   end
 
   test "postponing reaches the requester in the app only" do

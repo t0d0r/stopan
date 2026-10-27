@@ -79,10 +79,11 @@ class ServiceDeskFlowTest < ActionDispatch::IntegrationTest
     assert_equal organizations(:globex), ticket.organization
     get tickets_url
     assert_select "a.ticket-link", text: "Forklift battery"
-    # Members read their organization's tickets, never another's.
-    get ticket_url(tickets(:vpn))
-    assert_response :success
-    get ticket_url(tickets(:printer))
-    assert_response :not_found
+    # Only their own tickets: not a colleague's in Globex, not another organization's.
+    [ tickets(:vpn), tickets(:printer) ].each do |ticket|
+      sign_in eve
+      get ticket_url(ticket)
+      assert_response :not_found
+    end
   end
 end

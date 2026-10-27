@@ -56,8 +56,8 @@ class TicketLiveUpdatesTest < ActionDispatch::IntegrationTest
     assert_empty list_refreshes(users(:anna), :tickets) { ticket.apply_changes!({ priority: "low" }, actor: users(:agent)) }
     assert_equal [ "refresh" ], list_refreshes(users(:anna), :tickets) { ticket.add_comment(author: users(:agent), body: "Hi") }
     assert_empty list_refreshes(users(:boris), :tickets) { ticket.add_comment(author: users(:agent), body: "Again") }
-    assert_equal [ "refresh" ], list_refreshes(organizations(:acme), :tickets) { ticket.add_comment(author: users(:agent), body: "Org") }
-    assert_empty list_refreshes(organizations(:acme), :tickets) { ticket.apply_changes!({ priority: "high" }, actor: users(:agent)) }
+    # No organization-wide list any more: requesters see only their own tickets (specs/roles.md).
+    assert_empty list_refreshes(organizations(:acme), :tickets) { ticket.add_comment(author: users(:agent), body: "Org") }
 
     created = list_refreshes(:queue, :staff) do
       Ticket.create!(subject: "New one", description: "Text", requester: users(:anna), organization: organizations(:acme),

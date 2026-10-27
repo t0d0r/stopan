@@ -7,7 +7,7 @@ default) are requesters.
 
 | role | who | in short |
 |------|-----|----------|
-| `requester` | a customer contact | opens tickets for an organization they belong to; sees the tickets of their organizations (only public timeline entries), works only on their own |
+| `requester` | a customer contact | opens tickets for an organization they belong to; sees and works only on their own tickets (only public timeline entries) |
 | `agent` | support staff | sees and works every ticket of the organizations they belong to |
 | `admin` | service desk administrator | every ticket of every organization, plus users, organizations and memberships |
 
@@ -32,17 +32,17 @@ the role, and cannot be chosen as assignee.
   left out of administrators' messages. Once an administrator adds a
   membership, the next page works normally. Administrators are never
   limited by membership (agents are since the same day, below).
-- A requester sees a ticket while they are a member of its organization
-  (operator, 2026-10-27: members of an organization get its new tickets
-  in their notifications and can read them). Before that change only the
-  ticket's own requester could see it. They see the public part only:
-  the description, public replies, public events and files, never
-  internal notes or internal events. Removing a membership removes access
-  to that organization's tickets at once.
-- On a colleague's ticket a requester reads only: replying, marking as
-  done, editing, Markdown switches and sharing stay with the ticket's
-  own requester (`TicketPolicy#own?`) and staff. The page says so where
-  the composer would be.
+- **A requester sees only their own tickets** (operator, 2026-10-27:
+  "a requester must see only their own tickets"): tickets whose requester
+  they are, in an organization they are still a member of. Other
+  members' tickets of the same organization are a 404 like any other
+  ticket, everywhere (list, search, ticket page, files, notifications,
+  live streams, magic links, email replies), all through
+  `Ticket.visible_to`. Earlier the same day members could read their
+  organization's tickets; that was reversed. They see the public part
+  only: the description, public replies, public events and files, never
+  internal notes or internal events. Removing a membership removes
+  access to that organization's tickets at once.
 - **Agents work their own organizations only** (operator, 2026-10-27:
   "agents should see only their own organizations"). An agent sees and
   works every ticket (internal notes included) of the organizations they
@@ -67,7 +67,7 @@ the role, and cannot be chosen as assignee.
 |--------|-----------|-------|-------|
 | sign in, edit own account | yes | yes | yes |
 | list tickets | own tickets in own organizations ("My tickets") | queue of their organizations' tickets | queue of all tickets |
-| view a ticket (public part for requesters) | any ticket of an organization they belong to | any ticket of their organizations | any |
+| view a ticket (public part for requesters) | own ticket, in an organization they belong to | any ticket of their organizations | any |
 | see who is assigned (name only, ui.md "Ticket page") | tickets they can see, and on shared pages | yes | yes |
 | see internal notes and internal events | no | yes | yes |
 | create a ticket | for self, in own organization | for a member of one of their own organizations, in it | for any requester, in one of the requester's organizations |

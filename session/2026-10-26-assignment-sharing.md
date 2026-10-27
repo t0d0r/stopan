@@ -677,6 +677,15 @@ menu and Take; open /tickets/new and pick a requester.
   before reading innerText. Incoming text loses trailing spaces and
   extra blank lines (new mail only). Checked on dev ticket #1010
   (a newsletter): 7 short links, footer muted, copy has full URLs.
+- Requesters see only their own tickets (operator: "a requester must see
+  only their own tickets"), reversing the same morning's "members read
+  their organization's tickets": `Ticket.visible_to` adds
+  `requester_id = user` for requesters (still only in organizations they
+  belong to). Removed: the "My organizations" tab, the
+  `[organization, :tickets]` list stream and broadcast, the colleague
+  callout under a read-only ticket. New-ticket notifications to members
+  now reach staff members only (the notifier filters by visible_to).
+  A colleague's ticket is now a 404 instead of a read-only page/403.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

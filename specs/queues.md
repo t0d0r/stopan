@@ -116,13 +116,12 @@ Assigning from the queue (tickets.md "Assigning"):
 ## My tickets (requester)
 
 Tabs: `open` (new, open, pending, postponed; default, yellow), `done`
-("Done"; green), `all` (gray), all three of the requester's own tickets,
-and `organization` ("My organizations", purple: every ticket of the
-organizations they belong to, with a Requester column after the
-subject; roles.md), each with a coloured count; the current tab
+("Done"; green), `all` (gray), all three of the requester's own tickets
+(the only tickets a requester sees, roles.md; the "My organizations"
+tab of the same morning was removed on 2026-10-27), each with a coloured
+count; the current tab
 and the list panel take the tab's colour. Search (`q`, same matching as
-above) is the menu bar search. A "New ticket" button. Table columns: number, subject, requester (only on
-"My organizations"), organization (only if they belong to more than one),
+above) is the menu bar search. A "New ticket" button. Table columns: number, subject, organization (only if they belong to more than one),
 status, last activity; one line per row as in the queue.
 
 Empty states say what to do next ("You have no open tickets. Need help?
@@ -140,13 +139,9 @@ position:
   sharing).
 - **My tickets:** stream `[requester, :tickets]` of each requester, told
   after non-internal events of their own tickets (a new ticket, public
-  replies, status changes), and `[organization, :tickets]` of each of
-  their organizations, told after non-internal events of any ticket of it
-  (for the "My organizations" tab); internal changes send nothing to
-  requesters.
+  replies, status changes); internal changes send nothing to requesters.
 - `TicketListsChannel` accepts the staff stream only for staff, a
-  requester stream only for its signed-in owner, and an organization
-  stream only for its current members.
+  requester stream only for its signed-in owner.
 - Signal only: `<turbo-stream action="refresh">` (debounced per stream by
   turbo-rails); the list is fetched again over HTTP through
   `Ticket.visible_to`.

@@ -142,6 +142,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [ ] production: turn on "Fetch new mail automatically" in /admin/settings after the next deploy
 - [x] mail-shaped display for messages with source email (rules, quotes, softer footer and signature) and short links for addresses in all plain text (operator, 2026-10-27; specs/organization-mail.md "Display of mail", specs/markdown.md "Plain text links")
 - [ ] mail later: keep the original HTML part and offer "Show original" (sanitized, remote images blocked) for newsletters with complex layout
+- [x] requesters see only their own tickets; "My organizations" tab, organization list stream and colleague notice removed (operator, 2026-10-27; specs/roles.md)
 - [x] mobile rules from Apple / Material / WCAG: 44px targets, 16px fields, no sideways scrolling, no hover-only content (specs/mobile.md)
 - [x] production: deployed 8730df2 (omarchy theme, phone menu bar), after a database backup
 - [ ] admin dashboard warning for organizations whose Google account needs reconnecting (specs/mail-oauth.md "Failure")

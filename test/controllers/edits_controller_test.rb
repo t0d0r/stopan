@@ -39,7 +39,7 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
 
     sign_in users(:boris)
     patch ticket_description_url(@ticket), params: { ticket: { subject: "Hacked", description: "Hacked" } }
-    assert_response :forbidden
+    assert_response :not_found
     sign_in users(:carl)
     patch ticket_description_url(@ticket), params: { ticket: { subject: "Hacked", description: "Hacked" } }
     assert_response :not_found

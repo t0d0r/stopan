@@ -63,7 +63,7 @@ class TaskListTest < ActionDispatch::IntegrationTest
     @ticket.update_columns(description: "- [ ] one", markdown: true)
     sign_in users(:boris)
     patch task_ticket_description_url(@ticket), params: { line: 1, checked: "1" }
-    assert_response :forbidden
+    assert_response :not_found
     sign_in users(:carl)
     patch task_ticket_description_url(@ticket), params: { line: 1, checked: "1" }
     assert_response :not_found

@@ -141,12 +141,10 @@ de:
         open: "Offen"
         done: "Erledigt"
         all: "Alle"
-        organization: "Meine Organisationen"
       empty:
         open: "Sie haben keine offenen Tickets. Brauchen Sie Hilfe?"
         done: "Noch keine erledigten Tickets."
         all: "Sie haben noch keine Tickets eröffnet. Brauchen Sie Hilfe?"
-        organization: "Ihre Organisationen haben noch keine Tickets."
       open_new: "Eröffnen Sie ein neues Ticket."
       no_organization: "Ihr Konto gehört noch keiner Organisation an, daher können Sie keine Tickets eröffnen. Bitte wenden Sie sich an den Administrator Ihres Service Desks."
 
@@ -225,7 +223,6 @@ de:
       keep_status: "%{status} beibehalten"
       send_reply: "Antwort senden"
       add_note: "Interne Notiz hinzufügen"
-      colleague: "Nur %{name} und der Service Desk können auf dieses Ticket Ihrer Organisation antworten."
       done: "Dieses Ticket ist erledigt. Wenn Sie antworten, wird es wieder geöffnet."
 
     admin:
