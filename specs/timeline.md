@@ -81,8 +81,11 @@ comments can be read".
 - On the ticket page and the shared page, when the request's text is
   taller than 1.3 times the collapsed height (the larger of 35% of the
   window height and 200px), JavaScript shows it cut to that height, the
-  last lines fading out, with a button under it: "Show the whole
-  request" / "Collapse the request" (`aria-expanded`, `aria-controls`).
+  last lines fading out, and under it a strip across the whole note in
+  the colour of its title strip, like a fold, with a small centred
+  caption and chevron (operator, 2026-10-27: "a visual element that fits
+  the style"): "Show the whole request" / "Collapse the request". It is a
+  button (`aria-expanded`, `aria-controls`), 44px tall on phones.
   The heading, pills, translation, versions and files stay visible.
 - Without JavaScript, and when printing, the whole text shows. Nothing
   is removed from the page: the copy box copies the whole text.

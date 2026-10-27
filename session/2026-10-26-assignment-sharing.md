@@ -692,6 +692,9 @@ menu and Take; open /tickets/new and pick a requester.
   button (aria-expanded); opened state kept per path in memory, re-run
   after the in-place edit frame loads; print shows all. Checked on dev
   #1010: 315px collapsed, copy still copies the whole text.
+  The toggle is a full-width strip in the note's title strip colour
+  (var(--bar)), small centred caption and chevron, like a fold; checked
+  in Notes (light) and Omarchy (dark).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

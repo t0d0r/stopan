@@ -2676,19 +2676,32 @@ turbo-frame {
   mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
 }
 
+/* A strip across the note in the colour of its title strip, like a fold. */
 .long-request__toggle {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  min-height: 32px;
-  margin-top: 8px;
-  padding: 4px 12px;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  background: var(--field-bg);
-  color: var(--accent);
+  justify-content: center;
+  width: calc(100% + 32px);
+  min-height: 22px;
+  margin: 8px -16px 0;
+  padding: 0 8px;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--bar);
+  color: var(--ink-soft);
   font: inherit;
-  font-size: 13px;
+  font-size: 11px;
   cursor: pointer;
+}
+
+.long-request__toggle:hover {
+  color: var(--ink);
+}
+
+.long-request__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .long-request__toggle::after {
@@ -4190,6 +4203,10 @@ turbo-frame {
   border-radius: 6px 6px 0 0;
 }
 
+[data-look="omarchy"] .long-request__toggle {
+  border-color: var(--om-border);
+}
+
 [data-look="omarchy"] .menubar {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
@@ -4198,7 +4215,7 @@ turbo-frame {
 /* Labels in the monospace face, as on omamobile.org. */
 [data-look="omarchy"] :is(h1, h2, h3, .desk__title, .section-title, .sticky__caption, .nav-link, .view-link,
   .btn, .pill, .role-pill, .role-tag, .tab, .ticket-number, .board-column__title, .board-card__strip,
-  .report-tile__value, .menubar__brand, .language-switch, .scale-button) {
+  .report-tile__value, .menubar__brand, .language-switch, .scale-button, .long-request__toggle) {
   font-family: var(--font-mono);
 }
 
