@@ -202,7 +202,13 @@ function setUpCopyBoxes() {
     button.addEventListener("click", async () => {
       const text = message.querySelector("[data-message-text]");
       if (!text) return;
-      await copyText(text.innerText.trim());
+      // Addresses shown with a short label are copied in full (specs/markdown.md "Plain text links").
+      const links = [...text.querySelectorAll("a[data-address]")];
+      const labels = links.map((link) => link.textContent);
+      links.forEach((link) => { link.textContent = link.getAttribute("href"); });
+      const copied = text.innerText.trim();
+      links.forEach((link, index) => { link.textContent = labels[index]; });
+      await copyText(copied);
       button.classList.add("is-copied");
       button.title = button.dataset.copied;
       button.setAttribute("aria-label", button.dataset.copied);

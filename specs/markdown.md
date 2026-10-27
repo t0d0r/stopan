@@ -38,6 +38,29 @@ or a note can be written in Markdown and is then shown formatted.
 - Copy box: copies the text as shown (formatted, without Markdown syntax).
 - Task list items (`- [ ]`, `- [x]`) are check boxes; see "Task lists".
 
+## Plain text links
+
+Operator, 2026-10-27, with a screenshot of a mail from a newsletter: "the
+formatting of the read mail is bad". Mail in plain text often carries
+long tracking addresses (hundreds of characters of query string) that
+fill the page.
+
+- In a message that is not Markdown (and in organization notes and
+  notifications, which use the same plain text rendering), every
+  `http://` or `https://` address becomes a link with a short label: the
+  host without `www.` and the path, without query string and fragment,
+  cut to 48 characters with a trailing ellipsis; for example
+  `linkedin.com/comm/in/some-person-123`. The link goes to the full
+  address as written, with `rel="noopener noreferrer nofollow"` and
+  `target="_blank"` like Markdown links. Trailing punctuation (`.`, `,`,
+  `;`, `:`, `!`, `?`, a closing bracket without its opening one) is not
+  part of the address.
+- Only the label is shortened; the stored text is unchanged, and editing
+  shows the full address.
+- Copy box: copies the full addresses, not the short labels.
+- Emails keep the text as written (their plain text part), with the same
+  links in the HTML part.
+
 ## Task lists
 
 Plan item 6 (g0no markdown.md "Task lists"): users who may edit a message

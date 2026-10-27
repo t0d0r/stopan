@@ -26,16 +26,99 @@ module TicketsHelper
     tag.span(priority_name(priority), class: "pill pill--priority pill--#{priority} sticky--#{PRIORITY_COLORS.fetch(priority, 'gray')}")
   end
 
-  # Plain text with line breaks; HTML in the text is escaped.
+  ADDRESS = %r{\bhttps?://[^\s<>"]+}i
+  ADDRESS_LABEL_LENGTH = 48
+
+  # Plain text with line breaks; HTML in the text is escaped, and web
+  # addresses become links with a short label (specs/markdown.md "Plain
+  # text links").
   def ticket_text(text)
-    simple_format(h(text), class: "ticket-text__p")
+    simple_format(link_addresses(text.to_s), { class: "ticket-text__p" }, sanitize: false)
+  end
+
+  MAIL_RULE = /\A\s*([-_=*])\1{2,}\s*\z/
+  MAIL_SIGNATURE = /\A--\s?\z/
+
+  # A message that came in by mail, laid out as mail: rules, quote blocks,
+  # and a softer signature and newsletter footer (specs/organization-mail.md
+  # "Display of mail"). Nothing is left out.
+  def mail_text(text)
+    lines = text.to_s.split("\n")
+    signature_at = lines.index { |line| line.match?(MAIL_SIGNATURE) }
+    signature = signature_at ? lines[(signature_at + 1)..] : []
+    lines = lines.first(signature_at) if signature_at
+    footer_at = lines.rindex { |line| line.match?(MAIL_RULE) }
+    footer = footer_at && footer_at >= lines.size / 2 ? lines[(footer_at + 1)..] : []
+    lines = lines.first(footer_at) if footer.any?
+
+    parts = [ mail_blocks(lines) ]
+    parts << tag.div(mail_blocks(footer), class: "mail-footer") if footer.join.strip.present?
+    parts << tag.div(ticket_text(signature.join("\n")), class: "mail-signature") if signature.join.strip.present?
+    safe_join(parts)
+  end
+
+  # Runs of text, rule and quote lines, each as its own block.
+  def mail_blocks(lines)
+    kind = ->(line) { line.match?(MAIL_RULE) ? :rule : (line.start_with?(">") ? :quote : :text) }
+    blocks = lines.slice_when { |a, b| kind.(a) != kind.(b) }.filter_map do |run|
+      case kind.(run.first)
+      when :rule then tag.hr(class: "mail-rule")
+      when :quote then tag.blockquote(ticket_text(run.map { |line| line.sub(/\A>\s?/, "") }.join("\n")), class: "mail-quote")
+      else ticket_text(run.join("\n")) if run.join.strip.present?
+      end
+    end
+    safe_join(blocks)
+  end
+
+  # The escaped text with each http(s) address as a link.
+  def link_addresses(text)
+    parts = []
+    last = 0
+    text.scan(ADDRESS) do
+      match = Regexp.last_match
+      address, rest = split_trailing_punctuation(match[0])
+      parts << text[last...match.begin(0)] << address_link(address) << rest
+      last = match.end(0)
+    end
+    parts << text[last..]
+    safe_join(parts)
+  end
+
+  # Host without www. and path, without query string and fragment.
+  def address_label(address)
+    label = address.sub(%r{\Ahttps?://}i, "").sub(/\Awww\./i, "").split(/[?#]/, 2).first.to_s.chomp("/")
+    truncate(label.presence || address, length: ADDRESS_LABEL_LENGTH, omission: "…")
+  end
+
+  def address_link(address)
+    link_to address_label(address), address, rel: "noopener noreferrer nofollow", target: "_blank", data: { address: true }
+  end
+
+  # Sentence punctuation after an address, and a closing bracket without
+  # its opening one, belong to the text around it.
+  def split_trailing_punctuation(address)
+    rest = +""
+    loop do
+      last = address[-1]
+      closing = { ")" => "(", "]" => "[" }[last]
+      break unless last.match?(/[.,;:!?'*]/) || (closing && address.count(closing) < address.count(last))
+
+      rest.prepend(last)
+      address = address[0...-1]
+    end
+    [ address, rest ]
   end
 
   # The current text of a request or comment, formatted when it is
   # Markdown (specs/markdown.md); used by pages and emails.
   def formatted_text(record, tasks: false)
     text = record.is_a?(Ticket) ? record.description : record.body
-    record.markdown? ? render_markdown(text, tasks: tasks) : ticket_text(text)
+    record.markdown? ? render_markdown(text, tasks: tasks) : plain_text(record, text)
+  end
+
+  # Plain text, laid out as mail when the message came in by mail.
+  def plain_text(record, text)
+    record.source == "email" ? mail_text(text) : ticket_text(text)
   end
 
   # The message text as shown on a page; the copy box reads it. task_path:

@@ -115,7 +115,7 @@ class MailboxMessage
     part = mail.multipart? ? (mail.text_part || mail.html_part) : mail
     text = utf8(part&.decoded.to_s)
     text = html_to_text(text) if part&.mime_type == "text/html"
-    text = text.gsub(/\r\n?/, "\n")
+    text = text.gsub(/\r\n?/, "\n").gsub(/[ \t]+$/, "").gsub(/\n{3,}/, "\n\n")
     text = without_quotes(text) if reply
     text = text.strip
     text = I18n.t("mailer.mailbox.no_text") if text.empty?

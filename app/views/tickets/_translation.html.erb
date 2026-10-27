@@ -10,7 +10,7 @@
     <% else %>
       <p class="translation__note"><%= t("ui.translation.from", language: language_name(translation.source_language)) %></p>
       <div class="ticket-text<%= " markdown-body" if message.markdown? %>" lang="<%= translation.target_language %>">
-        <%= message.markdown? ? render_markdown(translation.text) : ticket_text(translation.text) %>
+        <%= message.markdown? ? render_markdown(translation.text) : plain_text(message, translation.text) %>
       </div>
     <% end %>
     <button type="button" class="translation__hide" data-translation-hide hidden><%= t("ui.translation.hide") %></button>

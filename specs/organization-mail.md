@@ -120,8 +120,10 @@ in-process job queue as today.
    (tags stripped, line breaks kept). For replies, quoted text is cut off
    at the first line that starts with `>`, or at a line like "On ...
    wrote:" / "На ... написа:" followed by quotes, or at
-   `-----Original Message-----`. Cut to 20,000 characters. An empty text
-   becomes "(no text)".
+   `-----Original Message-----`. Spaces at line ends are removed and more
+   than one empty line in a row becomes one (operator, 2026-10-27). Cut
+   to 20,000 characters. An empty text becomes "(no text)". Addresses
+   are shown as short links (markdown.md "Plain text links").
 5. **Files:** attachments with an allowed type and size (attachments.md)
    are attached, at most 5; others are skipped and a line "Some
    attachments were not accepted: <names>" is added to the text. Inline
@@ -134,6 +136,29 @@ in-process job queue as today.
 Tickets keep where they came from: `tickets.source` (`app`, `web_form`,
 `email`) and `comments.source` (`app`, `email`); the timeline shows "by
 email" / "through the web form" next to the entry.
+
+### Display of mail
+
+Operator, 2026-10-27: "the formatting of the read mail is bad ... you
+must know the ticket source; if it came from a mailbox, the formatting
+must suit it". A request or reply with source `email` that is not
+Markdown is laid out as mail (pages, shared pages, translations and
+notification emails), on top of the plain text rules (line breaks,
+short links, markdown.md "Plain text links"):
+
+- **Rules:** a line of three or more `-`, `_`, `=` or `*` (and nothing
+  else) becomes a thin horizontal line.
+- **Quotes:** consecutive lines starting with `>` become one quote block
+  (left rule, softer ink), one `>` level removed.
+- **Signature:** from a line that is exactly `-- ` or `--` (the usenet
+  signature separator) to the end: smaller, softer text, set apart by a
+  rule.
+- **Footer:** the text after the last rule line, when that rule is in
+  the second half of the message (newsletters put their "This email was
+  intended for ... / Unsubscribe" there): smaller, softer text.
+- Nothing is hidden or removed; the copy box copies all of it, with full
+  addresses. Messages from the app and the web form keep the plain text
+  layout.
 
 ## Not in this phase
 

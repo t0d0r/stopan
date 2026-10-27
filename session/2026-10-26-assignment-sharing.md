@@ -668,6 +668,15 @@ menu and Take; open /tickets/new and pick a requester.
   Turned on in the dev container (migrated, restarted, setting on): its
   Gmail mailbox was checked within a minute, 1 message, no error.
   Production: switch it on in /admin/settings after the next deploy.
+- Mail display (operator: read mail looked bad; "know the ticket source"):
+  `TicketsHelper#plain_text` picks `mail_text` for source `email`
+  (rules -> hr, `>` runs -> blockquote, footer after a rule in the second
+  half and the `-- ` signature in softer small text) and `ticket_text`
+  otherwise; both turn http(s) addresses into links labelled host+path
+  (48 chars, data-address), and the copy box swaps the full href in
+  before reading innerText. Incoming text loses trailing spaces and
+  extra blank lines (new mail only). Checked on dev ticket #1010
+  (a newsletter): 7 short links, footer muted, copy has full URLs.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

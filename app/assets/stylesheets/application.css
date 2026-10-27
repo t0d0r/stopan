@@ -2642,6 +2642,32 @@ turbo-frame {
   margin-bottom: 0;
 }
 
+/* Messages that came in by mail (specs/organization-mail.md "Display of mail"). */
+.mail-rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 12px 0;
+}
+
+.mail-quote {
+  margin: 0 0 8px;
+  padding-left: 10px;
+  border-left: 3px solid var(--rule);
+  color: var(--ink-soft);
+}
+
+.mail-footer,
+.mail-signature {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.mail-signature {
+  padding-top: 8px;
+  border-top: 1px dashed var(--rule);
+}
+
 .message--internal {
   outline: 2px dashed rgba(179, 38, 30, 0.35);
   outline-offset: -2px;
