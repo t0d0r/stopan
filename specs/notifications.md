@@ -197,7 +197,8 @@ notifications, live.
   the form with that user chosen), everyone with a role (requesters,
   agents, administrators), the members of an organization (a "Send a
   message" button on the organization page), or all users. Only active
-  users receive it; the sender never receives their own message. The
+  users receive it, never requesters without an organization (roles.md);
+  the sender never receives their own message. The
   text is plain, 1-2,000 characters, shown with line breaks.
 - The form says how many people will receive it, and a confirm dialog
   repeats the number when it is more than one. After sending: "Message

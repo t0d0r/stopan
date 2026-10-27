@@ -20,9 +20,18 @@ the role, and cannot be chosen as assignee.
 
 - A user belongs to zero or more organizations through `memberships`
   (unique per user and organization).
-- A requester can only open tickets for an organization they belong to. A
-  requester without a membership sees a message asking them to contact an
-  administrator, and the create action refuses.
+- A requester can only open tickets for an organization they belong to.
+- **A requester without a membership sees nothing** (operator,
+  2026-10-27): after signing in they get only `GET /no-organization`, a
+  small sticky saying the account is not part of an organization yet and
+  to contact the service desk administrator, with a sign-out button.
+  Every other page redirects there (JSON requests get 403), and the menu
+  bar shows no sections, search or notification bell. Still allowed: the
+  account pages (Devise), signing out, theme and text size, and an
+  administrator's "Back to my account" while impersonating them. They are
+  left out of administrators' messages. Once an administrator adds a
+  membership, the next page works normally. Staff are not affected:
+  membership never limits what staff see.
 - A requester sees a ticket while they are a member of its organization
   (operator, 2026-10-27: members of an organization get its new tickets
   in their notifications and can read them). Before that change only the
