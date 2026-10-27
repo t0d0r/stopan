@@ -141,6 +141,34 @@ notification arrives or the user reads notifications in another tab.
   page load, as before. Production needs `upgrade=websocket` on the Apache
   `ProxyPass` line for `/cable` (deploy.md); until then it works this way.
 
+### Live updates of the notifications page
+
+Requested by the operator on 2026-10-27. An open `/notifications` page
+(any page of it) reloads itself within about a second on the same signal
+as the panel: a new notification, or notifications read in another tab
+(opening one, opening its ticket, "Mark all as read").
+
+- **No new stream or channel.** The page already subscribes to the user's
+  own `[user, :notifications]` stream through `NotificationsChannel`. When
+  the coalesced `notifications_refresh` signal arrives on this page
+  (marked `data-notifications-page`), the client runs a Turbo 8 page
+  refresh (a `<turbo-stream action="refresh">` rendered locally) instead
+  of fetching the panel; the reloaded page brings a fresh bell too. The
+  page is fetched over HTTP, so sign-in and `Notification.visible_to` are
+  checked as on any request.
+- **Scroll position is kept** (`turbo_refreshes_with scroll: :preserve`).
+- **Work in progress waits:** like the other live pages, the refresh
+  waits while the page is busy (the bell panel or another menu open, a
+  focused or changed field) and runs once it is idle.
+- **The tab's own change does not reload it twice.** The signal carries
+  the Turbo request id of the request that caused it (`request-id`
+  attribute, `Turbo.current_request_id`, empty for changes outside a
+  Turbo request). The local refresh passes it on, so Turbo ignores a
+  signal caused by this tab's own request: after "Mark all as read" the
+  page shows the result and its notice once, instead of reloading again
+  and losing the notice. When several signals are coalesced and their ids
+  differ, the refresh carries no id and always runs.
+
 Data: `notifications` - `user_id` (FK, deleted with the user), `ticket_id`
 (FK), `actor_id` (FK users, nullable), `kind` (the email kinds),
 `event_id` (the event to jump to, nullable), `status` (new status for
@@ -229,7 +257,9 @@ nothing, the recipient's language, escaping of user text in HTML and plain
 text in the text part, and the threading header.
 `test/controllers/notifications_controller_test.rb` covers the
 subscription form (staff only, only that field) and the remembered
-language.
+language. `test/integration/notification_live_updates_test.rb` covers the
+live panel and the notifications page (its marker and scroll setting, the
+request id carried by the signal).
 
 ## Security Note
 

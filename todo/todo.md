@@ -70,6 +70,7 @@
 - [x] ticket page refreshes live, staff and public streams, waits while the user is busy (specs/timeline.md "Live updates of the ticket page")
 - [x] queue and My tickets refresh live (specs/queues.md "Live updates")
 - [x] admin pages refresh live (specs/admin.md "Live updates")
+- [~] notifications page refreshes live (specs/notifications.md "Live updates of the notifications page")
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 
 ## Later (specs/roadmap.md)
