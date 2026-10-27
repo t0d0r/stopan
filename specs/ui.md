@@ -316,16 +316,15 @@ profile or the header". The language of a page is the first of:
 
 ## Screenshots
 
-The README shows five screenshots in `docs/screenshots/` (excluded from the
-Docker image): the agent queue, the kanban board (`specs/board.md`), the
-agent's ticket page, the same ticket for its requester on a 390px phone,
-and the admin users list in the dark theme. They use only the fictional
-`make demo` data, all in English (operator, 2026-10-27: "English
-environment, no Cyrillic in the screenshots"): Chrome runs with
-`--lang=en`, `--accept-lang=en` and an English locale environment. Refresh them when one of these pages changes
-visibly.
+The README shows one screenshot, the agent queue, in `docs/screenshots/`
+(excluded from the Docker image). The operator found five too many
+(2026-10-28), so the board, ticket, phone and dark admin shots were
+removed. It uses only the fictional `make demo` data, in English
+(operator, 2026-10-27: "English environment, no Cyrillic in the
+screenshots"): Chrome runs with `--lang=en`, `--accept-lang=en` and an
+English locale environment. Refresh it when the queue changes visibly.
 
-`make screenshots` refreshes them: start the development server with the
+`make screenshots` refreshes it: start the development server with the
 demo data, then run it with `DEMO_PASSWORD` (the password given to `make
 demo`) and optionally `STOPAN_URL` (default `http://127.0.0.1:3000`). It
 drives headless Chrome over the DevTools protocol (`bin/screenshots`,

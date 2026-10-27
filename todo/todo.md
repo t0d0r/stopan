@@ -159,6 +159,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] README screenshots refreshed, all in English (Chrome with an English environment); the phone shot is now ticket-requester-phone.png (operator, 2026-10-27; specs/ui.md "Screenshots")
 - [x] README: Mermaid diagram of how tickets come in (ingress workflow) (operator, 2026-10-27; specs/overview.md "Ingress diagram")
 - [x] README ingress diagram made simple: six boxes left to right, details in a list (operator, 2026-10-27)
+- [x] README shows only the queue screenshot; the other four removed from the README, bin/screenshots and docs/screenshots (operator, 2026-10-28; specs/ui.md "Screenshots")
 - [x] production: deployed 50475d3 (documentation only) after a database backup (specs/deploy.md)
 - [x] admin: flush all tickets of an organization after typing its name, keeping its settings; numbers never reused (operator, 2026-10-27; specs/admin.md "Flush all tickets of an organization")
 - [x] requester email on the ticket page and the profile copies on click instead of opening the mail program (operator, 2026-10-27; specs/ui.md "Emails copy on click")
@@ -193,7 +194,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] use the chosen logo: public/icon.svg, icon.png, apple-touch-icon.png, favicon.ico (the menu bar already shows icon.svg)
 - [x] candidate 1 in black instead of teal (operator)
 - [ ] decide: own icon for the Omarchy theme (candidate 6) and a logo header in emails (specs/ui.md "Logo")
-- [ ] refresh the README screenshots after the logo changes (specs/ui.md "Screenshots")
+- [ ] refresh the README screenshot (the queue) after the logo changes (specs/ui.md "Screenshots")
 
 ## Later (specs/roadmap.md)
 

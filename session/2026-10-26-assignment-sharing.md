@@ -816,6 +816,10 @@ menu and Take; open /tickets/new and pick a requester.
 - Pushed main to origin again on the operator's request (up to 50a6a6f: the
   simple diagram and the logo work from session/2026-10-27-logo.md) after a
   gitleaks scan of the 3 unpushed commits (no leaks).
+- README now shows only the first screenshot (the queue); board, ticket,
+  phone and dark admin shots removed from README, `bin/screenshots` and
+  `docs/screenshots/` (operator: too many screenshots); specs/ui.md
+  "Screenshots" updated. Not pushed.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);
