@@ -106,7 +106,10 @@ Assigning from the queue (tickets.md "Assigning"):
 ## My tickets (requester)
 
 Tabs: `open` (new, open, pending; default, yellow), `solved` (resolved,
-closed; green), `all` (gray), each with a coloured count; the current tab
+closed; green), `all` (gray), all three of the requester's own tickets,
+and `organization` ("My organizations", purple: every ticket of the
+organizations they belong to, with the requester's name under the
+subject; roles.md), each with a coloured count; the current tab
 and the list panel take the tab's colour. Search (`q`, same matching as
 above) is the menu bar search. A "New ticket" button. Table columns: number, subject, organization (only if
 they belong to more than one), status, last activity.
@@ -126,9 +129,13 @@ position:
   sharing).
 - **My tickets:** stream `[requester, :tickets]` of each requester, told
   after non-internal events of their own tickets (a new ticket, public
-  replies, status changes); internal changes send nothing to requesters.
-- `TicketListsChannel` accepts the staff stream only for staff and a
-  requester stream only for its signed-in owner.
+  replies, status changes), and `[organization, :tickets]` of each of
+  their organizations, told after non-internal events of any ticket of it
+  (for the "My organizations" tab); internal changes send nothing to
+  requesters.
+- `TicketListsChannel` accepts the staff stream only for staff, a
+  requester stream only for its signed-in owner, and an organization
+  stream only for its current members.
 - Signal only: `<turbo-stream action="refresh">` (debounced per stream by
   turbo-rails); the list is fetched again over HTTP through
   `Ticket.visible_to`.
@@ -145,7 +152,8 @@ and "Next" links that keep all other parameters, and "Showing 26-50 of 112".
 
 `test/models/ticket_filter_test.rb` (views, filters, search, sort, pagination) and
 `test/controllers/tickets_controller_test.rb` (which list each role gets,
-and that a requester's list never contains another requester's ticket).
+that the own tabs never contain another requester's ticket, and that the
+organization tab contains only tickets of the requester's organizations).
 
 ## Security Note
 

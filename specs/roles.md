@@ -7,7 +7,7 @@ default) are requesters.
 
 | role | who | in short |
 |------|-----|----------|
-| `requester` | a customer contact | opens tickets for an organization they belong to; sees only their own tickets and only public timeline entries |
+| `requester` | a customer contact | opens tickets for an organization they belong to; sees the tickets of their organizations (only public timeline entries), works only on their own |
 | `agent` | support staff | sees and works every ticket of every organization |
 | `admin` | service desk administrator | everything an agent can, plus users, organizations and memberships |
 
@@ -23,9 +23,17 @@ the role, and cannot be chosen as assignee.
 - A requester can only open tickets for an organization they belong to. A
   requester without a membership sees a message asking them to contact an
   administrator, and the create action refuses.
-- A requester sees a ticket only while both are true: they are its
-  requester, and they are still a member of its organization. Removing a
-  membership removes access to that organization's tickets at once.
+- A requester sees a ticket while they are a member of its organization
+  (operator, 2026-10-27: members of an organization get its new tickets
+  in their notifications and can read them). Before that change only the
+  ticket's own requester could see it. They see the public part only:
+  the description, public replies, public events and files, never
+  internal notes or internal events. Removing a membership removes access
+  to that organization's tickets at once.
+- On a colleague's ticket a requester reads only: replying, marking as
+  resolved, editing, Markdown switches and sharing stay with the ticket's
+  own requester (`TicketPolicy#own?`) and staff. The page says so where
+  the composer would be.
 - Staff can be members of organizations (for example to raise tickets
   themselves), but membership does not limit what staff can see.
 
@@ -35,8 +43,8 @@ the role, and cannot be chosen as assignee.
 |--------|-----------|-------|-------|
 | sign in, edit own account | yes | yes | yes |
 | list tickets | own tickets in own organizations ("My tickets") | queue of all tickets | queue of all tickets |
-| view a ticket | own, in own organization | any | any |
-| see who is assigned (name only, ui.md "Ticket page") | own ticket, and on shared pages | yes | yes |
+| view a ticket (public part for requesters) | any ticket of an organization they belong to | any | any |
+| see who is assigned (name only, ui.md "Ticket page") | tickets they can see, and on shared pages | yes | yes |
 | see internal notes and internal events | no | yes | yes |
 | create a ticket | for self, in own organization | for any requester, in one of the requester's organizations | same as agent |
 | set priority / assignee on create | no | yes | yes |

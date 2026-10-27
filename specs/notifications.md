@@ -37,6 +37,15 @@ Each candidate is dropped when they are A, deactivated, cannot see T, or
 can see none of the batch's events. A person who is both requester and
 assignee, or assignee and subscriber, gets one email.
 
+**New tickets to the organization's members** (operator, 2026-10-27):
+for a batch with a `created` event, every active member of T's
+organization (requesters and staff members alike), other than A and
+other than those already notified above, gets an in-app notification of
+kind `created` ("Anna Petrova opened a new ticket"), with the live
+signal. No email for these: the panel only, so members are not flooded
+with mail. Requesters can open the ticket because members see their
+organizations' tickets (roles.md).
+
 ## Which email
 
 The first matching row decides the email, looking only at the events the
