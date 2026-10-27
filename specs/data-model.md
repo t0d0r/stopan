@@ -48,6 +48,7 @@ declared in the database.
 | share_password_digest | string, bcrypt, NULL for an open link |
 | shared_at | datetime |
 | edited_at, edited_by_id | last edit of subject or description (FK users, nullable; timeline.md "Editing") |
+| markdown | boolean, default false: the description is Markdown (markdown.md) |
 | created_at, updated_at | indexed `updated_at` for the default sort |
 
 Files: `has_many_attached :files`.
@@ -56,7 +57,8 @@ Files: `has_many_attached :files`.
 
 `ticket_id` (FK), `author_id` (FK users), `body` (text), `internal`
 (boolean, default false), `created_at`, `updated_at`, `edited_at`,
-`edited_by_id` (FK users, nullable). Index on `[ticket_id, created_at]`.
+`edited_by_id` (FK users, nullable), `markdown` (boolean, default false;
+markdown.md). Index on `[ticket_id, created_at]`.
 Files: `has_many_attached :files`.
 
 ## revisions

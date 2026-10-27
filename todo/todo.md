@@ -80,7 +80,7 @@ Plan: g0no's note display options for tickets (proposed 2026-10-27,
 waiting for the operator's go-ahead; specs are written when started):
 
 - [x] copy box on every message (request, reply, note, shared page) puts its text on the clipboard (g0no ui.md "Copy box")
-- [ ] Markdown per message: a box in the title strip and a composer check box, GFM via commonmarker with sanitize (g0no markdown.md); emails get formatted HTML, the text part stays plain
+- [~] Markdown per message: a box in the title strip and a composer check box, GFM via commonmarker with sanitize (g0no markdown.md); emails get formatted HTML, the text part stays plain
 - [ ] double-click on text you may edit opens the in-place edit form with the caret near the click; Escape cancels (g0no "Locked notes")
 - [ ] earlier versions with word-by-word changes (green / red) and "Restore this version" for staff (g0no history.md, TextDiff)
 - [ ] wide ticket view, a per-user preference like theme and text size (g0no "Wide notes")
