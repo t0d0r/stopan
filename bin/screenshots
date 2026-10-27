@@ -25,6 +25,7 @@ if (!password) {
 // file, demo user, viewport width and height, pixel ratio, language, dark theme, path
 const shots = [
   [ "queue.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/" ],
+  [ "board.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/tickets/board" ],
   [ "ticket-agent.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/tickets/1001" ],
   [ "ticket-requester-bg-phone.png", "anna@example.com", 390, 844, 2, "bg", false, "/tickets/1001" ],
   [ "admin-users-dark.png", "admin@example.com", 1280, 820, 1, "en", true, "/admin/users" ]

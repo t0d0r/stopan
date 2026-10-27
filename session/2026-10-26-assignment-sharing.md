@@ -422,6 +422,9 @@ Operator requests, in order:
   filter shows only that status's columns; sort orders cards after the
   golden ones (`TicketFilter#order` is now public); the "more in the
   list" link carries the filters.
+- README screenshots refreshed with `make screenshots` against a scratch
+  database with the `make demo` data (removed afterwards); a fifth one,
+  `board.png`, shows the board; specs/ui.md "Screenshots" lists five.
 
 ## Decisions
 
@@ -475,6 +478,9 @@ menu and Take; open /tickets/new and pick a requester.
   organization name, so an outsider learns as little as possible.
 
 ## Next
+
+- Refresh the README screenshots (`make screenshots`, specs/ui.md) when
+  the queue, board, ticket or admin users page changes visibly.
 
 - Production runs 3e50793 (deployed 2026-10-27 at the operator's request,
   backup `pre-deploy-fa69269.sqlite3` first; checks in specs/deploy.md).

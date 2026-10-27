@@ -13,6 +13,8 @@ instant.
 
 ![Agent queue with views, filters and three tickets](docs/screenshots/queue.png)
 
+![Kanban board with a column per status and the Not now and Done columns collapsed](docs/screenshots/board.png)
+
 | Ticket page for an agent | Requester on a phone, in Bulgarian |
 |---|---|
 | ![Ticket timeline with a public reply, an internal note and audit entries](docs/screenshots/ticket-agent.png) | ![The same ticket seen by its requester, without the internal note](docs/screenshots/ticket-requester-bg-phone.png) |

@@ -155,10 +155,12 @@ files have the same keys.
 
 ## Screenshots
 
-The README shows four screenshots in `docs/screenshots/` (excluded from the
-Docker image): the agent queue, the agent's ticket page, the same ticket
-for its requester on a 390px phone in Bulgarian, and the admin users list
-in the dark theme. They use only the fictional `make demo` data.
+The README shows five screenshots in `docs/screenshots/` (excluded from the
+Docker image): the agent queue, the kanban board (`specs/board.md`), the
+agent's ticket page, the same ticket for its requester on a 390px phone in
+Bulgarian, and the admin users list in the dark theme. They use only the
+fictional `make demo` data. Refresh them when one of these pages changes
+visibly.
 
 `make screenshots` refreshes them: start the development server with the
 demo data, then run it with `DEMO_PASSWORD` (the password given to `make
