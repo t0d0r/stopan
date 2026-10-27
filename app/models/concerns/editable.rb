@@ -32,4 +32,16 @@ module Editable
     refresh_after_edit
     true
   end
+
+  # Markdown on or off (specs/markdown.md): how the text is shown, not an
+  # edit, so no revision and no edited marker.
+  def switch_markdown(on)
+    return if markdown? == on
+
+    @editing = true
+    update_columns(markdown: on)
+    refresh_after_edit
+  ensure
+    @editing = false
+  end
 end

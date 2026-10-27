@@ -6,7 +6,7 @@
 
 <% if @comment %>
   <blockquote style="margin: 0 0 1em; padding: 0.5em 1em; border-left: 3px solid #c8c8c8;">
-    <%= ticket_text(@comment.body) %>
+    <%= formatted_text(@comment) %>
     <% if @comment.files.attached? %>
       <p><%= t("mailer.ticket.files") %>: <%= @comment.files.map { |file| file.filename.to_s }.join(", ") %></p>
     <% end %>
@@ -28,7 +28,7 @@
     <tr><td style="padding: 2px 12px 2px 0; color: #666;"><%= t("ui.fields.status") %></td><td><%= t("ui.statuses.#{@ticket.status}") %></td></tr>
     <tr><td style="padding: 2px 12px 2px 0; color: #666;"><%= t("ui.fields.priority") %></td><td><%= t("ui.priorities.#{@ticket.priority}") %></td></tr>
   </table>
-  <%= ticket_text(@ticket.description) %>
+  <%= formatted_text(@ticket) %>
 <% end %>
 
 <p><%= link_to t("mailer.ticket.open", reference: @ticket.reference), ticket_url(@ticket) %></p>

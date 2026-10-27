@@ -3,7 +3,7 @@
 # that the recipient may see the ticket and which of the events, and sends
 # nothing when they may not.
 class TicketMailer < ApplicationMailer
-  helper :tickets
+  helper :tickets, :markdown
   helper_method :notification_intro
 
   def created = notify

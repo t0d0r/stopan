@@ -12,8 +12,12 @@ Rails.application.routes.draw do
       patch :resolve
       patch :assign
     end
-    resources :comments, only: %i[create edit update]
-    resource :description, only: %i[edit update], controller: "ticket_descriptions"
+    resources :comments, only: %i[create edit update] do
+      patch :markdown, on: :member
+    end
+    resource :description, only: %i[edit update], controller: "ticket_descriptions" do
+      patch :markdown
+    end
     resource :share, only: %i[create destroy], controller: "ticket_shares"
     resources :attachments, only: :show do
       get :preview, on: :member

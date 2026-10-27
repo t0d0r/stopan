@@ -18,7 +18,10 @@ or a note can be written in Markdown and is then shown formatted.
   on (`aria-pressed`). Routes: `PATCH /tickets/:number/description/markdown`
   and `PATCH /tickets/:number/comments/:id/markdown` with `markdown` "1" or
   "0", then back to the message on the ticket page. Without JavaScript it
-  is a small form button; with Turbo the page reloads at the message.
+  is a small form button. Turbo drops the `#anchor` of a redirect, so for
+  Turbo requests the server redirects to the bare ticket page, which Turbo
+  renders as a refresh that keeps the scroll position; the same applies to
+  saving an edit (timeline.md "Editing").
 - The switch is not a text edit: it keeps no revision, does not mark the
   message as edited and is not activity (no event, email or `updated_at`
   change). Open pages refresh live as after an edit.

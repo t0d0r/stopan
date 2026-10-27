@@ -27,6 +27,7 @@
                         placeholder: staff ? t("ui.composer.placeholder_staff") : t("ui.composer.placeholder"),
                         data: { autogrow: true }, aria: { invalid: comment.errors[:body].any? } %>
       </div>
+      <%= render "partials/markdown_check", f: f %>
       <p class="composer__hint composer__hint--internal"><%= icon :lock %> <%= t("ui.composer.internal_hint") %></p>
       <div class="composer__row">
         <div class="field composer__files">

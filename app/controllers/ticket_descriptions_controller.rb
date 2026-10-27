@@ -10,10 +10,16 @@ class TicketDescriptionsController < ApplicationController
 
   def update
     if @ticket.edit(editor: current_user, **description_params.to_h.symbolize_keys)
-      redirect_to ticket_path(@ticket, anchor: "description"), notice: t("flash.request_updated")
+      redirect_to_ticket @ticket, anchor: "description", notice: t("flash.request_updated")
     else
       render :edit, status: :unprocessable_content
     end
+  end
+
+  # Markdown on or off (specs/markdown.md); not an edit.
+  def markdown
+    @ticket.switch_markdown(params[:markdown] == "1")
+    redirect_to_ticket @ticket, anchor: "description"
   end
 
   private

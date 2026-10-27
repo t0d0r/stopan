@@ -259,6 +259,12 @@ en:
         staff: "agents and admins"
         requesters: "requesters"
 
+    markdown:
+      label: "Markdown"
+      hint: "**bold**, *italic*, - lists, `code`, [link](https://...)"
+      turn_on: "Format as Markdown"
+      turn_off: "Show as plain text"
+
     copy:
       label: "Copy text"
       copied: "Copied"

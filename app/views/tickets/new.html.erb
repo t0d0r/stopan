@@ -48,6 +48,7 @@
           <%= f.text_area :description, class: "field-input", rows: 8, required: true, maxlength: 20_000,
                           data: { autogrow: true }, aria: { invalid: invalid?(@ticket, :description), describedby: "description-hint" } %>
           <small class="field-hint" id="description-hint"><%= t("ui.new_ticket.description_hint") %></small>
+          <%= render "partials/markdown_check", f: f %>
         </div>
         <% if current_user.staff? %>
           <div class="field-row">

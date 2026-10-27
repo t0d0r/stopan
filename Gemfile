@@ -15,6 +15,10 @@ gem "devise", "~> 5.0"
 # reload [https://turbo.hotwired.dev]; turbo.min.js is served by Propshaft
 gem "turbo-rails", "~> 2.0"
 
+# Markdown in messages (specs/markdown.md); ships precompiled native gems,
+# so the Docker build needs no compiler
+gem "commonmarker", "~> 2.10"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

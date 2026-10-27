@@ -184,6 +184,15 @@ Operator requests, in order:
   fallback). Checked in headless Chrome: the clipboard got the request
   and a note's text, the check mark showed and reset after 1.5 seconds.
 
+- Plan item 2 done: Markdown per message (`markdown` on tickets and
+  comments, migration `AddMarkdownToMessages`, gem `commonmarker`),
+  check box when writing, "M" box in the title strip for editors (not an
+  edit), `MarkdownHelper` with g0no's three safety layers, HTML email
+  formatted, text email plain. `redirect_to_ticket` sends Turbo requests
+  to the bare page so the refresh keeps the scroll (Turbo drops redirect
+  anchors). Checked in headless Chrome: lists, task boxes, quote, table,
+  links in a new tab, script dropped; toggling and saving keep the scroll.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

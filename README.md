@@ -38,7 +38,9 @@ The screenshots use the fictional data from `make demo`.
 - **Timeline** - public replies, staff-only internal notes, and an
   append-only audit log of status, priority and assignee changes
   (`specs/timeline.md`). The request and replies can be edited in place;
-  edits are marked and staff see the earlier versions.
+  edits are marked and staff see the earlier versions. Any message can be
+  written in Markdown, rendered safely (`specs/markdown.md`), and has a
+  copy box.
 - **Attachments** - up to 5 files of 10 MB from an allow-list of types,
   served only after the ticket's visibility check; images, PDFs and text
   files open in a preview dialog, everything else downloads

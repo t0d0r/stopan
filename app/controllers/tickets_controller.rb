@@ -83,7 +83,7 @@ class TicketsController < ApplicationController
   # Requesters choose only the text, the organization and files; the server
   # sets everything else (specs/roles.md, strong parameters per role).
   def ticket_params
-    fields = %i[subject description organization_id]
+    fields = %i[subject description markdown organization_id]
     fields += %i[requester_id priority assignee_id] if current_user.staff?
     params.expect(ticket: [ *fields, files: [] ])
   end

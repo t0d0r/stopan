@@ -3,7 +3,7 @@
 class CommentsController < ApplicationController
   include TicketTimeline
 
-  before_action :set_editable_comment, only: %i[edit update]
+  before_action :set_editable_comment, only: %i[edit update markdown]
 
   def create
     @ticket = find_visible_ticket(params[:ticket_id])
@@ -12,6 +12,7 @@ class CommentsController < ApplicationController
     authorize!(internal ? policy.note? : policy.reply?)
 
     @comment = @ticket.add_comment(author: current_user, body: comment_params[:body], internal: internal,
+                                   markdown: comment_params[:markdown] == "1",
                                    files: comment_params[:files] || [],
                                    status: (comment_params[:status] if current_user.staff?))
     if @comment.persisted?
@@ -28,11 +29,17 @@ class CommentsController < ApplicationController
 
   def update
     if @comment.edit(editor: current_user, body: params.expect(comment: [ :body ])[:body])
-      redirect_to ticket_path(@ticket, anchor: "event-#{@comment.event.id}"),
-                  notice: @comment.internal? ? t("flash.note_updated") : t("flash.reply_updated")
+      redirect_to_ticket @ticket, anchor: "event-#{@comment.event.id}",
+                                  notice: @comment.internal? ? t("flash.note_updated") : t("flash.reply_updated")
     else
       render :edit, status: :unprocessable_content
     end
+  end
+
+  # Markdown on or off (specs/markdown.md); not an edit.
+  def markdown
+    @comment.switch_markdown(params[:markdown] == "1")
+    redirect_to_ticket @ticket, anchor: "event-#{@comment.event.id}"
   end
 
   private
@@ -45,6 +52,6 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.expect(comment: [ :body, :internal, :status, files: [] ])
+    params.expect(comment: [ :body, :internal, :status, :markdown, files: [] ])
   end
 end

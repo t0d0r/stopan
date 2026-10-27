@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,6 +48,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_100000) do
     t.datetime "updated_at", null: false
     t.datetime "edited_at"
     t.integer "edited_by_id"
+    t.boolean "markdown", default: false, null: false
     t.index ["author_id"], name: "index_comments_on_author_id"
     t.index ["edited_by_id"], name: "index_comments_on_edited_by_id"
     t.index ["ticket_id", "created_at"], name: "index_comments_on_ticket_id_and_created_at"
@@ -130,6 +131,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_100000) do
     t.datetime "shared_at"
     t.datetime "edited_at"
     t.integer "edited_by_id"
+    t.boolean "markdown", default: false, null: false
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
     t.index ["edited_by_id"], name: "index_tickets_on_edited_by_id"
     t.index ["number"], name: "index_tickets_on_number", unique: true

@@ -38,6 +38,14 @@ class ApplicationController < ActionController::Base
   end
 
   # Tickets outside the user's scope are "not found" (specs/roles.md).
+  # Back to a message on the ticket page. Turbo drops the #anchor of a
+  # redirect, so Turbo requests go to the bare page, which Turbo renders as
+  # a refresh that keeps the scroll position (turbo_refreshes_with);
+  # without Turbo the anchor scrolls to the message.
+  def redirect_to_ticket(ticket, anchor:, **options)
+    redirect_to ticket_path(ticket, anchor: (anchor unless request.headers["X-Turbo-Request-Id"])), **options
+  end
+
   def find_visible_ticket(number)
     Ticket.visible_to(current_user).find_by!(number: number.to_s)
   end

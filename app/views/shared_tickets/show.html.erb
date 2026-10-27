@@ -28,7 +28,7 @@
           <%= time_ago @ticket.created_at %>
           <%= edited_note @ticket %>
         </p>
-        <div class="ticket-text" data-message-text><%= ticket_text @ticket.description %></div>
+        <%= message_text @ticket %>
         <% if @ticket.files.attached? %>
           <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
             <% @ticket.files.each do |file| %>

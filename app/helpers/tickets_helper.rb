@@ -1,4 +1,6 @@
 module TicketsHelper
+  include MarkdownHelper
+
   # Paper colour per status and priority; always shown with its text (ui.md).
   STATUS_COLORS = { "new" => "yellow", "open" => "pink", "pending" => "blue", "resolved" => "green",
                     "closed" => "gray" }.freeze
@@ -27,6 +29,29 @@ module TicketsHelper
   # Plain text with line breaks; HTML in the text is escaped.
   def ticket_text(text)
     simple_format(h(text), class: "ticket-text__p")
+  end
+
+  # The current text of a request or comment, formatted when it is
+  # Markdown (specs/markdown.md); used by pages and emails.
+  def formatted_text(record)
+    text = record.is_a?(Ticket) ? record.description : record.body
+    record.markdown? ? render_markdown(text) : ticket_text(text)
+  end
+
+  # The message text as shown on a page; the copy box reads it.
+  def message_text(record)
+    tag.div(formatted_text(record), class: [ "ticket-text", ("markdown-body" if record.markdown?) ],
+                                    data: { message_text: true })
+  end
+
+  # "M" box in a message's title strip that switches Markdown on or off.
+  def markdown_box(path, on:)
+    label = on ? t("ui.markdown.turn_off") : t("ui.markdown.turn_on")
+    button_to path, method: :patch, params: { markdown: on ? "0" : "1" }, form_class: "markdown-box__form",
+                    class: "sticky__box sticky__box--icon markdown-box", title: label,
+                    aria: { label: label, pressed: on } do
+      icon(:markdown, size: 10)
+    end
   end
 
   def user_name(user)

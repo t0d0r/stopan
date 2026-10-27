@@ -1,0 +1,5 @@
+<%# "Markdown" check box under a message text area (specs/markdown.md). Locals: f. %>
+<div class="markdown-check">
+  <label><%= f.check_box :markdown %> <%= icon :markdown, size: 13 %> <%= t("ui.markdown.label") %></label>
+  <small class="field-hint"><%= t("ui.markdown.hint") %></small>
+</div>

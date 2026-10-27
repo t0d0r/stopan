@@ -8,6 +8,7 @@
       <header class="sticky__bar">
         <% if comment.internal? %><%= icon :lock, size: 11 %><% else %><%= icon :reply, size: 11 %><% end %>
         <span class="sticky__caption"><%= t("ui.timeline.kinds.#{kind}") %></span>
+        <% if !shared && policy.edit_comment?(comment) %><%= markdown_box markdown_ticket_comment_path(ticket, comment), on: comment.markdown? %><% end %>
         <%= copy_box %>
       </header>
       <div class="message__body">
@@ -20,7 +21,7 @@
           <% if !shared && policy.edit_comment?(comment) %><%= edit_link edit_ticket_comment_path(ticket, comment), frame: dom_id(comment, :text) %><% end %>
         </p>
         <%= turbo_frame_tag dom_id(comment, :text) do %>
-          <div class="ticket-text" data-message-text><%= ticket_text comment.body %></div>
+          <%= message_text comment %>
         <% end %>
         <% if !shared && policy.see_revisions? %><%= render "tickets/revisions", record: comment %><% end %>
         <% if comment.files.attached? %>
