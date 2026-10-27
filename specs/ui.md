@@ -52,14 +52,21 @@ Turbo Drive for page changes.
   a sticky panel in the current tab's colour (yellow, green, gray).
 - **New ticket:** one yellow sticky form, labels above fields, hints under
   them, required fields marked, file input with the limits stated.
-- **Ticket page:** two columns from 900px. Main: a header with `#number`,
-  subject and status pill; the description as the first sticky; the
-  timeline; the composer. Side: "Properties" panel (status, priority,
+- **Ticket page:** two columns from 900px. Main: the request as one note
+  (operator, 2026-10-27: "make this look like one note; the number bold
+  before the subject; remove Queue"): the yellow sticky's title strip
+  (timeline.md "Message title strip"), then the page's `h1` "**#1001**
+  Subject" (number in bold), the status pill and, for staff, the priority
+  pill, then the text, earlier versions and files. There is no
+  breadcrumb (the menu bar leads back to the queue) and no separate
+  "Opened by" line (author and time are in the strip). Then the timeline
+  and the composer. Side: "Properties" panel (status, priority,
   assignee as selects with "Update" for staff, plain values for
   requesters; staff also get a one-click "Take" button above the form
   when the ticket is not theirs), "Requester" panel (name, email, organization; staff only see
   email) and dates. Requesters see "Mark as resolved" when allowed. Under
-  900px the side panel comes after the header.
+  900px the side panel comes after the request note. Shared pages show
+  the same note (status pill only) under the read-only notice.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
   sticky.
 - **Account pages:** a small yellow sticky centred on the desk.

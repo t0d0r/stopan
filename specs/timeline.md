@@ -62,7 +62,9 @@ scope, so internal text never reaches a requester's HTML.
   bold, the role label, the time, the "Visible to staff only" tag for
   notes and the "edited by <name> <time>" marker; at the right end the
   boxes: Edit (pencil, for users who may edit), Markdown and Copy. The
-  body below holds only the text, earlier versions and files. On narrow
+  body below holds only the text, earlier versions and files; the
+  request's body starts with its heading and pills (ui.md "Ticket page"),
+  which the in-place edit form replaces together with the text. On narrow
   screens the strip wraps onto a second line instead of cutting text off.
   The same strip is used on shared pages (without the Edit and Markdown
   boxes).
