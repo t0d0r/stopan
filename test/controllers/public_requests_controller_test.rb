@@ -122,4 +122,35 @@ class PublicRequestsControllerTest < ActionDispatch::IntegrationTest
     get admin_organization_url(@org)
     assert_select "input#public-form-url[value=?]", public_request_url(@org.slug)
   end
+
+  test "allowed senders: listed addresses and domains only; an empty list lets anyone in" do
+    @org.update!(public_allowed_senders: "Boss@Partner.example\n@acme.example\n\n@acme.example")
+    assert_equal "boss@partner.example\n@acme.example", @org.reload.public_allowed_senders
+
+    assert_no_difference -> { Ticket.count } do
+      submit(email: "stranger@example.com")
+    end
+    assert_response :unprocessable_content
+    assert_select ".form-errors", /cannot send requests to Acme Bakery/
+
+    assert_difference -> { Ticket.count }, 2 do
+      submit(email: "someone@acme.example")
+      submit(email: "boss@partner.example")
+    end
+    assert_no_difference -> { Ticket.count } do
+      submit(email: "someone@sub.acme.example")
+    end
+
+    @org.update!(public_allowed_senders: "")
+    assert_difference -> { Ticket.count } do
+      submit(email: "stranger@example.com")
+    end
+  end
+
+  test "a bad allowed sender entry is refused in the organization form" do
+    org = organizations(:acme)
+    org.public_allowed_senders = "ok@acme.example\nnot an address\nacme.example"
+    assert_not org.valid?
+    assert_match(/not an address, acme.example/, org.errors[:public_allowed_senders].first)
+  end
 end

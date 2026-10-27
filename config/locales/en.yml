@@ -293,6 +293,7 @@ en:
         slug_hint: "Lower-case letters, digits and dashes. The page: %{example}"
         slug_hint_short: "Lower-case letters, digits and dashes; it becomes part of the page's address."
         off_hint: "The page is off: turn it on above and save, then the link works."
+        senders_hint: "One per line: a full address (anna@acme.example) or a domain with @ (@acme.example). Empty: anyone may send requests."
         copy_label: "Copy the public page link of %{name}"
       mail:
         title: "Mail"
@@ -644,6 +645,9 @@ en:
     registration_closed: "Sign-up is closed. Ask an administrator for an account."
 
   activemodel:
+    errors:
+      messages:
+        not_allowed_sender: "cannot send requests to %{organization}. Ask the organization to add it."
     attributes:
       admin_message:
         recipients: "Recipients"
@@ -697,13 +701,16 @@ en:
         imap_password: "IMAP password"
         imap_folder: "Folder"
         mailbox_address: "Mailbox address"
-      app_setting:
-        auto_postpone_days: "Days without activity"
         slug: "URL name"
         public_intro: "Intro text"
+        public_allowed_senders: "Allowed email addresses"
+      app_setting:
+        auto_postpone_days: "Days without activity"
     errors:
       messages:
         private_host: "must be a public mail server, not an address inside the network"
+        invalid_senders: "has entries that are neither an address nor an @domain: %{entries}"
+        too_many_senders: "may hold at most %{count} entries"
         too_many: "may contain at most %{count} files"
         too_big: "%{filename} is larger than %{limit} MB"
         type_not_allowed: "%{filename} is not an allowed file type"

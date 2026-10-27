@@ -296,6 +296,7 @@ bg:
         slug_hint: "Малки латински букви, цифри и тирета. Страницата: %{example}"
         slug_hint_short: "Малки латински букви, цифри и тирета; става част от адреса на страницата."
         off_hint: "Страницата е изключена: включете я по-горе и запазете, след това линкът работи."
+        senders_hint: "По един на ред: пълен адрес (anna@acme.example) или домейн с @ (@acme.example). Празно: всеки може да изпраща заявки."
         copy_label: "Копирай линка към публичната страница на %{name}"
       mail:
         title: "Поща"
@@ -647,6 +648,9 @@ bg:
     registration_closed: "Регистрацията е затворена. Поискайте профил от администратор."
 
   activemodel:
+    errors:
+      messages:
+        not_allowed_sender: "не може да изпраща заявки до %{organization}. Помолете организацията да го добави."
     attributes:
       admin_message:
         recipients: "Получатели"
@@ -702,13 +706,16 @@ bg:
         imap_password: "IMAP парола"
         imap_folder: "Папка"
         mailbox_address: "Адрес на пощенската кутия"
-      app_setting:
-        auto_postpone_days: "Дни без активност"
         slug: "Име в адреса"
         public_intro: "Въвеждащ текст"
+        public_allowed_senders: "Разрешени имейл адреси"
+      app_setting:
+        auto_postpone_days: "Дни без активност"
     errors:
       messages:
         private_host: "трябва да е публичен пощенски сървър, не адрес във вътрешната мрежа"
+        invalid_senders: "съдържа редове, които не са нито адрес, нито @домейн: %{entries}"
+        too_many_senders: "може да съдържа най-много %{count} реда"
         too_many: "може да са най-много %{count} файла"
         too_big: "%{filename} е по-голям от %{limit} MB"
         type_not_allowed: "%{filename} не е от разрешен вид"

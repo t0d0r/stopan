@@ -21,6 +21,7 @@ class PublicRequest
   validates :email, presence: true, length: { maximum: 254 }, format: { with: EMAIL }
   validates :subject, presence: true, length: { maximum: 200 }
   validates :description, presence: true, length: { maximum: 20_000 }
+  validate :sender_allowed
 
   # Creates the ticket (and the requester when needed) and mails the
   # confirmation. Returns the ticket, or nil for an address that may not
@@ -43,6 +44,12 @@ class PublicRequest
   end
 
   private
+
+  def sender_allowed
+    return if email.blank? || organization.nil? || organization.public_sender_allowed?(email)
+
+    errors.add(:email, :not_allowed_sender, organization: organization.name)
+  end
 
   def requester_for_email
     user = User.find_by("lower(email) = ?", email.strip.downcase)

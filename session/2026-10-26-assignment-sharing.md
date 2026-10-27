@@ -370,6 +370,17 @@ Operator requests, in order:
   impersonation stay allowed; admin messages skip them. Staff are not
   affected (said so to the operator). Checked in headless Chrome.
 
+- Not now, automatic postponing, board scrolling, allowed senders
+  (operator): postponed status (purple, own queue view, requester Open
+  tab, no email); /admin/settings with auto_postpone_days (hourly in the
+  web process, rake stopan:postpone_inactive, stamp on cards due within 7
+  days, note on the ticket page); board spans the window, fits its height,
+  columns scroll on their own, edge scrolling while dragging, empty
+  columns start collapsed; organizations.public_allowed_senders
+  (addresses or @domains, empty = anyone) checked by the public form.
+  Found while checking: organization attribute labels (slug, intro) had
+  landed under app_setting in the locales; fixed. Stages still to do.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

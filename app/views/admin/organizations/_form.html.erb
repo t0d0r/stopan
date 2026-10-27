@@ -28,6 +28,13 @@
       </div>
     <% end %>
     <div class="field">
+      <%= f.label :public_allowed_senders %>
+      <%= f.text_area :public_allowed_senders, class: "field-input", rows: 4, data: { autogrow: true },
+                      placeholder: "anna@acme.example\n@acme.example",
+                      aria: { invalid: invalid?(organization, :public_allowed_senders), describedby: "senders-hint" } %>
+      <small class="field-hint" id="senders-hint"><%= t("ui.admin.public_form.senders_hint") %></small>
+    </div>
+    <div class="field">
       <%= f.label :public_intro %>
       <%= f.text_area :public_intro, class: "field-input", rows: 3, maxlength: 1_000, data: { autogrow: true } %>
     </div>

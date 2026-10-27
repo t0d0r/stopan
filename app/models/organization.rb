@@ -16,6 +16,13 @@ class Organization < ApplicationRecord
   validates :notes, length: { maximum: 5_000 }
   validates :slug, presence: true, length: { minimum: 2 }, format: { with: SLUG }, uniqueness: true
   validates :public_intro, length: { maximum: 1_000 }
+  validate :allowed_senders_valid
+
+  # One address or @domain per line, lower-case, without blanks or
+  # duplicates (specs/public-form.md "Allowed senders").
+  normalizes :public_allowed_senders, with: ->(text) {
+    text.to_s.split(/[\r\n,;]+/).map { |entry| entry.strip.downcase }.reject(&:empty?).uniq.join("\n").presence
+  }
 
   before_validation :fill_slug, on: :create
 
@@ -26,7 +33,30 @@ class Organization < ApplicationRecord
     where("ulower(organizations.name) LIKE ? ESCAPE '\\'", "%#{sanitize_sql_like(query.to_s.strip.downcase)}%")
   }
 
+  ALLOWED_SENDER = /\A(?:[^@\s]+)?@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+\z/
+  MAX_ALLOWED_SENDERS = 500
+
+  def allowed_senders
+    public_allowed_senders.to_s.split("\n")
+  end
+
+  # Anyone when the list is empty; else a listed address or @domain.
+  def public_sender_allowed?(email)
+    return true if allowed_senders.empty?
+
+    email = email.to_s.strip.downcase
+    domain = email.split("@", 2).last
+    allowed_senders.any? { |entry| entry == email || entry == "@#{domain}" }
+  end
+
   private
+
+  def allowed_senders_valid
+    entries = allowed_senders
+    errors.add(:public_allowed_senders, :too_many_senders, count: MAX_ALLOWED_SENDERS) if entries.size > MAX_ALLOWED_SENDERS
+    bad = entries.reject { |entry| entry.match?(ALLOWED_SENDER) }
+    errors.add(:public_allowed_senders, :invalid_senders, entries: bad.first(5).join(", ")) if bad.any?
+  end
 
   # A free URL name from the name; non-Latin names fall back to
   # "organization" with a number.
