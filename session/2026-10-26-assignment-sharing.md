@@ -428,6 +428,13 @@ Operator requests, in order:
 - The menu bar marks "Queue" on the board as well (`current_section`
   counts the boards controller as :tickets); `board.png` retaken with the
   demo tickets aged 25 minutes so card times fit on one line.
+- Ticket lists are one line per row (operator did not like the requester
+  under the subject): queue and "My organizations" have a Requester
+  column; from 1024px no cell wraps and the subject ends in an ellipsis
+  (tooltip has it whole, min 12em); under 1024px the requester column is
+  hidden and cells wrap, so the table never scrolls sideways (checked at
+  1280, 1024, 1023, 900, 800 and 390px, en and bg). README `queue.png`
+  retaken.
 
 ## Decisions
 

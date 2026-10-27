@@ -13,6 +13,9 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Queue"
     assert_select ".queue__views .view-link[aria-current=page]", /All unsolved/
     assert_select ".tickets-table tbody tr", 3
+    assert_select ".tickets-table th.col-requester", "Requester"
+    assert_select "#ticket_#{tickets(:printer).id} td.col-requester", tickets(:printer).requester.display_name
+    assert_select "#ticket_#{tickets(:printer).id} td.text:not(.col-requester):not(.col-org):not(.col-assignee)", text: /#{tickets(:printer).requester.display_name}/, count: 0
     assert_select ".menubar a.nav-link[aria-current=page]", /Queue/
 
     get tickets_url(view: "all", q: "vpn")
@@ -305,7 +308,11 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a.tab[aria-current=page]", /My organizations/
     numbers = css_select("td.ticket-number").map { |cell| cell.text.strip }
     assert_equal %w[#1001 #1002 #1004].sort, numbers.sort
-    assert_select ".ticket-row__requester", /#{users(:anna).display_name}/
+    assert_select "th.col-requester", "Requester"
+    assert_select "td.col-requester", users(:anna).display_name
+
+    get tickets_url(view: "open")
+    assert_select ".col-requester", 0
     assert_select "turbo-cable-stream-source[channel=TicketListsChannel]", 2
 
     get tickets_url(view: "all")

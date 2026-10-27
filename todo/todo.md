@@ -108,6 +108,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] organization list of email addresses or domains allowed to use the public request page (operator)
 - [x] README screenshots refreshed, with a fifth one of the board (specs/ui.md "Screenshots")
 - [x] menu bar marks "Queue" on the board too (specs/ui.md "Menu bar")
+- [x] one line per ticket row: requester in its own column, subject ends in an ellipsis from 1024px (specs/queues.md "Table")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

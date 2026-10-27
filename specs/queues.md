@@ -72,8 +72,16 @@ it with the field's own clear button shows the list without search again.
 
 ### Table
 
-Columns: number, subject (with requester name under it), organization,
-status, priority, assignee, last activity. The whole row is not a link -
+Columns: number, subject, requester, organization, status, priority,
+assignee, last activity. Each row is one line (operator, 2026-10-27: the
+requester's name under the subject made rows two lines tall): the
+requester has its own column. In windows at least 1024px wide no cell
+wraps and the subject takes the space left (at least 12em), ending in an
+ellipsis when it does not fit; the full subject is the link's tooltip.
+Narrower windows hide the requester column and let cells wrap so the
+table fits without scrolling sideways (the requester is on the ticket
+page); under 760px organization, priority, assignee and last activity
+are hidden too. The whole row is not a link -
 the subject is, so keyboard and screen reader users get one clear link per
 ticket. Status and priority are pills with text (colour is never the only
 signal). Urgent and high priority rows get a coloured left edge. The
@@ -108,11 +116,12 @@ Assigning from the queue (tickets.md "Assigning"):
 Tabs: `open` (new, open, pending, postponed; default, yellow), `done`
 ("Done"; green), `all` (gray), all three of the requester's own tickets,
 and `organization` ("My organizations", purple: every ticket of the
-organizations they belong to, with the requester's name under the
+organizations they belong to, with a Requester column after the
 subject; roles.md), each with a coloured count; the current tab
 and the list panel take the tab's colour. Search (`q`, same matching as
-above) is the menu bar search. A "New ticket" button. Table columns: number, subject, organization (only if
-they belong to more than one), status, last activity.
+above) is the menu bar search. A "New ticket" button. Table columns: number, subject, requester (only on
+"My organizations"), organization (only if they belong to more than one),
+status, last activity; one line per row as in the queue.
 
 Empty states say what to do next ("You have no open tickets. Need help?
 Open a new ticket.").

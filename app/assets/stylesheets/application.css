@@ -1663,9 +1663,30 @@ form.button_to {
   font-weight: 600;
 }
 
-.ticket-row__requester {
-  color: var(--ink-soft);
-  font-size: 12px;
+/* One line per row (queues.md "Table") where the columns fit: the subject
+   takes the space left and ends in an ellipsis; the other cells do not
+   wrap. Narrower windows drop the requester and wrap so the table fits. */
+@media (max-width: 1023px) {
+  .col-requester {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tickets-table td {
+    white-space: nowrap;
+  }
+
+  .tickets-table .col-subject {
+    width: 100%;
+    min-width: 12em;
+    max-width: 0;
+  }
+
+  .tickets-table .col-subject .ticket-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 /* Alternate rows (queues.md "Table"): a tint that suits every paper colour. */
