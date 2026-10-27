@@ -53,7 +53,9 @@ The screenshots use the fictional data from `make demo`.
   (`specs/tickets.md`).
 - **Sharing** - a secret read-only link to a ticket, optionally with a
   password; it shows only the public conversation, never internal notes;
-  administrators see and stop every shared link (`specs/sharing.md`).
+  the shared page and the ticket's Sharing panel show live how many have
+  the link open; administrators see and stop every shared link
+  (`specs/sharing.md`).
 - **Admin** - dashboard, users (roles, memberships, deactivation),
   organizations and members (`specs/admin.md`).
 - **Secure defaults** - scoped queries everywhere (404 for tickets you may

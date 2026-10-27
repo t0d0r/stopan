@@ -72,7 +72,7 @@
 - [x] admin pages refresh live (specs/admin.md "Live updates")
 - [x] notifications page refreshes live (specs/notifications.md "Live updates of the notifications page")
 - [x] preview dialog for images, PDFs and text files (specs/attachments.md "Preview")
-- [~] shared page and Sharing panel show how many view the link now (specs/sharing.md "Who is viewing now")
+- [x] shared page and Sharing panel show how many view the link now (specs/sharing.md "Who is viewing now")
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 
 ## Later (specs/roadmap.md)

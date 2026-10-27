@@ -223,8 +223,21 @@ async function refreshNotifications() {
   if (fresh && latest && !latest.open) latest.replaceWith(fresh);
 }
 
+// Viewer count of a shared link (specs/sharing.md "Who is viewing now"):
+// the signal carries only the number; the text comes from the page.
+function updateShareViewers() {
+  const count = Math.max(Number(this.getAttribute("count")) || 0, 0);
+  document.querySelectorAll("[data-share-viewers]").forEach((label) => {
+    const key = count === 0 && label.dataset.zero ? "zero" : count <= 1 ? "one" : "other";
+    label.textContent = label.dataset[key].replace("%{count}", count);
+    label.closest(".share-viewers").dataset.count = count;
+  });
+}
+
 function registerStreamActions() {
-  if (window.Turbo?.StreamActions) window.Turbo.StreamActions.notifications_refresh = scheduleNotificationsRefresh;
+  if (!window.Turbo?.StreamActions) return;
+  window.Turbo.StreamActions.notifications_refresh = scheduleNotificationsRefresh;
+  window.Turbo.StreamActions.share_viewers = updateShareViewers;
 }
 
 registerStreamActions();

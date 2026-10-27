@@ -111,7 +111,10 @@ content changes, keeping its scroll position (`turbo-refresh-scroll`
 - **Signal only.** The page subscribes with `turbo_stream_from
   *Ticket#share_stream` - the ticket, `:share` and a SHA-256 hash of the
   token, so the token itself stays out of Action Cable's logs and the
-  signed stream name (signed, not encrypted). The server broadcasts only
+  signed stream name (signed, not encrypted). Since 2026-10-27 the
+  subscription goes through `SharedTicketChannel` (ticket number as a
+  parameter), which accepts only the current link's stream of a shared
+  ticket and counts viewers (below). The server broadcasts only
   `<turbo-stream action="refresh">` (Turbo 8 page refresh, debounced by
   turbo-rails); the page fetches itself again over HTTP, so the token and
   the password unlock are checked as on any request.

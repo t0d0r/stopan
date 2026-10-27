@@ -64,6 +64,19 @@ module TicketsHelper
   end
 
   # On a shared page (share_token) files go through the share link.
+  # Live count of open shared pages of the ticket's link (specs/sharing.md
+  # "Who is viewing now"); application.js swaps the text on each signal.
+  # scope: :page (the shared page, counting the reader) or :panel.
+  def share_viewers_tag(count, scope:)
+    texts = %i[zero one other].filter_map do |key|
+      [ key, t("ui.share.viewers.#{scope}.#{key}") ] if I18n.exists?("ui.share.viewers.#{scope}.#{key}")
+    end.to_h
+    tag.p(class: "share-viewers", data: { count: count }) do
+      tag.span(class: "share-viewers__dot", aria: { hidden: true }) + icon(:eye, size: 13) +
+        tag.span(t("ui.share.viewers.#{scope}", count: count), data: { share_viewers: true, **texts }, aria: { live: "polite" })
+    end
+  end
+
   # A download link that opens the preview dialog for previewable kinds
   # (specs/attachments.md "Preview"); modified clicks still download.
   def attachment_link(ticket, attachment, share_token: nil)

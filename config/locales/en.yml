@@ -327,6 +327,14 @@ en:
       unlock: "Open"
       missing_title: "Link not available"
       missing_hint: "This link does not exist or is no longer shared. Ask the person who sent it for a new one."
+      viewers:
+        page:
+          one: "Only you are viewing"
+          other: "%{count} people viewing now"
+        panel:
+          zero: "Nobody has the link open now"
+          one: "1 person has the link open now"
+          other: "%{count} people have the link open now"
 
     forbidden:
       title: "Not allowed"

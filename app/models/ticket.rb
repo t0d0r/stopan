@@ -143,7 +143,12 @@ class Ticket < ApplicationRecord
   # Stream of the share page: the ticket plus a hash of the token, so the
   # token stays out of Action Cable's logs and the signed stream name.
   def share_stream(token = share_token)
-    [ self, :share, Digest::SHA256.hexdigest(token.to_s) ]
+    [ self, :share, share_digest(token) ]
+  end
+
+  # Names a link without the token itself (streams, viewer counts).
+  def share_digest(token = share_token)
+    Digest::SHA256.hexdigest(token.to_s)
   end
 
   # Stream of the ticket page for this user: staff hear every change,

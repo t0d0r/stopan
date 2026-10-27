@@ -1,9 +1,11 @@
 <% content_for :title, "#{@ticket.reference} #{@ticket.subject}" %>
 <% turbo_refreshes_with scroll: :preserve %>
-<%= turbo_stream_from(*@ticket.share_stream) %>
+<%= turbo_stream_from(*@ticket.share_stream, channel: SharedTicketChannel, data: { ticket: @ticket.number }) %>
 <div class="ticket-page ticket-page--shared">
   <header class="ticket-head">
     <p class="callout shared-note"><%= icon :link %> <%= t("ui.share.public_note", reference: @ticket.reference) %></p>
+    <%# This page subscribes after it loads, so it counts itself. %>
+    <%= share_viewers_tag ShareViewers.count(@ticket) + 1, scope: :page %>
     <h1 class="ticket-head__title"><%= @ticket.subject %></h1>
     <p class="ticket-head__meta">
       <span class="ticket-number"><%= @ticket.reference %></span>

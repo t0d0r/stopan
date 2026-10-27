@@ -8,6 +8,7 @@
         <%= ticket.share_password? ? t("ui.share.status_password") : t("ui.share.status_open") %>
         <%= time_ago ticket.shared_at %>
       </p>
+      <%= share_viewers_tag ShareViewers.count(ticket), scope: :panel %>
       <div class="sharing__link">
         <%= label_tag "share-url", t("ui.share.link"), class: "sr-only" %>
         <%= text_field_tag "share-url", shared_ticket_url(ticket.share_token), readonly: true, class: "field-input",

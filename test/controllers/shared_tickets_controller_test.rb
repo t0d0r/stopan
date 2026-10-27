@@ -126,9 +126,25 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     token = share
     get shared_ticket_url(token)
     signed = Turbo::StreamsChannel.signed_stream_name(tickets(:printer).share_stream)
-    assert_select "turbo-cable-stream-source[channel='Turbo::StreamsChannel'][signed-stream-name=?]", signed
+    assert_select "turbo-cable-stream-source[channel=SharedTicketChannel][signed-stream-name=?]", signed
     assert_select "meta[name=turbo-refresh-scroll][content=preserve]", 1
     assert_not_includes Turbo::StreamsChannel.verified_stream_name(signed), token
+  end
+
+  test "the shared page and the Sharing panel show the viewer count" do
+    ShareViewers::COUNTS.clear
+    token = share
+    ShareViewers.join(tickets(:printer), tickets(:printer).share_digest)
+
+    get shared_ticket_url(token)
+    assert_select "turbo-cable-stream-source[channel=SharedTicketChannel][data-ticket='1001']"
+    assert_select ".share-viewers[data-count='2'] [data-share-viewers][data-one][data-other]", "2 people viewing now"
+
+    sign_in users(:agent)
+    get ticket_url(tickets(:printer))
+    assert_select "#sharing .share-viewers[data-count='1'] [data-share-viewers][data-zero]", "1 person has the link open now"
+  ensure
+    ShareViewers::COUNTS.clear
   end
 
   test "a locked page does not subscribe" do

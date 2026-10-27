@@ -144,6 +144,20 @@ Operator requests, in order:
   Chrome: PNG, PDF viewer, text and "no preview" for ZIP on both pages,
   arrow keys and Escape.
 
+- Live viewer count of shared links (2026-10-27, operator: "show how
+  many are viewing a shared document now, like a shared Google
+  document"): `SharedTicketChannel` replaces the default channel on the
+  shared page (only the current link's stream, ticket number as param),
+  counts subscriptions per link digest in `ShareViewers` (process memory)
+  and broadcasts `share_viewers` with only the count to the share stream
+  and the ticket page streams; the shared page shows "Only you are
+  viewing" / "N people viewing now", the Sharing panel "Nobody / N people
+  have the link open now", with a green dot. Checked in headless Chrome
+  with several tabs: 0 -> 1 -> 2 -> 1 -> 0 on both pages as tabs opened,
+  closed and navigated away.
+- Open: counts are per process (fine with the single Puma process and
+  the async adapter); several processes would need a shared store.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
@@ -170,6 +184,12 @@ app/controllers/concerns/file_sending.rb, config/routes.rb,
 app/helpers/tickets_helper.rb, app/views/partials/_preview_dialog.html.erb,
 layout, application.{js,css}, locales, attachment and shared ticket tests,
 test/fixtures/files/{dot.png,blank.pdf,notes.zip}.
+Viewer count: specs/sharing.md, app/models/share_viewers.rb,
+app/channels/shared_ticket_channel.rb, app/models/ticket.rb
+(`share_digest`), tickets helper (`share_viewers_tag`), icons (eye),
+shared_tickets/show, tickets/_sharing, application.{js,css}, locales,
+test/models/share_viewers_test.rb, test/channels/shared_ticket_channel_test.rb,
+shared tickets controller test.
 
 ## Verify
 

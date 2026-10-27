@@ -813,6 +813,36 @@ form.button_to {
   padding-left: 18px;
 }
 
+/* ---------- viewer count of a shared link (specs/sharing.md) ---------- */
+
+.share-viewers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.share-viewers__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34a853;
+  box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.2);
+}
+
+.share-viewers[data-count="0"] .share-viewers__dot {
+  background: var(--ink-soft);
+  box-shadow: none;
+  opacity: 0.5;
+}
+
+.ticket-page--shared .share-viewers {
+  color: var(--desk-ink-soft);
+}
+
 /* ---------- preview dialog (specs/attachments.md) ---------- */
 
 .preview {
