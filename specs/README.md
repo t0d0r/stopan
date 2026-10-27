@@ -6,6 +6,7 @@
 | [roles.md](roles.md) | requester, agent and administrator; organizations and memberships; permission matrix and how it is enforced |
 | [tickets.md](tickets.md) | ticket fields, numbering, statuses, allowed transitions, creating and updating |
 | [timeline.md](timeline.md) | public replies, internal notes, the append-only event log, editing with earlier versions and the composer |
+| [board.md](board.md) | kanban board of tickets by status, Fizzy-like cards, drag and drop |
 | [markdown.md](markdown.md) | Markdown per message: switch, sanitized rendering, emails |
 | [organization-mail.md](organization-mail.md) | SMTP and IMAP mailbox per organization: settings, outgoing routing, incoming mail to tickets |
 | [public-form.md](public-form.md) | public request page per organization, accounts by email, magic sign-in links, abuse limits |
