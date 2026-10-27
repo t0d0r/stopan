@@ -876,20 +876,30 @@ form.button_to {
   background: #0857bd;
 }
 
-/* The own account page: panels side by side (specs/ui.md "Own account page"). */
-.account-page {
-  column-width: 320px;
-  column-gap: 20px;
+/* Panels in fixed columns that wrap on narrow screens (specs/ui.md "Panel
+   columns"). Not CSS multi-column: Safari splits its panels wrongly under
+   the text size zoom. */
+.panel-columns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px;
 }
 
-/* Panels flow down the columns and never split; the wide one spans all. */
-.account-page .panel {
-  margin: 0 0 20px;
-  break-inside: avoid;
+.panel-columns__column {
+  display: flex;
+  flex: 1 1 min(300px, 100%);
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.panel-columns .panel {
+  max-width: none;
+  margin: 0;
 }
 
 .account-panel--wide {
-  column-span: all;
   margin-top: 20px;
 }
 
@@ -3950,6 +3960,7 @@ turbo-frame {
 
 .stages-list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 6px;
   margin: 0;
   padding: 0;
@@ -3965,9 +3976,15 @@ turbo-frame {
 
 .stages-list__form {
   display: flex;
-  flex: 1;
+  flex: 1 1 220px;
+  flex-wrap: wrap;
   gap: 6px;
-  min-width: 260px;
+  min-width: 0;
+}
+
+.stages-list__form .field-input {
+  flex: 1 1 8em;
+  min-width: 0;
 }
 
 .stages-list__swatch {
@@ -3983,6 +4000,15 @@ turbo-frame {
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 10px;
+}
+
+.stages-new .filters__field {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.stages-new .field-input {
+  width: 100%;
 }
 
 .icon-action[disabled] {

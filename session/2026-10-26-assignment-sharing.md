@@ -820,6 +820,15 @@ menu and Take; open /tickets/new and pick a requester.
   phone and dark admin shots removed from README, `bin/screenshots` and
   `docs/screenshots/` (operator: too many screenshots); specs/ui.md
   "Screenshots" updated. Not pushed.
+- Account page and admin settings: panels in three fixed flex columns
+  (`.panel-columns` / `.panel-columns__column`) instead of CSS
+  multi-column; Safari split the account panels under the text size zoom
+  (operator screenshot at the largest size). Admin settings now fits
+  1440x900 without scrolling; the stage rows wrap inside their panel and
+  the 7px sideways scroll on phones is gone. Checked in Chrome at 1440,
+  1280 and 390 px with normal, big and extra text (specs/ui.md "Panel
+  columns"). Open: the menu bar itself overflows at extra on a 1280px
+  window (todo). Not deployed.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

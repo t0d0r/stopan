@@ -121,14 +121,24 @@ themes, the SVG tab icon, and the source of `public/icon.png` (512 px),
   sign up, password reset).
 - **Own account page** (`/users/edit`; operator, 2026-10-27: "the
   personal settings are vertical, make them fit the screen like the
-  administration"): a page title "My account" and a grid of sticky
-  panels across the desk (as many columns as fit, each at least 320px,
-  one column on phones; the panels flow down the columns without gaps),
-  each with its caption strip and its own Save:
-  Profile (name, email, password; yellow), Language (blue), Theme
-  (purple), Order of replies (green), Email notifications (pink, staff
-  only), and API tokens (gray, the full width of the grid, api.md). The
+  administration"): a page title "My account" and sticky panels in
+  three panel columns ("Panel columns" below), each with its caption
+  strip and its own Save: Profile (name, email, password; yellow) in the
+  first, Language (blue) and Theme (purple) in the second, Order of
+  replies (green) and Email notifications (pink, staff only) in the
+  third. API tokens (gray, api.md) spans the full width under them. The
   organizations the user belongs to are a line under the grid.
+- **Panel columns** (account page, admin settings; operator, 2026-10-28:
+  "the elements are placed well only at the small text size", and
+  "admin settings should fit without scrolling"): the panels sit in three
+  fixed columns chosen in the view (`.panel-columns`, flex), at least
+  300px each, which wrap to fewer columns and to one on phones; a column
+  keeps its panels together. Not CSS multi-column (`column-width`):
+  Safari splits panels across its columns under the text size `zoom`.
+  Admin settings: Look, Auto-postpone, Ticket page | Mailboxes,
+  Translation | Google, Stages, so the page fits 1440x900 at the normal
+  text size without scrolling. No panel content may stick out of its
+  panel or make the page scroll sideways at any text size.
 - **Flash messages:** stickies (yellow "Notice", pink "Attention") in a
   band at the top of the desk, under the menu bar and any banner, centred
   and at most 560px wide, on every screen size (operator, 2026-10-27:

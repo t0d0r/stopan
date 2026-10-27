@@ -6,121 +6,130 @@
 </div>
 
 <div class="account-page">
-  <section class="sticky sticky--yellow panel account-panel" id="profile-panel" aria-labelledby="profile-title">
-    <header class="sticky__bar"><span class="sticky__caption" id="profile-title"><%= t("ui.account_page.profile") %></span></header>
-    <div class="panel__body">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-        <%= form_errors resource %>
+  <%# Fixed columns of panels, not CSS columns: Safari splits those under the text size zoom (specs/ui.md "Panel columns"). %>
+  <div class="panel-columns">
+    <div class="panel-columns__column">
+      <section class="sticky sticky--yellow panel account-panel" id="profile-panel" aria-labelledby="profile-title">
+        <header class="sticky__bar"><span class="sticky__caption" id="profile-title"><%= t("ui.account_page.profile") %></span></header>
+        <div class="panel__body">
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+            <%= form_errors resource %>
 
-        <div class="field">
-          <%= f.label :name, t("ui.fields.name") %>
-          <%= f.text_field :name, autocomplete: "name", maxlength: 120 %>
-        </div>
+            <div class="field">
+              <%= f.label :name, t("ui.fields.name") %>
+              <%= f.text_field :name, autocomplete: "name", maxlength: 120 %>
+            </div>
 
-        <div class="field">
-          <%= f.label :email, t("ui.fields.email") %>
-          <%= f.email_field :email, autocomplete: "email" %>
-        </div>
+            <div class="field">
+              <%= f.label :email, t("ui.fields.email") %>
+              <%= f.email_field :email, autocomplete: "email" %>
+            </div>
 
-        <div class="field">
-          <%= f.label :password, t("ui.new_password") %>
-          <i><%= t("ui.account_page.password_keep") %></i>
-          <%= f.password_field :password, autocomplete: "new-password" %>
-          <% if @minimum_password_length %>
-            <em><%= t("ui.password_minimum", count: @minimum_password_length) %></em>
+            <div class="field">
+              <%= f.label :password, t("ui.new_password") %>
+              <i><%= t("ui.account_page.password_keep") %></i>
+              <%= f.password_field :password, autocomplete: "new-password" %>
+              <% if @minimum_password_length %>
+                <em><%= t("ui.password_minimum", count: @minimum_password_length) %></em>
+              <% end %>
+            </div>
+
+            <div class="field">
+              <%= f.label :password_confirmation, t("ui.confirm_new_password") %>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+            </div>
+
+            <% if resource.password_chosen? %>
+              <div class="field">
+                <%= f.label :current_password, t("ui.account_page.current_password") %>
+                <i><%= t("ui.account_page.current_password_hint") %></i>
+                <%= f.password_field :current_password, autocomplete: "current-password" %>
+              </div>
+            <% else %>
+              <p class="field-hint"><%= t("ui.account_page.first_password_hint") %></p>
+            <% end %>
+
+            <div class="actions">
+              <%= f.submit t("ui.save") %>
+            </div>
           <% end %>
         </div>
-
-        <div class="field">
-          <%= f.label :password_confirmation, t("ui.confirm_new_password") %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+      </section>
+    </div>
+    <div class="panel-columns__column">
+      <section class="sticky sticky--blue panel account-panel" id="language-panel" aria-labelledby="language-title">
+        <header class="sticky__bar"><span class="sticky__caption" id="language-title"><%= t("ui.account_page.language") %></span></header>
+        <div class="panel__body">
+          <%= form_with model: resource, url: user_language_path, method: :patch, id: "language" do |f| %>
+            <div class="field">
+              <%= f.label :language, t("ui.account_page.language"), class: "sr-only" %>
+              <%= f.select :language, [ [ t("ui.account_page.browser_language"), "" ] ] + ApplicationHelper::LANGUAGE_NAMES.invert.to_a,
+                           {}, class: "select" %>
+              <i><%= t("ui.account_page.language_hint") %></i>
+            </div>
+            <div class="actions">
+              <%= f.submit t("ui.account_page.save_language") %>
+            </div>
+          <% end %>
         </div>
-
-        <% if resource.password_chosen? %>
-          <div class="field">
-            <%= f.label :current_password, t("ui.account_page.current_password") %>
-            <i><%= t("ui.account_page.current_password_hint") %></i>
-            <%= f.password_field :current_password, autocomplete: "current-password" %>
+      </section>
+      <%# The theme is a browser preference, like light/dark (ui.md "Themes"). %>
+      <section class="sticky sticky--purple panel account-panel" id="look-panel" aria-labelledby="look-title">
+        <header class="sticky__bar"><span class="sticky__caption" id="look-title"><%= t("ui.account_page.theme") %></span></header>
+        <div class="panel__body">
+          <%= form_with url: preferences_path, method: :patch, id: "look", data: { turbo: false } do %>
+            <div class="field">
+              <%= label_tag :look, t("ui.account_page.theme"), class: "sr-only" %>
+              <% choices = [ [ t("ui.account_page.site_look", look: t("ui.account_page.looks.#{site_look}")), "default" ] ] +
+                           PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] } %>
+              <%= select_tag :look, options_for_select(choices, own_look || "default"), class: "select" %>
+              <i><%= t("ui.account_page.theme_hint") %></i>
+            </div>
+            <div class="actions">
+              <%= submit_tag t("ui.account_page.save_theme"), name: nil %>
+            </div>
+          <% end %>
+        </div>
+      </section>
+    </div>
+    <div class="panel-columns__column">
+      <%# The timeline order, a browser preference like the theme (timeline.md "Order of the timeline"). %>
+      <section class="sticky sticky--green panel account-panel" id="timeline-order-panel" aria-labelledby="timeline-order-title">
+        <header class="sticky__bar"><span class="sticky__caption" id="timeline-order-title"><%= t("ui.account_page.timeline_order") %></span></header>
+        <div class="panel__body">
+          <%= form_with url: preferences_path, method: :patch, id: "timeline-order", data: { turbo: false } do %>
+            <div class="field">
+              <%= label_tag :timeline_order, t("ui.account_page.timeline_order"), class: "sr-only" %>
+              <% site_order = AppSetting.current.timeline_order %>
+              <% choices = [ [ t("ui.account_page.site_timeline_order", order: t("ui.timeline.orders.#{site_order}")), "default" ] ] +
+                           AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] } %>
+              <%= select_tag :timeline_order, options_for_select(choices, own_timeline_order || "default"), class: "select" %>
+              <i><%= t("ui.account_page.timeline_order_hint") %></i>
+            </div>
+            <div class="actions">
+              <%= submit_tag t("ui.account_page.save_timeline_order"), name: nil %>
+            </div>
+          <% end %>
+        </div>
+      </section>
+      <% if resource.staff? %>
+        <section class="sticky sticky--pink panel account-panel" id="notifications-panel" aria-labelledby="notifications-title">
+          <header class="sticky__bar"><span class="sticky__caption" id="notifications-title"><%= t("ui.account_page.notifications") %></span></header>
+          <div class="panel__body">
+            <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
+              <div class="field">
+                <%= f.check_box :notify_new_tickets %><%= f.label :notify_new_tickets, t("ui.account_page.notify_new_tickets") %>
+                <i><%= t("ui.account_page.notifications_hint") %></i>
+              </div>
+              <div class="actions">
+                <%= f.submit t("ui.account_page.save_notifications") %>
+              </div>
+            <% end %>
           </div>
-        <% else %>
-          <p class="field-hint"><%= t("ui.account_page.first_password_hint") %></p>
-        <% end %>
-
-        <div class="actions">
-          <%= f.submit t("ui.save") %>
-        </div>
+        </section>
       <% end %>
     </div>
-  </section>
-  <section class="sticky sticky--blue panel account-panel" id="language-panel" aria-labelledby="language-title">
-    <header class="sticky__bar"><span class="sticky__caption" id="language-title"><%= t("ui.account_page.language") %></span></header>
-    <div class="panel__body">
-      <%= form_with model: resource, url: user_language_path, method: :patch, id: "language" do |f| %>
-        <div class="field">
-          <%= f.label :language, t("ui.account_page.language"), class: "sr-only" %>
-          <%= f.select :language, [ [ t("ui.account_page.browser_language"), "" ] ] + ApplicationHelper::LANGUAGE_NAMES.invert.to_a,
-                       {}, class: "select" %>
-          <i><%= t("ui.account_page.language_hint") %></i>
-        </div>
-        <div class="actions">
-          <%= f.submit t("ui.account_page.save_language") %>
-        </div>
-      <% end %>
-    </div>
-  </section>
-  <%# The theme is a browser preference, like light/dark (ui.md "Themes"). %>
-  <section class="sticky sticky--purple panel account-panel" id="look-panel" aria-labelledby="look-title">
-    <header class="sticky__bar"><span class="sticky__caption" id="look-title"><%= t("ui.account_page.theme") %></span></header>
-    <div class="panel__body">
-      <%= form_with url: preferences_path, method: :patch, id: "look", data: { turbo: false } do %>
-        <div class="field">
-          <%= label_tag :look, t("ui.account_page.theme"), class: "sr-only" %>
-          <% choices = [ [ t("ui.account_page.site_look", look: t("ui.account_page.looks.#{site_look}")), "default" ] ] +
-                       PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] } %>
-          <%= select_tag :look, options_for_select(choices, own_look || "default"), class: "select" %>
-          <i><%= t("ui.account_page.theme_hint") %></i>
-        </div>
-        <div class="actions">
-          <%= submit_tag t("ui.account_page.save_theme"), name: nil %>
-        </div>
-      <% end %>
-    </div>
-  </section>
-  <%# The timeline order, a browser preference like the theme (timeline.md "Order of the timeline"). %>
-  <section class="sticky sticky--green panel account-panel" id="timeline-order-panel" aria-labelledby="timeline-order-title">
-    <header class="sticky__bar"><span class="sticky__caption" id="timeline-order-title"><%= t("ui.account_page.timeline_order") %></span></header>
-    <div class="panel__body">
-      <%= form_with url: preferences_path, method: :patch, id: "timeline-order", data: { turbo: false } do %>
-        <div class="field">
-          <%= label_tag :timeline_order, t("ui.account_page.timeline_order"), class: "sr-only" %>
-          <% site_order = AppSetting.current.timeline_order %>
-          <% choices = [ [ t("ui.account_page.site_timeline_order", order: t("ui.timeline.orders.#{site_order}")), "default" ] ] +
-                       AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] } %>
-          <%= select_tag :timeline_order, options_for_select(choices, own_timeline_order || "default"), class: "select" %>
-          <i><%= t("ui.account_page.timeline_order_hint") %></i>
-        </div>
-        <div class="actions">
-          <%= submit_tag t("ui.account_page.save_timeline_order"), name: nil %>
-        </div>
-      <% end %>
-    </div>
-  </section>
-  <% if resource.staff? %>
-    <section class="sticky sticky--pink panel account-panel" id="notifications-panel" aria-labelledby="notifications-title">
-      <header class="sticky__bar"><span class="sticky__caption" id="notifications-title"><%= t("ui.account_page.notifications") %></span></header>
-      <div class="panel__body">
-        <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
-          <div class="field">
-            <%= f.check_box :notify_new_tickets %><%= f.label :notify_new_tickets, t("ui.account_page.notify_new_tickets") %>
-            <i><%= t("ui.account_page.notifications_hint") %></i>
-          </div>
-          <div class="actions">
-            <%= f.submit t("ui.account_page.save_notifications") %>
-          </div>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
+  </div>
   <%# Personal tokens for the JSON API (specs/api.md "Tokens"). %>
   <section class="sticky sticky--gray panel account-panel account-panel--wide api-tokens" id="api-tokens" aria-labelledby="api-tokens-title">
     <header class="sticky__bar"><span class="sticky__caption" id="api-tokens-title"><%= t("ui.api_tokens.title") %></span></header>

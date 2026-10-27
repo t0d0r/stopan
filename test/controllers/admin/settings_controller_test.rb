@@ -17,6 +17,15 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
 
+  test "the panels sit in three fixed columns, not CSS columns (specs/ui.md \"Panel columns\")" do
+    sign_in users(:admin)
+    get admin_settings_url
+    assert_select ".panel-columns > .panel-columns__column", 3
+    assert_select ".panel-columns__column:nth-child(1) > section", 3
+    assert_select ".panel-columns__column:nth-child(2) > #mailboxes + #translation"
+    assert_select ".panel-columns__column:nth-child(3) > #google + #stages"
+  end
+
   test "admins switch automatic mail fetching on and choose how often (specs/organization-mail.md)" do
     sign_in users(:admin)
     get admin_settings_url

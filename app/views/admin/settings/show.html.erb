@@ -4,170 +4,177 @@
   <%= render "admin/tabs" %>
 </div>
 
-<section class="sticky sticky--yellow panel panel--form" aria-labelledby="look-title" id="site-look">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.look_caption") %></span></header>
-  <div class="panel__body">
-    <h2 class="section-title" id="look-title"><%= t("ui.admin.settings.look_title") %></h2>
-    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
-      <div class="field">
-        <%= f.label :default_look, t("ui.admin.settings.look_title"), class: "sr-only" %>
-        <%= f.select :default_look, PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] }, {},
-                     class: "select", aria: { describedby: "look-hint" } %>
-        <small class="field-hint" id="look-hint"><%= t("ui.admin.settings.look_hint") %></small>
-      </div>
-      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
-    <% end %>
-  </div>
-</section>
-
-<section class="sticky sticky--purple panel panel--form" aria-labelledby="postpone-title" id="auto-postpone">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.postpone_caption") %></span></header>
-  <div class="panel__body">
-    <h2 class="section-title" id="postpone-title"><%= t("ui.admin.settings.postpone_title") %></h2>
-    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
-      <%= form_errors @setting %>
-      <div class="field">
-        <%= f.label :auto_postpone_days, t("ui.admin.settings.postpone_days") %>
-        <%= f.number_field :auto_postpone_days, class: "field-input", min: 0, max: 3650, required: true,
-                           aria: { describedby: "postpone-hint", invalid: invalid?(@setting, :auto_postpone_days) } %>
-        <small class="field-hint" id="postpone-hint"><%= t("ui.admin.settings.postpone_hint") %></small>
-      </div>
-      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
-    <% end %>
-  </div>
-</section>
-
-<%# Order of the ticket timeline for everyone (specs/timeline.md "Order of the timeline"). %>
-<section class="sticky sticky--blue panel panel--form" aria-labelledby="timeline-order-title" id="timeline-order">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.timeline_caption") %></span></header>
-  <div class="panel__body">
-    <h2 class="section-title" id="timeline-order-title"><%= t("ui.admin.settings.timeline_title") %></h2>
-    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
-      <div class="field">
-        <%= f.label :timeline_order, t("ui.admin.settings.timeline_title"), class: "sr-only" %>
-        <%= f.select :timeline_order, AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] }, {},
-                     class: "select", aria: { describedby: "timeline-order-hint" } %>
-        <small class="field-hint" id="timeline-order-hint"><%= t("ui.admin.settings.timeline_hint") %></small>
-      </div>
-      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
-    <% end %>
-  </div>
-</section>
-
-<%# Automatic fetching from the organizations' mailboxes (specs/organization-mail.md "Fetching"). %>
-<section class="sticky sticky--pink panel panel--form" aria-labelledby="mailboxes-title" id="mailboxes">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.mailbox_caption") %></span></header>
-  <div class="panel__body">
-    <h2 class="section-title" id="mailboxes-title"><%= t("ui.admin.settings.mailbox_title") %></h2>
-    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
-      <%= form_errors @setting if @setting.errors.include?(:mailbox_poll_seconds) %>
-      <div class="field">
-        <label class="check-field"><%= f.check_box :mailbox_polling, aria: { describedby: "mailbox-hint" } %>
-          <%= t("ui.admin.settings.mailbox_polling") %></label>
-      </div>
-      <div class="field">
-        <%= f.label :mailbox_poll_seconds, t("ui.admin.settings.mailbox_poll_seconds") %>
-        <%= f.select :mailbox_poll_seconds, AppSetting::MAILBOX_POLL_SECONDS.map { |seconds| [ t("ui.admin.settings.mailbox_every", count: seconds / 60), seconds ] }, {},
-                     class: "select", aria: { invalid: invalid?(@setting, :mailbox_poll_seconds) } %>
-        <small class="field-hint" id="mailbox-hint"><%= t("ui.admin.settings.mailbox_hint") %></small>
-      </div>
-      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
-    <% end %>
-  </div>
-</section>
-
-<section class="sticky sticky--blue panel panel--form" aria-labelledby="translation-title" id="translation">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.translation_caption") %></span></header>
-  <div class="panel__body">
-    <h2 class="section-title" id="translation-title"><%= t("ui.admin.settings.translation_title") %></h2>
-    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
-      <%= form_errors @setting if @setting.errors.include?(:deepl_api_key) %>
-      <%# Write-only key, like the organizations' mail passwords. %>
-      <% stored = @setting.deepl_api_key_in_database.present? %>
-      <div class="field">
-        <%= f.label :deepl_api_key, t("ui.admin.settings.deepl_key") %>
-        <%= f.password_field :deepl_api_key, value: nil, class: "field-input", autocomplete: "off",
-                             aria: { describedby: "deepl-key-hint", invalid: invalid?(@setting, :deepl_api_key) } %>
-        <small class="field-hint" id="deepl-key-hint">
-          <%= stored ? t("ui.admin.settings.deepl_key_stored") : t("ui.admin.settings.deepl_key_none") %>
-          <%= t("ui.admin.settings.deepl_key_hint") %>
-        </small>
-        <% if stored %>
-          <label class="check-field"><%= f.check_box :remove_deepl_api_key %> <%= t("ui.admin.settings.deepl_key_remove") %></label>
+<%# Panels in fixed columns so the page fits a screen (specs/ui.md "Panel columns"). %>
+<div class="panel-columns">
+  <div class="panel-columns__column">
+    <section class="sticky sticky--yellow panel panel--form" aria-labelledby="look-title" id="site-look">
+      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.look_caption") %></span></header>
+      <div class="panel__body">
+        <h2 class="section-title" id="look-title"><%= t("ui.admin.settings.look_title") %></h2>
+        <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+          <div class="field">
+            <%= f.label :default_look, t("ui.admin.settings.look_title"), class: "sr-only" %>
+            <%= f.select :default_look, PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] }, {},
+                         class: "select", aria: { describedby: "look-hint" } %>
+            <small class="field-hint" id="look-hint"><%= t("ui.admin.settings.look_hint") %></small>
+          </div>
+          <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
         <% end %>
       </div>
-      <div class="field">
-        <label class="check-field"><%= f.check_box :translation_enabled, aria: { describedby: "translation-hint" } %>
-          <%= t("ui.admin.settings.translation_enabled") %></label>
-        <small class="field-hint" id="translation-hint"><%= t("ui.admin.settings.translation_hint") %></small>
+    </section>
+
+    <section class="sticky sticky--purple panel panel--form" aria-labelledby="postpone-title" id="auto-postpone">
+      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.postpone_caption") %></span></header>
+      <div class="panel__body">
+        <h2 class="section-title" id="postpone-title"><%= t("ui.admin.settings.postpone_title") %></h2>
+        <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+          <%= form_errors @setting %>
+          <div class="field">
+            <%= f.label :auto_postpone_days, t("ui.admin.settings.postpone_days") %>
+            <%= f.number_field :auto_postpone_days, class: "field-input", min: 0, max: 3650, required: true,
+                               aria: { describedby: "postpone-hint", invalid: invalid?(@setting, :auto_postpone_days) } %>
+            <small class="field-hint" id="postpone-hint"><%= t("ui.admin.settings.postpone_hint") %></small>
+          </div>
+          <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
+        <% end %>
       </div>
-      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
-    <% end %>
-  </div>
-</section>
+    </section>
 
-<section class="sticky sticky--green panel panel--form" aria-labelledby="google-title" id="google">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.google_caption") %></span></header>
-  <div class="panel__body">
-    <h2 class="section-title" id="google-title"><%= t("ui.admin.settings.google_title") %></h2>
-    <%# Set up through the wizard (specs/mail-oauth.md "Setup wizard"). %>
-    <p><%= @setting.google_ready? ? t("ui.admin.settings.google_ready", count: MailConnection.count) : t("ui.admin.settings.google_not_set_up") %></p>
-    <div class="form-actions">
-      <%= link_to (@setting.google_ready? ? t("ui.admin.settings.google_open_wizard") : t("ui.admin.settings.google_start_wizard")),
-                  admin_google_setup_path(step: (@setting.google_ready? ? "connect" : "account")), class: "btn btn--primary" %>
-    </div>
+    <%# Order of the ticket timeline for everyone (specs/timeline.md "Order of the timeline"). %>
+    <section class="sticky sticky--blue panel panel--form" aria-labelledby="timeline-order-title" id="timeline-order">
+      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.timeline_caption") %></span></header>
+      <div class="panel__body">
+        <h2 class="section-title" id="timeline-order-title"><%= t("ui.admin.settings.timeline_title") %></h2>
+        <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+          <div class="field">
+            <%= f.label :timeline_order, t("ui.admin.settings.timeline_title"), class: "sr-only" %>
+            <%= f.select :timeline_order, AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] }, {},
+                         class: "select", aria: { describedby: "timeline-order-hint" } %>
+            <small class="field-hint" id="timeline-order-hint"><%= t("ui.admin.settings.timeline_hint") %></small>
+          </div>
+          <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
+        <% end %>
+      </div>
+    </section>
   </div>
-</section>
+  <div class="panel-columns__column">
+    <%# Automatic fetching from the organizations' mailboxes (specs/organization-mail.md "Fetching"). %>
+    <section class="sticky sticky--pink panel panel--form" aria-labelledby="mailboxes-title" id="mailboxes">
+      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.mailbox_caption") %></span></header>
+      <div class="panel__body">
+        <h2 class="section-title" id="mailboxes-title"><%= t("ui.admin.settings.mailbox_title") %></h2>
+        <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+          <%= form_errors @setting if @setting.errors.include?(:mailbox_poll_seconds) %>
+          <div class="field">
+            <label class="check-field"><%= f.check_box :mailbox_polling, aria: { describedby: "mailbox-hint" } %>
+              <%= t("ui.admin.settings.mailbox_polling") %></label>
+          </div>
+          <div class="field">
+            <%= f.label :mailbox_poll_seconds, t("ui.admin.settings.mailbox_poll_seconds") %>
+            <%= f.select :mailbox_poll_seconds, AppSetting::MAILBOX_POLL_SECONDS.map { |seconds| [ t("ui.admin.settings.mailbox_every", count: seconds / 60), seconds ] }, {},
+                         class: "select", aria: { invalid: invalid?(@setting, :mailbox_poll_seconds) } %>
+            <small class="field-hint" id="mailbox-hint"><%= t("ui.admin.settings.mailbox_hint") %></small>
+          </div>
+          <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
+        <% end %>
+      </div>
+    </section>
 
-<section class="sticky sticky--gray panel panel--form stages-panel" aria-labelledby="stages-title" id="stages">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.stages_caption") %></span></header>
-  <div class="panel__body">
-    <h2 class="section-title" id="stages-title"><%= t("ui.admin.settings.stages_title") %></h2>
-    <p class="field-hint"><%= t("ui.admin.settings.stages_hint") %></p>
-    <% stages = Stage.ordered.group_by(&:status) %>
-    <% TicketBoard::ORDER_OF_COLUMNS.each do |status| %>
-      <% next if stages[status].blank? %>
-      <h3 class="stages-panel__status"><%= status_pill status %></h3>
-      <ul class="stages-list">
-        <% stages[status].each_with_index do |stage, index| %>
-          <li class="stages-list__item" id="<%= dom_id(stage) %>">
-            <%= form_with model: [ :admin, stage ], class: "inline-form stages-list__form" do |f| %>
-              <%= f.label :name, t("ui.fields.name"), class: "sr-only", for: "stage_name_#{stage.id}" %>
-              <%= f.text_field :name, id: "stage_name_#{stage.id}", class: "field-input", maxlength: 40, required: true %>
-              <%= f.label :color, t("ui.admin.settings.color"), class: "sr-only", for: "stage_color_#{stage.id}" %>
-              <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, id: "stage_color_#{stage.id}", class: "select" %>
-              <%= f.submit t("ui.save"), class: "btn btn--small" %>
+    <section class="sticky sticky--blue panel panel--form" aria-labelledby="translation-title" id="translation">
+      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.translation_caption") %></span></header>
+      <div class="panel__body">
+        <h2 class="section-title" id="translation-title"><%= t("ui.admin.settings.translation_title") %></h2>
+        <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+          <%= form_errors @setting if @setting.errors.include?(:deepl_api_key) %>
+          <%# Write-only key, like the organizations' mail passwords. %>
+          <% stored = @setting.deepl_api_key_in_database.present? %>
+          <div class="field">
+            <%= f.label :deepl_api_key, t("ui.admin.settings.deepl_key") %>
+            <%= f.password_field :deepl_api_key, value: nil, class: "field-input", autocomplete: "off",
+                                 aria: { describedby: "deepl-key-hint", invalid: invalid?(@setting, :deepl_api_key) } %>
+            <small class="field-hint" id="deepl-key-hint">
+              <%= stored ? t("ui.admin.settings.deepl_key_stored") : t("ui.admin.settings.deepl_key_none") %>
+              <%= t("ui.admin.settings.deepl_key_hint") %>
+            </small>
+            <% if stored %>
+              <label class="check-field"><%= f.check_box :remove_deepl_api_key %> <%= t("ui.admin.settings.deepl_key_remove") %></label>
             <% end %>
-            <span class="stages-list__swatch sticky--<%= stage.color %>" aria-hidden="true"></span>
-            <%= button_to move_admin_stage_path(stage, direction: "up"), method: :patch, class: "icon-action", disabled: index.zero?,
-                          title: t("ui.admin.settings.up"), aria: { label: t("ui.admin.settings.up") } do %><%= icon :up, size: 14 %><% end %>
-            <%= button_to move_admin_stage_path(stage, direction: "down"), method: :patch, class: "icon-action",
-                          disabled: index == stages[status].size - 1, title: t("ui.admin.settings.down"),
-                          aria: { label: t("ui.admin.settings.down") } do %><%= icon :down, size: 14 %><% end %>
-            <%= button_to t("ui.delete"), admin_stage_path(stage), method: :delete, class: "link-button",
-                          form: { data: confirm_data(title: t("ui.admin.settings.delete_stage_title", name: stage.name),
-                                                     body: t("ui.admin.settings.delete_stage_body"), button: t("ui.delete")) } %>
-          </li>
+          </div>
+          <div class="field">
+            <label class="check-field"><%= f.check_box :translation_enabled, aria: { describedby: "translation-hint" } %>
+              <%= t("ui.admin.settings.translation_enabled") %></label>
+            <small class="field-hint" id="translation-hint"><%= t("ui.admin.settings.translation_hint") %></small>
+          </div>
+          <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
         <% end %>
-      </ul>
-    <% end %>
-    <% if stages.empty? %><p class="panel__empty"><%= t("ui.admin.settings.no_stages") %></p><% end %>
-
-    <h3 class="section-title"><%= t("ui.admin.settings.new_stage") %></h3>
-    <%= form_with model: [ :admin, Stage.new(status: "open") ], class: "inline-form stages-new" do |f| %>
-      <div class="filters__field">
-        <%= f.label :status, t("ui.fields.status") %>
-        <%= f.select :status, TicketBoard::ORDER_OF_COLUMNS.map { |s| [ status_name(s), s ] }, {}, class: "select" %>
       </div>
-      <div class="filters__field">
-        <%= f.label :name, t("ui.fields.name") %>
-        <%= f.text_field :name, class: "field-input", maxlength: 40, required: true, placeholder: t("ui.admin.settings.stage_placeholder") %>
-      </div>
-      <div class="filters__field">
-        <%= f.label :color, t("ui.admin.settings.color") %>
-        <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, class: "select" %>
-      </div>
-      <%= f.submit t("ui.admin.settings.add_stage"), class: "btn btn--primary" %>
-    <% end %>
+    </section>
   </div>
-</section>
+  <div class="panel-columns__column">
+    <section class="sticky sticky--green panel panel--form" aria-labelledby="google-title" id="google">
+      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.google_caption") %></span></header>
+      <div class="panel__body">
+        <h2 class="section-title" id="google-title"><%= t("ui.admin.settings.google_title") %></h2>
+        <%# Set up through the wizard (specs/mail-oauth.md "Setup wizard"). %>
+        <p><%= @setting.google_ready? ? t("ui.admin.settings.google_ready", count: MailConnection.count) : t("ui.admin.settings.google_not_set_up") %></p>
+        <div class="form-actions">
+          <%= link_to (@setting.google_ready? ? t("ui.admin.settings.google_open_wizard") : t("ui.admin.settings.google_start_wizard")),
+                      admin_google_setup_path(step: (@setting.google_ready? ? "connect" : "account")), class: "btn btn--primary" %>
+        </div>
+      </div>
+    </section>
+
+    <section class="sticky sticky--gray panel panel--form stages-panel" aria-labelledby="stages-title" id="stages">
+      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.stages_caption") %></span></header>
+      <div class="panel__body">
+        <h2 class="section-title" id="stages-title"><%= t("ui.admin.settings.stages_title") %></h2>
+        <p class="field-hint"><%= t("ui.admin.settings.stages_hint") %></p>
+        <% stages = Stage.ordered.group_by(&:status) %>
+        <% TicketBoard::ORDER_OF_COLUMNS.each do |status| %>
+          <% next if stages[status].blank? %>
+          <h3 class="stages-panel__status"><%= status_pill status %></h3>
+          <ul class="stages-list">
+            <% stages[status].each_with_index do |stage, index| %>
+              <li class="stages-list__item" id="<%= dom_id(stage) %>">
+                <%= form_with model: [ :admin, stage ], class: "inline-form stages-list__form" do |f| %>
+                  <%= f.label :name, t("ui.fields.name"), class: "sr-only", for: "stage_name_#{stage.id}" %>
+                  <%= f.text_field :name, id: "stage_name_#{stage.id}", class: "field-input", maxlength: 40, required: true %>
+                  <%= f.label :color, t("ui.admin.settings.color"), class: "sr-only", for: "stage_color_#{stage.id}" %>
+                  <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, id: "stage_color_#{stage.id}", class: "select" %>
+                  <%= f.submit t("ui.save"), class: "btn btn--small" %>
+                <% end %>
+                <span class="stages-list__swatch sticky--<%= stage.color %>" aria-hidden="true"></span>
+                <%= button_to move_admin_stage_path(stage, direction: "up"), method: :patch, class: "icon-action", disabled: index.zero?,
+                              title: t("ui.admin.settings.up"), aria: { label: t("ui.admin.settings.up") } do %><%= icon :up, size: 14 %><% end %>
+                <%= button_to move_admin_stage_path(stage, direction: "down"), method: :patch, class: "icon-action",
+                              disabled: index == stages[status].size - 1, title: t("ui.admin.settings.down"),
+                              aria: { label: t("ui.admin.settings.down") } do %><%= icon :down, size: 14 %><% end %>
+                <%= button_to t("ui.delete"), admin_stage_path(stage), method: :delete, class: "link-button",
+                              form: { data: confirm_data(title: t("ui.admin.settings.delete_stage_title", name: stage.name),
+                                                         body: t("ui.admin.settings.delete_stage_body"), button: t("ui.delete")) } %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+        <% if stages.empty? %><p class="panel__empty"><%= t("ui.admin.settings.no_stages") %></p><% end %>
+
+        <h3 class="section-title"><%= t("ui.admin.settings.new_stage") %></h3>
+        <%= form_with model: [ :admin, Stage.new(status: "open") ], class: "inline-form stages-new" do |f| %>
+          <div class="filters__field">
+            <%= f.label :status, t("ui.fields.status") %>
+            <%= f.select :status, TicketBoard::ORDER_OF_COLUMNS.map { |s| [ status_name(s), s ] }, {}, class: "select" %>
+          </div>
+          <div class="filters__field">
+            <%= f.label :name, t("ui.fields.name") %>
+            <%= f.text_field :name, class: "field-input", maxlength: 40, required: true, placeholder: t("ui.admin.settings.stage_placeholder") %>
+          </div>
+          <div class="filters__field">
+            <%= f.label :color, t("ui.admin.settings.color") %>
+            <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, class: "select" %>
+          </div>
+          <%= f.submit t("ui.admin.settings.add_stage"), class: "btn btn--primary" %>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>

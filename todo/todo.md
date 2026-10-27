@@ -160,6 +160,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] README: Mermaid diagram of how tickets come in (ingress workflow) (operator, 2026-10-27; specs/overview.md "Ingress diagram")
 - [x] README ingress diagram made simple: six boxes left to right, details in a list (operator, 2026-10-27)
 - [x] README shows only the queue screenshot; the other four removed from the README, bin/screenshots and docs/screenshots (operator, 2026-10-28; specs/ui.md "Screenshots")
+- [x] account page and admin settings: panels in fixed flex columns instead of CSS columns, which Safari split under the big/extra text size; settings fit 1440x900 without scrolling; stage rows wrap inside their panel (operator, 2026-10-28; specs/ui.md "Panel columns")
+- [ ] menu bar overflows sideways at the extra text size on a 1280px window (zoom 1.3 makes it wider than the window; the phone layout switches by real width) (specs/ui.md)
 - [x] production: deployed 50475d3 (documentation only) after a database backup (specs/deploy.md)
 - [x] admin: flush all tickets of an organization after typing its name, keeping its settings; numbers never reused (operator, 2026-10-27; specs/admin.md "Flush all tickets of an organization")
 - [x] requester email on the ticket page and the profile copies on click instead of opening the mail program (operator, 2026-10-27; specs/ui.md "Emails copy on click")
