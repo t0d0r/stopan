@@ -813,6 +813,9 @@ menu and Take; open /tickets/new and pick a requester.
 - README diagram simplified to six boxes left to right (channels, Checks, Ticket
   or reply, Notifications) with the details in a list under it; rendered in
   Chrome to check.
+- Pushed main to origin again on the operator's request (up to 50a6a6f: the
+  simple diagram and the logo work from session/2026-10-27-logo.md) after a
+  gitleaks scan of the 3 unpushed commits (no leaks).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);
