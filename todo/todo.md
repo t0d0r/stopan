@@ -88,7 +88,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] clickable Markdown task lists for users who may edit; clicks by one person within 10 minutes form one revision (g0no markdown.md "Task lists")
 - [x] shared page one column that follows the width switch; width box on the original request; g0no-style in-place editing (specs/ui.md, specs/timeline.md)
 - [x] ticket header inside the request note: bold number before the subject, no breadcrumb (specs/ui.md "Ticket page")
-- [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
+- [x] add `upgrade=websocket` to the production Apache ProxyPass through the ISPConfig API; /cable upgrades with 101 (specs/deploy.md "WebSocket proxy")
 
 ## Later (specs/roadmap.md)
 

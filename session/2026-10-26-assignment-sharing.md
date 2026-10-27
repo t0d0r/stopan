@@ -267,6 +267,15 @@ Operator requests, in order:
   the Apache proxy line (WebSocket 404, so no live updates in
   production yet) and SMTP.
 
+- WebSocket proxy (operator: "add upgrade=websocket through the
+  ISPConfig API"): saved the site record, `sites_web_domain_update`
+  changed only the ProxyPass line (passing the current log_retention and
+  pm_* values, which the method would otherwise reset to defaults);
+  ISPConfig regenerated the vhost in ~50 s and restarted Apache (a few
+  seconds down for every site). `/cable` now upgrades with 101, foreign
+  origins get 404; Stopan and g0no answer. Live updates work in
+  production. Still open: SMTP.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

@@ -23,7 +23,7 @@ The deployment waited on ISPConfig Remote API access on 2026-10-25/26
 | part | where |
 |------|-------|
 | website | ISPConfig site `stopan.linuxfan.org`, client 1 (the same client and settings as the g0no site), created with `sites_web_domain_add` from `deploy/ispconfig-site.json`: no PHP, SSL with Let's Encrypt, rewrite HTTP to HTTPS, PageSpeed off, proxy in the site's "Apache directives" field |
-| proxy | the site's Apache directives (`deploy/ispconfig-site.json`): `ProxyPass / http://127.0.0.1:3183/`, `ProxyPreserveHost On`, `X-Forwarded-Proto https`, ACME challenge path excluded. They are stored in the ISPConfig site record, so a panel resync regenerates them |
+| proxy | the site's Apache directives (`deploy/ispconfig-site.json`): `ProxyPass / http://127.0.0.1:3183/ retry=0 upgrade=websocket`, `ProxyPreserveHost On`, `X-Forwarded-Proto https`, ACME challenge path excluded. They are stored in the ISPConfig site record, so a panel resync regenerates them |
 | system user | `stopan` (system account, no login shell, home `/srv/stopan`, own subuid/subgid range, lingering so its services run without a login) |
 | container | rootless Podman as `stopan`, from the quadlet `deploy/stopan.container`, installed as `~stopan/.config/containers/systemd/stopan.container`; systemd user service `stopan.service`, `Restart=always`, `WantedBy=default.target` |
 | image | `localhost/stopan:latest` (also tagged with the git revision), built on the server from `Dockerfile` |
@@ -42,11 +42,12 @@ container's own network namespace only, lets the image's user listen on
 port 80. A process that escapes it is the unprivileged user `stopan`,
 which cannot read g0no's or the operator's files.
 
-Since 2026-10-26 the notification panel updates live over Action Cable
-(`/cable`, notifications.md). The installed proxy line has no
-`upgrade=websocket` yet; until the operator adds it (Apache 2.4.47+), the
-panel updates on page load and the browser's Action Cable client keeps
-retrying, which is harmless. Thruster passes WebSockets through.
+Live updates use Action Cable over a WebSocket on `/cable`
+(notifications.md, timeline.md, queues.md, admin.md, sharing.md). Since
+2026-10-27 the proxy line carries `upgrade=websocket` (Apache 2.4.47+;
+the server runs 2.4.69, and `mod_proxy_http` handles the upgrade, so
+`mod_proxy_wstunnel` is not needed). Thruster passes WebSockets through.
+Without the upgrade, pages still work and update on load.
 
 ## Settings (`~stopan/stopan.env`)
 
@@ -242,15 +243,37 @@ newest revision images.
   HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure HttpOnly session
   cookie unchanged; `/users/sign_up` redirects to sign-in; an unknown
   share link is 404; g0no `/up` 200.
-- Still open (operator): `/cable` WebSocket upgrades through Apache answer
-  404, because the site's `ProxyPass` line has no `upgrade=websocket`;
-  live updates (notifications, ticket pages, queue, admin, shared pages,
-  viewer counts) work only after that change, pages work without it.
-  `SMTP_ADDRESS` is not set, so no email is sent (the log says so).
+- `/cable` answered 404 through Apache after the deploy, because the
+  `ProxyPass` line had no `upgrade=websocket`; fixed the same day (next
+  section). `SMTP_ADDRESS` is not set, so no email is sent (the log says
+  so).
 - Rollback of this release: as `stopan`, `podman tag localhost/stopan:e553a58
   localhost/stopan:latest`, restore the backup over
   `~/storage/production.sqlite3` (with `podman unshare`, service stopped),
   then `systemctl --user restart stopan`.
+
+## WebSocket proxy (2026-10-27)
+
+Operator: "add upgrade=websocket through the ISPConfig API".
+
+- The site record was read with `sites_web_domain_get` (primary_id 25)
+  and saved as `/root/stopan/site-25-before-websocket.json` (root, 600)
+  for a rollback.
+- `sites_web_domain_update` (client 1, primary_id 25) changed only the
+  one line `ProxyPass / http://127.0.0.1:3183/ retry=0` to end in
+  `upgrade=websocket`. The method fills `log_retention` and the `pm_*`
+  fields with defaults when they are missing, so the call passed their
+  current values (30, 10, 2, 1, 5) to leave them unchanged. The request
+  is `/root/stopan/site-25-websocket-update.json`.
+- ISPConfig's cron regenerated the vhost within about 50 seconds and
+  restarted Apache (a restart, not a graceful reload: every site on the
+  server was unavailable for a few seconds). `apache2ctl configtest`
+  OK; Apache active; Stopan and g0no `/up` 200.
+- Checked: a WebSocket upgrade to `/cable` with the site's own `Origin`
+  answers 101; with a foreign `Origin` 404 (Action Cable's same-origin
+  check).
+- Rollback: `sudo /root/stopan/bin/ispconfig-remote sites_web_domain_update`
+  with the old line (built from the saved record the same way).
 
 ## Rollback
 

@@ -138,8 +138,8 @@ notification arrives or the user reads notifications in another tab.
 - **Adapter:** `async` (`config/cable.yml`), one Puma process; several
   processes would need solid_cable or Redis.
 - **Without a WebSocket** (blocked proxy, old browser) the panel updates on
-  page load, as before. Production needs `upgrade=websocket` on the Apache
-  `ProxyPass` line for `/cable` (deploy.md); until then it works this way.
+  page load, as before. Production's Apache `ProxyPass` line carries
+  `upgrade=websocket` for `/cable` since 2026-10-27 (deploy.md).
 
 ### Live updates of the notifications page
 
