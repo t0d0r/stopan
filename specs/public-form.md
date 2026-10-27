@@ -35,6 +35,26 @@ gets in with a magic sign-in link.
   each organization whose page is on. Copying shows "Copied" for 2
   seconds.
 
+## Allowed senders
+
+Operator, 2026-10-27: "organizations should have a list of emails that
+can be used for creating tickets via the public link".
+
+- `organizations.public_allowed_senders` (text): one entry per line,
+  either a full address (`anna@acme.example`) or a domain written with a
+  leading `@` (`@acme.example`, which allows every address at exactly
+  that domain). Stored lower-case, blank lines and duplicates dropped, at
+  most 500 entries; an entry that is neither is a validation error naming
+  it. Edited in the "Public request page" part of the organization form.
+- Empty list: anyone may send a request (as before). Non-empty: only
+  matching addresses; any other address gets the form back with 422 and
+  "This email address cannot send requests to Acme Bakery. Ask the
+  organization to add it." under the email field, and nothing is created.
+  This reveals whether an address is on the list, never whether it has an
+  account. The rate limits count refused attempts too.
+- The list does not apply to the mailbox (organization-mail.md) in this
+  phase.
+
 ## Who the request belongs to
 
 The email address is the identity, as in email-based service desks (the
@@ -106,7 +126,8 @@ same rules apply to the mailbox, organization-mail.md):
 
 ## Acceptance
 
-`test/controllers/public_requests_controller_test.rb` (off and unknown
+`test/controllers/public_requests_controller_test.rb` (allowed senders:
+addresses, domains, refusal message, empty list for anyone; off and unknown
 slugs 404, new and known requesters, membership added, staff and
 deactivated addresses create nothing with the same answer, honeypot,
 timing, rate limit, signed-in users redirected, confirmation email with a

@@ -29,6 +29,7 @@ declared in the database.
 | notes | optional text, staff only |
 | slug | unique, URL name of the public form (public-form.md) |
 | public_form, public_intro | public request page on/off (default off) and its intro text |
+| public_allowed_senders | text, one address or @domain per line; empty = anyone (public-form.md "Allowed senders") |
 | smtp_enabled, smtp_address, smtp_port, smtp_security, smtp_username, smtp_password (encrypted), mail_from | outgoing mail (organization-mail.md) |
 | imap_enabled, imap_address, imap_port, imap_ssl, imap_username, imap_password (encrypted), imap_folder, mailbox_address | mailbox |
 | imap_last_checked_at, imap_last_error, imap_messages_count | mailbox status |
