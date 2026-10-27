@@ -66,16 +66,27 @@ in-process job queue as today.
 
 ### Fetching
 
-- Every `MAILBOX_POLL_SECONDS` (default 120) the app checks each
-  organization with the mailbox enabled: IMAP login, select the folder,
-  search `UNSEEN`, take at most 50 messages per check (oldest first),
-  process each and mark it `\Seen`. A message that fails to process is
-  marked `\Seen` too and its error logged, so one bad message does not
-  block the queue; the organization's `imap_last_error` shows it.
+- When automatic fetching is on, every few minutes (below) the app checks
+  each organization with the mailbox enabled: IMAP login, select the
+  folder, search `UNSEEN`, take at most 50 messages per check (oldest
+  first), process each and mark it `\Seen`. A message that fails to
+  process is marked `\Seen` too and its error logged, so one bad message
+  does not block the queue; the organization's `imap_last_error` shows it.
+- **On /admin/settings** (operator, 2026-10-27: "make it an option in
+  settings"), panel "Mailboxes" (`#mailboxes`): a check box "Fetch new
+  mail from the organizations' mailboxes automatically"
+  (`app_settings.mailbox_polling`, default off) and "How often": every 1,
+  2, 5, 10 or 15 minutes (`app_settings.mailbox_poll_seconds`, 60, 120,
+  300, 600, 900; default 120). A change applies within half a minute,
+  without a restart. "Check the mailbox" on an organization page fetches
+  at once whatever the setting.
 - The poller runs inside the web process (one Puma process, like Action
-  Cable's async adapter), started only by `rails server` and only when
-  `MAILBOX_POLLING=true` (production sets it; development and tests do
-  not). Checks of one organization never overlap. `bin/rails
+  Cable's async adapter), started only by `rails server` (never in the
+  console, rake tasks or tests). It wakes every 30 seconds, reads the
+  setting, and checks the mailboxes when fetching is on and the chosen
+  interval has passed since its last check. `MAILBOX_POLLING=false` in
+  the environment is the operator's switch to keep the poller from
+  starting at all, whatever the setting. Checks never overlap. `bin/rails
   stopan:mailboxes:check` runs one check of every mailbox by hand.
 - Connections use TLS with certificate verification when `imap_ssl` is
   on; a timeout of 30 seconds per connection.

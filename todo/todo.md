@@ -85,7 +85,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] magic sign-in links and "email me a sign-in link"; choosing a first password (specs/public-form.md)
 - [x] public request page per organization with accounts by email and abuse limits (specs/public-form.md)
 - [x] IMAP mailbox per organization: poller, new tickets and replies from mail (specs/organization-mail.md)
-- [ ] operator: set TRUSTED_PROXIES and MAILBOX_POLLING in production when used (specs/deploy.md)
+- [ ] operator: set TRUSTED_PROXIES in production when the public forms are used (specs/deploy.md); mail fetching is now a setting
 - [x] admins can impersonate a user, with a clear banner and a way back (specs/admin.md "Impersonation")
 - [x] flash messages slide in from the right to the centre band and sweep out to the left (specs/ui.md)
 - [x] who works on the ticket next to the status in the request note, also for requesters and shared pages (specs/ui.md, specs/sharing.md)
@@ -138,6 +138,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] site-wide default theme in /admin/settings; users may still pick their own (operator, 2026-10-27; specs/ui.md "Themes")
 - [x] Google mail setup as a step-by-step wizard instead of manual settings (operator, 2026-10-27; specs/mail-oauth.md "Setup wizard")
 - [x] wizard path for Gmail with an app password, no Google Cloud (operator, 2026-10-27; specs/mail-oauth.md "App password path")
+- [x] automatic mail fetching on /admin/settings: on/off and every 1-15 minutes, applies without restart; on in dev (operator, 2026-10-27; specs/organization-mail.md "Fetching")
+- [ ] production: turn on "Fetch new mail automatically" in /admin/settings after the next deploy
 - [x] mobile rules from Apple / Material / WCAG: 44px targets, 16px fields, no sideways scrolling, no hover-only content (specs/mobile.md)
 - [x] production: deployed 8730df2 (omarchy theme, phone menu bar), after a database backup
 - [ ] admin dashboard warning for organizations whose Google account needs reconnecting (specs/mail-oauth.md "Failure")

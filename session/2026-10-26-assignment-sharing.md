@@ -659,9 +659,15 @@ menu and Take; open /tickets/new and pick a requester.
   (`MailConnection#disconnect!`, also used by "Disconnect Google"). Steps
   are now named in the URL (`?step=client`); a step of the other path
   switches the path. Not yet checked in a browser at phone width.
-- Mailbox polling: every `MAILBOX_POLL_SECONDS` (default 120 s), only when
-  `MAILBOX_POLLING=true`; per specs/deploy.md that is still not set in
-  production, so there only "Check the mailbox" fetches mail.
+- Mail fetching is a setting (operator: "make it an option in settings"):
+  /admin/settings panel "Mailboxes", `app_settings.mailbox_polling` and
+  `mailbox_poll_seconds` (60/120/300/600/900; migration
+  `AddMailboxPollingToAppSettings`). The poller starts under `rails
+  server` unless `MAILBOX_POLLING=false`, wakes every 30 s and reads the
+  setting, so changes need no restart; `MAILBOX_POLL_SECONDS` is gone.
+  Turned on in the dev container (migrated, restarted, setting on): its
+  Gmail mailbox was checked within a minute, 1 message, no error.
+  Production: switch it on in /admin/settings after the next deploy.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

@@ -58,11 +58,13 @@ Generated on the server with umask 077 and never copied off it:
 `ADMIN_EMAIL=admin@stopan.linuxfan.org` (no address was given; change it
 at the account page), `RAILS_FORCE_SSL=true`,
 `RAILS_ASSUME_SSL=true`, `REGISTRATION_OPEN=false` (docker.md, auth.md).
-For the public forms and mailboxes (public-form.md,
-organization-mail.md) production also needs `TRUSTED_PROXIES=<the
-server's own address>` (Apache reaches the container through pasta,
-which shows the server's address to the app) and `MAILBOX_POLLING=true`;
-both are set by the operator in `stopan.env` when the features are used.
+For the public forms (public-form.md) production also needs
+`TRUSTED_PROXIES=<the server's own address>` (Apache reaches the
+container through pasta, which shows the server's address to the app),
+set by the operator in `stopan.env` when the feature is used. Automatic
+fetching from the organizations' mailboxes is switched on in
+`/admin/settings` ("Mailboxes", organization-mail.md "Fetching");
+`MAILBOX_POLLING` is no longer needed.
 The "Translate" button (translation.md) takes its DeepL key from
 `/admin/settings` (stored encrypted); `DEEPL_API_KEY` here is only a
 fallback.

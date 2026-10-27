@@ -1,6 +1,6 @@
 module Admin
   # Settings of the whole service desk (specs/board.md): automatic
-  # postponing, and the board's stages.
+  # postponing, fetching from the mailboxes, and the board's stages.
   class SettingsController < BaseController
     def show
       @setting = AppSetting.current
@@ -21,7 +21,7 @@ module Admin
     # (specs/translation.md). The Google client is set in the wizard
     # (Admin::GoogleSetupController).
     def setting_params
-      params.expect(app_setting: [ :auto_postpone_days, :default_look, :translation_enabled, :deepl_api_key, :remove_deepl_api_key ])
+      params.expect(app_setting: [ :auto_postpone_days, :default_look, :mailbox_polling, :mailbox_poll_seconds, :translation_enabled, :deepl_api_key, :remove_deepl_api_key ])
             .tap { |permitted| permitted.delete(:deepl_api_key) if permitted[:deepl_api_key].blank? }
     end
   end

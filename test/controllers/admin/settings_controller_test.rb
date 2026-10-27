@@ -17,6 +17,26 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
 
+  test "admins switch automatic mail fetching on and choose how often (specs/organization-mail.md)" do
+    sign_in users(:admin)
+    get admin_settings_url
+    assert_select "#mailboxes input[type=checkbox][name='app_setting[mailbox_polling]']:not([checked])"
+    assert_select "#mailboxes select[name='app_setting[mailbox_poll_seconds]'] option", 5
+    assert_select "#mailboxes option[selected][value='120']", "Every 2 minutes"
+    assert_select "#mailboxes option[value='60']", "Every minute"
+
+    patch admin_settings_url, params: { app_setting: { mailbox_polling: "1", mailbox_poll_seconds: "300" } }
+    assert_redirected_to admin_settings_url
+    setting = AppSetting.current.reload
+    assert setting.mailbox_polling?
+    assert_equal 300, setting.mailbox_poll_seconds
+
+    patch admin_settings_url, params: { app_setting: { mailbox_poll_seconds: "7" } }
+    assert_response :unprocessable_content
+    assert_select "#mailboxes .form-errors"
+    assert_equal 300, AppSetting.current.reload.mailbox_poll_seconds
+  end
+
   test "cards due soon show the stamp and staff see the note" do
     AppSetting.current.update!(auto_postpone_days: 30)
     tickets(:printer).update_columns(updated_at: 27.days.ago)

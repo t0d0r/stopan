@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_130000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,6 +48,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
     t.string "google_client_id"
     t.text "google_client_secret"
     t.string "default_look", default: "notes", null: false
+    t.boolean "mailbox_polling", default: false, null: false
+    t.integer "mailbox_poll_seconds", default: 120, null: false
   end
 
   create_table "comments", force: :cascade do |t|

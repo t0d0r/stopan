@@ -304,6 +304,14 @@ de:
         postpone_title: "Automatisches Zurückstellen"
         postpone_days: "Tickets nach so vielen Tagen ohne Aktivität zurückstellen"
         postpone_hint: "Tickets mit dem Status Neu, In Bearbeitung oder Wartet auf Antwort, die so lange niemand bearbeitet hat, wechseln einmal pro Stunde zu Später. 0 schaltet dies aus. Karten, die innerhalb einer Woche fällig werden, zeigen auf dem Board einen Stempel."
+        mailbox_caption: "Postfächer"
+        mailbox_title: "E-Mail abrufen"
+        mailbox_polling: "Neue E-Mails aus den Postfächern der Organisationen automatisch abrufen"
+        mailbox_poll_seconds: "Wie oft"
+        mailbox_every:
+          one: "Jede Minute"
+          other: "Alle %{count} Minuten"
+        mailbox_hint: "Geprüft wird jede Organisation mit aktiviertem Postfach: höchstens 50 neue Nachrichten pro Prüfung, im Postfach als gelesen markiert. Postfach prüfen auf der Seite der Organisation ruft sofort ab."
         translation_caption: "Übersetzung"
         translation_title: "Maschinelle Übersetzung (DeepL)"
         translation_enabled: "Schaltfläche Übersetzen an Nachrichten für Mitarbeiter anbieten"
@@ -971,6 +979,7 @@ de:
         public_intro: "Einleitungstext"
         public_allowed_senders: "Erlaubte E-Mail-Adressen"
       app_setting:
+        mailbox_poll_seconds: "Wie oft"
         auto_postpone_days: "Tage ohne Aktivität"
         deepl_api_key: "DeepL-API-Schlüssel"
       stage:

@@ -301,6 +301,14 @@ en:
         postpone_title: "Automatic postponing"
         postpone_days: "Postpone tickets after this many days without activity"
         postpone_hint: "New, in progress and pending tickets nobody touched for this long move to Not now, once an hour. 0 turns it off. Cards due within a week show a stamp on the board."
+        mailbox_caption: "Mailboxes"
+        mailbox_title: "Fetching mail"
+        mailbox_polling: "Fetch new mail from the organizations' mailboxes automatically"
+        mailbox_poll_seconds: "How often"
+        mailbox_every:
+          one: "Every minute"
+          other: "Every %{count} minutes"
+        mailbox_hint: "Each organization with its mailbox turned on is checked: at most 50 new messages per check, marked as read in the mailbox. Check the mailbox on an organization's page fetches at once."
         translation_caption: "Translation"
         translation_title: "Machine translation (DeepL)"
         translation_enabled: "Offer a Translate button on messages for staff"
@@ -966,6 +974,7 @@ en:
         public_intro: "Intro text"
         public_allowed_senders: "Allowed email addresses"
       app_setting:
+        mailbox_poll_seconds: "How often"
         auto_postpone_days: "Days without activity"
         deepl_api_key: "DeepL API key"
       stage:
