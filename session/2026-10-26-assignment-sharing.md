@@ -206,6 +206,10 @@ Operator requests, in order:
   headless Chrome: caret at "sec|ond" in plain text and "bl|ank" inside a
   Markdown table, no scroll, Escape both ways.
 
+- Alternate row shading (operator: "odd/even colouring for the lists in
+  queue"): even rows of the queue and My tickets get a translucent dark
+  tint, so it suits every view colour and the dark theme.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

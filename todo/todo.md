@@ -66,6 +66,7 @@
 - [x] in-app notification panel: bell with unread count, dropdown, notifications page (specs/notifications.md "Notification panel")
 - [x] live updates of the notification panel over Action Cable (specs/notifications.md "Live updates of the panel")
 - [x] queue views as a horizontal tab row like the admin tabs (specs/queues.md)
+- [x] alternate row shading in the queue and My tickets (specs/queues.md "Table")
 - [x] shared ticket page refreshes live on public changes (specs/sharing.md "Live updates of the shared page")
 - [x] ticket page refreshes live, staff and public streams, waits while the user is busy (specs/timeline.md "Live updates of the ticket page")
 - [x] queue and My tickets refresh live (specs/queues.md "Live updates")

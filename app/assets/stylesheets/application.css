@@ -1582,6 +1582,11 @@ form.button_to {
   font-size: 12px;
 }
 
+/* Alternate rows (queues.md "Table"): a tint that suits every paper colour. */
+.tickets-table tbody tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.05);
+}
+
 .tickets-table tbody tr:hover td {
   background: rgba(255, 255, 255, 0.4);
 }

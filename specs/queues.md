@@ -81,6 +81,13 @@ assignee has a small round badge with their initials in a paper colour
 picked from their user id, so the same person always has the same colour
 (the name is next to it; the badge is decorative, `aria-hidden`).
 
+Rows alternate (operator, 2026-10-27: "odd/even colouring for the lists
+in queue"): every even row of the queue and of My tickets is a shade
+darker than the panel's paper (a translucent black tint, so it works on
+every view colour and in the dark theme, where the paper keeps its
+colour); hovering a row lightens it as before. The urgent/high edge and
+the row borders stay.
+
 Assigning from the queue (tickets.md "Assigning"):
 
 - The assignee cell is a menu button showing the badge and name (or
