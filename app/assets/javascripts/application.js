@@ -150,11 +150,15 @@ function setUpCopyButtons() {
     const label = button.title;
     button.addEventListener("click", async () => {
       await copyText(button.dataset.copyValue);
+      // A visible "Copied" that screen readers also hear, where the button has one.
+      const status = button.querySelector("[data-copied-status]");
       button.classList.add("is-copied");
       button.title = button.dataset.copiedLabel;
+      if (status) status.textContent = button.dataset.copiedLabel;
       setTimeout(() => {
         button.classList.remove("is-copied");
         button.title = label;
+        if (status) status.textContent = "";
       }, 2000);
     }, { signal: pageSignal });
   });

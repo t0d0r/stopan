@@ -781,6 +781,9 @@ menu and Take; open /tickets/new and pick a requester.
   `AddLastTicketNumberToAppSettings`) keeps numbers increasing. Danger zone
   panel with the typed name (JS gate + server check), API flush. Checked the
   panel on dev without submitting.
+- Requester email copies on click (`ApplicationHelper#copy_email`, a button with
+  data-copy-value and a live "Copied" status) in the Requester panel and on the
+  profile; no mailto. Checked on dev #1094.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

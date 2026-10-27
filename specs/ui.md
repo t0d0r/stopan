@@ -165,6 +165,12 @@ Turbo Drive for page changes.
   from a mailbox. On a shared page: "#1094 Subject", status and the
   shared link, nothing more than that page shows. Replies and notes copy
   their text only.
+- **Emails copy on click** (operator, 2026-10-27: "clicking the
+  requester's email should not open the mail program, only copy it"):
+  the requester's email in the ticket page's Requester panel and on a
+  person's profile is a button that puts the address on the clipboard
+  and shows "Copied" next to it for two seconds (also announced to
+  screen readers); no `mailto:` link.
 
 ## Accessibility
 

@@ -7,7 +7,7 @@
     <p class="person-head__meta">
       <span class="role-tag"><%= role_label(@person) %></span>
       <% if @person.deactivated? %><span class="role-tag role-tag--off"><%= t("ui.people.deactivated") %></span><% end %>
-      <%= mail_to @person.email %>
+      <%= copy_email @person.email %>
     </p>
   </div>
 </div>

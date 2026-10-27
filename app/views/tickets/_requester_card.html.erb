@@ -8,7 +8,7 @@
       <dd><%= current_user.staff? ? link_to(ticket.requester.display_name, person_path(ticket.requester)) : ticket.requester.display_name %></dd>
       <% if current_user.staff? %>
         <dt><%= t("ui.fields.email") %></dt>
-        <dd class="text"><%= mail_to ticket.requester.email %></dd>
+        <dd class="text"><%= copy_email ticket.requester.email %></dd>
       <% end %>
       <dt><%= t("ui.fields.organization") %></dt>
       <dd><%= ticket.organization.name %></dd>

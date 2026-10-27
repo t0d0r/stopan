@@ -227,6 +227,7 @@ de:
       not_allowed: "nicht erlaubt"
       assignee_not_allowed: "diese Person darf dieses Ticket nicht bearbeiten"
     people:
+      copy_email: "%{email} kopieren"
       about: "Angaben"
       none: "keine"
       member_since: "Mitglied seit"

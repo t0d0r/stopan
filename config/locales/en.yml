@@ -224,6 +224,7 @@ en:
       not_allowed: "not allowed"
       assignee_not_allowed: "this person may not work this ticket"
     people:
+      copy_email: "Copy %{email}"
       about: "About"
       none: "none"
       member_since: "Member since"

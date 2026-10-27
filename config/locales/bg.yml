@@ -227,6 +227,7 @@ bg:
       not_allowed: "не е позволено"
       assignee_not_allowed: "този човек не може да работи по заявката"
     people:
+      copy_email: "Копирай %{email}"
       about: "Данни"
       none: "няма"
       member_since: "Член от"

@@ -4152,6 +4152,47 @@ turbo-frame {
   margin: 10px 0 0;
 }
 
+/* An email that copies itself on click (specs/ui.md "Emails copy on click"). */
+.copy-value {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: copy;
+}
+
+.copy-value:hover .copy-value__text {
+  text-decoration: underline;
+}
+
+.copy-value .icon {
+  flex: none;
+  color: var(--ink-soft);
+}
+
+.copy-value__done {
+  color: #2e7d32;
+  font-size: 12px;
+}
+
+.copy-value__done:empty {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .copy-value {
+    min-height: 44px;
+  }
+}
+
 /* A removable filter chip, e.g. the requester filter (specs/people.md). */
 .chip {
   display: inline-flex;

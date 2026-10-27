@@ -6,11 +6,15 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     get ticket_url(tickets(:printer))
     assert_select "#requester-title ~ dl a[href=?]", person_path(users(:anna)), users(:anna).display_name
+    assert_select "#requester-title ~ dl button.copy-value[type=button][data-copy-value=?] .copy-value__text", users(:anna).email, users(:anna).email
+    assert_select "#requester-title ~ dl a[href^=mailto]", 0
 
     get person_url(users(:anna))
     assert_response :success
     assert_select "h1.desk__title", users(:anna).display_name
-    assert_select ".person-head a[href=?]", "mailto:#{users(:anna).email}"
+    # The email copies itself instead of opening the mail program (specs/ui.md).
+    assert_select ".person-head button.copy-value[data-copy-value=?]", users(:anna).email
+    assert_select "a[href^=mailto]", 0
     assert_select ".report-tile", 6
     tiles = css_select(".report-tile").to_h { |tile| [ tile.at_css(".report-tile__label").text, tile.at_css(".report-tile__value").text ] }
     assert_equal "2", tiles["Tickets"]

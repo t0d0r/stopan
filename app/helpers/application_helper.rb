@@ -34,6 +34,15 @@ module ApplicationHelper
     !user_signed_in? || controller_name == "shared_tickets"
   end
 
+  # An email address that copies itself on click instead of opening the
+  # mail program (specs/ui.md "Emails copy on click").
+  def copy_email(email)
+    tag.button(type: "button", class: "copy-value", data: { copy_value: email, copied_label: t("ui.share.copied") },
+               "aria-label": t("ui.people.copy_email", email: email)) do
+      safe_join([ tag.span(email, class: "copy-value__text"), icon(:copy, size: 11),
+                  tag.span("", class: "copy-value__done", data: { copied_status: true }, "aria-live": "polite") ])
+    end
+  end
 
   # data-* attributes for a form that asks before submitting; the confirm
   # dialog (partials/_confirm_dialog) shows the title, message and button.
