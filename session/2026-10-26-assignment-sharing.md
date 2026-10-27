@@ -170,6 +170,14 @@ Operator requests, in order:
   marker), agent cancelled and then edited a reply, earlier versions
   listed.
 
+- Plan, not started (operator, 2026-10-27: "see what options g0no has
+  for showing notes and apply them, give me a plan"): copy box,
+  Markdown per message, double-click to edit, word diff and restore in
+  earlier versions, wide view preference, clickable task lists (todo
+  "Plan"). Not taken over: per-note colours (colours mean requester,
+  staff and internal here), autosave (replies are sent messages), the
+  note board and sorting.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
