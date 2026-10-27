@@ -416,6 +416,12 @@ Operator requests, in order:
   `MergeResolvedAndClosedIntoDone` converts tickets, status events,
   notifications and stages; resolved -> closed events are deleted (they
   would read "Done to Done"). Irreversible.
+- Board filters are now the list's: status, priority, assignee,
+  organization and sort, rendered by the shared partial
+  `tickets/_filters` (queue and board), keeping the search `q`. A status
+  filter shows only that status's columns; sort orders cards after the
+  golden ones (`TicketFilter#order` is now public); the "more in the
+  list" link carries the filters.
 
 ## Decisions
 

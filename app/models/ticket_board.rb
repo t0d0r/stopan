@@ -1,7 +1,8 @@
 # The kanban board of GET /tickets/board (specs/board.md): one column per
 # status, each followed by its stages (staff-defined sub-columns); cards
-# ordered urgent first, then high, then latest activity. Filters and
-# visibility come from TicketFilter.
+# ordered urgent first, then high, then the list's sort (latest activity
+# by default). Filters and visibility come from TicketFilter, with the
+# same parameters as the list.
 class TicketBoard
   # Not now first, like Fizzy's NOT NOW lane.
   ORDER_OF_COLUMNS = %w[postponed new open pending done].freeze
@@ -19,7 +20,7 @@ class TicketBoard
   attr_reader :filter
 
   def initialize(user, params)
-    @filter = TicketFilter.new(user, params.slice(:assignee, :organization, :q).merge(view: "all"))
+    @filter = TicketFilter.new(user, params.slice(:status, :priority, :assignee, :organization, :q, :sort).merge(view: "all"))
   end
 
   def stages
@@ -29,7 +30,8 @@ class TicketBoard
   def columns
     @columns ||= begin
       counts = filter.scope.group(:status, :stage_id).count
-      ORDER_OF_COLUMNS.flat_map do |status|
+      statuses = filter.status ? [ filter.status ] : ORDER_OF_COLUMNS
+      statuses.flat_map do |status|
         [ column(status, nil, counts), *stages.fetch(status, []).map { |stage| column(status, stage, counts) } ]
       end
     end
@@ -39,7 +41,7 @@ class TicketBoard
 
   def column(status, stage, counts)
     tickets = filter.scope.where(status: status, stage_id: stage&.id).includes(:requester, :assignee, :organization, :stage)
-                    .order(ORDER, updated_at: :desc, id: :desc)
+                    .order(ORDER, *filter.order)
     tickets = tickets.limit(LIMIT) if LIMITED.include?(status)
     Column.new(status: status, stage: stage, tickets: tickets.to_a, count: counts.fetch([ status, stage&.id ], 0))
   end

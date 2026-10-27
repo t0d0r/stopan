@@ -1,0 +1,38 @@
+<%# The staff filters of the queue and the board (specs/queues.md "Filters", specs/board.md). %>
+<%= form_with url: url, method: :get, class: class_names("filters", local_assigns[:form_class]), data: { filter_form: true, turbo_action: "replace" } do %>
+  <%= hidden_field_tag :view, view, id: nil if view %>
+  <%= hidden_field_tag :q, filter.query, id: nil if filter.query %>
+  <div class="filters__field">
+    <%= label_tag :status, t("ui.fields.status") %>
+    <%= select_tag :status, options_for_select(Ticket::STATUSES.map { |s| [ status_name(s), s ] }, filter.status),
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.status), data: { auto_submit: true } %>
+  </div>
+  <div class="filters__field">
+    <%= label_tag :priority, t("ui.fields.priority") %>
+    <%= select_tag :priority, options_for_select(priority_options, filter.priority),
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.priority), data: { auto_submit: true } %>
+  </div>
+  <div class="filters__field">
+    <%= label_tag :assignee, t("ui.fields.assignee") %>
+    <%= select_tag :assignee,
+                   options_for_select([ [ t("ui.queue.assignee_me"), "me" ], [ t("ui.queue.assignee_none"), "none" ] ] +
+                                      staff.map { |u| [ u.display_name, u.id.to_s ] }, filter.assignee),
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.assignee), data: { auto_submit: true } %>
+  </div>
+  <div class="filters__field">
+    <%= label_tag :organization, t("ui.fields.organization") %>
+    <%= select_tag :organization, options_from_collection_for_select(current_user.visible_organizations.ordered, :id, :name, filter.organization_id),
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true } %>
+  </div>
+  <div class="filters__field">
+    <%= label_tag :sort, t("ui.queue.sort") %>
+    <%= select_tag :sort, options_for_select(TicketFilter::SORTS.map { |s| [ t("ui.queue.sorts.#{s}"), s ] }, filter.sort),
+                   class: "select", data: { auto_submit: true } %>
+  </div>
+  <div class="filters__actions">
+    <noscript><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></noscript>
+    <% if filter.filtered? %>
+      <%= link_to t("ui.queue.clear"), clear_path, class: "filters__clear" %>
+    <% end %>
+  </div>
+<% end %>

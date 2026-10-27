@@ -72,6 +72,15 @@ class TicketFilter
       .merge(changes).compact_blank
   end
 
+  # The list's sort, also the board's order after golden cards.
+  def order
+    case sort
+    when "created" then [ { created_at: :desc, id: :desc } ]
+    when "priority" then [ PRIORITY_ORDER, { updated_at: :desc, id: :desc } ]
+    else [ { updated_at: :desc, id: :desc } ]
+    end
+  end
+
   private
 
   def base
@@ -138,14 +147,6 @@ class TicketFilter
       scope.where("tickets.number = :number OR #{text}", number: number.to_i, pattern: pattern)
     else
       scope.where(text, pattern: pattern)
-    end
-  end
-
-  def order
-    case sort
-    when "created" then [ { created_at: :desc, id: :desc } ]
-    when "priority" then [ PRIORITY_ORDER, { updated_at: :desc, id: :desc } ]
-    else [ { updated_at: :desc, id: :desc } ]
     end
   end
 end

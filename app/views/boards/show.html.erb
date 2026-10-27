@@ -9,24 +9,8 @@
   <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
 </div>
 
-<%= form_with url: board_path, method: :get, class: "filters board-filters", data: { filter_form: true, turbo_action: "replace" } do %>
-  <div class="filters__field">
-    <%= label_tag :assignee, t("ui.fields.assignee") %>
-    <%= select_tag :assignee,
-                   options_for_select([ [ t("ui.queue.assignee_me"), "me" ], [ t("ui.queue.assignee_none"), "none" ] ] +
-                                      @staff.map { |u| [ u.display_name, u.id.to_s ] }, filter.assignee),
-                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.assignee), data: { auto_submit: true } %>
-  </div>
-  <div class="filters__field">
-    <%= label_tag :organization, t("ui.fields.organization") %>
-    <%= select_tag :organization, options_from_collection_for_select(current_user.visible_organizations.ordered, :id, :name, filter.organization_id),
-                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true } %>
-  </div>
-  <div class="filters__actions">
-    <noscript><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></noscript>
-    <% if filter.filtered? %><%= link_to t("ui.queue.clear"), board_path, class: "filters__clear" %><% end %>
-  </div>
-<% end %>
+<%= render "tickets/filters", filter: filter, staff: @staff, url: board_path, view: nil, clear_path: board_path,
+                              form_class: "board-filters" %>
 
 <div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>">
   <% @board.columns.each do |column| %>
@@ -54,7 +38,7 @@
           <% if column.tickets.empty? %><p class="board-column__empty"><%= t("ui.board.empty") %></p><% end %>
         </div>
         <% if column.more.positive? %>
-          <p class="board-column__more"><%= link_to t("ui.board.more", count: column.more), tickets_path(view: "done") %></p>
+          <p class="board-column__more"><%= link_to t("ui.board.more", count: column.more), tickets_path(filter.params_with(view: "done", status: nil, page: nil)) %></p>
         <% end %>
       </div>
     </section>

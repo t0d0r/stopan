@@ -58,6 +58,36 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
     assert_select "select[name=organization].is-set"
   end
 
+  test "the board has the list's filters: status, priority, assignee, organization and sort" do
+    sign_in users(:agent)
+    get board_url
+    %w[status priority assignee organization sort].each { |name| assert_select "form.board-filters select[name=?]", name }
+    assert_select "form.board-filters input[name=view]", 0
+
+    get board_url(status: "open", q: "printer")
+    assert_select ".board-column[data-status]:not(.board-column--stage)", 1
+    assert_select ".board-column[data-status=open] .board-card", 1
+    assert_select "form.board-filters input[type=hidden][name=q][value=printer]"
+    assert_select "select[name=status].is-set"
+    assert_select ".filters__clear[href=?]", board_path
+
+    get board_url(priority: "urgent")
+    assert_select ".board-card", 1
+    assert_select ".board-column[data-status=pending] .board-card", 1
+  end
+
+  test "the sort orders cards after golden ones" do
+    Ticket.update_all(status: "open")
+    Ticket.update_all(priority: "normal")
+    tickets(:printer).update_columns(created_at: 1.day.ago, updated_at: 1.minute.ago)
+    tickets(:vpn).update_columns(created_at: 1.hour.ago, updated_at: 1.year.ago)
+    sign_in users(:admin)
+    get board_url(sort: "created")
+    assert_equal tickets(:vpn).reference, css_select(".board-column[data-status=open] .board-card__number").first.text.strip
+    get board_url
+    assert_equal tickets(:printer).reference, css_select(".board-column[data-status=open] .board-card__number").first.text.strip
+  end
+
   test "requesters may not open the board; the queue links to it" do
     sign_in users(:anna)
     get board_url

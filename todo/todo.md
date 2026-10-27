@@ -103,6 +103,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] board scrolls better: full window width, columns scroll on their own, edge scrolling while dragging (operator)
 - [x] board columns centred when they do not fill the width; a click on an expanded column's header collapses it (specs/board.md)
 - [x] one "Done" status instead of resolved and closed, everywhere; replies reopen it, no final close (specs/tickets.md "One Done status")
+- [x] board has the list's filters: status, priority, assignee, organization, sort; one shared partial (specs/board.md)
 - [ ] production: the next deploy runs `MergeResolvedAndClosedIntoDone` (irreversible; back up the database first) (specs/deploy.md)
 - [x] organization list of email addresses or domains allowed to use the public request page (operator)
 
