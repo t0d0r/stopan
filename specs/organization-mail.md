@@ -91,8 +91,9 @@ in-process job queue as today.
    not a member; an unknown address gets a new requester account (name
    from the `From` display name, else the part before `@`) and the
    membership; a staff address may only reply to an existing ticket (as
-   a public reply); deactivated users and staff starting a new ticket
-   are skipped and logged.
+   a public reply, and an agent only on a ticket of their own
+   organizations, roles.md); deactivated users and staff starting a new
+   ticket are skipped and logged.
 3. **Reply or new ticket:** a reply when the subject has `[Stopan
    #<number>]` or `In-Reply-To`/`References` has `<ticket-<number>@host>`,
    the ticket belongs to this organization, and the sender is its

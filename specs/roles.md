@@ -8,8 +8,8 @@ default) are requesters.
 | role | who | in short |
 |------|-----|----------|
 | `requester` | a customer contact | opens tickets for an organization they belong to; sees the tickets of their organizations (only public timeline entries), works only on their own |
-| `agent` | support staff | sees and works every ticket of every organization |
-| `admin` | service desk administrator | everything an agent can, plus users, organizations and memberships |
+| `agent` | support staff | sees and works every ticket of the organizations they belong to |
+| `admin` | service desk administrator | every ticket of every organization, plus users, organizations and memberships |
 
 "Staff" means agent or admin (`User#staff?`).
 
@@ -21,7 +21,7 @@ the role, and cannot be chosen as assignee.
 - A user belongs to zero or more organizations through `memberships`
   (unique per user and organization).
 - A requester can only open tickets for an organization they belong to.
-- **A requester without a membership sees nothing** (operator,
+- **A requester or agent without a membership sees nothing** (operator,
   2026-10-27): after signing in they get only `GET /no-organization`, a
   small sticky saying the account is not part of an organization yet and
   to contact the service desk administrator, with a sign-out button.
@@ -30,8 +30,8 @@ the role, and cannot be chosen as assignee.
   account pages (Devise), signing out, theme and text size, and an
   administrator's "Back to my account" while impersonating them. They are
   left out of administrators' messages. Once an administrator adds a
-  membership, the next page works normally. Staff are not affected:
-  membership never limits what staff see.
+  membership, the next page works normally. Administrators are never
+  limited by membership (agents are since the same day, below).
 - A requester sees a ticket while they are a member of its organization
   (operator, 2026-10-27: members of an organization get its new tickets
   in their notifications and can read them). Before that change only the
@@ -43,19 +43,34 @@ the role, and cannot be chosen as assignee.
   resolved, editing, Markdown switches and sharing stay with the ticket's
   own requester (`TicketPolicy#own?`) and staff. The page says so where
   the composer would be.
-- Staff can be members of organizations (for example to raise tickets
-  themselves), but membership does not limit what staff can see.
+- **Agents work their own organizations only** (operator, 2026-10-27:
+  "agents should see only their own organizations"). An agent sees and
+  works every ticket (internal notes included) of the organizations they
+  are a member of, and nothing of the others: queue, board, search,
+  ticket pages (404 for others), files, notifications, live streams and
+  email replies all go through `Ticket.visible_to`. Administrators see
+  every organization, member or not.
+- An agent creates tickets only in their own organizations, for
+  requesters who are members of the chosen organization; the new ticket
+  form lists only those organizations and requesters.
+- A ticket can be assigned only to an administrator or to an active agent
+  who is a member of its organization (`Ticket#assignable_staff`); assign
+  menus, the Properties select and the queue's assignee filter list only
+  those. Removing an agent's membership leaves their existing
+  assignments in place; they no longer see those tickets until an
+  administrator reassigns them (the admin list shows them).
+- The queue and board filters list only the agent's organizations.
 
 ## Permission matrix
 
 | action | requester | agent | admin |
 |--------|-----------|-------|-------|
 | sign in, edit own account | yes | yes | yes |
-| list tickets | own tickets in own organizations ("My tickets") | queue of all tickets | queue of all tickets |
-| view a ticket (public part for requesters) | any ticket of an organization they belong to | any | any |
+| list tickets | own tickets in own organizations ("My tickets") | queue of their organizations' tickets | queue of all tickets |
+| view a ticket (public part for requesters) | any ticket of an organization they belong to | any ticket of their organizations | any |
 | see who is assigned (name only, ui.md "Ticket page") | tickets they can see, and on shared pages | yes | yes |
 | see internal notes and internal events | no | yes | yes |
-| create a ticket | for self, in own organization | for any requester, in one of the requester's organizations | same as agent |
+| create a ticket | for self, in own organization | for a member of one of their own organizations, in it | for any requester, in one of the requester's organizations |
 | set priority / assignee on create | no | yes | yes |
 | public reply | own ticket, not closed | any ticket, not closed | same as agent |
 | internal note | no | any ticket (also closed) | same as agent |
