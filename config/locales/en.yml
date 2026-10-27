@@ -223,6 +223,33 @@ en:
       select_row: "Select %{reference}"
       not_allowed: "not allowed"
       assignee_not_allowed: "this person may not work this ticket"
+    people:
+      about: "About"
+      none: "none"
+      member_since: "Member since"
+      last_sign_in: "Last sign in"
+      never: "Never"
+      deactivated: "Deactivated"
+      numbers: "Ticket numbers"
+      tiles:
+        total: "Tickets"
+        unsolved: "Unsolved now"
+        done: "Done"
+        last_30_days: "Last 30 days"
+        first_response: "Median first response"
+        resolution: "Median time to done"
+      sources: "How they write in"
+      source:
+        app: "In the app"
+        web_form: "Web form"
+        email: "Email"
+      latest: "Latest tickets"
+      all_tickets:
+        one: "The ticket from this person"
+        other: "All %{count} tickets from this person"
+      no_tickets: "No tickets from this person that you can see."
+      requester_chip: "Requester: %{name}"
+      remove_requester: "Remove the requester filter"
     mail_view:
       frame_title: "The mail as it was sent"
       tabs_label: "Show the mail as"

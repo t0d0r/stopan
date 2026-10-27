@@ -768,6 +768,11 @@ menu and Take; open /tickets/new and pick a requester.
   tickets"), bulk "Delete" (confirm on the button: setUpConfirm now honours
   data-confirm on a submit button), API DELETE + deleted_tickets. Mail replies
   to deleted tickets start new ones. Checked on dev with #1010 (restored).
+- Person profile (operator: "from Requester open the requester's profile with
+  statistics"): `PeopleController#show` (/people/:id, staff; agents only people
+  of their organizations), `PersonStats` (tiles, sources, recent), link from
+  the requester card, `requester` filter in `TicketFilter` with a chip, API
+  `GET /api/v1/people/:id`. Checked on dev (/people/26).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

@@ -4,7 +4,8 @@
     <h2 class="sr-only" id="requester-title"><%= t("ui.fields.requester") %></h2>
     <dl class="facts">
       <dt><%= t("ui.fields.name") %></dt>
-      <dd><%= ticket.requester.display_name %></dd>
+      <%# Staff open the requester's profile (specs/people.md). %>
+      <dd><%= current_user.staff? ? link_to(ticket.requester.display_name, person_path(ticket.requester)) : ticket.requester.display_name %></dd>
       <% if current_user.staff? %>
         <dt><%= t("ui.fields.email") %></dt>
         <dd class="text"><%= mail_to ticket.requester.email %></dd>

@@ -1,0 +1,104 @@
+<% content_for :title, @person.display_name %>
+<%# A person's profile with ticket statistics (specs/people.md). %>
+<div class="desk__header person-head">
+  <%= user_avatar @person %>
+  <div class="person-head__who">
+    <h1 class="desk__title"><%= @person.display_name %></h1>
+    <p class="person-head__meta">
+      <span class="role-tag"><%= role_label(@person) %></span>
+      <% if @person.deactivated? %><span class="role-tag role-tag--off"><%= t("ui.people.deactivated") %></span><% end %>
+      <%= mail_to @person.email %>
+    </p>
+  </div>
+</div>
+
+<div class="person-page">
+  <section class="person-tiles report-tiles" aria-label="<%= t("ui.people.numbers") %>">
+    <div class="sticky sticky--gray report-tile">
+      <span class="report-tile__label"><%= t("ui.people.tiles.total") %></span>
+      <span class="report-tile__value"><%= @stats.total %></span>
+    </div>
+    <div class="sticky sticky--yellow report-tile">
+      <span class="report-tile__label"><%= t("ui.people.tiles.unsolved") %></span>
+      <span class="report-tile__value"><%= @stats.unsolved %></span>
+    </div>
+    <div class="sticky sticky--green report-tile">
+      <span class="report-tile__label"><%= t("ui.people.tiles.done") %></span>
+      <span class="report-tile__value"><%= @stats.done %></span>
+    </div>
+    <div class="sticky sticky--blue report-tile">
+      <span class="report-tile__label"><%= t("ui.people.tiles.last_30_days") %></span>
+      <span class="report-tile__value"><%= @stats.last_30_days %></span>
+    </div>
+    <div class="sticky sticky--purple report-tile">
+      <span class="report-tile__label"><%= t("ui.people.tiles.first_response") %></span>
+      <span class="report-tile__value"><%= report_duration(@stats.first_response_median) %></span>
+    </div>
+    <div class="sticky sticky--pink report-tile">
+      <span class="report-tile__label"><%= t("ui.people.tiles.resolution") %></span>
+      <span class="report-tile__value"><%= report_duration(@stats.resolution_median) %></span>
+    </div>
+  </section>
+
+  <section class="sticky sticky--yellow panel person-panel" aria-labelledby="person-facts-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="person-facts-title"><%= t("ui.people.about") %></span></header>
+    <div class="panel__body">
+      <dl class="facts">
+        <dt><%= t("ui.admin.organizations") %></dt>
+        <dd><%= @person.organizations.map(&:name).join(", ").presence || t("ui.people.none") %></dd>
+        <dt><%= t("ui.people.member_since") %></dt>
+        <dd><%= l(@person.created_at.to_date, format: :long) %></dd>
+        <dt><%= t("ui.people.last_sign_in") %></dt>
+        <dd><%= @person.last_sign_in_at ? time_ago(@person.last_sign_in_at) : t("ui.people.never") %></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sticky sticky--blue panel person-panel" aria-labelledby="person-sources-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="person-sources-title"><%= t("ui.people.sources") %></span></header>
+    <div class="panel__body">
+      <dl class="facts">
+        <% @stats.by_source.each do |source, count| %>
+          <dt><%= t("ui.people.source.#{source}") %></dt>
+          <dd><%= count %></dd>
+        <% end %>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sticky sticky--gray panel person-panel person-panel--wide" aria-labelledby="person-tickets-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="person-tickets-title"><%= t("ui.people.latest") %></span></header>
+    <div class="panel__body">
+      <% recent = @stats.recent.to_a %>
+      <% if recent.any? %>
+        <div class="table-scroll">
+          <table class="ledger tickets-table">
+            <thead>
+              <tr>
+                <th scope="col" class="num"><%= t("ui.fields.number") %></th>
+                <th scope="col"><%= t("ui.fields.subject") %></th>
+                <th scope="col" class="col-org"><%= t("ui.fields.organization") %></th>
+                <th scope="col"><%= t("ui.fields.status") %></th>
+                <th scope="col" class="col-updated"><%= t("ui.fields.updated") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recent.each do |ticket| %>
+                <tr class="ticket-row">
+                  <td class="num ticket-number"><%= ticket.reference %></td>
+                  <td class="text col-subject"><%= link_to ticket.subject, ticket_path(ticket), class: "ticket-link" %></td>
+                  <td class="text col-org"><%= ticket.organization.name %></td>
+                  <td><%= status_pill ticket.status %></td>
+                  <td class="date col-updated"><%= time_ago ticket.updated_at %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <p class="person-panel__more"><%= link_to t("ui.people.all_tickets", count: @stats.total), tickets_path(view: "all", requester: @person.id) %></p>
+      <% else %>
+        <p class="panel__empty"><%= t("ui.people.no_tickets") %></p>
+      <% end %>
+    </div>
+  </section>
+</div>

@@ -10,7 +10,7 @@ class TicketFilter
   PRIORITY_ORDER = Arel.sql("CASE tickets.priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 " \
                             "WHEN 'normal' THEN 2 ELSE 3 END")
 
-  attr_reader :user, :view, :status, :priority, :assignee, :organization_id, :query, :sort, :page
+  attr_reader :user, :view, :status, :priority, :assignee, :organization_id, :requester_id, :query, :sort, :page
 
   def initialize(user, params)
     @user = user
@@ -24,6 +24,12 @@ class TicketFilter
     @priority = params[:priority].presence_in(Ticket::PRIORITIES)
     @assignee = parse_assignee(params[:assignee].to_s)
     @organization_id = Organization.find_by(id: params[:organization].to_s)&.id if params[:organization].present?
+    # One requester's tickets (specs/people.md "Queue filter").
+    @requester_id = User.find_by(id: params[:requester].to_s)&.id if params[:requester].present?
+  end
+
+  def requester
+    @requester ||= User.find_by(id: requester_id) if requester_id
   end
 
   def views
@@ -56,7 +62,7 @@ class TicketFilter
   end
 
   def filtered?
-    [ status, priority, assignee, organization_id, query ].any?
+    [ status, priority, assignee, organization_id, requester_id, query ].any?
   end
 
   # The filtered tickets of the current view, for the board (specs/board.md).
@@ -67,7 +73,7 @@ class TicketFilter
   # Query parameters of the current list, for links that change one thing.
   def params_with(changes = {})
     { view: view, status: status, priority: priority, assignee: assignee, organization: organization_id,
-      q: query, sort: (sort unless sort == "updated"), page: (page if page > 1) }
+      requester: requester_id, q: query, sort: (sort unless sort == "updated"), page: (page if page > 1) }
       .merge(changes).compact_blank
   end
 
@@ -117,6 +123,7 @@ class TicketFilter
     scope = scope.where(status: status) if status
     scope = scope.where(priority: priority) if priority
     scope = scope.where(organization_id: organization_id) if organization_id
+    scope = scope.where(requester_id: requester_id) if requester_id
     scope = filter_assignee(scope) if assignee
     scope = search(scope) if query
     scope

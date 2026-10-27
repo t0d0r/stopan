@@ -2,6 +2,7 @@
 <%= form_with url: url, method: :get, class: class_names("filters", local_assigns[:form_class]), data: { filter_form: true, turbo_action: "replace" } do %>
   <%= hidden_field_tag :view, view, id: nil if view %>
   <%= hidden_field_tag :q, filter.query, id: nil if filter.query %>
+  <%= hidden_field_tag :requester, filter.requester_id, id: nil if filter.requester_id %>
   <div class="filters__field">
     <%= label_tag :status, t("ui.fields.status") %>
     <%= select_tag :status, options_for_select(Ticket::STATUSES.map { |s| [ status_name(s), s ] }, filter.status),
@@ -29,7 +30,15 @@
     <%= select_tag :sort, options_for_select(TicketFilter::SORTS.map { |s| [ t("ui.queue.sorts.#{s}"), s ] }, filter.sort),
                    class: "select", data: { auto_submit: true } %>
   </div>
-  <div class="filters__actions">
+<%# One requester's tickets, from their profile (specs/people.md "Queue filter"). %>
+<% if filter.requester %>
+  <div class="filters__field filters__chip">
+    <span class="chip"><%= t("ui.people.requester_chip", name: filter.requester.display_name) %>
+      <%= link_to url + "?" + filter.params_with(requester: nil, page: nil).to_query, class: "chip__remove",
+                  "aria-label": t("ui.people.remove_requester") do %>&times;<% end %></span>
+  </div>
+<% end %>
+<div class="filters__actions">
     <noscript><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></noscript>
     <% if filter.filtered? %>
       <%= link_to t("ui.queue.clear"), clear_path, class: "filters__clear" %>

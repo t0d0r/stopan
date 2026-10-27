@@ -96,6 +96,7 @@ Everyone (within their rights):
 | `POST /api/v1/notifications/:id/read`, `POST /api/v1/notifications/read_all` | mark read |
 | `GET /api/v1/reports` | staff: the report of reports.md for `period` and `organization` (tiles, buckets, burndown, rows) |
 | `GET /api/v1/stages` | staff: the board's stages |
+| `GET /api/v1/people/:id` | staff: a person's profile and ticket statistics (people.md) |
 | `GET /api/v1/tokens`, `DELETE /api/v1/tokens/:id` | own tokens |
 
 Administrators only (403 for others):

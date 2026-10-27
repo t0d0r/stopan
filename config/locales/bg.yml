@@ -226,6 +226,33 @@ bg:
       select_row: "Избери %{reference}"
       not_allowed: "не е позволено"
       assignee_not_allowed: "този човек не може да работи по заявката"
+    people:
+      about: "Данни"
+      none: "няма"
+      member_since: "Член от"
+      last_sign_in: "Последен вход"
+      never: "Никога"
+      deactivated: "Деактивиран"
+      numbers: "Числа за заявките"
+      tiles:
+        total: "Заявки"
+        unsolved: "Нерешени сега"
+        done: "Готови"
+        last_30_days: "Последните 30 дни"
+        first_response: "Медиана на първия отговор"
+        resolution: "Медиана до готово"
+      sources: "Откъде пише"
+      source:
+        app: "В приложението"
+        web_form: "Уеб форма"
+        email: "Имейл"
+      latest: "Последни заявки"
+      all_tickets:
+        one: "Заявката от този човек"
+        other: "Всички %{count} заявки от този човек"
+      no_tickets: "Няма заявки от този човек, които да виждате."
+      requester_chip: "Заявител: %{name}"
+      remove_requester: "Махни филтъра по заявител"
     mail_view:
       frame_title: "Писмото, както е изпратено"
       tabs_label: "Покажи писмото като"

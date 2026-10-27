@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   patch "tickets/bulk" => "ticket_bulk#update", as: :bulk_tickets
   # The kanban board (specs/board.md); before resources so "board" is no number.
   get "tickets/board" => "boards#show", as: :board
+  # A person's profile with statistics, for staff (specs/people.md).
+  resources :people, only: :show
   # Statistics for staff (specs/reports.md).
   get "reports" => "reports#show", as: :reports
 
@@ -123,6 +125,7 @@ Rails.application.routes.draw do
       resources :stages, only: %i[index create update destroy] do
         post :move, on: :member
       end
+      resources :people, only: :show
       resources :users, only: %i[index show create update destroy]
       resources :organizations, only: %i[index show create update destroy] do
         post :mail_test, on: :member

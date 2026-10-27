@@ -226,6 +226,33 @@ de:
       select_row: "%{reference} auswählen"
       not_allowed: "nicht erlaubt"
       assignee_not_allowed: "diese Person darf dieses Ticket nicht bearbeiten"
+    people:
+      about: "Angaben"
+      none: "keine"
+      member_since: "Mitglied seit"
+      last_sign_in: "Letzte Anmeldung"
+      never: "Nie"
+      deactivated: "Deaktiviert"
+      numbers: "Zahlen zu Tickets"
+      tiles:
+        total: "Tickets"
+        unsolved: "Jetzt ungelöst"
+        done: "Erledigt"
+        last_30_days: "Letzte 30 Tage"
+        first_response: "Median erste Antwort"
+        resolution: "Median bis erledigt"
+      sources: "Wie die Person schreibt"
+      source:
+        app: "In der App"
+        web_form: "Webformular"
+        email: "E-Mail"
+      latest: "Neueste Tickets"
+      all_tickets:
+        one: "Das Ticket dieser Person"
+        other: "Alle %{count} Tickets dieser Person"
+      no_tickets: "Keine Tickets dieser Person, die Sie sehen können."
+      requester_chip: "Anfragende Person: %{name}"
+      remove_requester: "Filter nach anfragender Person entfernen"
     mail_view:
       frame_title: "Die E-Mail, wie sie gesendet wurde"
       tabs_label: "E-Mail anzeigen als"

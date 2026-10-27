@@ -46,6 +46,7 @@ small sticky in its colour, and the list panel takes the same colour:
 | `priority` | one priority |
 | `assignee` | a staff user id, `me`, or `none` |
 | `organization` | an organization id |
+| `requester` | a requester's user id (staff; people.md "Queue filter") |
 | `q` | search text (from the menu bar search): `#1001` or `1001` also matches the ticket number; otherwise case-insensitive substring match on subject and description (LIKE with escaped wildcards). SQLite folds only ASCII case, so the app registers `ulower()` (Ruby's Unicode `downcase`, `config/initializers/sqlite_functions.rb`) and searches compare `ulower(column)` with a downcased pattern; Bulgarian text matches regardless of case |
 | `sort` | `updated` (last activity first, default), `created` (newest first), `priority` (urgent first, then last activity) |
 
