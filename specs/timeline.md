@@ -54,6 +54,18 @@ scope, so internal text never reaches a requester's HTML.
 - Property events: one quiet line with an icon, e.g. "Maria changed status
   from Open to Pending - 5 minutes ago".
 - Every entry has an anchor (`#event-<id>`) and a `<time datetime>` element.
+- **Message title strip** (operator, 2026-10-27: author, role, time and
+  "edited by" belong in the header of the original request). The request,
+  replies and notes carry all their details in the sticky's title strip,
+  left to right: the kind icon and caption ("Original request", "Reply
+  from the service desk", "Internal note", ...), the author's name in
+  bold, the role label, the time, the "Visible to staff only" tag for
+  notes and the "edited by <name> <time>" marker; at the right end the
+  boxes: Edit (pencil, for users who may edit), Markdown and Copy. The
+  body below holds only the text, earlier versions and files. On narrow
+  screens the strip wraps onto a second line instead of cutting text off.
+  The same strip is used on shared pages (without the Edit and Markdown
+  boxes).
 - Attachments of a comment are listed under its body as download links with
   size.
 
