@@ -3079,6 +3079,17 @@ turbo-frame {
   scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
 }
 
+/* Columns that do not fill the width sit in the middle; auto margins
+   (not justify-content: center) keep the first column reachable when
+   the board overflows. */
+.board > :first-child {
+  margin-left: auto;
+}
+
+.board > :last-child {
+  margin-right: auto;
+}
+
 .board::-webkit-scrollbar,
 .board-column__cards::-webkit-scrollbar {
   width: 8px;
@@ -3160,6 +3171,12 @@ turbo-frame {
   border-radius: 8px;
   background: var(--bar);
   color: #2c2a26;
+  cursor: pointer;
+  user-select: none;
+}
+
+.board-column__head:hover {
+  filter: brightness(0.96);
 }
 
 .board-column__title {

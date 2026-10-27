@@ -101,6 +101,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] agents see and work only their own organizations; admins everything (specs/roles.md)
 - [ ] operator: make production agents members of their organizations before deploying this (specs/roles.md)
 - [x] board scrolls better: full window width, columns scroll on their own, edge scrolling while dragging (operator)
+- [x] board columns centred when they do not fill the width; a click on an expanded column's header collapses it (specs/board.md)
+- [~] one "Done" status instead of resolved and closed, everywhere (specs/tickets.md)
 - [x] organization list of email addresses or domains allowed to use the public request page (operator)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,

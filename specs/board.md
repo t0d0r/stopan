@@ -20,8 +20,10 @@ statuses.
   and Pending start expanded; Resolved and Closed start collapsed.
 - A **collapsed column** is a tall rounded pill in its colour: the count
   at the top, the status name written vertically below. Clicking it (or
-  Enter / Space) expands the column; an expanded column's header has a
-  collapse box. Which columns are expanded is remembered per browser
+  Enter / Space) expands the column. Clicking anywhere on an expanded
+  column's header collapses it again (operator, 2026-10-27: "close and
+  open with a click, like open"); the header's collapse box does the
+  same from the keyboard. Which columns are expanded is remembered per browser
   (`localStorage`, a convenience; without it the defaults apply).
 - An **expanded column** has a header with the status name and the count,
   and its cards below, at least 290px wide.
@@ -31,6 +33,9 @@ statuses.
   so its sideways scrollbar is always in view; each expanded column
   scrolls its own cards up and down under its fixed header. Scrollbars
   are thin and tinted; sideways scrolling snaps gently to column starts.
+  When the columns need less than the window's width (many collapsed),
+  they sit centred (operator, 2026-10-27: "let them be centred"); when
+  they need more, the board scrolls from the first column.
   While a card is dragged within 80px of the board's left or right edge,
   the board scrolls that way. The page itself never scrolls sideways.
 - Columns without cards start collapsed, unless the user expanded them

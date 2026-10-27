@@ -402,6 +402,12 @@ Operator requests, in order:
   ignored. Demo: Maria in both organizations, Petar in Globex. Test
   fixtures make both test agents members of both organizations.
   Operator must add production agents as members before deploying.
+- Board: columns sit centred when they need less than the window width
+  (auto margins on the first and last column, so an overflowing board
+  still starts at its first column); clicking an expanded column's header
+  collapses it, as clicking a pill expands it.
+- In progress: one "Done" status replacing resolved and closed (operator
+  chose "one Done status everywhere").
 
 ## Decisions
 

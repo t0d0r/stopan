@@ -41,7 +41,7 @@
         <span class="board-pill__label"><%= column.stage ? column.stage.name : status_name(column.status) %></span>
       </button>
       <div class="board-column__body">
-        <header class="board-column__head">
+        <header class="board-column__head" data-board-toggle title="<%= t("ui.board.collapse", status: name) %>">
           <h2 class="board-column__title"><% if column.stage %><span class="board-column__parent"><%= status_name(column.status) %> /</span> <%= column.stage.name %><% else %><%= status_name(column.status) %><% end %></h2>
           <span class="board-column__count" data-column-count><%= column.count %></span>
           <button type="button" class="sticky__box board-column__collapse" data-board-toggle aria-expanded="true"
