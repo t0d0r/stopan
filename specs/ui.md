@@ -22,7 +22,9 @@ Turbo Drive for page changes.
   "Board" on the board (operator, 2026-10-27: "a separate button for the
   board in the header"; before, the board counted as "Queue"). Then the ticket search field (signed-in users,
   queues.md "Search"; on its own full-width row under 1180px, where the
-  bar wraps instead of running off the screen). Right: the
+  bar wraps instead of running off the screen). Under 560px the bar has
+  three rows: the icon with the tools on the right, the section pills on
+  a full-width row (wrapping), the search. Right: the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
   the language switch (only where it applies, see "Language"), the
@@ -164,6 +166,39 @@ validation messages for Bulgarian and German in
 `config/locales/rails.{bg,de}.yml`. German uses the formal "Sie".
 `test/i18n/locales_test.rb` checks that every language has the same keys
 as English.
+
+### Themes
+
+Operator, 2026-10-27: "an option to use themes: two themes, the current
+one named notes and a new one named omarchy, style
+https://omamobile.org/".
+
+- **Notes** (default): the Stickies look described above.
+- **Omarchy**: the look of omamobile.org and the Omarchy desktop: flat
+  surfaces with 1px borders and 6px corners, no shadows, a monospace face
+  for headings, section pills, buttons, pills, tabs and numbers, and a
+  sans-serif body. Colours from Omarchy's palettes: **Tokyo Night** in
+  the dark theme (background `#1a1b26`, deep `#14141c`, surfaces
+  `#23242f` / `#2a2b35`, borders `#353640` / `#51525a`, text `#c0caf5`,
+  muted `#8589a2`, accent `#7aa2f7`) and **Catppuccin Latte** in the
+  light theme (background `#eff1f5`, deep `#e5e7eb`, surfaces `#e7e9ec` /
+  `#dee0e4`, borders `#d2d4d8` / `#b6b7ba`, text `#4c4f69`, muted
+  `#646674`, accent `#1c61e9`). The sun/moon switch keeps choosing light
+  or dark in both themes.
+- The paper colours keep their meaning (views, statuses, priorities,
+  message kinds): in Omarchy each becomes a light tint of the surface in
+  that colour of the palette (yellow, blue, green, pink, purple, gray),
+  with its title strip a stronger tint, so the colour still tells the
+  kind while the page stays flat and dark or light as chosen. Text on
+  them uses the theme's text colours.
+- Fonts: the CSP allows no font files from other sites, so the theme
+  names JetBrains Mono and Geist first and falls back to the system's
+  monospace (`ui-monospace`, SF Mono, Menlo, Consolas) and sans-serif
+  faces.
+- Chosen on the account page ("Theme": Notes, Omarchy), kept like the
+  other preferences in the `look` cookie (`notes` or `omarchy`, one year,
+  SameSite=Lax) and rendered as `<html data-look>` before any script
+  runs; `PATCH /preferences` with `look`. It applies to this browser.
 
 ### Language
 

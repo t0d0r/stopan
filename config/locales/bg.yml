@@ -39,6 +39,12 @@ bg:
       browser_language: "Езикът на браузъра"
       language_hint: "Езикът на страниците и на имейлите ви."
       save_language: "Запази езика"
+      theme: "Тема"
+      theme_hint: "Как изглежда Stopan в този браузър. Бутонът слънце/луна пак избира светло или тъмно."
+      save_theme: "Запази темата"
+      looks:
+        notes: "Notes"
+        omarchy: "Omarchy"
 
     sign_in: "Вход"
     login: "Имейл или потребителско име"

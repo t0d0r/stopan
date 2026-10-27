@@ -39,6 +39,12 @@ de:
       browser_language: "Sprache des Browsers"
       language_hint: "Die Sprache der Seiten und Ihrer E-Mails."
       save_language: "Sprache speichern"
+      theme: "Design"
+      theme_hint: "Wie Stopan in diesem Browser aussieht. Der Sonne/Mond-Schalter wählt weiterhin hell oder dunkel."
+      save_theme: "Design speichern"
+      looks:
+        notes: "Notes"
+        omarchy: "Omarchy"
 
     sign_in: "Anmelden"
     login: "E-Mail oder Benutzername"

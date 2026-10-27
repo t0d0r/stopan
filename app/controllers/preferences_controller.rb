@@ -7,6 +7,8 @@ class PreferencesController < ApplicationController
   THEMES = %w[light dark].freeze
   SCALES = %w[normal big extra].freeze
   WIDTHS = %w[normal wide].freeze
+  # Themes (ui.md "Themes"): notes is the Stickies look.
+  LOOKS = %w[notes omarchy].freeze
 
   skip_before_action :authenticate_user!
   skip_before_action :require_organization
@@ -15,6 +17,7 @@ class PreferencesController < ApplicationController
     remember :theme, params[:theme].presence_in(THEMES)
     remember :scale, params[:scale].presence_in(SCALES)
     remember :width, params[:width].presence_in(WIDTHS)
+    remember :look, params[:look].presence_in(LOOKS)
     remember_language params[:locale].presence_in(I18n.available_locales.map(&:to_s))
     redirect_back fallback_location: root_path
   end

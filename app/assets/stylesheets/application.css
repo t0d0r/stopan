@@ -2961,11 +2961,17 @@ turbo-frame {
     display: none;
   }
 
-  /* Five sections do not fit one phone row; they wrap instead of hiding. */
+  /* Phones: the icon and the tools on the first row, the sections on a
+     full-width row of their own (wrapping, never hidden), then the search. */
   .menubar__nav {
-    flex: 1 1 0;
+    order: 1;
+    flex: 1 0 100%;
     flex-wrap: wrap;
     row-gap: 2px;
+  }
+
+  .menubar__search {
+    order: 2;
   }
 
   .nav-link {
@@ -3925,4 +3931,244 @@ turbo-frame {
   font-size: 12px;
   overflow-wrap: anywhere;
   user-select: all;
+}
+
+/* ---------- theme: omarchy (ui.md "Themes") ----------
+   The look of omamobile.org: flat surfaces, 1px borders, 6px corners, no
+   shadows, a monospace face for labels. Catppuccin Latte when light,
+   Tokyo Night when dark (the sun/moon switch still decides). Paper
+   colours become tints of the surface in the palette's hue, so they keep
+   their meaning. These rules come last so they win over the notes look. */
+
+:root[data-look="omarchy"] {
+  --om-bg: #eff1f5;
+  --om-deep: #e5e7eb;
+  --om-surface: #f6f7f9;
+  --om-surface-2: #e7e9ec;
+  --om-border: #d2d4d8;
+  --om-border-strong: #b6b7ba;
+  --om-text: #4c4f69;
+  --om-muted: #646674;
+  --om-accent: #1c61e9;
+  --om-accent-ink: #fff;
+  --om-yellow: #df8e1d;
+  --om-blue: #1e66f5;
+  --om-green: #40a02b;
+  --om-pink: #ea76cb;
+  --om-purple: #8839ef;
+  --om-gray: #9ca0b0;
+  --om-red: #d20f39;
+  --om-tint: 12%;
+  --om-tint-bar: 26%;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  --desk: var(--om-bg);
+  --desk-ink: var(--om-text);
+  --desk-ink-soft: var(--om-muted);
+  --menubar-bg: var(--om-deep);
+  --menubar-border: var(--om-border);
+  --menubar-ink: var(--om-text);
+  --ink: var(--om-text);
+  --ink-soft: var(--om-muted);
+  --rule: var(--om-border);
+  --field-bg: var(--om-surface);
+  --field-border: var(--om-border-strong);
+  --accent: var(--om-accent);
+  --accent-ring: color-mix(in srgb, var(--om-accent) 35%, transparent);
+  --danger: var(--om-red);
+  --shadow: none;
+  --shadow-lift: 0 0 0 1px var(--om-border-strong);
+  --menu-bg: var(--om-surface);
+  --menu-ink: var(--om-text);
+  --menu-ink-soft: var(--om-muted);
+  --search-bg: var(--om-surface);
+  --search-bg-focus: var(--om-surface);
+  --tool-hover: color-mix(in srgb, var(--om-text) 10%, transparent);
+  --font: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-look="omarchy"]:not([data-theme="light"]) {
+    --om-bg: #1a1b26;
+    --om-deep: #14141c;
+    --om-surface: #23242f;
+    --om-surface-2: #2a2b35;
+    --om-border: #353640;
+    --om-border-strong: #51525a;
+    --om-text: #c0caf5;
+    --om-muted: #8589a2;
+    --om-accent: #7aa2f7;
+    --om-accent-ink: #0c0e10;
+    --om-yellow: #e0af68;
+    --om-blue: #7aa2f7;
+    --om-green: #9ece6a;
+    --om-pink: #f7768e;
+    --om-purple: #bb9af7;
+    --om-gray: #565f89;
+    --om-red: #f7768e;
+    --om-tint: 10%;
+    --om-tint-bar: 20%;
+    color-scheme: dark;
+  }
+}
+
+:root[data-look="omarchy"][data-theme="dark"] {
+  --om-bg: #1a1b26;
+  --om-deep: #14141c;
+  --om-surface: #23242f;
+  --om-surface-2: #2a2b35;
+  --om-border: #353640;
+  --om-border-strong: #51525a;
+  --om-text: #c0caf5;
+  --om-muted: #8589a2;
+  --om-accent: #7aa2f7;
+  --om-accent-ink: #0c0e10;
+  --om-yellow: #e0af68;
+  --om-blue: #7aa2f7;
+  --om-green: #9ece6a;
+  --om-pink: #f7768e;
+  --om-purple: #bb9af7;
+  --om-gray: #565f89;
+  --om-red: #f7768e;
+  --om-tint: 10%;
+  --om-tint-bar: 20%;
+  color-scheme: dark;
+}
+
+/* Paper colours: tints of the surface in the palette's hue. */
+[data-look="omarchy"] .sticky--yellow { --hue: var(--om-yellow); }
+[data-look="omarchy"] .sticky--blue { --hue: var(--om-blue); }
+[data-look="omarchy"] .sticky--green { --hue: var(--om-green); }
+[data-look="omarchy"] .sticky--pink { --hue: var(--om-pink); }
+[data-look="omarchy"] .sticky--purple { --hue: var(--om-purple); }
+[data-look="omarchy"] .sticky--gray { --hue: var(--om-gray); }
+
+[data-look="omarchy"] [class*="sticky--"] {
+  --paper: color-mix(in srgb, var(--hue) var(--om-tint), var(--om-surface));
+  --bar: color-mix(in srgb, var(--hue) var(--om-tint-bar), var(--om-surface));
+}
+
+[data-look="omarchy"] .sticky {
+  border: 1px solid var(--om-border);
+  border-radius: 6px;
+}
+
+[data-look="omarchy"] .sticky__bar {
+  border-bottom-color: var(--om-border);
+  border-radius: 6px 6px 0 0;
+}
+
+[data-look="omarchy"] .menubar {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Labels in the monospace face, as on omamobile.org. */
+[data-look="omarchy"] :is(h1, h2, h3, .desk__title, .section-title, .sticky__caption, .nav-link, .view-link,
+  .btn, .pill, .role-pill, .role-tag, .tab, .ticket-number, .board-column__title, .board-card__strip,
+  .report-tile__value, .menubar__brand, .language-switch, .scale-button) {
+  font-family: var(--font-mono);
+}
+
+[data-look="omarchy"] :is(.desk__title, h1) {
+  letter-spacing: -0.03em;
+}
+
+[data-look="omarchy"] .btn {
+  border-color: var(--om-border-strong);
+  background: var(--om-surface);
+  color: var(--om-text);
+}
+
+[data-look="omarchy"] .btn:hover {
+  border-color: var(--om-muted);
+  background: var(--om-surface-2);
+}
+
+[data-look="omarchy"] .btn--primary,
+[data-look="omarchy"] .btn--primary:hover {
+  border-color: var(--om-accent);
+  background: var(--om-accent);
+  color: var(--om-accent-ink);
+}
+
+[data-look="omarchy"] .btn--primary:hover {
+  filter: brightness(1.08);
+}
+
+[data-look="omarchy"] .pill {
+  border-color: color-mix(in srgb, var(--hue) 45%, transparent);
+  border-radius: 4px;
+  box-shadow: none;
+  color: var(--om-text);
+}
+
+[data-look="omarchy"] .pill--urgent {
+  border-color: var(--om-red);
+  color: var(--om-red);
+}
+
+[data-look="omarchy"] .view-link[aria-current] {
+  box-shadow: inset 0 -2px 0 var(--hue, var(--om-accent));
+}
+
+[data-look="omarchy"] .board-card {
+  border-color: var(--om-border);
+  background: var(--om-surface);
+  box-shadow: none;
+  color: var(--om-text);
+}
+
+[data-look="omarchy"] .board-card:hover {
+  border-color: var(--om-border-strong);
+  box-shadow: none;
+}
+
+[data-look="omarchy"] .report-chart__tooltip {
+  border: 1px solid var(--om-border-strong);
+  background: var(--om-surface-2);
+  box-shadow: none;
+  color: var(--om-text);
+}
+
+[data-look="omarchy"] .report-chart__grid {
+  stroke: var(--om-border);
+}
+
+/* Parts drawn for white paper in the notes look. */
+[data-look="omarchy"] .avatar {
+  border-color: var(--om-border-strong);
+  box-shadow: none;
+  color: var(--om-text);
+}
+
+[data-look="omarchy"] .internal-tag {
+  background: color-mix(in srgb, var(--om-red) 16%, transparent);
+  color: var(--om-red);
+}
+
+[data-look="omarchy"] .message--internal {
+  outline-color: color-mix(in srgb, var(--om-red) 55%, transparent);
+}
+
+[data-look="omarchy"] .message--internal .sticky__bar,
+[data-look="omarchy"] .mode-option--internal:has(input:checked) {
+  color: var(--om-red);
+}
+
+[data-look="omarchy"] .mode-option,
+[data-look="omarchy"] .field-file::file-selector-button {
+  border-color: var(--om-border-strong);
+  background: var(--om-surface);
+  color: var(--om-text);
+}
+
+[data-look="omarchy"] .mode-option:has(input:checked) {
+  border-color: var(--om-accent);
+  background: var(--om-surface-2);
+}
+
+[data-look="omarchy"] .field-file::file-selector-button:hover {
+  background: var(--om-surface-2);
 }

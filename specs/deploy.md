@@ -480,6 +480,24 @@ chart and the "Board" pill; no migrations.
   g0no `/up` 200.
 - Rollback: tag `localhost/stopan:ff0f444` as `latest` and restart.
 
+## Update 2026-10-27 (revision 8961aaa)
+
+Operator: "yes, deploy". Google accounts for organization mail; migration
+`CreateMailConnections` (table `mail_connections`,
+`organizations.mail_auth`, `app_settings.google_client_id/secret`).
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-d757d14.sqlite3`
+  (mode 600; 4 users, 2 tickets, schema 20261028100000).
+- Checked: healthy; schema 20261028110000, no pending migrations;
+  `mail_connections` exists; every organization still on `password`;
+  users and tickets kept; `/admin/mail_oauth/callback` without a session
+  redirects to sign-in; `/up` 200; `http://` -> 301; `/cable` 101; the
+  four security headers; g0no `/up` 200.
+- Next: register the Google OAuth client with the production redirect
+  URI and enter it on /admin/settings (specs/mail-oauth.md).
+- Rollback: tag `localhost/stopan:d757d14` as `latest` and restart; the
+  new table and columns can stay.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

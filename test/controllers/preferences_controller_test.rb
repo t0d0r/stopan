@@ -26,6 +26,23 @@ class PreferencesControllerTest < ActionDispatch::IntegrationTest
     assert_select "html[data-width=normal]"
   end
 
+  test "the theme (look) is notes by default, omarchy when chosen, and unknown values are ignored" do
+    get new_user_session_url
+    assert_select "html[data-look=notes]"
+    patch preferences_url, params: { look: "omarchy" }, headers: { "Referer" => edit_user_registration_url }
+    assert_redirected_to edit_user_registration_url
+    get new_user_session_url
+    assert_select "html[data-look=omarchy]"
+    patch preferences_url, params: { look: "neon" }
+    get new_user_session_url
+    assert_select "html[data-look=omarchy]"
+
+    sign_in users(:anna)
+    get edit_user_registration_url
+    assert_select "form#look[action=?] select[name=look] option[selected][value=omarchy]", preferences_path, "Omarchy"
+    assert_select "form#look select[name=look] option[value=notes]", "Notes"
+  end
+
   test "the menu bar has the theme switch and text sizes" do
     sign_in users(:admin)
     get tickets_url

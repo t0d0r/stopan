@@ -605,6 +605,18 @@ menu and Take; open /tickets/new and pick a requester.
   endpoint (a fake client id, so Google showed its error page).
   Personal Gmail works the same with an External client in Testing
   (7-day tokens); an app password needs no OAuth.
+- Deployed 8961aaa (Google mail) after a backup (`pre-deploy-d757d14`).
+- Phone menu bar (operator screenshot: the pills were squeezed into a
+  column between the icon and the tools): under 560px the pills get a
+  full-width row of their own between the icon/tools row and the search.
+- Themes (operator: "notes" and "omarchy", style omamobile.org):
+  `look` cookie and `<html data-look>`, chosen on the account page.
+  Omarchy reads omamobile.org's own CSS (Omarchy palettes): Tokyo Night
+  when dark, Catppuccin Latte when light, flat 1px borders, 6px corners,
+  no shadows, monospace labels; paper colours become tints of the
+  surface via `color-mix` on `--hue`, so they keep their meaning. Fixed
+  the parts drawn for white paper (avatars, internal note red, composer
+  mode, file button). Fonts fall back to system faces (CSP).
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

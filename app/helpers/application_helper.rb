@@ -12,6 +12,10 @@ module ApplicationHelper
     cookies[:width].presence_in(PreferencesController::WIDTHS) || "normal"
   end
 
+  def look_preference
+    cookies[:look].presence_in(PreferencesController::LOOKS) || "notes"
+  end
+
   # Each language named in itself, for the language switch (ui.md "Language").
   LANGUAGE_NAMES = { "en" => "English", "bg" => "Български", "de" => "Deutsch" }.freeze
 

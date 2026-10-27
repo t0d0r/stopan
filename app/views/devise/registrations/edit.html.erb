@@ -55,6 +55,20 @@
   </div>
 <% end %>
 
+<%# The theme is a browser preference, like light/dark (ui.md "Themes"). %>
+<%= form_with url: preferences_path, method: :patch, id: "look", data: { turbo: false } do %>
+  <h3><%= t("ui.account_page.theme") %></h3>
+  <div class="field">
+    <%= label_tag :look, t("ui.account_page.theme"), class: "sr-only" %>
+    <%= select_tag :look, options_for_select(PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] }, look_preference),
+                   class: "select" %>
+    <i><%= t("ui.account_page.theme_hint") %></i>
+  </div>
+  <div class="actions">
+    <%= submit_tag t("ui.account_page.save_theme"), name: nil %>
+  </div>
+<% end %>
+
 <% if resource.staff? %>
   <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
     <h3><%= t("ui.account_page.notifications") %></h3>

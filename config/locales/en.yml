@@ -36,6 +36,12 @@ en:
       browser_language: "Browser language"
       language_hint: "The language of the pages and of your emails."
       save_language: "Save language"
+      theme: "Theme"
+      theme_hint: "How Stopan looks in this browser. The sun and moon switch still picks light or dark."
+      save_theme: "Save theme"
+      looks:
+        notes: "Notes"
+        omarchy: "Omarchy"
 
     sign_in: "Sign in"
     login: "Email or username"
