@@ -11,7 +11,7 @@ before it is built. The "foundation" column says what already exists.
 | SLAs | first-response and resolution targets per priority, breach warnings | `priority`, `created_at`, first staff `replied` event, `done_at` |
 | automation | triggers, macros (canned replies) | status transitions in one place (`Ticket::TRANSITIONS`, `Ticket#change_status`) |
 | live updates | later: partial updates (Turbo Stream replace of one row) instead of page refreshes for busy queues | done: notification panel (notifications.md), shared pages (sharing.md), ticket page (timeline.md), ticket lists (queues.md), admin pages (admin.md) |
-| API | JSON API with tokens for integrations | policies and scopes are independent of HTML controllers |
+| API | built 2026-10-27, see api.md | - |
 | integrations | chat, monitoring alerts, CRM | - |
 | reporting | **specified in reports.md**; later: CSV export, custom date ranges, business hours | events table, `done_at`, comments |
 | agent groups | groups/teams, restrict agents to groups or organizations, group queues | role column; `Ticket.visible_to` is the single place to narrow |

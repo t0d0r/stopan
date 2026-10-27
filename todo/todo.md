@@ -144,6 +144,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] mail details for staff at the start of a mail ticket, Roundcube-style header (operator, 2026-10-27; specs/organization-mail.md "Mail details")
 - [x] mail HTML view like Roundcube: cleaned HTML part in a sealed frame (own CSP, sandbox), remote images blocked until "Show images", HTML/Text tabs (operator, 2026-10-27; specs/organization-mail.md "HTML view")
 - [ ] mail HTML later: inline cid: images from the attachments, HTML of replies
+- [x] JSON API /api/v1 with personal tokens (read-only option, expiry, revoke), same rights as the pages, admin endpoints (operator, 2026-10-27; specs/api.md)
+- [ ] API later: webhooks for new tickets and replies; OpenAPI description
 - [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")
 - [x] requesters see only their own tickets; "My organizations" tab, organization list stream and colleague notice removed (operator, 2026-10-27; specs/roles.md)
 - [x] long original request collapses with "Show the whole request" (operator, 2026-10-27; specs/timeline.md "Long requests collapse")
@@ -177,7 +179,7 @@ approved "go in this order", all done 2026-10-27):
 - [ ] live ticket and queue updates over Turbo Streams (specs/roadmap.md)
 - [ ] agent groups and organization-wide requester visibility (specs/roadmap.md)
 - [ ] reporting (specs/roadmap.md)
-- [ ] JSON API (specs/roadmap.md)
+- [x] JSON API (specs/roadmap.md; built 2026-10-27, specs/api.md)
 - [ ] headless browser system tests (specs/roadmap.md)
 - [x] admin users list: hide Delete for users with ticket history instead of refusing on submit (specs/admin.md)
 - [x] build and check the Stopan Docker image, `make docker-check` (specs/docker.md)

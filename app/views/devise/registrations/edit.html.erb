@@ -99,6 +99,63 @@
   <% end %>
 <% end %>
 
+<%# Personal tokens for the JSON API (specs/api.md "Tokens"). %>
+<section id="api-tokens" class="api-tokens" aria-labelledby="api-tokens-title">
+  <h3 id="api-tokens-title"><%= t("ui.api_tokens.title") %></h3>
+  <p class="field-hint"><%= t("ui.api_tokens.intro") %></p>
+  <% if (plain = flash[:api_token]) %>
+    <div class="callout api-tokens__new" role="status">
+      <p><strong><%= t("ui.api_tokens.copy_now") %></strong></p>
+      <div class="sharing__link">
+        <%= text_field_tag "new-api-token", plain, readonly: true, class: "field-input", data: { select_on_focus: true },
+                           "aria-label": t("ui.api_tokens.new_token") %>
+        <button type="button" class="btn" data-copy="new-api-token" data-copied-label="<%= t("ui.share.copied") %>">
+          <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.google_setup.copy") %></span>
+        </button>
+      </div>
+    </div>
+  <% end %>
+  <% tokens = resource.api_tokens.newest_first.to_a %>
+  <% if tokens.any? %>
+    <ul class="share-list api-tokens__list">
+      <% tokens.each do |token| %>
+        <li class="share-list__item">
+          <p class="share-list__title"><strong><%= token.name %></strong> <span class="api-tokens__hint">...<%= token.token_hint %></span></p>
+          <p class="share-list__meta">
+            <%= token.read_only? ? t("ui.api_tokens.read_only") : t("ui.api_tokens.read_write") %> &middot;
+            <%= t("ui.api_tokens.created", time: time_ago(token.created_at)) %> &middot;
+            <%= token.last_used_at ? t("ui.api_tokens.used", time: time_ago(token.last_used_at)) : t("ui.api_tokens.never_used") %>
+            <% if token.expires_at %> &middot; <%= token.expired? ? t("ui.api_tokens.expired") : t("ui.api_tokens.expires", date: l(token.expires_at.to_date, format: :long)) %><% end %>
+          </p>
+          <%= button_to t("ui.api_tokens.revoke"), api_token_path(token), method: :delete, class: "btn",
+                        data: confirm_data(title: t("ui.api_tokens.revoke"), body: t("ui.api_tokens.revoke_body", name: token.name),
+                                           button: t("ui.api_tokens.revoke")) %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if tokens.size < ApiToken::MAX_PER_USER %>
+    <%= form_with model: ApiToken.new, url: api_tokens_path, id: "new-api-token-form" do |f| %>
+      <div class="field">
+        <%= f.label :name, t("ui.api_tokens.name") %>
+        <%= f.text_field :name, required: true, maxlength: 60, autocomplete: "off", placeholder: t("ui.api_tokens.name_placeholder") %>
+      </div>
+      <div class="field">
+        <%= f.label :expires_in_days, t("ui.api_tokens.expiry") %>
+        <%= f.select :expires_in_days, ApiToken::EXPIRIES.map { |days| [ days ? t("ui.api_tokens.days", count: days) : t("ui.api_tokens.never"), days.to_s ] },
+                     {}, class: "select" %>
+      </div>
+      <div class="field">
+        <%= f.check_box :read_only %><%= f.label :read_only, t("ui.api_tokens.read_only_option") %>
+        <i><%= t("ui.api_tokens.read_only_hint") %></i>
+      </div>
+      <div class="actions"><%= f.submit t("ui.api_tokens.create") %></div>
+    <% end %>
+  <% else %>
+    <p class="field-hint"><%= t("ui.api_tokens.limit", count: ApiToken::MAX_PER_USER) %></p>
+  <% end %>
+</section>
+
 <p class="auth__meta"><%= t("ui.account_page.organizations") %>:
   <%= resource.organizations.map(&:name).join(", ").presence || t("ui.account_page.no_organizations") %></p>
 <div class="auth__links"><%= link_to t("ui.account_page.back"), root_path %></div>

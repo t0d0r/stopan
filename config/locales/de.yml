@@ -178,6 +178,33 @@ de:
       me: "Ich"
       nobody: "Niemand"
 
+    api_tokens:
+      title: "API-Tokens"
+      intro: "Ein Token lässt ein Programm Stopan in Ihrem Namen und mit Ihren Rechten über die JSON-API (/api/v1) nutzen. Behandeln Sie es wie ein Passwort."
+      copy_now: "Kopieren Sie das Token jetzt. Es wird nur einmal angezeigt."
+      new_token: "Neues API-Token"
+      read_only: "Nur lesen"
+      read_write: "Lesen und schreiben"
+      created: "erstellt %{time}"
+      used: "benutzt %{time}"
+      never_used: "nie benutzt"
+      expires: "läuft ab am %{date}"
+      expired: "abgelaufen"
+      revoke: "Widerrufen"
+      revoke_body: "Programme mit \"%{name}\" verlieren sofort den Zugang."
+      name: "Name"
+      name_placeholder: "zum Beispiel: Monitoring"
+      expiry: "Läuft ab"
+      never: "Nie"
+      days:
+        one: "In %{count} Tag"
+        other: "In %{count} Tagen"
+      read_only_option: "Nur lesen"
+      read_only_hint: "Das Token kann lesen, aber nichts ändern."
+      create: "Token erstellen"
+      limit:
+        one: "Sie haben die Höchstzahl an Tokens (%{count}). Widerrufen Sie eins, um ein neues zu erstellen."
+        other: "Sie haben die Höchstzahl an Tokens (%{count}). Widerrufen Sie eins, um ein neues zu erstellen."
     mail_view:
       frame_title: "Die E-Mail, wie sie gesendet wurde"
       tabs_label: "E-Mail anzeigen als"
@@ -924,6 +951,8 @@ de:
     google_failed: "Die Verbindung mit Google hat nicht funktioniert. Prüfen Sie Client-ID, Secret und Redirect-URI und versuchen Sie es erneut."
     google_disconnected: "Google getrennt. Die E-Mail dieser Organisation ist aus."
     google_client_saved: "Google-Client gespeichert. Verbinden Sie jetzt ein Postfach."
+    api_token_created: "Token \"%{name}\" erstellt. Kopieren Sie es jetzt: Es wird nicht noch einmal angezeigt."
+    api_token_revoked: "Token \"%{name}\" widerrufen."
     gmail_app_password_saved: "%{organization} nutzt jetzt Gmail mit dem App-Passwort."
     mailbox_disabled: "Schalten Sie zuerst das Postfach dieser Organisation ein."
     organization_deleted: "Organisation %{name} wurde gelöscht."
@@ -956,6 +985,16 @@ de:
         email: "Gmail-Adresse"
         app_password: "App-Passwort"
 
+  api:
+    errors:
+      unauthorized: "Ein gültiges API-Token ist nötig (Authorization: Bearer ...)."
+      forbidden: "Das dürfen Sie nicht."
+      read_only: "Dieses Token darf nur lesen."
+      not_found: "Nicht gefunden."
+      bad_request: "In der Anfrage fehlen Daten."
+      invalid: "Die Daten sind ungültig."
+      rate_limited: "Zu viele Anfragen. Versuchen Sie es in einer Minute erneut."
+
   activerecord:
     models:
       user: "Benutzer"
@@ -963,6 +1002,8 @@ de:
       comment: "Kommentar"
       organization: "Organisation"
     attributes:
+      api_token:
+        name: "Name"
       user:
         name: "Name"
         username: "Benutzername"
@@ -1015,6 +1056,7 @@ de:
         color: "Farbe"
     errors:
       messages:
+        too_many_tokens: "Sie können höchstens %{count} API-Tokens haben"
         google_client_id: "muss auf .apps.googleusercontent.com enden (kopieren Sie sie von der Client-Seite in Google Cloud)"
         required_for_translation: "wird benötigt, bevor die Übersetzung eingeschaltet werden kann"
         private_host: "muss ein öffentlicher Mailserver sein, keine Adresse im internen Netzwerk"

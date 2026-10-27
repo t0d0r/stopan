@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
   patch "users/notifications", to: "users/notifications#update", as: :user_notifications
   patch "users/language", to: "users/languages#update", as: :user_language
+  # Personal API tokens on the account page (specs/api.md "Tokens").
+  resources :api_tokens, only: %i[create destroy], path: "users/api_tokens", controller: "users/api_tokens"
   resources :notifications, only: %i[index show] do
     patch :read_all, on: :collection
     get :panel, on: :collection
@@ -85,6 +87,46 @@ Rails.application.routes.draw do
   get "no-organization" => "no_organizations#show", as: :no_organization
 
   patch "preferences" => "preferences#update", as: :preferences
+
+  # The JSON API with personal tokens (specs/api.md).
+  namespace :api do
+    namespace :v1 do
+      resource :me, only: %i[show update], controller: "me"
+      resources :tokens, only: %i[index destroy]
+      resources :tickets, only: %i[index show create update], param: :number do
+        post :resolve, on: :member
+        resource :description, only: :update do
+          patch :task
+        end
+        resources :comments, only: %i[index create update] do
+          patch :task, on: :member
+        end
+        resources :attachments, only: :show
+        resources :revisions, only: :index do
+          post :restore, on: :member
+        end
+        resource :share, only: %i[create destroy]
+        resources :translations, only: :create
+      end
+      resources :notifications, only: :index do
+        post :read, on: :member
+        post :read_all, on: :collection
+      end
+      resource :reports, only: :show
+      resources :stages, only: %i[index create update destroy] do
+        post :move, on: :member
+      end
+      resources :users, only: %i[index show create update destroy]
+      resources :organizations, only: %i[index show create update destroy] do
+        post :mail_test, on: :member
+        post :mailbox_check, on: :member
+        resources :memberships, only: :create
+      end
+      resources :memberships, only: :destroy
+      resource :settings, only: %i[show update]
+      resources :messages, only: :create
+    end
+  end
 
   # Health check for load balancers and container orchestrators.
   get "up" => "rails/health#show", as: :rails_health_check

@@ -175,6 +175,33 @@ en:
       me: "Me"
       nobody: "Nobody"
 
+    api_tokens:
+      title: "API tokens"
+      intro: "A token lets a program use Stopan as you, with your rights, through the JSON API (/api/v1). Treat it like a password."
+      copy_now: "Copy the token now. It is shown only once."
+      new_token: "New API token"
+      read_only: "Read-only"
+      read_write: "Read and write"
+      created: "made %{time}"
+      used: "used %{time}"
+      never_used: "never used"
+      expires: "expires %{date}"
+      expired: "expired"
+      revoke: "Revoke"
+      revoke_body: "Programs using \"%{name}\" lose access at once."
+      name: "Name"
+      name_placeholder: "for example: monitoring"
+      expiry: "Expires"
+      never: "Never"
+      days:
+        one: "In %{count} day"
+        other: "In %{count} days"
+      read_only_option: "Read-only"
+      read_only_hint: "The token can read but not change anything."
+      create: "Make token"
+      limit:
+        one: "You have the most tokens allowed (%{count}). Revoke one to make another."
+        other: "You have the most tokens allowed (%{count}). Revoke one to make another."
     mail_view:
       frame_title: "The mail as it was sent"
       tabs_label: "Show the mail as"
@@ -921,6 +948,8 @@ en:
     google_failed: "Connecting with Google did not work. Check the client ID, secret and redirect URI, and try again."
     google_disconnected: "Google disconnected. Mail for this organization is off."
     google_client_saved: "Google client saved. Now connect a mailbox."
+    api_token_created: "Token \"%{name}\" made. Copy it now: it is not shown again."
+    api_token_revoked: "Token \"%{name}\" revoked."
     gmail_app_password_saved: "%{organization} now uses Gmail with the app password."
     mailbox_disabled: "Turn on this organization's mailbox first."
     organization_deleted: "Organization %{name} was deleted."
@@ -953,6 +982,16 @@ en:
         email: "Gmail address"
         app_password: "App password"
 
+  api:
+    errors:
+      unauthorized: "A valid API token is needed (Authorization: Bearer ...)."
+      forbidden: "You may not do that."
+      read_only: "This token is read-only."
+      not_found: "Not found."
+      bad_request: "The request is missing data."
+      invalid: "The data is not valid."
+      rate_limited: "Too many requests. Try again in a minute."
+
   activerecord:
     models:
       user: "User"
@@ -960,6 +999,8 @@ en:
       comment: "Comment"
       organization: "Organization"
     attributes:
+      api_token:
+        name: "Name"
       user:
         name: "Name"
         username: "Username"
@@ -1010,6 +1051,7 @@ en:
         color: "Colour"
     errors:
       messages:
+        too_many_tokens: "You can have at most %{count} API tokens"
         google_client_id: "must end in .apps.googleusercontent.com (copy it from the client page in Google Cloud)"
         required_for_translation: "is needed before translation can be switched on"
         private_host: "must be a public mail server, not an address inside the network"

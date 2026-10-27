@@ -178,6 +178,33 @@ bg:
       me: "Аз"
       nobody: "Никой"
 
+    api_tokens:
+      title: "API токени"
+      intro: "Токенът позволява на програма да ползва Stopan от ваше име и с вашите права през JSON API (/api/v1). Пазете го като парола."
+      copy_now: "Копирайте токена сега. Показва се само веднъж."
+      new_token: "Нов API токен"
+      read_only: "Само за четене"
+      read_write: "Четене и промяна"
+      created: "създаден %{time}"
+      used: "ползван %{time}"
+      never_used: "неползван"
+      expires: "изтича на %{date}"
+      expired: "изтекъл"
+      revoke: "Отнеми"
+      revoke_body: "Програмите, които ползват \"%{name}\", губят достъп веднага."
+      name: "Име"
+      name_placeholder: "например: мониторинг"
+      expiry: "Изтича"
+      never: "Никога"
+      days:
+        one: "След %{count} ден"
+        other: "След %{count} дни"
+      read_only_option: "Само за четене"
+      read_only_hint: "Токенът може да чете, но не и да променя."
+      create: "Създай токен"
+      limit:
+        one: "Имате максималния брой токени (%{count}). Отнемете един, за да създадете нов."
+        other: "Имате максималния брой токени (%{count}). Отнемете един, за да създадете нов."
     mail_view:
       frame_title: "Писмото, както е изпратено"
       tabs_label: "Покажи писмото като"
@@ -924,6 +951,8 @@ bg:
     google_failed: "Свързването с Google не успя. Проверете Client ID, secret и redirect URI и опитайте пак."
     google_disconnected: "Google е прекъснат. Пощата на организацията е изключена."
     google_client_saved: "Google клиентът е запазен. Сега свържете кутия."
+    api_token_created: "Токенът \"%{name}\" е създаден. Копирайте го сега: няма да се покаже отново."
+    api_token_revoked: "Токенът \"%{name}\" е отнет."
     gmail_app_password_saved: "%{organization} вече ползва Gmail с app password."
     mailbox_disabled: "Първо включете пощенската кутия на организацията."
     organization_deleted: "Организация %{name} е изтрита."
@@ -956,6 +985,16 @@ bg:
         email: "Gmail адрес"
         app_password: "App password"
 
+  api:
+    errors:
+      unauthorized: "Нужен е валиден API токен (Authorization: Bearer ...)."
+      forbidden: "Нямате право да направите това."
+      read_only: "Този токен е само за четене."
+      not_found: "Не е намерено."
+      bad_request: "В заявката липсват данни."
+      invalid: "Данните не са валидни."
+      rate_limited: "Твърде много заявки. Опитайте пак след минута."
+
   activerecord:
     models:
       user: "Потребител"
@@ -963,6 +1002,8 @@ bg:
       comment: "Коментар"
       organization: "Организация"
     attributes:
+      api_token:
+        name: "Име"
       user:
         name: "Име"
         username: "Потребителско име"
@@ -1015,6 +1056,7 @@ bg:
         color: "Цвят"
     errors:
       messages:
+        too_many_tokens: "Можете да имате най-много %{count} API токена"
         google_client_id: "трябва да завършва на .apps.googleusercontent.com (копирайте го от страницата на клиента в Google Cloud)"
         required_for_translation: "е нужен, преди преводът да се включи"
         private_host: "трябва да е публичен пощенски сървър, не адрес във вътрешната мрежа"

@@ -24,6 +24,7 @@
 | [reports.md](reports.md) | statistics page for staff: new, done, backlog, response and resolution times, per organization and person |
 | [translation.md](translation.md) | "Translate" button on messages for staff: DeepL, admin switch, stored translations, privacy |
 | [sharing.md](sharing.md) | share a ticket by secret link, optionally with a password: who may share, what the public page shows, headers, rate limit |
+| [api.md](api.md) | JSON API under /api/v1 with personal tokens (read-only or read-write), same rights as the pages |
 | [roadmap.md](roadmap.md) | later phases: notifications, ingestion, SLAs, automation, API, reporting, groups, ... |
 
 ## Security Note

@@ -716,6 +716,19 @@ menu and Take; open /tickets/new and pick a requester.
   follow the shown pane. Checked on dev #1010 with a sample newsletter
   (no real mailbox read): scripts 0, remote image blocked until "Show
   images", copy gives the frame's text.
+- JSON API (operator: "API with tokens, every user makes their own, all
+  functions"; then "a Read-only option"): specs/api.md. `api_tokens`
+  (migration `CreateApiTokens`; SHA-256 digest, hint, read_only,
+  expires_at, last_used_at), account page section `#api-tokens`
+  (`Users::ApiTokensController`, token shown once via flash, max 10, not
+  while impersonating). `Api::V1::BaseController < ActionController::API`
+  (Bearer only, 401/403 read_only/404/422/429 JSON errors in the user's
+  language, 300/min per token), `ApiRepresentation` for JSON shapes, and
+  controllers for me, tokens, tickets, description, comments,
+  attachments, revisions, share, translations, notifications, reports,
+  stages, users, organizations, memberships, settings, messages; each
+  reuses the models and TicketPolicy. Smoke test on dev with a temporary
+  read-only token (deleted afterwards).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

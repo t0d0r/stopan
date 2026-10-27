@@ -78,6 +78,13 @@ The screenshots use the fictional data from `make demo`.
 - **Public request page** - `/support/<organization>` lets anyone send a
   request without an account; the email address is the identity and new
   requesters get a one-time sign-in link (`specs/public-form.md`).
+- **JSON API** - `/api/v1` with personal tokens made on the account page
+  (read-only or read and write, optional expiry), with the same rights as
+  the web app: tickets, replies, files, sharing, notifications, reports
+  and, for administrators, users, organizations and settings
+  (`specs/api.md`). Example:
+  `curl -H "Authorization: Bearer $STOPAN_TOKEN" https://<host>/api/v1/tickets`
+  (the token in an environment variable, never in a file or the history).
 - **Secure defaults** - scoped queries everywhere (404 for tickets you may
   not see), per-role strong parameters, CSRF protection, Content Security
   Policy, account lockout, closed sign-up in production, ticket text
