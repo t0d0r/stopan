@@ -802,6 +802,9 @@ menu and Take; open /tickets/new and pick a requester.
   data); `bin/screenshots` now runs Chrome with --lang/--accept-lang en and an
   English locale environment, the phone shot is English
   (`ticket-requester-phone.png`, the Bulgarian one removed).
+- README "How tickets come in": Mermaid flowchart of the four channels and their
+  checks (rendered in headless Chrome with mermaid 11.4.1 to check the syntax);
+  specs/overview.md "Ingress diagram" says to keep it in sync.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

@@ -71,6 +71,17 @@ and g0no's server deployment files. They remain in git history only.
   the notification panel's refresh signal (notifications.md). Live ticket
   and queue updates are on the roadmap.
 
+## Ingress diagram
+
+Operator, 2026-10-27: "generate an ingress workflow diagram too". The
+README section "How tickets come in" has a Mermaid flowchart of the four
+channels (web app, public form, organization mailbox, JSON API), the
+checks on each (spam guards, automatic mail, reply detection, the email
+as identity) and what follows (ticket, timeline event, notifications).
+It summarises public-form.md, organization-mail.md, roles.md, api.md and
+notifications.md; change it in the same turn as any of them changes the
+flow. GitHub renders it; elsewhere it reads as text.
+
 ## Not in this phase
 
 Email ingestion and notifications, SLAs, automations and macros, a public
