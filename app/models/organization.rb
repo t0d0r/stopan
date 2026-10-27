@@ -33,7 +33,7 @@ class Organization < ApplicationRecord
     where("ulower(organizations.name) LIKE ? ESCAPE '\\'", "%#{sanitize_sql_like(query.to_s.strip.downcase)}%")
   }
 
-  ALLOWED_SENDER = /\A(?:[^@\s]+)?@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+\z/
+  ALLOWED_SENDER = /\A[^@\s]*@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+\z/
   MAX_ALLOWED_SENDERS = 500
 
   def allowed_senders
