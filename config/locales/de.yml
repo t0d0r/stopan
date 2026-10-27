@@ -205,6 +205,22 @@ de:
       limit:
         one: "Sie haben die Höchstzahl an Tokens (%{count}). Widerrufen Sie eins, um ein neues zu erstellen."
         other: "Sie haben die Höchstzahl an Tokens (%{count}). Widerrufen Sie eins, um ein neues zu erstellen."
+    bulk:
+      title: "Massenaktionen"
+      selected:
+        one: "%{count} ausgewählt"
+        other: "%{count} ausgewählt"
+      all_selected: "Alle %{count} in dieser Liste ausgewählt"
+      select_all: "Alle %{count} in dieser Liste auswählen"
+      status: "Status: keine Änderung"
+      priority: "Priorität: keine Änderung"
+      assignee: "Zuständig: keine Änderung"
+      apply: "Anwenden"
+      clear: "Auswahl aufheben"
+      select_page: "Alle Tickets dieser Seite auswählen"
+      select_row: "%{reference} auswählen"
+      not_allowed: "nicht erlaubt"
+      assignee_not_allowed: "diese Person darf dieses Ticket nicht bearbeiten"
     mail_view:
       frame_title: "Die E-Mail, wie sie gesendet wurde"
       tabs_label: "E-Mail anzeigen als"
@@ -951,6 +967,15 @@ de:
     google_failed: "Die Verbindung mit Google hat nicht funktioniert. Prüfen Sie Client-ID, Secret und Redirect-URI und versuchen Sie es erneut."
     google_disconnected: "Google getrennt. Die E-Mail dieser Organisation ist aus."
     google_client_saved: "Google-Client gespeichert. Verbinden Sie jetzt ein Postfach."
+    bulk_updated:
+      zero: "Kein Ticket musste geändert werden."
+      one: "1 Ticket geändert."
+      other: "%{count} Tickets geändert."
+    bulk_skipped:
+      one: "1 übersprungen: %{tickets}"
+      other: "%{count} übersprungen: %{tickets}"
+    bulk_nothing_chosen: "Wählen Sie zuerst Status, Priorität oder Zuständige."
+    bulk_nothing_selected: "Wählen Sie zuerst mindestens ein Ticket."
     api_token_created: "Token \"%{name}\" erstellt. Kopieren Sie es jetzt: Es wird nicht noch einmal angezeigt."
     api_token_revoked: "Token \"%{name}\" widerrufen."
     gmail_app_password_saved: "%{organization} nutzt jetzt Gmail mit dem App-Passwort."

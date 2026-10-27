@@ -146,6 +146,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [ ] mail HTML later: inline cid: images from the attachments, HTML of replies
 - [x] JSON API /api/v1 with personal tokens (read-only option, expiry, revoke), same rights as the pages, admin endpoints (operator, 2026-10-27; specs/api.md)
 - [ ] API later: webhooks for new tickets and replies; OpenAPI description
+- [x] bulk actions in the queue and search: check boxes, status/priority/assignee for the selection or the whole list (max 500), skipped tickets named; also PATCH /api/v1/tickets/bulk (operator, 2026-10-27; specs/queues.md "Bulk actions")
+- [~] account page laid out in panels like the admin pages (operator, 2026-10-27)
 - [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")
 - [x] requesters see only their own tickets; "My organizations" tab, organization list stream and colleague notice removed (operator, 2026-10-27; specs/roles.md)
 - [x] long original request collapses with "Show the whole request" (operator, 2026-10-27; specs/timeline.md "Long requests collapse")

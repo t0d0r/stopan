@@ -678,6 +678,42 @@ function setUpMailView() {
   });
 }
 
+// Bulk actions of the queue (specs/queues.md "Bulk actions"): the bar
+// shows once a row is selected and offers the whole list when the whole
+// page is selected.
+function setUpBulkActions() {
+  const form = document.querySelector("[data-bulk-form]");
+  const page = document.querySelector("[data-bulk-page]");
+  if (!form || !page) return;
+  const rows = [...document.querySelectorAll("[data-bulk-row]")];
+  const all = form.querySelector("[data-bulk-all]");
+  const clear = form.querySelector("[data-bulk-clear]");
+  const scope = form.querySelector("[data-bulk-scope]");
+  const count = form.querySelector("[data-bulk-count]");
+  const update = () => {
+    const selected = rows.filter((row) => row.checked).length;
+    const whole = scope.value === "list";
+    form.hidden = selected === 0 && !whole;
+    page.checked = selected === rows.length;
+    page.indeterminate = selected > 0 && selected < rows.length;
+    if (all) all.hidden = whole || selected !== rows.length;
+    clear.hidden = false;
+    const label = whole ? form.dataset.allSelected : (selected === 1 ? form.dataset.selectedOne : form.dataset.selectedOther);
+    count.textContent = label.replace("%{count}", selected);
+    rows.forEach((row) => row.closest("tr")?.classList.toggle("is-selected", row.checked || whole));
+  };
+  const choose = (checked) => {
+    rows.forEach((row) => { row.checked = checked; });
+    scope.value = "selected";
+    update();
+  };
+  rows.forEach((row) => row.addEventListener("change", () => { scope.value = "selected"; update(); }, { signal: pageSignal }));
+  page.addEventListener("change", () => choose(page.checked), { signal: pageSignal });
+  clear.addEventListener("click", () => choose(false), { signal: pageSignal });
+  all?.addEventListener("click", () => { scope.value = "list"; update(); }, { signal: pageSignal });
+  update();
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -695,6 +731,7 @@ function setUpPage() {
   setUpCopyBoxes();
   setUpMailView();
   setUpLongRequest();
+  setUpBulkActions();
   setUpDoubleClickEdit();
   setUpTaskLists();
   setUpTranslations();

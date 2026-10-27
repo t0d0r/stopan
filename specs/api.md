@@ -78,6 +78,7 @@ Everyone (within their rights):
 | `GET /api/v1/tickets/:number` | the ticket with its visible timeline (events with their comments), files, share state (for who may share), `mail_headers` (staff) |
 | `PATCH /api/v1/tickets/:number` | staff: `ticket[status, priority, assignee_id, stage_id]` |
 | `POST /api/v1/tickets/:number/resolve` | the requester's "Mark as done" |
+| `PATCH /api/v1/tickets/bulk` | staff: `numbers[]` or `scope=list` with the list filters (`view, status, priority, assignee, organization, q`), and `changes[status, priority, assignee]` (`me`, `none` or a user id); returns `updated` (numbers) and `skipped` (number and reason) (queues.md "Bulk actions") |
 | `PATCH /api/v1/tickets/:number/description` | `ticket[subject, description]` (an edit with a revision) and/or `ticket[markdown]` (the switch) |
 | `PATCH /api/v1/tickets/:number/description/task` | `line`, `checked` (Markdown task lists) |
 | `GET /api/v1/tickets/:number/comments` | visible replies and notes |

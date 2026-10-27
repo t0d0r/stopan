@@ -31,10 +31,14 @@
                                     clear_path: tickets_path(view: filter.view) %>
 
       <% if filter.tickets.any? %>
+        <%= render "tickets/bulk_bar", filter: filter, staff: staff %>
         <div class="table-scroll">
           <table class="ledger tickets-table">
             <thead>
               <tr>
+                <th scope="col" class="col-select">
+                  <label class="select-box"><input type="checkbox" data-bulk-page aria-label="<%= t("ui.bulk.select_page") %>"></label>
+                </th>
                 <th scope="col" class="num"><%= t("ui.fields.number") %></th>
                 <th scope="col"><%= t("ui.fields.subject") %></th>
                 <th scope="col" class="col-requester"><%= t("ui.fields.requester") %></th>
@@ -48,6 +52,10 @@
             <tbody>
               <% filter.tickets.each do |ticket| %>
                 <tr id="<%= dom_id(ticket) %>" class="ticket-row ticket-row--<%= ticket.priority %>">
+                  <td class="col-select">
+                    <label class="select-box"><input type="checkbox" name="numbers[]" value="<%= ticket.number %>" form="bulk-form" data-bulk-row
+                           aria-label="<%= t("ui.bulk.select_row", reference: ticket.reference) %>"></label>
+                  </td>
                   <td class="num ticket-number"><%= ticket.reference %></td>
                   <td class="text col-subject">
                     <%= link_to ticket_path(ticket), class: "ticket-link" do %><%= ticket.subject %><% if ticket.shared? %> <%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %><% end %>

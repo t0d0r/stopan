@@ -205,6 +205,22 @@ bg:
       limit:
         one: "Имате максималния брой токени (%{count}). Отнемете един, за да създадете нов."
         other: "Имате максималния брой токени (%{count}). Отнемете един, за да създадете нов."
+    bulk:
+      title: "Масови действия"
+      selected:
+        one: "%{count} избрана"
+        other: "%{count} избрани"
+      all_selected: "Избрани са всички %{count} в списъка"
+      select_all: "Избери всички %{count} в списъка"
+      status: "Състояние: без промяна"
+      priority: "Приоритет: без промяна"
+      assignee: "Отговорник: без промяна"
+      apply: "Приложи"
+      clear: "Изчисти избора"
+      select_page: "Избери всички заявки на страницата"
+      select_row: "Избери %{reference}"
+      not_allowed: "не е позволено"
+      assignee_not_allowed: "този човек не може да работи по заявката"
     mail_view:
       frame_title: "Писмото, както е изпратено"
       tabs_label: "Покажи писмото като"
@@ -951,6 +967,15 @@ bg:
     google_failed: "Свързването с Google не успя. Проверете Client ID, secret и redirect URI и опитайте пак."
     google_disconnected: "Google е прекъснат. Пощата на организацията е изключена."
     google_client_saved: "Google клиентът е запазен. Сега свържете кутия."
+    bulk_updated:
+      zero: "Нито една заявка не се нуждаеше от промяна."
+      one: "Променена е 1 заявка."
+      other: "Променени са %{count} заявки."
+    bulk_skipped:
+      one: "1 пропусната: %{tickets}"
+      other: "%{count} пропуснати: %{tickets}"
+    bulk_nothing_chosen: "Първо изберете състояние, приоритет или отговорник."
+    bulk_nothing_selected: "Първо изберете поне една заявка."
     api_token_created: "Токенът \"%{name}\" е създаден. Копирайте го сега: няма да се покаже отново."
     api_token_revoked: "Токенът \"%{name}\" е отнет."
     gmail_app_password_saved: "%{organization} вече ползва Gmail с app password."

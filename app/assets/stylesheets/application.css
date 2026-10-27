@@ -1720,6 +1720,87 @@ form.button_to {
   background: rgba(255, 255, 255, 0.4);
 }
 
+/* Bulk actions (specs/queues.md "Bulk actions"). */
+.tickets-table tbody tr.is-selected td {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.tickets-table .col-select {
+  width: 1%;
+  padding-right: 0;
+}
+
+.select-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  cursor: pointer;
+}
+
+.select-box input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.bulk-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bar);
+}
+
+.bulk-bar[hidden] {
+  display: none;
+}
+
+.bulk-bar__count {
+  margin: 0;
+  font-weight: 600;
+}
+
+.bulk-bar__all {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bulk-bar__fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+@media (max-width: 760px) {
+  .select-box {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .bulk-bar__fields {
+    margin-left: 0;
+  }
+
+  .bulk-bar__all {
+    min-height: 44px;
+  }
+}
+
 .assignee {
   display: inline-flex;
   align-items: center;

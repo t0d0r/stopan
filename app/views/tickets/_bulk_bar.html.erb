@@ -1,0 +1,30 @@
+<%# Bulk actions for the selected rows or the whole list (specs/queues.md "Bulk actions").
+    The row check boxes join this form through their form attribute. Locals: filter, staff. %>
+<%= form_with url: bulk_tickets_path, method: :patch, id: "bulk-form", class: "bulk-bar",
+              data: { bulk_form: true, selected_one: t("ui.bulk.selected.one"), selected_other: t("ui.bulk.selected.other"),
+                      all_selected: t("ui.bulk.all_selected", count: filter.total_count) } do %>
+  <%= hidden_field_tag :return_to, request.fullpath, id: nil %>
+  <%= hidden_field_tag :scope, "selected", id: nil, data: { bulk_scope: true } %>
+  <% filter.params_with.slice(*TicketBulkUpdate::LIST_FILTERS).each do |name, value| %>
+    <%= hidden_field_tag "list[#{name}]", value, id: nil %>
+  <% end %>
+  <p class="bulk-bar__count" data-bulk-count aria-live="polite"><%= t("ui.bulk.title") %></p>
+  <% if filter.total_count > filter.tickets.size %>
+    <button type="button" class="bulk-bar__all" data-bulk-all hidden><%= t("ui.bulk.select_all", count: filter.total_count) %></button>
+  <% end %>
+  <div class="bulk-bar__fields">
+    <%= label_tag "bulk_status", t("ui.fields.status"), class: "sr-only" %>
+    <%= select_tag "changes[status]", options_for_select(Ticket::STATUSES.map { |status| [ status_name(status), status ] }),
+                   include_blank: t("ui.bulk.status"), id: "bulk_status", class: "select" %>
+    <%= label_tag "bulk_priority", t("ui.fields.priority"), class: "sr-only" %>
+    <%= select_tag "changes[priority]", options_for_select(priority_options),
+                   include_blank: t("ui.bulk.priority"), id: "bulk_priority", class: "select" %>
+    <%= label_tag "bulk_assignee", t("ui.fields.assignee"), class: "sr-only" %>
+    <%= select_tag "changes[assignee]",
+                   options_for_select([ [ t("ui.queue.assignee_me"), "me" ], [ t("ui.queue.assignee_none"), "none" ] ] +
+                                      staff.map { |user| [ user.display_name, user.id.to_s ] }),
+                   include_blank: t("ui.bulk.assignee"), id: "bulk_assignee", class: "select" %>
+    <%= submit_tag t("ui.bulk.apply"), name: nil, class: "btn btn--primary" %>
+    <button type="button" class="btn" data-bulk-clear hidden><%= t("ui.bulk.clear") %></button>
+  </div>
+<% end %>

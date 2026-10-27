@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   end
 
   # Tickets are addressed by their number (Ticket#to_param).
+  # Bulk actions of the queue (specs/queues.md); before resources so "bulk" is no number.
+  patch "tickets/bulk" => "ticket_bulk#update", as: :bulk_tickets
   # The kanban board (specs/board.md); before resources so "board" is no number.
   get "tickets/board" => "boards#show", as: :board
   # Statistics for staff (specs/reports.md).
@@ -93,6 +95,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resource :me, only: %i[show update], controller: "me"
       resources :tokens, only: %i[index destroy]
+      patch "tickets/bulk", to: "tickets_bulk#update", as: :bulk_tickets
       resources :tickets, only: %i[index show create update], param: :number do
         post :resolve, on: :member
         resource :description, only: :update do

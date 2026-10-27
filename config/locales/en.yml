@@ -202,6 +202,22 @@ en:
       limit:
         one: "You have the most tokens allowed (%{count}). Revoke one to make another."
         other: "You have the most tokens allowed (%{count}). Revoke one to make another."
+    bulk:
+      title: "Bulk actions"
+      selected:
+        one: "%{count} selected"
+        other: "%{count} selected"
+      all_selected: "All %{count} in this list selected"
+      select_all: "Select all %{count} in this list"
+      status: "Status: no change"
+      priority: "Priority: no change"
+      assignee: "Assignee: no change"
+      apply: "Apply"
+      clear: "Clear selection"
+      select_page: "Select every ticket on this page"
+      select_row: "Select %{reference}"
+      not_allowed: "not allowed"
+      assignee_not_allowed: "this person may not work this ticket"
     mail_view:
       frame_title: "The mail as it was sent"
       tabs_label: "Show the mail as"
@@ -948,6 +964,15 @@ en:
     google_failed: "Connecting with Google did not work. Check the client ID, secret and redirect URI, and try again."
     google_disconnected: "Google disconnected. Mail for this organization is off."
     google_client_saved: "Google client saved. Now connect a mailbox."
+    bulk_updated:
+      zero: "No ticket needed a change."
+      one: "1 ticket changed."
+      other: "%{count} tickets changed."
+    bulk_skipped:
+      one: "1 skipped: %{tickets}"
+      other: "%{count} skipped: %{tickets}"
+    bulk_nothing_chosen: "Choose a status, priority or assignee first."
+    bulk_nothing_selected: "Select at least one ticket first."
     api_token_created: "Token \"%{name}\" made. Copy it now: it is not shown again."
     api_token_revoked: "Token \"%{name}\" revoked."
     gmail_app_password_saved: "%{organization} now uses Gmail with the app password."

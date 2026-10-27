@@ -729,6 +729,15 @@ menu and Take; open /tickets/new and pick a requester.
   stages, users, organizations, memberships, settings, messages; each
   reuses the models and TicketPolicy. Smoke test on dev with a temporary
   read-only token (deleted afterwards).
+- Bulk actions (operator: "bulk actions in search and the queue"):
+  `TicketBulkUpdate` (numbers or the list's filters, max 500; each ticket
+  through visible_to, TicketPolicy#update?, apply_changes; skipped with a
+  reason, unchanged left alone), `TicketBulkController` (PATCH
+  /tickets/bulk, return_to only /tickets paths) and
+  `Api::V1::TicketsBulkController`. Queue: `tickets/_bulk_bar` form with
+  row check boxes joined by `form="bulk-form"`, `setUpBulkActions` shows
+  the bar, page select, "select all N in this list" (scope=list).
+  Checked in Chrome at 1280 and 390px on dev.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

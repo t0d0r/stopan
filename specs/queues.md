@@ -113,6 +113,41 @@ Assigning from the queue (tickets.md "Assigning"):
   closes on a click outside, Escape, scrolling or opening another menu;
   without JavaScript it opens inside the cell.
 
+### Bulk actions
+
+Operator, 2026-10-27: "in search and the queue we need an option for
+bulk actions". Staff only; search results are the queue (above), so
+they have it too.
+
+- The queue table starts with a check box column: one per row
+  (`numbers[]`, "Select #1001" for screen readers) and one in the head
+  that selects every row of the page. Rows are selected in place; the
+  check box cell is padded to a 44px target on phones.
+- **Bulk bar** above the table, shown once at least one row is selected
+  (always shown without JavaScript): "3 selected", and three selects,
+  each starting at "no change": Status (every status), Priority (every
+  priority), Assignee ("Me", "Nobody", the staff who may be assigned in
+  the user's organizations), then "Apply" and "Clear".
+- When every row of the page is selected and the list has more, the bar
+  offers "Select all 94 in this list"; then the action applies to every
+  ticket of the current view, filters and search (`scope=list`), at most
+  500, and the bar says "All 94 in this list selected".
+- `PATCH /tickets/bulk` with `numbers[]` or `scope=list` plus the list's
+  `view, status, priority, assignee, organization, q`, the changes, and
+  `return_to` (a `/tickets` path; anything else goes to `/tickets`).
+  Each ticket goes through `Ticket.visible_to`, `TicketPolicy#update?`
+  and `apply_changes`, one by one, so events, notifications and live
+  refreshes are as for single changes. A ticket where a change is not
+  allowed (a status transition, an assignee who may not work that
+  organization) is skipped; the rest are changed. A ticket that already
+  has the chosen values is left alone. The flash says how many were
+  changed and lists up to ten skipped references with the reason.
+- Nothing chosen (all "no change") or nothing selected: nothing happens
+  and the flash says so.
+- The API has the same: `PATCH /api/v1/tickets/bulk` (api.md).
+- A selection holds back live refreshes of the list (a checked box is
+  work in progress, timeline.md), so it is not lost.
+
 ## My tickets (requester)
 
 Tabs: `open` (new, open, pending, postponed; default, yellow), `done`
