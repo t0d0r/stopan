@@ -126,6 +126,26 @@ cannot hide who wrote what.
   a collapsed "Earlier versions (n)" list, newest first, each headed
   "Before the edit by <name> <time>". Requesters and shared pages never
   see earlier versions, also of their own text.
+- **What each edit changed** (plan item 4, from g0no's history): every
+  entry shows the edit word by word against the text that replaced it
+  (the next newer version, or the current text for the newest entry):
+  removed words red and struck through (`<del>`), added words green
+  (`<ins>`), the rest plain, line breaks kept. A changed subject is shown
+  the same way above the text. `TextDiff` (taken from g0no) is a
+  longest-common-subsequence diff over words and white space after
+  trimming the common start and end; above 400,000 cells the middle is
+  shown as one removal and one addition.
+- **Restore** (staff): "Restore this version" under an entry puts that
+  text (and subject) back, after the confirm dialog ("The text goes back
+  to how it was before <name>'s edit on <time>. The current text stays in
+  the earlier versions."). A restore is an ordinary edit by the restoring
+  user: it adds a revision with the current text, marks the message as
+  edited and refreshes pages. An entry equal to the current text says
+  "Same as the current text" instead of the button. Route: `POST
+  /tickets/:number/revisions/:id/restore` (`RevisionsController#restore`);
+  the revision must belong to that ticket or one of its comments (404
+  otherwise) and the user must be staff (403). Back to the message with
+  "Earlier version restored."
 - **Not activity.** An edit writes no timeline event, sends no email or
   notification and does not change the ticket's `updated_at` (queue
   order): it corrects what was said, it does not say something new.
@@ -187,7 +207,10 @@ the right stream; public and internal events reach the right streams).
 events for every change, immutability, the requester filter, and that a
 requester's page contains no internal note text.
 
-Editing: `test/models/revision_test.rb` (edits keep the previous text,
+Editing: `test/models/text_diff_test.rb` (word runs, trimming, the cell
+limit), `test/controllers/revisions_controller_test.rb` (diff markup for
+staff, restore per role, other tickets' revisions 404, "same as current"),
+`test/models/revision_test.rb` (edits keep the previous text,
 unchanged text is a no-op, validation, no event, `updated_at` untouched)
 and `test/controllers/edits_controller_test.rb` (who may edit what per
 role, closed tickets, internal notes hidden from requesters, earlier
