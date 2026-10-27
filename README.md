@@ -26,49 +26,24 @@ The screenshots use the fictional data from `make demo`.
 
 ## How tickets come in
 
-Four channels lead to the same ticket, timeline and notifications. The
-email address is the identity on the public form and in the mailbox
-(`specs/public-form.md`, `specs/organization-mail.md`); the app and the
-API act with the signed-in user's or the token's rights (`specs/roles.md`,
-`specs/api.md`).
-
 ```mermaid
-flowchart TD
-  subgraph channels["Channels"]
-    app["Web app<br/>requester for themself,<br/>staff for a requester"]
-    form["Public form<br/>/support/organization"]
-    mail["Organization mailbox<br/>IMAP, every 1-15 minutes,<br/>password, app password or Google"]
-    api["JSON API /api/v1<br/>personal token"]
-  end
-
-  form --> guard{"Honeypot, rate limit,<br/>allowed senders"}
-  guard -- "refused" --> drop["Nothing created, logged<br/>(the form still says thank you)"]
-  guard -- "passed" --> who
-
-  mail --> robot{"Automatic mail?<br/>auto-reply, bulk, list,<br/>bounce, own address"}
-  robot -- "yes" --> skip["Skipped, marked read"]
-  robot -- "no" --> reply{"Reply to a ticket?<br/>subject reference or<br/>In-Reply-To / References"}
-  reply -- "yes, its requester<br/>or staff of its organization" --> comment["Public reply on that ticket<br/>(a done ticket opens again)"]
-  reply -- "no" --> who
-
-  who{"Who is the sender?<br/>the email is the identity"}
-  who -- "unknown address" --> newuser["New requester account,<br/>membership, sign-in link email"]
-  who -- "active requester" --> member["Membership added<br/>when missing"]
-  who -- "staff or deactivated" --> drop
-
-  app --> ticket
-  api --> ticket
-  newuser --> ticket
-  member --> ticket
-
-  ticket["New ticket<br/>next number, source app / web_form / email,<br/>mail headers and cleaned HTML kept"]
-  ticket --> event["Timeline event"]
-  comment --> event
-  event --> notify["Notifications"]
-  notify --> subscribers["Email to staff subscribed<br/>to new tickets"]
-  notify --> members["In-app notice to the<br/>organization's staff"]
-  notify --> live["Live refresh of the queue,<br/>board and open pages"]
+flowchart LR
+  app["Web app"] --> ticket
+  api["JSON API"] --> ticket
+  form["Public form"] --> check
+  mail["Mailbox"] --> check
+  check["Checks"] --> ticket["Ticket or reply"]
+  ticket --> notify["Notifications"]
 ```
+
+- **Web app and API** create tickets with the user's (or token's) rights
+  (`specs/roles.md`, `specs/api.md`).
+- **Public form and mailbox** go through checks first: spam guards and
+  automatic mail are dropped, a mail that refers to a ticket becomes a
+  reply, and the sender's email is the identity - a new address gets a
+  requester account (`specs/public-form.md`, `specs/organization-mail.md`).
+- **Notifications:** email to staff subscribed to new tickets, in-app
+  notices and live page refreshes (`specs/notifications.md`).
 
 ## Features
 

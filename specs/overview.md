@@ -74,10 +74,11 @@ and g0no's server deployment files. They remain in git history only.
 ## Ingress diagram
 
 Operator, 2026-10-27: "generate an ingress workflow diagram too". The
-README section "How tickets come in" has a Mermaid flowchart of the four
-channels (web app, public form, organization mailbox, JSON API), the
-checks on each (spam guards, automatic mail, reply detection, the email
-as identity) and what follows (ticket, timeline event, notifications).
+README section "How tickets come in" has a simple Mermaid flowchart, left
+to right (operator, 2026-10-27: "too complicated, make it simple"): the
+four channels (web app, JSON API, public form, mailbox), one "Checks" box
+for the form and the mailbox, "Ticket or reply" and "Notifications"; a
+short list under it gives the details and links the specs.
 It summarises public-form.md, organization-mail.md, roles.md, api.md and
 notifications.md; change it in the same turn as any of them changes the
 flow. GitHub renders it; elsewhere it reads as text.

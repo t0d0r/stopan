@@ -810,6 +810,9 @@ menu and Take; open /tickets/new and pick a requester.
 - Pushed main to origin (GitHub) on the operator's request after a gitleaks
   scan of the 44 unpushed commits and a check for real addresses from the dev
   mailbox (none; only fictional test data).
+- README diagram simplified to six boxes left to right (channels, Checks, Ticket
+  or reply, Notifications) with the details in a list under it; rendered in
+  Chrome to check.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);
