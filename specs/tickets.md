@@ -67,8 +67,8 @@ actor:
   form chose another status ("Submit as ...").
 - A staff reply or note may choose any allowed status in the same request.
 
-Requester action: "Mark as resolved" on their own ticket in `new`, `open` or
-`pending` sets `resolved`.
+Requester action: "Mark as resolved" on their own ticket in `new`, `open`,
+`pending` or `postponed` sets `resolved`.
 
 Closed tickets accept no public replies from anyone. Staff can still add
 internal notes and reopen the ticket (`closed` -> `open`).

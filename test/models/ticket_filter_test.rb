@@ -13,7 +13,7 @@ class TicketFilterTest < ActiveSupport::TestCase
     assert_equal [ 1003 ], numbers(agent, view: "pending")
     assert_equal [ 1004 ], numbers(agent, view: "solved")
     assert_equal 4, numbers(agent, view: "all").size
-    assert_equal({ "unsolved" => 3, "mine" => 1, "unassigned" => 1, "pending" => 1, "solved" => 1, "all" => 4 },
+    assert_equal({ "unsolved" => 3, "mine" => 1, "unassigned" => 1, "pending" => 1, "postponed" => 0, "solved" => 1, "all" => 4 },
                  TicketFilter.new(agent, {}).counts)
   end
 
@@ -76,5 +76,12 @@ class TicketFilterTest < ActiveSupport::TestCase
     second = TicketFilter.new(agent, { view: "all", page: "2" })
     assert_equal 9, second.tickets.size
     assert_equal({ view: "all", page: 3 }, second.params_with(page: 3))
+  end
+
+  test "postponed tickets have their own view and stay in the requester's Open tab" do
+    tickets(:printer).update_columns(status: "postponed")
+    assert_equal [ 1001 ], numbers(users(:agent), view: "postponed")
+    assert_not_includes numbers(users(:agent), view: "unsolved"), 1001
+    assert_includes numbers(users(:anna), view: "open"), 1001
   end
 end

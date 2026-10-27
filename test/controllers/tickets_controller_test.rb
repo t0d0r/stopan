@@ -142,7 +142,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     get ticket_url(tickets(:printer))
     assert_select ".message--internal", /STAFF-ONLY/
     assert_match "assigned the ticket to Maria Agent", response.body
-    assert_select "form.properties-form select[name='ticket[status]'] option", 4 # open + 3 transitions
+    assert_select "form.properties-form select[name='ticket[status]'] option", 5 # open + 4 transitions
     assert_select ".composer input[name='comment[internal]']", 2
   end
 

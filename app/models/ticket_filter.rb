@@ -2,7 +2,7 @@
 # for requesters (specs/queues.md). Every query starts from
 # Ticket.visible_to, and the parameters only narrow it.
 class TicketFilter
-  STAFF_VIEWS = %w[unsolved mine unassigned pending solved all].freeze
+  STAFF_VIEWS = %w[unsolved mine unassigned pending postponed solved all].freeze
   # The first three are the requester's own tickets; "organization" is every
   # ticket of their organizations (specs/queues.md "My tickets").
   REQUESTER_VIEWS = %w[open solved all organization].freeze
@@ -91,6 +91,7 @@ class TicketFilter
     when "mine" then base.unsolved.where(assignee_id: user.id)
     when "unassigned" then base.unsolved.where(assignee_id: nil)
     when "pending" then base.where(status: "pending")
+    when "postponed" then base.where(status: Ticket::POSTPONED)
     when "solved" then base.solved
     else base
     end
@@ -98,7 +99,7 @@ class TicketFilter
 
   def own_view(name)
     case name
-    when "open" then own.unsolved
+    when "open" then own.where(status: Ticket::OPEN_FOR_REQUESTER)
     when "solved" then own.solved
     else own
     end

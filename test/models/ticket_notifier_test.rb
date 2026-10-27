@@ -167,4 +167,15 @@ class TicketNotifierTest < ActiveSupport::TestCase
     perform_enqueued_jobs { ticket.add_comment(author: users(:agent), body: "On it") }
     assert_not Notification.where(ticket: ticket, user: users(:boris)).where.not(kind: "created").exists?
   end
+
+  test "postponing reaches the requester in the app only" do
+    ticket = tickets(:printer)
+    sent = mails { ticket.apply_changes!({ status: "postponed" }, actor: users(:agent)) }
+    assert_not sent.key?(users(:anna).email)
+    note = Notification.where(user: users(:anna), ticket: ticket).last
+    assert_equal [ "status_changed", "postponed" ], [ note.kind, note.status ]
+
+    mails { ticket.add_comment(author: users(:anna), body: "Any news?") }
+    assert_equal "open", ticket.reload.status
+  end
 end

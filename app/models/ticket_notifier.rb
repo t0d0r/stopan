@@ -45,9 +45,19 @@ class TicketNotifier
     recipients = notifications
     recipients.each do |recipient, kind|
       store(recipient, kind)
+      next if postponing_only?(recipient, kind)
+
       TicketMailer.with(recipient: recipient, ticket: @ticket, event_ids: @events.map(&:id)).public_send(kind).deliver_later
     end
     members_to_tell(recipients.keys).each { |member| store(member, :created) }
+  end
+
+  # Postponing reaches the requester in the app only (specs/notifications.md).
+  def postponing_only?(recipient, kind)
+    kind == :status_changed && recipient == @ticket.requester &&
+      TicketEvent.visible_to(recipient).where(id: @events.map(&:id)).all? do |event|
+        event.action == "status_changed" && event.to_value == Ticket::POSTPONED
+      end
   end
 
   # Active members of the ticket's organization, for a new ticket, other

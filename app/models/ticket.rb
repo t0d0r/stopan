@@ -2,16 +2,21 @@ class Ticket < ApplicationRecord
   include Attachable
   include Editable
 
-  STATUSES = %w[new open pending resolved closed].freeze
+  STATUSES = %w[new open pending postponed resolved closed].freeze
   UNSOLVED = %w[new open pending].freeze
   SOLVED = %w[resolved closed].freeze
+  # Parked for later ("Not now"); neither unsolved nor solved (board.md).
+  POSTPONED = "postponed"
+  # What a requester's "Open" tab holds (specs/queues.md).
+  OPEN_FOR_REQUESTER = (UNSOLVED + [ POSTPONED ]).freeze
   PRIORITIES = %w[low normal high urgent].freeze
   # Manual status changes staff may make (specs/tickets.md). Nothing goes
   # back to "new".
   TRANSITIONS = {
-    "new" => %w[open pending resolved closed],
-    "open" => %w[pending resolved closed],
-    "pending" => %w[open resolved closed],
+    "new" => %w[open pending resolved closed postponed],
+    "open" => %w[pending resolved closed postponed],
+    "pending" => %w[open resolved closed postponed],
+    "postponed" => %w[open resolved closed],
     "resolved" => %w[open closed],
     "closed" => %w[open]
   }.freeze
@@ -102,7 +107,7 @@ class Ticket < ApplicationRecord
   end
 
   def resolvable_by_requester?
-    UNSOLVED.include?(status)
+    OPEN_FOR_REQUESTER.include?(status)
   end
 
   def shared?
@@ -245,7 +250,7 @@ class Ticket < ApplicationRecord
 
     if comment.author.staff?
       "open" if status == "new"
-    elsif %w[pending resolved].include?(status)
+    elsif %w[pending resolved postponed].include?(status)
       "open"
     end
   end
@@ -271,7 +276,7 @@ class Ticket < ApplicationRecord
     case status
     when "resolved" then self.resolved_at = Time.current
     when "closed" then self.closed_at = Time.current
-    when "open", "pending" then self.resolved_at = self.closed_at = nil
+    when "open", "pending", POSTPONED then self.resolved_at = self.closed_at = nil
     end
   end
 

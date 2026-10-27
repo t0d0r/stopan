@@ -67,6 +67,7 @@ bg:
       pending: "Чака отговор"
       resolved: "Решена"
       closed: "Затворена"
+      postponed: "Отложена"
     priorities:
       low: "Нисък"
       normal: "Нормален"
@@ -104,6 +105,7 @@ bg:
         mine: "Възложени на мен"
         unassigned: "Неразпределени"
         pending: "Чакат отговор"
+        postponed: "Отложени"
         solved: "Решени"
         all: "Всички заявки"
       search_label: "Търсене в заявките"

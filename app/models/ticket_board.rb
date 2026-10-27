@@ -2,7 +2,9 @@
 # status, cards ordered urgent first, then high, then latest activity.
 # Filters and visibility come from TicketFilter.
 class TicketBoard
-  COLLAPSED = %w[resolved closed].freeze
+  # Not now first, like Fizzy's NOT NOW lane (specs/board.md).
+  ORDER_OF_COLUMNS = %w[postponed new open pending resolved closed].freeze
+  COLLAPSED = %w[postponed resolved closed].freeze
   LIMITED = %w[resolved closed].freeze
   LIMIT = 50
   ORDER = Arel.sql("CASE tickets.priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 ELSE 2 END")
@@ -21,7 +23,7 @@ class TicketBoard
   def columns
     @columns ||= begin
       counts = filter.scope.group(:status).count
-      Ticket::STATUSES.map do |status|
+      ORDER_OF_COLUMNS.map do |status|
         tickets = filter.scope.where(status: status).includes(:requester, :assignee, :organization)
                         .order(ORDER, updated_at: :desc, id: :desc)
         tickets = tickets.limit(LIMIT) if LIMITED.include?(status)
