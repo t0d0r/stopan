@@ -1,5 +1,6 @@
-<%# Sun/moon theme switch and text size menu. Both are forms (no JavaScript
-    needed); application.js applies them at once and sets the same cookies. %>
+<%# Sun/moon theme switch, text size menu and language switch. All are form
+    buttons (no JavaScript needed); application.js applies all but the
+    language at once and sets the same cookies. %>
 <%= form_with url: preferences_path, method: :patch, class: "prefs", data: { preference: true } do %>
   <%# Only one button shows, depending on the current theme (application.css). %>
   <button type="submit" name="theme" value="dark" class="tool-button theme-toggle theme-toggle--to-dark"
@@ -19,4 +20,8 @@
               aria-label="<%= t("ui.prefs.text_size") %>: <%= t("ui.prefs.scales.#{scale}") %>">A</button>
     <% end %>
   </span>
+  <%# The other language, named in itself (ui.md "Language"); the page reloads. %>
+  <% language = other_language %>
+  <button type="submit" name="locale" value="<%= language %>" class="tool-button language-switch" lang="<%= language %>" data-turbo="false"
+          title="<%= ApplicationHelper::LANGUAGE_NAMES[language] %>" aria-label="<%= ApplicationHelper::LANGUAGE_NAMES[language] %>"><%= language.upcase %></button>
 <% end %>

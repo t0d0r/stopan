@@ -379,6 +379,14 @@ form.button_to {
   opacity: 1;
 }
 
+/* The other language's code, "BG" or "EN" (ui.md "Language"). */
+.language-switch {
+  margin-left: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 .scale-button[aria-pressed="true"] {
   background: var(--tool-hover);
   font-weight: 700;
@@ -2804,10 +2812,32 @@ turbo-frame {
 
 /* ---------- small screens ---------- */
 
+/* The menu bar wraps and the search gets its own row (ui.md "Menu bar"):
+   the tools no longer fit next to it. */
+@media (max-width: 960px) {
+  .menubar {
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    height: auto;
+    padding: 6px 16px;
+  }
+
+  .menubar__search {
+    order: 1;
+    flex: 1 0 100%;
+    margin: 0;
+  }
+
+  .menubar__search .search-field {
+    height: 28px;
+  }
+}
+
 @media (max-width: 900px) {
   .menubar__role {
     display: none;
   }
+
 
   .ticket-page {
     grid-template-columns: minmax(0, 1fr);
@@ -2867,13 +2897,6 @@ turbo-frame {
     padding-top: 16px;
   }
 
-  .menubar {
-    flex-wrap: wrap;
-    gap: 6px 14px;
-    height: auto;
-    padding: 6px 16px;
-  }
-
   .menubar__name,
   .menubar__user {
     display: none;
@@ -2885,16 +2908,6 @@ turbo-frame {
 
   .desk__header {
     flex-wrap: wrap;
-  }
-
-  .menubar__search {
-    order: 1;
-    flex: 1 0 100%;
-    margin: 0;
-  }
-
-  .menubar__search .search-field {
-    height: 28px;
   }
 
   /* The panel hangs from the whole menu bar (a sticky, so the containing

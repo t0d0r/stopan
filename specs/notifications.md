@@ -225,7 +225,9 @@ notifications, live.
 
 - **Language:** the recipient's `users.locale`, else English. The app
   stores the language of the browser each signed-in user last used (only
-  when the browser sent a supported `Accept-Language`).
+  when the browser sent a supported `Accept-Language`), unless the user
+  chose a language (ui.md "Language"): then `users.locale` is that
+  language and the browser does not change it.
 - **Subject:** `[Stopan #1001] <kind>: <ticket subject>`, kinds translated.
 - **Body:** HTML and plain-text parts. User text (subject, description,
   reply and note bodies, file and user names) is escaped in HTML and
@@ -297,7 +299,8 @@ to `tmp/mails/` (`delivery_method :file`); tests use `:test`.
 - `TicketMailer` repeats the visibility checks and renders one template
   (`ticket_mailer/notification`, HTML and text) for all kinds.
 - `Users::NotificationsController#update` saves the opt-in.
-- `ApplicationController#remember_locale` stores the browser language.
+- `ApplicationController#remember_locale` stores the browser language,
+  unless the user chose one (`users.language`, ui.md "Language").
 
 ## Acceptance
 

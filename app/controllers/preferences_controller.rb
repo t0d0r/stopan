@@ -1,6 +1,8 @@
 # Theme (light / dark), width and text size, kept in cookies so the layout can render
 # them before any script runs. application.js sets the same cookies without a
-# round trip; this action is the fallback without JavaScript.
+# round trip; this action is the fallback without JavaScript. The language
+# switch always comes here: a cookie, and the user's choice when signed in
+# and not impersonating (specs/ui.md "Language").
 class PreferencesController < ApplicationController
   THEMES = %w[light dark].freeze
   SCALES = %w[normal big extra].freeze
@@ -13,6 +15,7 @@ class PreferencesController < ApplicationController
     remember :theme, params[:theme].presence_in(THEMES)
     remember :scale, params[:scale].presence_in(SCALES)
     remember :width, params[:width].presence_in(WIDTHS)
+    remember_language params[:locale].presence_in(I18n.available_locales.map(&:to_s))
     redirect_back fallback_location: root_path
   end
 
@@ -20,5 +23,12 @@ class PreferencesController < ApplicationController
 
   def remember(name, value)
     cookies.permanent[name] = { value: value, same_site: :lax } if value
+  end
+
+  def remember_language(locale)
+    return unless locale
+
+    remember :locale, locale
+    current_user.choose_language!(locale) if user_signed_in? && !impersonator
   end
 end

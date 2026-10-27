@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
   patch "users/notifications", to: "users/notifications#update", as: :user_notifications
+  patch "users/language", to: "users/languages#update", as: :user_language
   resources :notifications, only: %i[index show] do
     patch :read_all, on: :collection
     get :panel, on: :collection

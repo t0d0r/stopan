@@ -49,8 +49,17 @@ class ApplicationController < ActionController::Base
     redirect_to new_user_session_path, alert: t("flash.impersonation_ended")
   end
 
+  # The user's chosen language, this browser's switch, the browser's
+  # language, English (specs/ui.md "Language"). While impersonating, the
+  # admin's switch comes first so it does not change the user's choice.
   def switch_locale(&action)
-    I18n.with_locale(locale_from_accept_language || I18n.default_locale, &action)
+    chosen = current_user&.language
+    locale = session[:impersonator_id] ? locale_from_cookie || chosen : chosen || locale_from_cookie
+    I18n.with_locale(locale || locale_from_accept_language || I18n.default_locale, &action)
+  end
+
+  def locale_from_cookie
+    cookies[:locale].presence_in(I18n.available_locales.map(&:to_s))
   end
 
   # Uses the first language in Accept-Language when the app has a translation for it.
@@ -60,10 +69,13 @@ class ApplicationController < ActionController::Base
   end
 
   # Emails to this user use the language of the browser they last used
-  # (specs/notifications.md); only a supported Accept-Language is stored.
+  # (specs/notifications.md), unless they chose one; only a supported
+  # Accept-Language is stored.
   def remember_locale
+    return unless user_signed_in? && current_user.language.nil?
+
     locale = locale_from_accept_language
-    current_user.update_column(:locale, locale) if user_signed_in? && locale && current_user.locale != locale
+    current_user.update_column(:locale, locale) if locale && current_user.locale != locale
   end
 
   def authorize!(allowed)

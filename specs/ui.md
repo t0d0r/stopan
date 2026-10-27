@@ -19,10 +19,11 @@ Turbo Drive for page changes.
   "New ticket" (green), "Admin" (admins, grey). The current section has
   `aria-current="page"`; the board (board.md) is part of "Queue", like
   the list and the ticket pages. Then the ticket search field (signed-in users,
-  queues.md "Search"; on its own full-width row under 560px). Right: the
+  queues.md "Search"; on its own full-width row under 960px, where the
+  bar wraps instead of running off the screen). Right: the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
-  the user's name with a role label, "Logout".
+  the language switch, the user's name with a role label, "Logout".
 - **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
   #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink
   `#fcd4e6 / #f4b0cf`, purple `#e3d8fc / #c9b9f5`, gray `#efeeea / #d8d6cf`.
@@ -150,9 +151,37 @@ Turbo Drive for page changes.
 
 All UI text is in `config/locales/{en,bg}.yml` (`ui.*`, `flash.*`,
 `activerecord.*`) and Devise text in `config/locales/devise.{en,bg}.yml`.
-The locale follows the browser's `Accept-Language` (first supported
-language, default English). `test/i18n/locales_test.rb` checks that both
-files have the same keys.
+`test/i18n/locales_test.rb` checks that both files have the same keys.
+
+### Language
+
+Operator, 2026-10-27: "make it easy to change the language from the
+profile or the header". The language of a page is the first of:
+
+1. the signed-in user's chosen language (`users.language`), except while
+   an administrator impersonates them (then 2 comes first, so the admin's
+   own switch works without changing the user's choice);
+2. the `locale` cookie (`en` or `bg`, one year, SameSite=Lax) set by the
+   switch on this browser;
+3. the browser's `Accept-Language` (first supported language);
+4. English.
+
+- **Header switch:** one button in the menu bar preferences, after the
+  text sizes, showing the code of the other language ("BG" on English
+  pages, "EN" on Bulgarian ones); its tooltip and label name that
+  language in itself ("Български", "English"). It is a submit button of
+  the preferences form (`PATCH /preferences`, `locale=bg`), shown signed
+  in and out, and the page reloads in the new language (no script
+  shortcut, unlike theme and size). Signed in (and not impersonating), it
+  also saves the choice to the user.
+- **Account page:** a "Language" section with a select: "Browser
+  language" (follow `Accept-Language`; clears the choice and the cookie),
+  "English", "Български", and its own Save button
+  (`PATCH /users/language`, like the notification setting; refused while
+  impersonating). Saving shows "Language saved." in the new language.
+- A chosen language is also the language of the user's emails
+  (`users.locale` is set to it, and the browser language no longer
+  overwrites it; notifications.md "Content").
 
 ## Screenshots
 

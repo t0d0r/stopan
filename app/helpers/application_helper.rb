@@ -12,6 +12,14 @@ module ApplicationHelper
     cookies[:width].presence_in(PreferencesController::WIDTHS) || "normal"
   end
 
+  # Each language named in itself, for the language switch (ui.md "Language").
+  LANGUAGE_NAMES = { "en" => "English", "bg" => "Български" }.freeze
+
+  # The language the header switch offers: the one not shown now.
+  def other_language
+    (LANGUAGE_NAMES.keys - [ I18n.locale.to_s ]).first
+  end
+
   # data-* attributes for a form that asks before submitting; the confirm
   # dialog (partials/_confirm_dialog) shows the title, message and button.
   def confirm_data(title:, body:, button:)

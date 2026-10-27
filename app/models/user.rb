@@ -34,7 +34,7 @@ class User < ApplicationRecord
   validates :username, uniqueness: { case_sensitive: false }, length: { maximum: 60 }, allow_nil: true
   validates :name, length: { maximum: 120 }
   validates :role, inclusion: { in: ROLES }
-  validates :locale, inclusion: { in: ->(_) { I18n.available_locales.map(&:to_s) } }, allow_nil: true
+  validates :locale, :language, inclusion: { in: ->(_) { I18n.available_locales.map(&:to_s) } }, allow_nil: true
 
   scope :active, -> { where(deactivated_at: nil) }
   scope :new_ticket_subscribers, -> { active.staff.where(notify_new_tickets: true) }
@@ -86,6 +86,13 @@ class User < ApplicationRecord
 
   def member_of?(organization)
     organization && memberships.exists?(organization_id: organization.id)
+  end
+
+  # A language chosen in the header or on the account page (specs/ui.md
+  # "Language"); blank goes back to the browser's. Emails follow the choice.
+  def choose_language!(value)
+    language = value.presence_in(I18n.available_locales.map(&:to_s))
+    update!(language: language, locale: language || locale)
   end
 
   # Devise asks this on sign-in and on every request; a deactivated user is

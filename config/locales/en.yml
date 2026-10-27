@@ -32,6 +32,10 @@ en:
       notify_new_tickets: "Email me about every new ticket"
       notifications_hint: "You always get emails about tickets assigned to you."
       save_notifications: "Save notifications"
+      language: "Language"
+      browser_language: "Browser language"
+      language_hint: "The language of the pages and of your emails. The button next to the text sizes switches it too."
+      save_language: "Save language"
 
     sign_in: "Sign in"
     login: "Email or username"
@@ -665,6 +669,7 @@ en:
     member_added: "%{name} was added."
     member_removed: "%{name} was removed."
     notifications_saved: "Notification settings saved."
+    language_saved: "Language saved."
     account_delete_disabled: "Accounts cannot be deleted here. Ask an administrator to deactivate yours."
     registration_closed: "Sign-up is closed. Ask an administrator for an account."
 

@@ -435,6 +435,20 @@ Operator requests, in order:
   hidden and cells wrap, so the table never scrolls sideways (checked at
   1280, 1024, 1023, 900, 800 and 390px, en and bg). README `queue.png`
   retaken.
+- Language choice (operator: "make it easy to change the language from
+  the profile or the header"): a BG/EN button after the text sizes
+  (`PATCH /preferences`, `locale`, full reload) and a Language select on
+  the account page ("Browser language", English, Български;
+  `PATCH /users/language`, `Users::LanguagesController`). Order: the
+  user's `users.language` (new column, migration `AddLanguageToUsers`),
+  the `locale` cookie, Accept-Language, English; while impersonating the
+  cookie comes first and the user's choice is never changed. A choice
+  also sets `users.locale`, which the browser then no longer overwrites,
+  so emails follow it. `test/integration/language_test.rb`.
+- Menu bar: it ran off the screen between 561 and about 900px already
+  (up to 240px for an admin in Bulgarian); under 960px it now wraps with
+  the search on its own row. Measured 0px overflow at 561-1280px for
+  requester, agent and admin in en and bg.
 
 ## Decisions
 
@@ -488,6 +502,9 @@ menu and Take; open /tickets/new and pick a requester.
   organization name, so an outsider learns as little as possible.
 
 ## Next
+
+- The next production deploy runs migration `AddLanguageToUsers` (adds a
+  nullable column; nothing to convert).
 
 - Refresh the README screenshots (`make screenshots`, specs/ui.md) when
   the queue, board, ticket or admin users page changes visibly.

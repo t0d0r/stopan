@@ -6,8 +6,9 @@ require "test_helper"
 class AccountPagesBulgarianTest < ActionDispatch::IntegrationTest
   BG = { "Accept-Language" => "bg" }.freeze
 
-  # Names that stay in Latin script: the brand and fixture data.
-  ALLOWED_LATIN = [ "Stopan", "Anna Requester", "Acme Bakery" ].freeze
+  # Names that stay in Latin script: the brand, fixture data, and English
+  # named in itself by the language switch (specs/ui.md "Language").
+  ALLOWED_LATIN = [ "Stopan", "Anna Requester", "Acme Bakery", "English", "EN" ].freeze
 
   setup { ActionMailer::Base.deliveries.clear }
 

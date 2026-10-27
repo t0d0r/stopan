@@ -575,7 +575,8 @@ function setUpPage() {
   document.querySelectorAll("form[data-preference]").forEach((form) => {
     form.addEventListener("submit", (event) => {
       const button = event.submitter;
-      if (!button || !button.name) return;
+      // The language switch reloads the page in the new language.
+      if (!button || !button.name || button.name === "locale") return;
       event.preventDefault();
       document.cookie = `${button.name}=${button.value}; path=/; max-age=31536000; samesite=lax`;
       document.documentElement.dataset[button.name] = button.value;

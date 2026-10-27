@@ -42,6 +42,19 @@
   </div>
 <% end %>
 
+<%= form_with model: resource, url: user_language_path, method: :patch, id: "language" do |f| %>
+  <h3><%= t("ui.account_page.language") %></h3>
+  <div class="field">
+    <%= f.label :language, t("ui.account_page.language"), class: "sr-only" %>
+    <%= f.select :language, [ [ t("ui.account_page.browser_language"), "" ] ] + ApplicationHelper::LANGUAGE_NAMES.invert.to_a,
+                 {}, class: "select" %>
+    <i><%= t("ui.account_page.language_hint") %></i>
+  </div>
+  <div class="actions">
+    <%= f.submit t("ui.account_page.save_language") %>
+  </div>
+<% end %>
+
 <% if resource.staff? %>
   <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
     <h3><%= t("ui.account_page.notifications") %></h3>

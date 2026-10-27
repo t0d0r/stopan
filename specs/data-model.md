@@ -14,6 +14,7 @@ declared in the database.
 | role | `requester` (default), `agent`, `admin`; indexed |
 | deactivated_at | set = cannot sign in, not assignable |
 | locale | nullable, `en`/`bg`: language of the browser last used; emails use it (notifications.md) |
+| language | nullable, `en`/`bg`: the language the user chose (ui.md "Language"); nil follows the browser |
 | notify_new_tickets | boolean, default false: staff opt-in to "new ticket" emails (notifications.md) |
 | password_chosen | boolean, default true; false for requesters created by the public form or the mailbox until they choose a password (public-form.md) |
 | failed_attempts, locked_at | Devise lockable |
