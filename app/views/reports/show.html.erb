@@ -85,8 +85,8 @@
                 <th scope="col" class="num"><%= t("ui.reports.columns.created") %></th>
                 <th scope="col" class="num"><%= t("ui.reports.columns.done") %></th>
                 <th scope="col" class="num"><%= t("ui.reports.columns.open") %></th>
-                <th scope="col" class="num"><%= t("ui.reports.columns.first_response") %></th>
-                <th scope="col" class="num"><%= t("ui.reports.columns.resolution") %></th>
+                <th scope="col" class="num hide-narrow"><%= t("ui.reports.columns.first_response") %></th>
+                <th scope="col" class="num hide-narrow"><%= t("ui.reports.columns.resolution") %></th>
               </tr>
             </thead>
             <tbody>
@@ -96,8 +96,8 @@
                   <td class="num"><%= row.created %></td>
                   <td class="num"><%= row.done %></td>
                   <td class="num"><%= row.open %></td>
-                  <td class="num"><%= report_duration(row.first_response) %></td>
-                  <td class="num"><%= report_duration(row.resolution) %></td>
+                  <td class="num hide-narrow"><%= report_duration(row.first_response) %></td>
+                  <td class="num hide-narrow"><%= report_duration(row.resolution) %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -123,9 +123,9 @@
               <th scope="col"><%= t("ui.reports.columns.person") %></th>
               <th scope="col" class="num"><%= t("ui.reports.columns.assigned_open") %></th>
               <th scope="col" class="num"><%= t("ui.reports.columns.done") %></th>
-              <th scope="col" class="num"><%= t("ui.reports.columns.replies") %></th>
-              <th scope="col" class="num"><%= t("ui.reports.columns.notes") %></th>
-              <th scope="col" class="num"><%= t("ui.reports.columns.first_response") %></th>
+              <th scope="col" class="num hide-narrow"><%= t("ui.reports.columns.replies") %></th>
+              <th scope="col" class="num hide-narrow"><%= t("ui.reports.columns.notes") %></th>
+              <th scope="col" class="num hide-narrow"><%= t("ui.reports.columns.first_response") %></th>
             </tr>
           </thead>
           <tbody>
@@ -134,9 +134,9 @@
                 <td class="text report-table__name"><%= row.user.display_name %> <span class="muted"><%= role_label(row.user) %></span></td>
                 <td class="num"><%= row.open %></td>
                 <td class="num"><%= row.done %></td>
-                <td class="num"><%= row.replies %></td>
-                <td class="num"><%= row.notes %></td>
-                <td class="num"><%= report_duration(row.first_response) %></td>
+                <td class="num hide-narrow"><%= row.replies %></td>
+                <td class="num hide-narrow"><%= row.notes %></td>
+                <td class="num hide-narrow"><%= report_duration(row.first_response) %></td>
               </tr>
             <% end %>
           </tbody>

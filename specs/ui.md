@@ -57,7 +57,7 @@ Turbo Drive for page changes.
 
 - **Queue** (staff): a coloured row of view tabs, then the filter bar and
   table in a sticky panel in the current view's colour (queues.md). Under
-  760px the tab row scrolls sideways and
+  760px the tab row wraps onto more rows (no sideways scrolling) and
   table columns other than number, subject and status are hidden.
 - **My tickets** (requester): coloured tabs, "New ticket" button, table in
   a sticky panel in the current tab's colour (yellow, green, gray).
@@ -146,8 +146,14 @@ Turbo Drive for page changes.
 
 ## Accessibility
 
-- Works at 390px width with no horizontal page scroll (tables scroll inside
-  their panel).
+- Works at 390px width with no horizontal page scroll. Navigation (menu
+  bar pills, view and section tabs) wraps onto more rows instead of
+  scrolling sideways, and the lists people use on phones (queue, My
+  tickets, admin users, report tables) hide their less important columns
+  under 760px instead (the admin users list shows the email and the role under
+  the name), so they do not scroll sideways either (operator, 2026-10-27: "I
+  don't like left-right scrolling on mobile"). The board is the one view
+  that scrolls sideways by design (board.md).
 - Visible focus rings; every field has a label; errors are listed in an
   `role="alert"` box at the top of the form and fields with errors get
   `aria-invalid`.

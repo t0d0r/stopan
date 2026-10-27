@@ -8,9 +8,10 @@ list query starts from `Ticket.visible_to(current_user)`.
 
 Layout: a horizontal row of view tabs under the page title, like the
 admin section tabs (operator, 2026-10-26), then the list panel with the
-filter bar and the table at full width. The row wraps on wide screens;
-under 760px it scrolls sideways and the current view is scrolled into
-sight. The search field is in the menu bar
+filter bar and the table at full width. The row wraps onto more rows when
+it does not fit, on phones too, with tighter tabs under 760px (operator,
+2026-10-27: no sideways scrolling on mobile; before, it scrolled
+sideways under 760px). The search field is in the menu bar
 (see "Search" below).
 
 ### Views (`view` parameter)
@@ -77,7 +78,8 @@ assignee, last activity. Each row is one line (operator, 2026-10-27: the
 requester's name under the subject made rows two lines tall): the
 requester has its own column. In windows at least 1024px wide no cell
 wraps and the subject takes the space left (at least 12em), ending in an
-ellipsis when it does not fit; the full subject is the link's tooltip.
+ellipsis when it does not fit; the ticket page shows it in full (no
+hover tooltip, operator 2026-10-27; mobile.md rule 4).
 Narrower windows hide the requester column and let cells wrap so the
 table fits without scrolling sideways (the requester is on the ticket
 page); under 760px organization, priority, assignee and last activity

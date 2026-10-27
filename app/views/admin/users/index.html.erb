@@ -30,11 +30,11 @@
         <thead>
           <tr>
             <th scope="col"><%= t("ui.fields.name") %></th>
-            <th scope="col"><%= t("ui.fields.email") %></th>
-            <th scope="col"><%= t("ui.fields.role") %></th>
-            <th scope="col"><%= t("ui.admin.organizations") %></th>
-            <th scope="col"><%= t("ui.admin.last_sign_in") %></th>
-            <th scope="col" class="num"><%= t("ui.admin.sign_ins") %></th>
+            <th scope="col" class="hide-narrow"><%= t("ui.fields.email") %></th>
+            <th scope="col" class="hide-narrow"><%= t("ui.fields.role") %></th>
+            <th scope="col" class="hide-narrow"><%= t("ui.admin.organizations") %></th>
+            <th scope="col" class="hide-narrow"><%= t("ui.admin.last_sign_in") %></th>
+            <th scope="col" class="num hide-narrow"><%= t("ui.admin.sign_ins") %></th>
             <th scope="col"><span class="sr-only"><%= t("ui.admin.actions") %></span></th>
           </tr>
         </thead>
@@ -45,12 +45,15 @@
                 <%= user.display_name %>
                 <% if user.username.present? && user.username != user.display_name %><span class="muted">@<%= user.username %></span><% end %>
                 <% if user.deactivated? %><span class="state-tag"><%= t("ui.admin.deactivated") %></span><% end %>
+                <%# On phones the email column is hidden and shows here instead. %>
+                <span class="only-narrow muted user-cell__email"><%= user.email %></span>
+                <span class="only-narrow"><span class="role-pill role-pill--<%= user.role %>"><%= role_label(user) %></span></span>
               </td>
-              <td class="text"><%= user.email %></td>
-              <td><span class="role-pill role-pill--<%= user.role %>"><%= role_label(user) %></span></td>
-              <td class="text"><%= user.organizations.map(&:name).join(", ").presence || tag.span("-", class: "muted") %></td>
-              <td class="date"><%= user.last_sign_in_at ? time_ago(user.last_sign_in_at) : t("ui.admin.never") %></td>
-              <td class="num"><%= user.sign_in_count %></td>
+              <td class="text hide-narrow"><%= user.email %></td>
+              <td class="hide-narrow"><span class="role-pill role-pill--<%= user.role %>"><%= role_label(user) %></span></td>
+              <td class="text hide-narrow"><%= user.organizations.map(&:name).join(", ").presence || tag.span("-", class: "muted") %></td>
+              <td class="date hide-narrow"><%= user.last_sign_in_at ? time_ago(user.last_sign_in_at) : t("ui.admin.never") %></td>
+              <td class="num hide-narrow"><%= user.sign_in_count %></td>
               <td class="action">
                 <%# Icon actions with labels (specs/admin.md "Users"). %>
                 <%= link_to edit_admin_user_path(user), class: "icon-action", title: t("ui.admin.edit_user_label", name: user.display_name),

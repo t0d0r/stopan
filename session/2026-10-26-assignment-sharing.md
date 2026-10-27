@@ -617,6 +617,19 @@ menu and Take; open /tickets/new and pick a requester.
   surface via `color-mix` on `--hue`, so they keep their meaning. Fixed
   the parts drawn for white paper (avatars, internal note red, composer
   mode, file button). Fonts fall back to system faces (CSP).
+- Deployed 8730df2 (themes, phone menu bar) after a backup
+  (`pre-deploy-8961aaa.sqlite3`).
+- Mobile (operator: no sideways scrolling; "find UI style docs for mobile
+  and apply them"): specs/mobile.md with sources (Apple HIG 44pt,
+  Material 48dp, WCAG 2.5.8/2.5.5, iOS 16px field zoom). Applied: queue
+  view tabs wrap instead of scrolling; `hide-narrow` / `only-narrow`
+  utility classes; admin users show email and role under the name;
+  report tables drop minor columns and wrap headers; shared links on the
+  dashboard are stacked rows; ticket links lost their `title` tooltip;
+  under 760px the menu bar is static, every control is at least 44x44,
+  text fields 16px. A scratch Chrome sweep (360 and 390px, staff and
+  requester pages) reports no small targets, no small fields and no
+  sideways scrolling outside the board.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

@@ -50,7 +50,7 @@
                 <tr id="<%= dom_id(ticket) %>" class="ticket-row ticket-row--<%= ticket.priority %>">
                   <td class="num ticket-number"><%= ticket.reference %></td>
                   <td class="text col-subject">
-                    <%= link_to ticket_path(ticket), class: "ticket-link", title: ticket.subject do %><%= ticket.subject %><% if ticket.shared? %> <%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %><% end %>
+                    <%= link_to ticket_path(ticket), class: "ticket-link" do %><%= ticket.subject %><% if ticket.shared? %> <%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %><% end %>
                   </td>
                   <td class="text col-requester"><%= ticket.requester.display_name %></td>
                   <td class="text col-org"><%= ticket.organization.name %></td>

@@ -2923,10 +2923,50 @@ turbo-frame {
     gap: 12px;
   }
 
+  /* Less important columns give way on phones, so lists never scroll
+     sideways (ui.md "Accessibility"). */
+  .hide-narrow {
+    display: none;
+  }
+
+  .only-narrow {
+    display: block;
+  }
+
+  .report-table th,
+  .report-table__name {
+    white-space: normal;
+  }
+
+  .report-table th,
+  .report-table th.num {
+    letter-spacing: 0;
+    white-space: normal;
+  }
+
+  .report-table :is(th, td) {
+    padding-inline: 3px;
+  }
+
+  /* Numbers that link to a filtered list get a full touch target. */
+  .ledger td.num a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* The views wrap onto more rows instead of scrolling sideways
+     (queues.md), a little tighter on phones. */
   .queue__views ul {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 2px 2px 6px;
+    gap: 4px;
+  }
+
+  .view-link {
+    gap: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
   }
 
   .col-org,
@@ -3623,6 +3663,16 @@ turbo-frame {
   }
 }
 
+/* Shown only on phones, in place of a hidden column (ui.md "Accessibility"). */
+.only-narrow {
+  display: none;
+}
+
+.user-cell__email {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
 /* ---------- reports (specs/reports.md) ---------- */
 
 .report-filters {
@@ -4171,4 +4221,112 @@ turbo-frame {
 
 [data-look="omarchy"] .field-file::file-selector-button:hover {
   background: var(--om-surface-2);
+}
+
+/* Shared links on the admin dashboard as stacked rows (mobile.md rule 7). */
+.share-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.share-list__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.share-list__title {
+  grid-column: 1 / -1;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.share-list__title .ticket-number {
+  margin-right: 6px;
+}
+
+.share-list__meta {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.share-list__action {
+  justify-self: end;
+}
+
+/* ---------- phones (mobile.md) ---------- */
+
+@media (max-width: 760px) {
+  /* Rule 6: several rows of menu bar would cover a third of the screen. */
+  .menubar {
+    position: static;
+    column-gap: 6px;
+    padding-inline: 12px;
+  }
+
+  .menubar__right,
+  .prefs,
+  .scale-buttons {
+    gap: 2px;
+  }
+
+  /* Comes after the base rule that hides it on wide screens. */
+  .only-narrow {
+    display: block;
+  }
+
+  /* Rule 1: 44 x 44 touch targets. */
+  :is(.btn, .select, .field-input, .nav-link, .view-link, .tab, .link-button, .mode-option, .menubar__button,
+    .take-button, .assign-menu__button, .assign-menu__item, .auth input[type="submit"], .actions input[type="submit"]) {
+    min-height: 44px;
+  }
+
+  :is(.tool-button, .icon-action, .sticky__box, .language-switch, .scale-button, .menubar__button, .menubar__brand) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  :is(.view-switch__link, .report-chart__table summary, .revisions summary) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .menubar__brand,
+  .menubar__button {
+    justify-content: center;
+  }
+
+  .menubar__search .search-field,
+  .search-field {
+    height: auto;
+    min-height: 44px;
+  }
+
+  .search-field__input {
+    min-height: 44px;
+  }
+
+  .auth input[type="email"],
+  .auth input[type="password"],
+  .auth input[type="text"] {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .link-button {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Rule 2: 16px text fields, so iOS does not zoom in. */
+  :is(input, select, textarea, .select, .field-input, .search-field, .search-field__input),
+  .filters .search-field__input {
+    font-size: 16px;
+  }
 }

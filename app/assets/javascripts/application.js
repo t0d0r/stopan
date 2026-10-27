@@ -619,11 +619,6 @@ function setUpPage() {
   document.querySelectorAll("select[data-message-recipients]").forEach(setUpMessageForm);
   setUpDropdowns();
 
-  // A sideways-scrolling tab row (queue views on phones) shows the current tab.
-  document.querySelectorAll(".queue__views ul").forEach((row) => {
-    const current = row.querySelector("[aria-current]");
-    if (current && row.scrollWidth > row.clientWidth) row.scrollLeft = current.offsetLeft - row.offsetLeft - 16;
-  });
   document.querySelectorAll("select[data-requester-organizations]").forEach(setUpRequesterOrganizations);
 
   // Theme and text size apply at once; the cookie keeps them for the next page.

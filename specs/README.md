@@ -15,6 +15,7 @@
 | [admin.md](admin.md) | admin dashboard, users and roles, organizations and memberships |
 | [data-model.md](data-model.md) | tables, columns, indexes and deletion rules |
 | [auth.md](auth.md) | Devise setup, lockable, deactivation, sign-up switch, seeded admin, demo data |
+| [mobile.md](mobile.md) | rules for phones: 44px touch targets, 16px fields, no sideways scrolling, no hover-only content, with sources |
 | [ui.md](ui.md) | Stickies-based look adapted to a service desk, pages, behaviour, accessibility, translations |
 | [docker.md](docker.md) | Docker image, compose file and environment variables |
 | [deploy.md](deploy.md) | production on stopan.linuxfan.org: ISPConfig site, rootless Podman, setup, verification, rollback |
