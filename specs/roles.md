@@ -36,6 +36,7 @@ the role, and cannot be chosen as assignee.
 | sign in, edit own account | yes | yes | yes |
 | list tickets | own tickets in own organizations ("My tickets") | queue of all tickets | queue of all tickets |
 | view a ticket | own, in own organization | any | any |
+| see who is assigned (name only, ui.md "Ticket page") | own ticket, and on shared pages | yes | yes |
 | see internal notes and internal events | no | yes | yes |
 | create a ticket | for self, in own organization | for any requester, in one of the requester's organizations | same as agent |
 | set priority / assignee on create | no | yes | yes |

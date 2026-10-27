@@ -246,4 +246,21 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     get ticket_url(tickets(:printer))
     assert_select "#description .ticket-note__meta .pill--priority", 0
   end
+
+  test "the request note says who works on the ticket, also to the requester and on shared pages" do
+    ticket = tickets(:printer)
+    ticket.update_columns(assignee_id: users(:agent).id)
+    sign_in users(:anna)
+    get ticket_url(ticket)
+    assert_select "#description .ticket-note__meta .ticket-note__assignee", /Assigned to\s+\S+\s+#{users(:agent).display_name}/
+    assert_select "#description .ticket-note__assignee .avatar"
+
+    ticket.share!(actor: users(:agent), password: nil)
+    get shared_ticket_url(ticket.share_token)
+    assert_select ".ticket-note__assignee strong", users(:agent).display_name
+
+    ticket.update_columns(assignee_id: nil)
+    get ticket_url(ticket)
+    assert_select ".ticket-note__assignee", 0
+  end
 end

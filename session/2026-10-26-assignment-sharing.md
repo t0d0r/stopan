@@ -310,6 +310,12 @@ Operator requests, in order:
   while sliding, 360 centred at 1280px, -840 while leaving, heading moved
   up from 132 to 68 after, no horizontal scroll.
 
+- Assignee in the request note (operator: "next to In progress add who
+  is working on the ticket"): "Assigned to" with the initials badge and
+  name after the pills, for staff, requesters and shared pages (sharing.md
+  updated: staff names already show on public replies; assignee changes
+  stay internal events). Checked at 1280px and 390px in Bulgarian.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

@@ -56,8 +56,11 @@ Turbo Drive for page changes.
   (operator, 2026-10-27: "make this look like one note; the number bold
   before the subject; remove Queue"): the yellow sticky's title strip
   (timeline.md "Message title strip"), then the page's `h1` "**#1001**
-  Subject" (number in bold), the status pill and, for staff, the priority
-  pill, then the text, earlier versions and files. There is no
+  Subject" (number in bold), the status pill, for staff the priority
+  pill, and, when someone is assigned, who works on the ticket ("Assigned
+  to" with their initials badge and name; operator, 2026-10-27), then the
+  text, earlier versions and files. Requesters and shared pages see the
+  assignee there too; changes of assignee stay internal events. There is no
   breadcrumb (the menu bar leads back to the queue) and no separate
   "Opened by" line (author and time are in the strip). Then the timeline
   and the composer. Side: "Properties" panel (status, priority,

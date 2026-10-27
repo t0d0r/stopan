@@ -2143,6 +2143,20 @@ form.button_to {
   margin: 0 0 12px;
 }
 
+.ticket-note__assignee {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.ticket-note__assignee strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
 .side-panel {
   margin-bottom: 16px;
 }

@@ -1,5 +1,6 @@
 <%# Heading of the request note (specs/ui.md "Ticket page"): the bold
-    number before the subject, then the pills. Locals: ticket, priority. %>
+    number before the subject, then the pills and who works on the ticket.
+    Locals: ticket, priority. %>
 <h1 class="ticket-note__title">
   <span class="ticket-note__number"><%= ticket.reference %></span>
   <%= ticket.subject_was || ticket.subject %>
@@ -7,4 +8,9 @@
 <p class="ticket-note__meta">
   <%= status_pill(ticket.status_was || ticket.status) %>
   <% if priority %><%= priority_pill(ticket.priority_was || ticket.priority) %><% end %>
+  <% if (assignee = ticket.assignee) %>
+    <span class="ticket-note__assignee">
+      <%= t("ui.ticket.assigned_to") %> <%= user_avatar(assignee) %> <strong><%= assignee.display_name %></strong>
+    </span>
+  <% end %>
 </p>

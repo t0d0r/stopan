@@ -25,8 +25,13 @@ The requester's view of the ticket, read-only, without sign-in:
   replies with their author names, role labels and files, the `created`
   entry and status changes.
 
-Never shown: internal notes, internal events (priority, assignee, sharing),
-priority, assignee, organization, any email address, the composer or any
+Shown since 2026-10-27 (operator: "next to In progress add who is working
+on the ticket"): the assignee's display name next to the status pill, as
+on the ticket page (ui.md "Ticket page"); staff names already appear on
+their public replies, so this reveals nothing new.
+
+Never shown: internal notes, internal events (priority, assignee changes,
+sharing), priority, organization, any email address, the composer or any
 form that changes the ticket. A note at the top says it is a read-only copy
 shared by link.
 

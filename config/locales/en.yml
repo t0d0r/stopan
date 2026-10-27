@@ -158,6 +158,7 @@ en:
       nobody: "Nobody"
 
     ticket:
+      assigned_to: "Assigned to"
       changed_elsewhere: "This ticket has changed elsewhere. The page will update when you finish what you are doing here."
       details: "Ticket details"
       description: "Original request"
