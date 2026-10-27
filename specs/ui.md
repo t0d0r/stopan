@@ -176,12 +176,14 @@ profile or the header". The language of a page is the first of:
 3. the browser's `Accept-Language` (first supported language);
 4. English.
 
-- **Header switch:** one button per other language in the menu bar
-  preferences, after the text sizes, showing its code ("BG DE" on English
-  pages, "EN DE" on Bulgarian ones, "EN BG" on German ones), so any
-  language is one click away; each tooltip and label names that language
-  in itself ("English", "Български", "Deutsch"). They are submit buttons
-  of the preferences form (`PATCH /preferences`, `locale=de`), and the
+- **Header switch:** one group in the menu bar preferences, after the
+  text sizes and built like them: the codes of all languages side by
+  side ("EN BG DE"), the current one shaded and `aria-pressed="true"`
+  (operator, 2026-10-27: separate "EN" and "DE" buttons looked like two
+  controls; "they must be one whole"). Any language is one click away;
+  each tooltip and label names that language in itself ("English",
+  "Български", "Deutsch"), and the group is labelled "Language". The
+  buttons are submit buttons of the preferences form (`PATCH /preferences`, `locale=de`), and the
   page reloads in the new language (no script shortcut, unlike theme and
   size). Shown only to visitors who are not signed in (sign-in, password
   and magic link pages, the public request form) and on shared ticket

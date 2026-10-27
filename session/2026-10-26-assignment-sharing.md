@@ -477,6 +477,11 @@ Operator requests, in order:
 - Header language buttons now only for visitors who are not signed in
   and on shared ticket pages (also when signed in); signed-in users use
   the account page (operator). `language_switch?` helper.
+- Deployed 0f52988 after a backup (`pre-deploy-8f4eb97.sqlite3`).
+- Language buttons are one group like the text sizes (operator: "EN" and
+  "DE" looked like two controls): all codes, current one shaded and
+  aria-pressed. The dev container needed `make docker-dev-restart` to
+  pick up `de` in config/application.rb.
 - Translate button (operator chose DeepL): spec written,
   specs/translation.md; not built yet.
 

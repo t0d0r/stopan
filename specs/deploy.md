@@ -435,6 +435,14 @@ the role icon in the menu bar; no migrations.
 - Rollback: tag `localhost/stopan:cbf319b` as `latest` and restart; the
   database is unchanged by this release.
 
+## Update 2026-10-27 (revision 0f52988)
+
+Operator: "yes, deploy". Language buttons only for visitors and on
+shared pages; no migrations. Backup `~stopan/backups/pre-deploy-8f4eb97.sqlite3`
+(mode 600) first; checked: healthy, sign-in shows the language buttons,
+`/up` 200, `/cable` 101, the four security headers. Rollback: tag
+`localhost/stopan:8f4eb97` as `latest` and restart.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

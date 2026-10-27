@@ -21,10 +21,6 @@ module ApplicationHelper
     !user_signed_in? || controller_name == "shared_tickets"
   end
 
-  # The languages the header switch offers: all but the one shown now.
-  def other_languages
-    LANGUAGE_NAMES.keys - [ I18n.locale.to_s ]
-  end
 
   # data-* attributes for a form that asks before submitting; the confirm
   # dialog (partials/_confirm_dialog) shows the title, message and button.

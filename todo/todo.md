@@ -118,6 +118,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] menu bar shows the role as an icon (person, headset, shield) with its name as tooltip and label (specs/ui.md "Menu bar")
 - [x] production: deployed 8f4eb97 (German, role icon), after a database backup (specs/deploy.md)
 - [x] header language switch only when signed out and on shared pages; signed-in users choose on the account page (specs/ui.md "Language")
+- [x] production: deployed 0f52988 (language buttons only for visitors and shared pages), after a database backup
+- [x] language buttons as one group like the text sizes: "EN BG DE", current shaded (specs/ui.md "Language")
 - [ ] "Translate" button on messages for staff with DeepL, admin switch, stored translations (specs/translation.md)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,

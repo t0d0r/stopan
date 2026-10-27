@@ -6,19 +6,19 @@ class LanguageTest < ActionDispatch::IntegrationTest
   test "the header offers the other languages, signed in and out" do
     get new_user_session_url
     assert_select "html[lang=en]"
-    assert_select ".menubar form.prefs button.language-switch", 2
-    assert_select ".menubar form.prefs button.language-switch[name=locale][value=bg][title=Български]", "BG"
+    assert_select ".menubar form.prefs .language-switches[role=group][aria-label=Language] button.language-switch", 3
+    assert_select ".menubar form.prefs button.language-switch[name=locale][value=en][aria-pressed=true]", "EN"
+    assert_select ".menubar form.prefs button.language-switch[name=locale][value=bg][title=Български][aria-pressed=false]", "BG"
     assert_select ".menubar form.prefs button.language-switch[name=locale][value=de][title=Deutsch]", "DE"
 
     get new_user_session_url, headers: { "Accept-Language" => "bg" }
     assert_select "html[lang=bg]"
-    assert_select ".menubar form.prefs button.language-switch[name=locale][value=en][title=English]", "EN"
-    assert_select ".menubar form.prefs button.language-switch[value=de]", "DE"
+    assert_select ".menubar form.prefs button.language-switch[name=locale][value=en][title=English][aria-pressed=false]", "EN"
+    assert_select ".menubar form.prefs button.language-switch[value=bg][aria-pressed=true]", "BG"
 
     get new_user_session_url, headers: { "Accept-Language" => "de-DE,de;q=0.9" }
     assert_select "html[lang=de]"
-    assert_select ".menubar form.prefs button.language-switch", 2
-    assert_select ".menubar form.prefs button.language-switch[value=de]", 0
+    assert_select ".menubar form.prefs button.language-switch[value=de][aria-pressed=true]"
   end
 
   test "signed in, only the account page and shared pages offer the language" do
@@ -33,10 +33,10 @@ class LanguageTest < ActionDispatch::IntegrationTest
     assert_select "form#language select[name='user[language]']"
 
     get shared_ticket_url(ticket.share_token)
-    assert_select ".menubar form.prefs button.language-switch", 2
+    assert_select ".menubar form.prefs button.language-switch", 3
     sign_out :user
     get shared_ticket_url(ticket.share_token)
-    assert_select ".menubar form.prefs button.language-switch", 2
+    assert_select ".menubar form.prefs button.language-switch", 3
   end
 
   test "German is chosen like the others and used for emails" do

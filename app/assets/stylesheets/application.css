@@ -375,23 +375,28 @@ form.button_to {
 .scale-button--extra { font-size: 17px; }
 
 .scale-button:hover,
-.scale-button[aria-pressed="true"] {
+.scale-button[aria-pressed="true"],
+.language-switch:hover,
+.language-switch[aria-pressed="true"] {
   opacity: 1;
 }
 
-/* The other languages' codes, such as "BG DE" (ui.md "Language"). */
+/* The language codes, one group like the text sizes (ui.md "Language"). */
 .language-switches {
-  display: inline-flex;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 .language-switch {
+  min-width: 22px;
+  padding: 0 3px;
+  opacity: 0.6;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
-.scale-button[aria-pressed="true"] {
+.scale-button[aria-pressed="true"],
+.language-switch[aria-pressed="true"] {
   background: var(--tool-hover);
   font-weight: 700;
 }
