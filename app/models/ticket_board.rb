@@ -4,9 +4,9 @@
 # visibility come from TicketFilter.
 class TicketBoard
   # Not now first, like Fizzy's NOT NOW lane.
-  ORDER_OF_COLUMNS = %w[postponed new open pending resolved closed].freeze
-  COLLAPSED = %w[postponed resolved closed].freeze
-  LIMITED = %w[resolved closed].freeze
+  ORDER_OF_COLUMNS = %w[postponed new open pending done].freeze
+  COLLAPSED = %w[postponed done].freeze
+  LIMITED = %w[done].freeze
   LIMIT = 50
   ORDER = Arel.sql("CASE tickets.priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 ELSE 2 END")
 

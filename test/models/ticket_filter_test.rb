@@ -11,9 +11,9 @@ class TicketFilterTest < ActiveSupport::TestCase
     assert_equal [ 1001 ], numbers(agent, view: "mine")
     assert_equal [ 1002 ], numbers(agent, view: "unassigned")
     assert_equal [ 1003 ], numbers(agent, view: "pending")
-    assert_equal [ 1004 ], numbers(agent, view: "solved")
+    assert_equal [ 1004 ], numbers(agent, view: "done")
     assert_equal 4, numbers(agent, view: "all").size
-    assert_equal({ "unsolved" => 3, "mine" => 1, "unassigned" => 1, "pending" => 1, "postponed" => 0, "solved" => 1, "all" => 4 },
+    assert_equal({ "unsolved" => 3, "mine" => 1, "unassigned" => 1, "pending" => 1, "postponed" => 0, "done" => 1, "all" => 4 },
                  TicketFilter.new(agent, {}).counts)
   end
 
@@ -55,7 +55,7 @@ class TicketFilterTest < ActiveSupport::TestCase
   test "requesters get their own tickets and requester views only" do
     anna = users(:anna)
     assert_equal [ 1001 ], numbers(anna)
-    assert_equal [ 1004 ], numbers(anna, view: "solved")
+    assert_equal [ 1004 ], numbers(anna, view: "done")
     assert_equal [ 1001, 1004 ], numbers(anna, view: "all").sort
     assert_equal "open", TicketFilter.new(anna, { view: "unassigned" }).view
     # Staff-only filters do not apply to requesters.

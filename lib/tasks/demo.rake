@@ -46,7 +46,7 @@ namespace :stopan do
                            requester: chris, organization: globex, priority: "high", actor: agent)
       vpn.apply_changes!({ assignee_id: second_agent.id, priority: "urgent" }, actor: agent)
       vpn.add_comment(author: second_agent, body: "We updated the VPN client remotely. Please try again and tell us if it still drops.",
-                      status: "resolved")
+                      status: "done")
       vpn.add_comment(author: chris, body: "Still drops after the update, unfortunately.")
     end
     puts "stopan:demo: created 2 organizations, 5 users (password from DEMO_PASSWORD) and 3 tickets."

@@ -25,12 +25,12 @@ class TicketPolicyTest < ActiveSupport::TestCase
     assert_not policy(:carl, :printer).resolve?
   end
 
-  test "closed tickets take no replies but staff notes" do
-    assert_not policy(:anna, :old_question).reply?
+  test "done tickets take replies and notes, but cannot be marked done again" do
+    assert policy(:anna, :old_question).reply?
+    assert policy(:anna, :old_question).edit_description?
     assert_not policy(:anna, :old_question).resolve?
-    assert_not policy(:agent, :old_question).reply?
+    assert policy(:agent, :old_question).reply?
     assert policy(:agent, :old_question).note?
-    assert policy(:agent, :old_question).comment?
   end
 
   test "staff can do everything on tickets" do

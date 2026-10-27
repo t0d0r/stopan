@@ -54,7 +54,7 @@
           <% if column.tickets.empty? %><p class="board-column__empty"><%= t("ui.board.empty") %></p><% end %>
         </div>
         <% if column.more.positive? %>
-          <p class="board-column__more"><%= link_to t("ui.board.more", count: column.more), tickets_path(view: column.status == "closed" ? "all" : "solved", status: column.status) %></p>
+          <p class="board-column__more"><%= link_to t("ui.board.more", count: column.more), tickets_path(view: "done") %></p>
         <% end %>
       </div>
     </section>

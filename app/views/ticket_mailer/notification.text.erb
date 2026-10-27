@@ -15,7 +15,7 @@
 
 <%= t("mailer.ticket.status_now", status: t("ui.statuses.#{@status_event.to_value}")) %>
 <% end %>
-<% if @reason == "requester" && @status_event && %w[pending resolved].include?(@status_event.to_value) %>
+<% if @reason == "requester" && @status_event && %w[pending done].include?(@status_event.to_value) %>
 
 <%= t("mailer.ticket.hint.#{@status_event.to_value}") %>
 <% end %>

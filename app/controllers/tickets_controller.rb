@@ -67,11 +67,11 @@ class TicketsController < ApplicationController
     end
   end
 
-  # The requester's "Mark as resolved".
+  # The requester's "Mark as done".
   def resolve
     authorize! policy.resolve?
-    @ticket.apply_changes!({ status: "resolved" }, actor: current_user)
-    redirect_to @ticket, notice: t("flash.ticket_resolved", reference: @ticket.reference)
+    @ticket.apply_changes!({ status: Ticket::DONE }, actor: current_user)
+    redirect_to @ticket, notice: t("flash.ticket_done", reference: @ticket.reference)
   end
 
   # One-click assignment from the queue and the ticket page; taking a new

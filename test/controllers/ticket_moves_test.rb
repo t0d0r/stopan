@@ -23,14 +23,14 @@ class TicketMovesTest < ActionDispatch::IntegrationTest
 
   test "the Move menu form goes back to the board with a notice" do
     ticket = tickets(:printer)
-    patch move_ticket_url(ticket), params: { status: "resolved" }, headers: { "Referer" => board_url }
+    patch move_ticket_url(ticket), params: { status: "done" }, headers: { "Referer" => board_url }
     assert_redirected_to board_url
-    assert_equal "Ticket #{ticket.reference} moved to Resolved.", flash[:notice]
+    assert_equal "Ticket #{ticket.reference} moved to Done.", flash[:notice]
   end
 
   test "requesters cannot move tickets" do
     sign_in users(:anna)
-    patch move_ticket_url(tickets(:printer)), params: { status: "closed" }, headers: { "Accept" => "application/json" }
+    patch move_ticket_url(tickets(:printer)), params: { status: "done" }, headers: { "Accept" => "application/json" }
     assert_response :forbidden
     assert_equal "open", tickets(:printer).reload.status
   end

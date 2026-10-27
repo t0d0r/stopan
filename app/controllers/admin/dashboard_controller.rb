@@ -4,7 +4,7 @@ module Admin
       @stats = {
         unsolved: Ticket.unsolved.count,
         unassigned: Ticket.unsolved.where(assignee_id: nil).count,
-        solved_week: Ticket.solved.where(resolved_at: 7.days.ago..).or(Ticket.where(closed_at: 7.days.ago..)).count,
+        done_week: Ticket.done.where(done_at: 7.days.ago..).count,
         organizations: Organization.count,
         staff: User.staff.active.count,
         requesters: User.requesters.active.count

@@ -46,13 +46,9 @@
       <dd><%= time_ago ticket.created_at %></dd>
       <dt><%= t("ui.fields.updated") %></dt>
       <dd><%= time_ago ticket.updated_at %></dd>
-      <% if ticket.resolved_at %>
-        <dt><%= t("ui.fields.resolved") %></dt>
-        <dd><%= time_ago ticket.resolved_at %></dd>
-      <% end %>
-      <% if ticket.closed_at %>
-        <dt><%= t("ui.fields.closed") %></dt>
-        <dd><%= time_ago ticket.closed_at %></dd>
+      <% if ticket.done_at %>
+        <dt><%= t("ui.fields.done") %></dt>
+        <dd><%= time_ago ticket.done_at %></dd>
       <% end %>
     </dl>
   </div>

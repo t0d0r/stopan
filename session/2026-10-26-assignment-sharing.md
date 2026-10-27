@@ -406,8 +406,16 @@ Operator requests, in order:
   (auto margins on the first and last column, so an overflowing board
   still starts at its first column); clicking an expanded column's header
   collapses it, as clicking a pill expands it.
-- In progress: one "Done" status replacing resolved and closed (operator
-  chose "one Done status everywhere").
+- One "Done" status ("Готова") replaces resolved and closed (operator
+  chose "one Done status everywhere"). Transitions: new/open/pending/
+  postponed -> done, done -> open. No final close: requesters reply to a
+  done ticket (page or email) and it reopens; staff reply without
+  reopening. Queue and My tickets view `done` (old `solved` falls back to
+  the default view); board has one collapsed Done column (50 cards).
+  `done_at` replaces `resolved_at`/`closed_at`. Migration
+  `MergeResolvedAndClosedIntoDone` converts tickets, status events,
+  notifications and stages; resolved -> closed events are deleted (they
+  would read "Done to Done"). Irreversible.
 
 ## Decisions
 
@@ -461,6 +469,9 @@ menu and Take; open /tickets/new and pick a requester.
   organization name, so an outsider learns as little as possible.
 
 ## Next
+
+- Production deploy (only when the operator asks): back up the database
+  first; the `MergeResolvedAndClosedIntoDone` migration cannot be undone.
 
 - Rebuild the Docker image (`make docker-up`) to see the changes on :3000;
   production needs a deploy by the operator (migration

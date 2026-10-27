@@ -57,17 +57,25 @@ class MailboxMessageTest < ActiveSupport::TestCase
     assert_equal :reply, process(raw)
   end
 
-  test "staff reply by email to open tickets only; never start one" do
+  test "staff reply by email to tickets; never start one" do
     ticket = tickets(:printer)
     assert_equal :reply, process(email(from: users(:agent).email, subject: "[Stopan ##{ticket.number}]", body: "On it."))
     assert_equal users(:agent), ticket.comments.last.author
     assert_equal :ignored, process(email(from: users(:agent).email, subject: "New thing"))
   end
 
-  test "someone else quoting a ticket number starts their own ticket; closed tickets too" do
+  test "someone else quoting a ticket number starts their own ticket" do
     assert_equal :ticket, process(email(from: users(:boris).email, subject: "[Stopan ##{tickets(:printer).number}] me too"))
     assert_equal users(:boris), Ticket.order(:id).last.requester
-    assert_equal :ticket, process(email(from: users(:anna).email, subject: "Re: [Stopan ##{tickets(:old_question).number}]"))
+  end
+
+  test "the requester's reply to a done ticket reopens it" do
+    ticket = tickets(:old_question)
+    assert_no_difference -> { Ticket.count } do
+      assert_equal :reply, process(email(from: users(:anna).email, subject: "Re: [Stopan ##{ticket.number}]"))
+    end
+    assert_equal "open", ticket.reload.status
+    assert_nil ticket.done_at
   end
 
   test "automatic mail, own mail and deactivated senders are skipped" do

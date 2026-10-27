@@ -2,10 +2,11 @@ class Ticket < ApplicationRecord
   include Attachable
   include Editable
 
-  STATUSES = %w[new open pending postponed resolved closed].freeze
+  STATUSES = %w[new open pending postponed done].freeze
   UNSOLVED = %w[new open pending].freeze
-  SOLVED = %w[resolved closed].freeze
-  # Parked for later ("Not now"); neither unsolved nor solved (board.md).
+  # The one finished status; replies reopen it (specs/tickets.md).
+  DONE = "done"
+  # Parked for later ("Not now"); neither unsolved nor done (board.md).
   POSTPONED = "postponed"
   # What a requester's "Open" tab holds (specs/queues.md).
   OPEN_FOR_REQUESTER = (UNSOLVED + [ POSTPONED ]).freeze
@@ -13,12 +14,11 @@ class Ticket < ApplicationRecord
   # Manual status changes staff may make (specs/tickets.md). Nothing goes
   # back to "new".
   TRANSITIONS = {
-    "new" => %w[open pending resolved closed postponed],
-    "open" => %w[pending resolved closed postponed],
-    "pending" => %w[open resolved closed postponed],
-    "postponed" => %w[open resolved closed],
-    "resolved" => %w[open closed],
-    "closed" => %w[open]
+    "new" => %w[open pending done postponed],
+    "open" => %w[pending done postponed],
+    "pending" => %w[open done postponed],
+    "postponed" => %w[open done],
+    "done" => %w[open]
   }.freeze
   FIRST_NUMBER = 1001
   # Where a ticket came from (specs/public-form.md, organization-mail.md).
@@ -68,7 +68,7 @@ class Ticket < ApplicationRecord
   after_update :record_changes
 
   scope :unsolved, -> { where(status: UNSOLVED) }
-  scope :solved, -> { where(status: SOLVED) }
+  scope :done, -> { where(status: DONE) }
 
   # Staff see every ticket; a requester sees their own tickets in the
   # organizations they still belong to (specs/roles.md).
@@ -102,8 +102,8 @@ class Ticket < ApplicationRecord
     UNSOLVED.include?(status)
   end
 
-  def closed?
-    status == "closed"
+  def done?
+    status == DONE
   end
 
   # Statuses staff may pick now: the current one plus allowed transitions.
@@ -275,7 +275,7 @@ class Ticket < ApplicationRecord
 
     if comment.author.staff?
       "open" if status == "new"
-    elsif %w[pending resolved postponed].include?(status)
+    elsif [ "pending", DONE, POSTPONED ].include?(status)
       "open"
     end
   end
@@ -304,11 +304,7 @@ class Ticket < ApplicationRecord
   end
 
   def stamp_status_times
-    case status
-    when "resolved" then self.resolved_at = Time.current
-    when "closed" then self.closed_at = Time.current
-    when "open", "pending", POSTPONED then self.resolved_at = self.closed_at = nil
-    end
+    self.done_at = (Time.current if done?)
   end
 
   def event_actor

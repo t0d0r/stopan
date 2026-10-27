@@ -2,10 +2,10 @@
 # for requesters (specs/queues.md). Every query starts from
 # Ticket.visible_to, and the parameters only narrow it.
 class TicketFilter
-  STAFF_VIEWS = %w[unsolved mine unassigned pending postponed solved all].freeze
+  STAFF_VIEWS = %w[unsolved mine unassigned pending postponed done all].freeze
   # The first three are the requester's own tickets; "organization" is every
   # ticket of their organizations (specs/queues.md "My tickets").
-  REQUESTER_VIEWS = %w[open solved all organization].freeze
+  REQUESTER_VIEWS = %w[open done all organization].freeze
   SORTS = %w[updated created priority].freeze
   PER_PAGE = 25
   PRIORITY_ORDER = Arel.sql("CASE tickets.priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 " \
@@ -92,7 +92,7 @@ class TicketFilter
     when "unassigned" then base.unsolved.where(assignee_id: nil)
     when "pending" then base.where(status: "pending")
     when "postponed" then base.where(status: Ticket::POSTPONED)
-    when "solved" then base.solved
+    when "done" then base.done
     else base
     end
   end
@@ -100,7 +100,7 @@ class TicketFilter
   def own_view(name)
     case name
     when "open" then own.where(status: Ticket::OPEN_FOR_REQUESTER)
-    when "solved" then own.solved
+    when "done" then own.done
     else own
     end
   end

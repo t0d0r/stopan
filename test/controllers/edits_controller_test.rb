@@ -25,7 +25,7 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Fixed typo.", @own_reply.reload.body
   end
 
-  test "the requester cannot edit staff replies, internal notes, closed or other tickets" do
+  test "the requester cannot edit staff replies, internal notes or other tickets" do
     sign_in users(:anna)
     get edit_ticket_comment_url(@ticket, @staff_reply)
     assert_response :forbidden
@@ -34,9 +34,8 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
     patch ticket_comment_url(@ticket, @note), params: { comment: { body: "Hacked" } }
     assert_response :not_found
 
-    closed = tickets(:old_question)
-    get edit_ticket_description_url(closed)
-    assert_response :forbidden
+    get edit_ticket_description_url(tickets(:old_question)) # done, still their own
+    assert_response :success
 
     sign_in users(:boris)
     patch ticket_description_url(@ticket), params: { ticket: { subject: "Hacked", description: "Hacked" } }
@@ -47,7 +46,7 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Please send a photo.", @staff_reply.reload.body
   end
 
-  test "staff edit any reply, note and request, also on closed tickets" do
+  test "staff edit any reply, note and request, also on done tickets" do
     sign_in users(:agent_two)
     patch ticket_comment_url(@ticket, @own_reply), params: { comment: { body: "Password [removed]" } }
     assert_equal "Password [removed]", @own_reply.reload.body

@@ -19,8 +19,6 @@ class TicketPolicy
   end
 
   def reply?
-    return false if ticket.closed?
-
     user.staff? || own?
   end
 
@@ -46,16 +44,15 @@ class TicketPolicy
   end
 
   # Editing text (specs/timeline.md "Editing"): staff any request, reply or
-  # note; the requester their own request and own public replies while the
-  # ticket is open to replies.
+  # note; the requester their own request and own public replies.
   def edit_description?
-    user.staff? || (own? && !ticket.closed?)
+    user.staff? || own?
   end
 
   def edit_comment?(comment)
     return true if user.staff?
 
-    comment.author_id == user.id && !comment.internal? && own? && !ticket.closed?
+    comment.author_id == user.id && !comment.internal? && own?
   end
 
   def see_revisions?

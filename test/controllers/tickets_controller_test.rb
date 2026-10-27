@@ -23,11 +23,11 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
 
   test "the queue is coloured by view and its filters apply without a button" do
     sign_in users(:agent)
-    get tickets_url(view: "solved", priority: "urgent", q: "vpn", sort: "created", page: 2)
-    assert_select ".queue__views .view-link.sticky--green[aria-current=page]", /Solved/
+    get tickets_url(view: "done", priority: "urgent", q: "vpn", sort: "created", page: 2)
+    assert_select ".queue__views .view-link.sticky--green[aria-current=page]", /Done/
     assert_select ".queue__list.sticky--green"
     assert_select "form.filters" do
-      assert_select "input[type=hidden][name=view][value=solved]"
+      assert_select "input[type=hidden][name=view][value=done]"
       assert_select "input[type=hidden][name=q][value=vpn]"
       assert_select "input[type=search]", 0
       assert_select "select.is-set", 1
@@ -39,10 +39,10 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
 
   test "the menu bar search keeps the list's view and filters but not the page" do
     sign_in users(:agent)
-    get tickets_url(view: "solved", priority: "urgent", q: "vpn", sort: "created", page: 2)
+    get tickets_url(view: "done", priority: "urgent", q: "vpn", sort: "created", page: 2)
     assert_select ".menubar form.menubar__search[role=search][action='#{tickets_path}'][method=get]" do
       assert_select "input#menubar-q[type=search][name=q][value=vpn]"
-      assert_select "input[type=hidden][name=view][value=solved]"
+      assert_select "input[type=hidden][name=view][value=done]"
       assert_select "input[type=hidden][name=priority][value=urgent]"
       assert_select "input[type=hidden][name=sort][value=created]"
       assert_select "input[name=q][type=hidden]", 0
@@ -60,7 +60,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
       assert_select "input#menubar-q:not([value])"
     end
 
-    get tickets_url(view: "solved")
+    get tickets_url(view: "done")
     assert_select ".tabs .tab.sticky--green[aria-current=page]"
     assert_select "section.panel.sticky--green"
     assert_select ".panel input[type=search]", 0
@@ -142,7 +142,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     get ticket_url(tickets(:printer))
     assert_select ".message--internal", /STAFF-ONLY/
     assert_match "assigned the ticket to Maria Agent", response.body
-    assert_select "form.properties-form select[name='ticket[status]'] option", 5 # open + 4 transitions
+    assert_select "form.properties-form select[name='ticket[status]'] option", 4 # open + pending, done, postponed
     assert_select ".composer input[name='comment[internal]']", 2
   end
 
@@ -150,7 +150,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:anna)
     assert_difference "Ticket.count" do
       post tickets_url, params: { ticket: { subject: "Oven alarm keeps beeping", description: "Since Monday.",
-                                            status: "closed", priority: "urgent", assignee_id: users(:agent).id,
+                                            status: "done", priority: "urgent", assignee_id: users(:agent).id,
                                             requester_id: users(:boris).id, files: [ upload ] } }
     end
     ticket = Ticket.order(:number).last
@@ -222,12 +222,12 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     patch ticket_url(tickets(:old_question)), params: { ticket: { status: "pending" } }
     assert_response :unprocessable_content
-    assert_select ".form-errors", /cannot change from Closed to Pending/
+    assert_select ".form-errors", /cannot change from Done to Pending/
   end
 
   test "requesters cannot update properties" do
     sign_in users(:anna)
-    patch ticket_url(tickets(:printer)), params: { ticket: { status: "closed", assignee_id: "" } }
+    patch ticket_url(tickets(:printer)), params: { ticket: { status: "done", assignee_id: "" } }
     assert_response :forbidden
     assert_equal "open", tickets(:printer).reload.status
     assert_equal users(:agent), tickets(:printer).assignee
@@ -235,19 +235,20 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
 
   test "requesters cannot update colleagues' tickets or see other organizations'" do
     sign_in users(:boris)
-    patch ticket_url(tickets(:printer)), params: { ticket: { status: "closed" } }
+    patch ticket_url(tickets(:printer)), params: { ticket: { status: "done" } }
     assert_response :forbidden
     sign_in users(:carl)
-    patch ticket_url(tickets(:printer)), params: { ticket: { status: "closed" } }
+    patch ticket_url(tickets(:printer)), params: { ticket: { status: "done" } }
     assert_response :not_found
     assert_equal "open", tickets(:printer).reload.status
   end
 
-  test "a requester marks their ticket as resolved" do
+  test "a requester marks their ticket as done" do
     sign_in users(:anna)
     patch resolve_ticket_url(tickets(:printer))
     assert_redirected_to ticket_url(tickets(:printer))
-    assert_equal "resolved", tickets(:printer).reload.status
+    assert_equal "done", tickets(:printer).reload.status
+    assert_equal "Ticket #1001 is marked as done.", flash[:notice]
     assert_equal users(:anna), tickets(:printer).events.last.actor
 
     patch resolve_ticket_url(tickets(:old_question))

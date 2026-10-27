@@ -12,7 +12,7 @@
     <span class="stat__value"><%= @stats[:unassigned] %></span><span class="stat__label"><%= t("ui.admin.stats.unassigned") %></span>
   <% end %>
   <div class="sticky sticky--green stat">
-    <span class="stat__value"><%= @stats[:solved_week] %></span><span class="stat__label"><%= t("ui.admin.stats.solved_week") %></span>
+    <span class="stat__value"><%= @stats[:done_week] %></span><span class="stat__label"><%= t("ui.admin.stats.done_week") %></span>
   </div>
   <%= link_to admin_organizations_path, class: "sticky sticky--purple stat" do %>
     <span class="stat__value"><%= @stats[:organizations] %></span><span class="stat__label"><%= t("ui.admin.stats.organizations") %></span>

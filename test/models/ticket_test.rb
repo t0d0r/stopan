@@ -68,9 +68,10 @@ class TicketTest < ActiveSupport::TestCase
     end
   end
 
-  test "nothing goes back to new and closed only reopens" do
+  test "nothing goes back to new and done only reopens" do
     assert_not Ticket::TRANSITIONS.values.flatten.include?("new")
-    assert_equal %w[open], Ticket::TRANSITIONS["closed"]
+    assert_equal %w[open], Ticket::TRANSITIONS["done"]
+    assert_equal %w[new open pending postponed done], Ticket::STATUSES
   end
 
   test "changes write one event per field with the right visibility" do
@@ -84,7 +85,7 @@ class TicketTest < ActiveSupport::TestCase
   end
 
   test "an invalid change saves nothing" do
-    ticket = tickets(:old_question) # closed
+    ticket = tickets(:old_question) # done
     assert_no_difference "TicketEvent.count" do
       assert_not ticket.apply_changes({ status: "pending", priority: "high" }, actor: users(:agent))
     end
@@ -93,13 +94,10 @@ class TicketTest < ActiveSupport::TestCase
 
   test "status times" do
     ticket = tickets(:printer)
-    ticket.apply_changes!({ status: "resolved" }, actor: users(:agent))
-    assert ticket.resolved_at
-    ticket.apply_changes!({ status: "closed" }, actor: users(:agent))
-    assert ticket.closed_at
+    ticket.apply_changes!({ status: "done" }, actor: users(:agent))
+    assert ticket.done_at
     ticket.apply_changes!({ status: "open" }, actor: users(:agent))
-    assert_nil ticket.resolved_at
-    assert_nil ticket.closed_at
+    assert_nil ticket.done_at
   end
 
   test "a staff reply opens a new ticket" do
@@ -112,8 +110,8 @@ class TicketTest < ActiveSupport::TestCase
 
   test "a staff reply can choose the status" do
     ticket = tickets(:email_account)
-    ticket.add_comment(author: users(:agent), body: "Done, password sent separately.", status: "resolved")
-    assert_equal "resolved", ticket.reload.status
+    ticket.add_comment(author: users(:agent), body: "Done, password sent separately.", status: "done")
+    assert_equal "done", ticket.reload.status
   end
 
   test "an invalid chosen status keeps the comment out too" do
@@ -123,17 +121,21 @@ class TicketTest < ActiveSupport::TestCase
       assert_not comment.persisted?
       assert_predicate comment.errors[:base], :any?
     end
-    assert_equal "closed", ticket.reload.status
+    assert_equal "done", ticket.reload.status
   end
 
-  test "a requester reply reopens pending and resolved tickets only" do
+  test "a requester reply reopens pending, postponed and done tickets only" do
     vpn = tickets(:vpn)
     vpn.update_columns(status: "pending")
     vpn.add_comment(author: users(:carl), body: "Still broken.")
     assert_equal "open", vpn.reload.status
 
-    vpn.update_columns(status: "resolved")
+    vpn.update_columns(status: "done")
     vpn.add_comment(author: users(:carl), body: "Broken again.")
+    assert_equal "open", vpn.reload.status
+
+    vpn.update_columns(status: "postponed")
+    vpn.add_comment(author: users(:carl), body: "Any news?")
     assert_equal "open", vpn.reload.status
 
     ticket = tickets(:email_account)
@@ -147,11 +149,13 @@ class TicketTest < ActiveSupport::TestCase
     assert_equal "new", ticket.reload.status
   end
 
-  test "closed tickets take internal notes but no public replies" do
+  test "done tickets take replies and notes; only the requester's reply reopens" do
     ticket = tickets(:old_question)
-    assert_not ticket.add_comment(author: users(:agent), body: "Hello?").persisted?
-    assert_not ticket.add_comment(author: users(:anna), body: "Hello?").persisted?
     assert ticket.add_comment(author: users(:agent), body: "For the record.", internal: true).persisted?
+    assert ticket.add_comment(author: users(:agent), body: "Glad it works.").persisted?
+    assert_equal "done", ticket.reload.status
+    assert ticket.add_comment(author: users(:anna), body: "Hello?").persisted?
+    assert_equal "open", ticket.reload.status
   end
 
   test "attachment limits" do

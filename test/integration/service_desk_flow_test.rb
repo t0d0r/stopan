@@ -3,7 +3,7 @@ require "test_helper"
 # End-to-end flows through the real pages, as a requester and an agent
 # would click through them (specs/roles.md, specs/timeline.md).
 class ServiceDeskFlowTest < ActionDispatch::IntegrationTest
-  test "a ticket from creation to closing" do
+  test "a ticket from creation to done and back" do
     # The requester opens a ticket.
     sign_in users(:boris)
     get new_ticket_url
@@ -38,22 +38,24 @@ class ServiceDeskFlowTest < ActionDispatch::IntegrationTest
     post ticket_comments_url(ticket), params: { comment: { body: "Restarted, photo attached.", files: [ upload ] } }
     assert_equal "open", ticket.reload.status
 
-    # The agent resolves and later closes it.
+    # The agent marks it done.
     sign_in users(:agent)
-    post ticket_comments_url(ticket), params: { comment: { body: "Firmware updated remotely.", internal: "0", status: "resolved" } }
-    patch ticket_url(ticket), params: { ticket: { status: "closed" } }
-    assert_equal "closed", ticket.reload.status
+    post ticket_comments_url(ticket), params: { comment: { body: "Firmware updated remotely.", internal: "0", status: "done" } }
+    assert_equal "done", ticket.reload.status
+    assert ticket.done_at
 
-    # Closed: the requester can no longer reply and is told what to do.
+    # Done: the requester may still reply, which opens it again.
     sign_in users(:boris)
     get ticket_url(ticket)
-    assert_select ".composer", 0
-    assert_select ".callout", /This ticket is closed/
+    assert_select ".ticket-head .pill--status", "Done"
+    assert_select ".composer .composer__reopen"
+    post ticket_comments_url(ticket), params: { comment: { body: "It happened again." } }
+    assert_equal "open", ticket.reload.status
 
     # The full audit history, oldest first.
     actions = ticket.events.map(&:action)
     assert_equal %w[created priority_changed assignee_changed noted replied status_changed replied status_changed
-                    replied status_changed status_changed], actions
+                    replied status_changed replied status_changed], actions
   end
 
   test "an administrator brings a new requester on board" do

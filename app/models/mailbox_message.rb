@@ -25,7 +25,7 @@ class MailboxMessage
     return staff_reply(user) if user&.staff?
 
     ticket = referenced_ticket
-    if ticket && user && ticket.requester_id == user.id && !ticket.closed?
+    if ticket && user && ticket.requester_id == user.id
       reply(ticket, user)
     else
       new_ticket(user)
@@ -61,10 +61,10 @@ class MailboxMessage
     [ mail.header["In-Reply-To"], mail.header["References"] ].compact.flat_map { |field| field.value.to_s.split(/\s+/) }
   end
 
-  # Staff may answer an open ticket by email; they never start one this way.
+  # Staff may answer a ticket by email; they never start one this way.
   def staff_reply(user)
     ticket = referenced_ticket
-    return ignore("staff sender without an open ticket") unless ticket && !ticket.closed?
+    return ignore("staff sender without a ticket") unless ticket
     return ignore("agent outside the ticket's organization") unless Ticket.visible_to(user).exists?(ticket.id)
 
     reply(ticket, user)

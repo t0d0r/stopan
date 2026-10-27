@@ -62,9 +62,8 @@ en:
       new: "New"
       open: "In progress"
       pending: "Pending"
-      resolved: "Resolved"
-      closed: "Closed"
       postponed: "Not now"
+      done: "Done"
     priorities:
       low: "Low"
       normal: "Normal"
@@ -85,8 +84,7 @@ en:
       files: "Attachments"
       created: "Created"
       updated: "Last activity"
-      resolved: "Resolved"
-      closed: "Closed"
+      done: "Done"
       name: "Name"
       username: "Username"
       email: "Email"
@@ -104,7 +102,7 @@ en:
         unassigned: "Unassigned"
         pending: "Pending"
         postponed: "Not now"
-        solved: "Solved"
+        done: "Done"
         all: "All tickets"
       search_label: "Search tickets"
       search_placeholder: "Search subject, text or #number"
@@ -125,12 +123,12 @@ en:
       title: "My tickets"
       views:
         open: "Open"
-        solved: "Solved"
+        done: "Done"
         all: "All"
         organization: "My organizations"
       empty:
         open: "You have no open tickets. Need help?"
-        solved: "No solved tickets yet."
+        done: "No done tickets yet."
         all: "You have not opened any tickets yet. Need help?"
         organization: "Your organizations have no tickets yet."
       open_new: "Open a new ticket."
@@ -170,8 +168,8 @@ en:
       opened_by: "Opened by %{name}"
       properties: "Properties"
       update: "Update ticket"
-      resolve: "Mark as resolved"
-      resolve_title: "Mark this ticket as resolved?"
+      resolve: "Mark as done"
+      resolve_title: "Mark this ticket as done?"
       resolve_body: "Use this when your problem is solved. You can still reply later, which opens the ticket again."
 
     timeline:
@@ -212,7 +210,7 @@ en:
       send_reply: "Send reply"
       add_note: "Add internal note"
       colleague: "Only %{name} and the service desk can reply to this ticket of your organization."
-      closed: "This ticket is closed. If you need more help, open a new ticket."
+      done: "This ticket is done. If you reply, it opens again."
 
     admin:
       shared_tickets:
@@ -356,7 +354,7 @@ en:
       stats:
         unsolved: "unsolved tickets"
         unassigned: "unassigned"
-        solved_week: "solved in 7 days"
+        done_week: "done in 7 days"
         organizations: "organizations"
         staff: "agents and admins"
         requesters: "requesters"
@@ -602,7 +600,7 @@ en:
       status_now: "The status is now %{status}."
       hint:
         pending: "The service desk is waiting for your answer. Reply on the ticket page."
-        resolved: "If this does not solve your problem, reply on the ticket page and the ticket opens again."
+        done: "If this does not solve your problem, reply on the ticket page and the ticket opens again."
       files: "Attached files"
       open: "Open ticket %{reference}"
       reason:
@@ -624,7 +622,7 @@ en:
     share_wrong_password: "Wrong password."
     share_too_many_attempts: "Too many attempts. Try again in a few minutes."
     assignee_invalid: "Tickets can only be assigned to active agents and administrators."
-    ticket_resolved: "Ticket %{reference} is marked as resolved."
+    ticket_done: "Ticket %{reference} is marked as done."
     reply_sent: "Your reply was sent."
     note_added: "Internal note added."
     reply_updated: "Reply updated."
@@ -764,4 +762,3 @@ en:
             internal:
               staff_only: "can only be written by agents and administrators"
             base:
-              ticket_closed: "This ticket is closed and accepts no more replies."

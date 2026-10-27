@@ -15,7 +15,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "a requester's internal flag and status are ignored" do
     sign_in users(:anna)
-    post ticket_comments_url(tickets(:printer)), params: { comment: { body: "Hello", internal: "1", status: "closed" } }
+    post ticket_comments_url(tickets(:printer)), params: { comment: { body: "Hello", internal: "1", status: "done" } }
     comment = Comment.last
     assert_not comment.internal?
     assert_equal "open", tickets(:printer).reload.status
@@ -32,17 +32,22 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "nobody replies publicly to a closed ticket" do
+  test "a requester's reply to a done ticket opens it again" do
     sign_in users(:anna)
+    get ticket_url(tickets(:old_question))
+    assert_select ".composer .composer__reopen", /If you reply, it opens again/
     post ticket_comments_url(tickets(:old_question)), params: { comment: { body: "One more thing" } }
-    assert_response :forbidden
-
-    sign_in users(:agent)
-    post ticket_comments_url(tickets(:old_question)), params: { comment: { body: "Hi", internal: "0" } }
-    assert_response :forbidden
+    assert_equal "open", tickets(:old_question).reload.status
   end
 
-  test "staff add internal notes, also on closed tickets" do
+  test "staff reply publicly to a done ticket without reopening it" do
+    sign_in users(:agent)
+    post ticket_comments_url(tickets(:old_question)), params: { comment: { body: "Hi", internal: "0" } }
+    assert_not Comment.last.internal?
+    assert_equal "done", tickets(:old_question).reload.status
+  end
+
+  test "staff add internal notes, also on done tickets" do
     sign_in users(:agent)
     post ticket_comments_url(tickets(:old_question)), params: { comment: { body: "Customer called again", internal: "1" } }
     assert Comment.last.internal?
@@ -54,8 +59,8 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   test "staff reply and set the status in one go" do
     sign_in users(:agent)
     post ticket_comments_url(tickets(:email_account)), params: { comment: { body: "Account created.", internal: "0",
-                                                                             status: "resolved" } }
-    assert_equal "resolved", tickets(:email_account).reload.status
+                                                                             status: "done" } }
+    assert_equal "done", tickets(:email_account).reload.status
   end
 
   test "an empty reply re-renders the ticket with errors" do

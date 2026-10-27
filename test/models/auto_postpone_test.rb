@@ -15,7 +15,7 @@ class AutoPostponeTest < ActiveSupport::TestCase
     assert_equal 1, moved
     assert_equal "postponed", tickets(:printer).reload.status
     assert_not_equal "postponed", tickets(:email_account).reload.status
-    assert_equal "closed", tickets(:old_question).reload.status
+    assert_equal "done", tickets(:old_question).reload.status
     event = tickets(:printer).events.where(action: "status_changed").last
     assert_nil event.actor
     assert_equal "postponed", event.to_value

@@ -16,7 +16,6 @@ class Comment < ApplicationRecord
   validates :body, presence: true, length: { maximum: 20_000 }
   validates :source, inclusion: { in: SOURCES }
   validate :only_staff_write_internal_notes
-  validate :ticket_accepts_replies, on: :create
 
   after_create :record_event
 
@@ -37,10 +36,6 @@ class Comment < ApplicationRecord
 
   def only_staff_write_internal_notes
     errors.add(:internal, :staff_only) if internal? && !author&.staff?
-  end
-
-  def ticket_accepts_replies
-    errors.add(:base, :ticket_closed) if !internal? && ticket&.closed?
   end
 
   def revision_text

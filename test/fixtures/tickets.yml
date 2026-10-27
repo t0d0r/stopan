@@ -37,11 +37,10 @@ old_question:
   number: 1004
   subject: Opening hours over the holidays
   description: Are you open on the 24th?
-  status: closed
+  status: done
   priority: low
   requester: anna
   organization: acme
-  resolved_at: <%= 10.days.ago.to_fs(:db) %>
-  closed_at: <%= 9.days.ago.to_fs(:db) %>
+  done_at: <%= 9.days.ago.to_fs(:db) %>
   created_at: <%= 12.days.ago.to_fs(:db) %>
   updated_at: <%= 9.days.ago.to_fs(:db) %>

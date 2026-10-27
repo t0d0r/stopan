@@ -164,7 +164,7 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ "refresh" ], refreshes.call { ticket.add_comment(author: users(:agent), body: "Public answer") }
     assert_empty refreshes.call { ticket.add_comment(author: users(:agent), body: "SECRET", internal: true) }
     assert_empty refreshes.call { ticket.apply_changes!({ priority: "urgent" }, actor: users(:agent)) }
-    assert_equal [ "refresh" ], refreshes.call { ticket.apply_changes!({ status: "resolved" }, actor: users(:agent)) }
+    assert_equal [ "refresh" ], refreshes.call { ticket.apply_changes!({ status: "done" }, actor: users(:agent)) }
     assert_equal [ "refresh" ], refreshes.call { ticket.unshare!(actor: users(:agent)) }
   end
 

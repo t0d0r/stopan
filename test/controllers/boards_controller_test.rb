@@ -7,7 +7,8 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
     get board_url
     assert_response :success
     assert_select ".board-column[data-status]", Ticket::STATUSES.size
-    assert_select ".board-column[data-status=resolved].is-collapsed"
+    assert_select ".board-column[data-status=done].is-collapsed"
+    assert_select ".board-column[data-status=done] .board-pill__label", "Done"
     assert_select ".board-column[data-status=open]:not(.is-collapsed)"
     open_count = Ticket.where(status: "open").count
     assert_select ".board-column[data-status=open] .board-column__count", open_count.to_s
@@ -37,17 +38,17 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
     assert_includes first["class"], "is-golden"
   end
 
-  test "solved columns show at most 50 cards with a link to the rest" do
+  test "the done column shows at most 50 cards with a link to the rest" do
     52.times do |i|
       Ticket.create!(subject: "Old #{i}", description: "x", requester: users(:anna), organization: organizations(:acme),
-                     actor: users(:agent)).update_columns(status: "resolved")
+                     actor: users(:agent)).update_columns(status: "done")
     end
     sign_in users(:agent)
     get board_url
-    assert_select ".board-column[data-status=resolved] .board-card", 50
-    total = Ticket.where(status: "resolved").count
-    assert_select ".board-column[data-status=resolved] .board-column__count", total.to_s
-    assert_select ".board-column[data-status=resolved] .board-column__more", /and #{total - 50} more/
+    assert_select ".board-column[data-status=done] .board-card", 50
+    total = Ticket.where(status: "done").count
+    assert_select ".board-column[data-status=done] .board-column__count", total.to_s
+    assert_select ".board-column[data-status=done] .board-column__more a[href=?]", tickets_path(view: "done"), /and #{total - 50} more/
   end
 
   test "filters narrow the board" do

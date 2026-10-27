@@ -75,13 +75,13 @@ class TicketNotifierTest < ActiveSupport::TestCase
 
   test "an internal note that changes the status tells the requester only the status" do
     sent = mails do
-      tickets(:printer).add_comment(author: users(:agent_two), body: "SECRET workaround", internal: true, status: "resolved")
+      tickets(:printer).add_comment(author: users(:agent_two), body: "SECRET workaround", internal: true, status: "done")
     end
 
     assert_equal "[Stopan #1001] Status changed: Receipt printer prints blank pages", sent["anna@example.com"]
     body = body_of("anna@example.com")
     assert_not_includes body, "SECRET"
-    assert_includes body, "from In progress to Resolved"
+    assert_includes body, "from In progress to Done"
     assert_includes body, "reply on the ticket page and the ticket opens again"
     assert_match(/Internal note/, sent["maria@example.com"])
   end
@@ -98,11 +98,11 @@ class TicketNotifierTest < ActiveSupport::TestCase
     assert_empty mails { tickets(:email_account).apply_changes!({ status: "open" }, actor: users(:agent)) }
   end
 
-  test "a requester marking a ticket resolved tells the assignee" do
-    sent = mails { tickets(:printer).apply_changes!({ status: "resolved" }, actor: users(:anna)) }
+  test "a requester marking a ticket done tells the assignee" do
+    sent = mails { tickets(:printer).apply_changes!({ status: "done" }, actor: users(:anna)) }
 
     assert_equal [ "maria@example.com" ], sent.keys
-    assert_includes body_of("maria@example.com"), "Anna Requester changed the status of ticket #1001 from In progress to Resolved."
+    assert_includes body_of("maria@example.com"), "Anna Requester changed the status of ticket #1001 from In progress to Done."
   end
 
   test "deactivated users and requesters who left the organization get nothing" do

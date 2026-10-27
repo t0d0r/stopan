@@ -2,12 +2,11 @@ module TicketsHelper
   include MarkdownHelper
 
   # Paper colour per status and priority; always shown with its text (ui.md).
-  STATUS_COLORS = { "new" => "yellow", "open" => "pink", "pending" => "blue", "postponed" => "purple", "resolved" => "green",
-                    "closed" => "gray" }.freeze
+  STATUS_COLORS = { "new" => "yellow", "open" => "pink", "pending" => "blue", "postponed" => "purple", "done" => "green" }.freeze
   PRIORITY_COLORS = { "low" => "gray", "normal" => "blue", "high" => "purple", "urgent" => "pink" }.freeze
-  # Paper colour per list view (queues.md); pending and solved match their statuses.
+  # Paper colour per list view (queues.md); pending and done match their statuses.
   VIEW_COLORS = { "unsolved" => "yellow", "mine" => "purple", "unassigned" => "pink", "pending" => "blue",
-                  "solved" => "green", "all" => "gray", "open" => "yellow", "organization" => "purple",
+                  "done" => "green", "all" => "gray", "open" => "yellow", "organization" => "purple",
                   "postponed" => "purple" }.freeze
   AVATAR_COLORS = %w[yellow blue green pink purple gray].freeze
 

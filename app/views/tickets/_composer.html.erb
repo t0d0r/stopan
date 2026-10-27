@@ -1,6 +1,6 @@
 <% staff = current_user.staff? %>
 <% if policy.comment? %>
-  <% internal = comment.internal? || (staff && ticket.closed?) %>
+  <% internal = comment.internal? %>
   <section class="sticky sticky--<%= internal ? "pink" : (staff ? "blue" : "yellow") %> composer<%= " is-internal" if internal %>"
            aria-labelledby="composer-title" data-composer data-staff-color="blue">
     <header class="sticky__bar"><span class="sticky__caption" id="composer-title"><%= t("ui.composer.title") %></span></header>
@@ -20,6 +20,9 @@
             <%= icon :lock %> <%= t("ui.composer.internal") %>
           </label>
         </fieldset>
+      <% end %>
+      <% if !staff && ticket.done? %>
+        <p class="field-hint composer__reopen"><%= t("ui.composer.done") %></p>
       <% end %>
       <div class="field">
         <%= f.label :body, staff ? t("ui.composer.body_staff") : t("ui.composer.body"), class: "sr-only" %>
@@ -53,8 +56,6 @@
       </div>
     <% end %>
   </section>
-<% elsif ticket.closed? %>
-  <p class="callout"><%= t("ui.composer.closed") %> <%= link_to t("ui.my_tickets.open_new"), new_ticket_path %></p>
 <% else %>
   <%# A colleague's ticket: members read it, only its requester and staff reply (roles.md). %>
   <p class="callout"><%= t("ui.composer.colleague", name: ticket.requester.display_name) %> <%= link_to t("ui.my_tickets.open_new"), new_ticket_path %></p>

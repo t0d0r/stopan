@@ -33,7 +33,7 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     post admin_stages_url, params: { stage: { status: "open", name: "Investigating", color: "pink" } }
     post admin_stages_url, params: { stage: { status: "open", name: "QA", color: "green" } }
     first, second = Stage.where(status: "open").ordered.to_a
-    patch admin_stage_url(second), params: { stage: { name: "QA to confirm", color: "blue", status: "closed" } }
+    patch admin_stage_url(second), params: { stage: { name: "QA to confirm", color: "blue", status: "done" } }
     assert_equal [ "QA to confirm", "blue", "open" ], second.reload.slice(:name, :color, :status).values
     patch move_admin_stage_url(second, direction: "up")
     assert_equal [ second, first ], Stage.where(status: "open").ordered.to_a
