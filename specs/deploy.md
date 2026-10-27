@@ -553,6 +553,22 @@ application change, no migrations.
   `/cable` 101; the four security headers; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:59175fa` as `latest` and restart.
 
+## Update 2026-10-28 (revision bf47c22)
+
+Operator: "yes, deploy and push". Since 50475d3: the account page and
+admin settings put their panels in fixed columns (ui.md "Panel columns";
+Safari split the account page under the text size zoom, and settings
+now fit a screen), the new site icon (ui.md "Logo"), the README with one
+screenshot and a simple ingress diagram. No migrations.
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-50475d3.sqlite3`
+  (mode 600; 4 users, 2 tickets, schema 20261028190000).
+- Checked: healthy; schema 20261028190000, no pending migrations; users
+  and tickets kept; `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  `/cable` 101; the four security headers; the served stylesheet has the
+  panel columns; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:50475d3` as `latest` and restart.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:
