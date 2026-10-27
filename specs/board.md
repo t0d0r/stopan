@@ -43,9 +43,20 @@ statuses.
 - Done shows the 50 most recently active cards, with "and N more in the
   list" linking to the queue's Done view; the other
   columns show every card. Counts are the full numbers.
-- Filters: the board takes the queue's assignee and organization filters
-  (`assignee`, `organization` parameters, the same selects without an
-  Apply button); a set filter is highlighted.
+- **Filters, the same as the list** (operator, 2026-10-27: "lets board
+  view to have same filters as list"): Status, Priority, Assignee,
+  Organization and Sort, with the same parameters (`status`, `priority`,
+  `assignee`, `organization`, `sort`), the same selects without an Apply
+  button (one shared partial, `tickets/_filters`), and the menu bar
+  search (`q`) kept while filtering. A set filter is highlighted; "Clear
+  filters" goes back to the plain board. The board has no views, so
+  every ticket the user may see is on it.
+  - Status shows only that status's column and its stage columns.
+  - Sort orders the cards within each column: golden (urgent) cards stay
+    on top, then high, then the chosen order: last activity (default),
+    newest created first, or by priority (normal before low).
+  - "and N more in the list" carries the filters to the queue's Done
+    view.
 
 ## Card
 
@@ -62,7 +73,7 @@ statuses.
 - **Golden cards:** urgent tickets are drawn in gold (yellow paper, a gold
   border) and always sit at the top of their column, like Fizzy's golden
   tickets. Order within a column: urgent first, then high, then most
-  recent activity.
+  recent activity (or the order chosen with the Sort filter).
 - A shared ticket shows the link icon after the subject.
 
 ## Moving cards
