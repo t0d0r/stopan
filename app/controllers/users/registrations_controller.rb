@@ -6,6 +6,7 @@ module Users
   class RegistrationsController < Devise::RegistrationsController
     before_action :require_open_registration, only: %i[new create]
     before_action :configure_permitted_parameters
+    before_action :refuse_while_impersonating, only: %i[edit update]
 
     def destroy
       redirect_to edit_user_registration_path, alert: t("flash.account_delete_disabled")
@@ -23,6 +24,12 @@ module Users
       params = params.except(:password, :password_confirmation) if params[:password].blank?
       resource.password_chosen = true if params[:password].present?
       resource.update(params)
+    end
+
+    # An impersonating admin never changes the user's own credentials
+    # (specs/admin.md "Impersonation").
+    def refuse_while_impersonating
+      redirect_to root_path, alert: t("flash.impersonation_account_locked") if impersonator
     end
 
     def require_open_registration

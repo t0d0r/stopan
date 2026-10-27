@@ -17,6 +17,9 @@ class User < ApplicationRecord
   has_many :comments, foreign_key: :author_id, inverse_of: :author, dependent: :restrict_with_error
   has_many :ticket_events, foreign_key: :actor_id, inverse_of: :actor, dependent: :restrict_with_error
   has_many :revisions, foreign_key: :editor_id, inverse_of: :editor, dependent: :restrict_with_error
+  has_many :impersonations, dependent: :restrict_with_error
+  has_many :impersonations_made, class_name: "Impersonation", foreign_key: :admin_id, inverse_of: :admin,
+                                 dependent: :restrict_with_error
 
   # One-time sign-in links for requesters (specs/public-form.md "Magic
   # sign-in links"): any sign-in changes current_sign_in_at and so ends
@@ -105,7 +108,7 @@ class User < ApplicationRecord
 
   def ticket_history?
     requested_tickets.exists? || assigned_tickets.exists? || comments.exists? || ticket_events.exists? ||
-      revisions.exists?
+      revisions.exists? || impersonations.exists? || impersonations_made.exists?
   end
 
   # The ids among user_ids that have ticket history, in one query per table
@@ -115,6 +118,8 @@ class User < ApplicationRecord
       Ticket.where(assignee_id: user_ids).distinct.pluck(:assignee_id),
       Comment.where(author_id: user_ids).distinct.pluck(:author_id),
       TicketEvent.where(actor_id: user_ids).distinct.pluck(:actor_id),
-      Revision.where(editor_id: user_ids).distinct.pluck(:editor_id) ].flatten.to_set
+      Revision.where(editor_id: user_ids).distinct.pluck(:editor_id),
+      Impersonation.where(user_id: user_ids).distinct.pluck(:user_id),
+      Impersonation.where(admin_id: user_ids).distinct.pluck(:admin_id) ].flatten.to_set
   end
 end

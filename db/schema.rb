@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_170000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -53,6 +53,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_160000) do
     t.index ["author_id"], name: "index_comments_on_author_id"
     t.index ["edited_by_id"], name: "index_comments_on_edited_by_id"
     t.index ["ticket_id", "created_at"], name: "index_comments_on_ticket_id_and_created_at"
+  end
+
+  create_table "impersonations", force: :cascade do |t|
+    t.integer "admin_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "started_at", null: false
+    t.datetime "ended_at"
+    t.string "ip"
+    t.index ["admin_id"], name: "index_impersonations_on_admin_id"
+    t.index ["user_id", "started_at"], name: "index_impersonations_on_user_id_and_started_at"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -199,6 +209,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_160000) do
   add_foreign_key "comments", "tickets"
   add_foreign_key "comments", "users", column: "author_id"
   add_foreign_key "comments", "users", column: "edited_by_id"
+  add_foreign_key "impersonations", "users"
+  add_foreign_key "impersonations", "users", column: "admin_id"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "notifications", "ticket_events", column: "event_id"

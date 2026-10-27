@@ -49,6 +49,12 @@
     </div>
   </header>
 
+  <% if impersonator && user_signed_in? %>
+    <div class="impersonation-banner" role="status">
+      <span><%= t("ui.impersonation.banner", name: current_user.display_name, role: role_label(current_user)) %></span>
+      <%= button_to t("ui.impersonation.back"), impersonation_path, method: :delete, class: "btn btn--small", data: { turbo: false } %>
+    </div>
+  <% end %>
   <main class="desk" id="main">
     <% if flash.any? %>
       <div class="flash-stack">

@@ -1,0 +1,35 @@
+<%# "Sign in as" and the impersonation record of a user (specs/admin.md
+    "Impersonation"). Locals: user. %>
+<section class="sticky sticky--pink panel panel--form impersonation-panel" aria-labelledby="impersonation-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.impersonation.title") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="impersonation-title"><%= t("ui.impersonation.title") %></h2>
+    <% if Impersonation.allowed?(current_user, user) %>
+      <p class="field-hint"><%= t("ui.impersonation.hint") %></p>
+      <%= button_to t("ui.impersonation.sign_in_as", name: user.display_name), admin_user_impersonation_path(user),
+                    class: "btn btn--danger", data: { turbo: false },
+                    form: { data: confirm_data(title: t("ui.impersonation.confirm_title", name: user.display_name),
+                                               body: t("ui.impersonation.confirm_body"),
+                                               button: t("ui.impersonation.sign_in_as", name: user.display_name)) } %>
+    <% else %>
+      <p class="field-hint"><%= t("ui.impersonation.not_allowed") %></p>
+    <% end %>
+    <% records = user.impersonations.newest_first.includes(:admin).limit(10) %>
+    <% if records.any? %>
+      <table class="ledger">
+        <tbody>
+          <% records.each do |record| %>
+            <tr>
+              <td class="text"><%= record.admin.display_name %></td>
+              <td class="date"><%= l(record.started_at, format: :long) %></td>
+              <td class="date"><%= record.ended_at ? l(record.ended_at, format: :long) : t("ui.impersonation.not_ended") %></td>
+              <td class="comment"><%= record.ip %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.impersonation.none") %></p>
+    <% end %>
+  </div>
+</section>

@@ -2886,6 +2886,24 @@ turbo-frame {
   flex: none;
 }
 
+/* Impersonation banner (admin.md): impossible to overlook. */
+.impersonation-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 14px;
+  padding: 8px 16px;
+  background: #b3261e;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.impersonation-panel {
+  margin-top: 16px;
+}
+
 /* Public request page (public-form.md): the honeypot field is off screen. */
 .hp-field {
   position: absolute;

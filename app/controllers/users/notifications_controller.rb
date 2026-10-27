@@ -4,7 +4,7 @@ module Users
   # (specs/notifications.md).
   class NotificationsController < ApplicationController
     def update
-      authorize!(current_user.staff?)
+      authorize!(current_user.staff? && !impersonator)
       current_user.update!(notify_new_tickets: params.dig(:user, :notify_new_tickets) == "1")
       redirect_to edit_user_registration_path, notice: t("flash.notifications_saved")
     end

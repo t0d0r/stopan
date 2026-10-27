@@ -302,6 +302,17 @@ en:
       turn_on: "Format as Markdown"
       turn_off: "Show as plain text"
 
+    impersonation:
+      title: "Sign in as this user"
+      hint: "See and use the app as this user to help them. Everything you do appears under their name, and it is recorded."
+      sign_in_as: "Sign in as %{name}"
+      confirm_title: "Sign in as %{name}?"
+      confirm_body: "Replies and changes you make will appear under their name. The impersonation is recorded with time and address. Their account settings stay locked."
+      not_allowed: "Administrators and deactivated users cannot be impersonated."
+      none: "Nobody has signed in as this user."
+      not_ended: "ended by sign-out"
+      banner: "You are signed in as %{name} (%{role}) by impersonation."
+      back: "Back to my account"
     public_request:
       title: "Contact %{name} support"
       intro: "Describe your question or problem. We reply by email; you do not need an account."
@@ -528,6 +539,10 @@ en:
     user_has_history: "%{name} has ticket history and cannot be deleted. Deactivate the account instead."
     organization_created: "Organization %{name} was created."
     organization_updated: "Organization %{name} was updated."
+    impersonation_started: "You are now signed in as %{name}."
+    impersonation_stopped: "You are back in your own account."
+    impersonation_ended: "The impersonation ended. Please sign in again."
+    impersonation_account_locked: "The account settings cannot be changed while impersonating."
     public_request_too_many: "Too many requests from your address. Please try again later."
     magic_link_sent: "If an account exists for this address, we sent a sign-in link to it."
     magic_signed_in: "You are signed in."

@@ -31,7 +31,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "dashboard#show"
-    resources :users, except: :show
+    resources :users, except: :show do
+      resource :impersonation, only: :create
+    end
     resources :organizations do
       resources :memberships, only: :create
       post :mail_test, on: :member
@@ -55,6 +57,8 @@ Rails.application.routes.draw do
   resources :magic_links, only: %i[new create], path: "magic"
   get "magic/:token" => "magic_links#show", as: :magic_link
   post "magic/:token" => "magic_links#create_session", as: :magic_link_session
+
+  delete "impersonation" => "impersonations#destroy", as: :impersonation
 
   patch "preferences" => "preferences#update", as: :preferences
 

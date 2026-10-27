@@ -5,12 +5,33 @@ class ApplicationController < ActionController::Base
 
   around_action :switch_locale
   before_action :authenticate_user!, unless: :devise_controller?
+  before_action :check_impersonation
   before_action { Current.user = current_user }
   before_action :remember_locale
 
   rescue_from NotAuthorized, with: :forbidden
 
+  helper_method :impersonator
+
   private
+
+  # The administrator behind an impersonation (specs/admin.md
+  # "Impersonation"), or nil.
+  def impersonator
+    return unless session[:impersonator_id]
+
+    @impersonator ||= User.find_by(id: session[:impersonator_id])
+  end
+
+  # An impersonation ends when its administrator may no longer start one
+  # (demoted, deactivated or deleted): the whole session is dropped.
+  def check_impersonation
+    return unless session[:impersonator_id]
+    return if user_signed_in? && Impersonation.allowed?(impersonator, current_user)
+
+    reset_session
+    redirect_to new_user_session_path, alert: t("flash.impersonation_ended")
+  end
 
   def switch_locale(&action)
     I18n.with_locale(locale_from_accept_language || I18n.default_locale, &action)
