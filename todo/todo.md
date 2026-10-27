@@ -84,7 +84,7 @@ waiting for the operator's go-ahead; specs are written when started):
 - [x] Markdown per message: a box in the title strip and a composer check box, GFM via commonmarker with sanitize (g0no markdown.md); emails get formatted HTML, the text part stays plain
 - [x] double-click on text you may edit opens the in-place edit form with the caret near the click; Escape cancels (g0no "Locked notes")
 - [x] earlier versions with word-by-word changes (green / red) and "Restore this version" for staff (g0no history.md, TextDiff)
-- [ ] wide ticket view, a per-user preference like theme and text size (g0no "Wide notes")
+- [~] wide ticket view, a per-user preference like theme and text size (g0no "Wide notes")
 - [ ] clickable Markdown task lists for users who may edit; clicks by one person within 10 minutes form one revision (g0no markdown.md "Task lists")
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 

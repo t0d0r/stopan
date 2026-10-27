@@ -20,8 +20,8 @@ Turbo Drive for page changes.
   `aria-current="page"`. Then the ticket search field (signed-in users,
   queues.md "Search"; on its own full-width row under 560px). Right: the
   notification bell with its unread count and panel (notifications.md
-  "Notification panel"), theme switch, three text sizes, the user's
-  name with a role label, "Logout".
+  "Notification panel"), theme switch, width switch, three text sizes,
+  the user's name with a role label, "Logout".
 - **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
   #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink
   `#fcd4e6 / #f4b0cf`, purple `#e3d8fc / #c9b9f5`, gray `#efeeea / #d8d6cf`.
@@ -74,6 +74,17 @@ Turbo Drive for page changes.
 ## Behaviour (application.js)
 
 - Theme and text-size buttons apply at once and set cookies.
+- **Width switch** (plan item 5, from g0no's wide notes; a per-user
+  preference instead of per note, since tickets are shared): a box with
+  diagonal arrows pointing out (widen) or in (narrow) next to the theme
+  switch. Wide lets the desk grow from 1120px to 1920px, so the ticket
+  page's main column, the queue table and admin lists use a wide screen;
+  narrow forms keep their own width. Kept like theme and text size: the
+  `width` cookie (`normal` or `wide`, one year, SameSite=Lax), rendered as
+  `<html data-width>` before any script runs, set at once by
+  application.js and by `PATCH /preferences` without JavaScript. The
+  width changes with a 0.25 s transition (none with reduced motion). The
+  box is hidden under 760px, where pages already use the full width.
 - Filter selects in the queue submit their form on change; there is no
   Apply button (only a `<noscript>` one).
 - Clearing the menu bar search with the field's clear button submits it.
