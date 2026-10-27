@@ -102,6 +102,19 @@ cannot hide who wrote what.
   notice ("Reply updated." / "Internal note updated." / "Request
   updated."); "Cancel" restores the text. Errors re-render the form
   (422).
+- **Double-click to edit** (plan item 3, from g0no's locked notes): a
+  double-click on the text of a message the user may edit opens the same
+  in-place form, as the pencil box does; a double-click on a link, check
+  box or button does nothing special. The caret is put near the clicked
+  place: the text before the click, as shown, is matched against the
+  plain text ignoring white space (its last 30 visible characters, then
+  shorter pieces, so Markdown syntax in between does not stop it; the
+  occurrence closest to the click's position wins); without a match the
+  caret goes to the end. Focusing never scrolls the page. The pencil
+  box's tooltip says "Edit (or double-click the text)".
+- **Escape** in an edit form cancels it (like "Cancel") while nothing was
+  changed; with changes it does nothing, so typed text is never thrown
+  away by a key.
 - **Marked as edited.** An edited message shows "edited by <name> <time>"
   in its meta line, for everyone who can see the message (also on a
   shared page), so a requester knows when staff changed their text.
