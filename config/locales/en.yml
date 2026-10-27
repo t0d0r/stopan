@@ -279,6 +279,7 @@ en:
 
     edit:
       edit: "Edit"
+      edit_hint: "Edit (or double-click the text)"
       save: "Save"
       text: "Text"
       edited_by: "edited by %{name}"

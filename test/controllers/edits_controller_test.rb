@@ -80,7 +80,7 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
       assert_select ".message__author", users(:anna).display_name
       assert_select ".role-tag"
       assert_select "time"
-      assert_select ".message__boxes a.edit-link[aria-label=Edit]"
+      assert_select ".message__boxes a.edit-link[aria-label=Edit][title=?]", "Edit (or double-click the text)"
     end
     assert_select ".message__body .message__author", 0
     assert_select ".revisions", 0

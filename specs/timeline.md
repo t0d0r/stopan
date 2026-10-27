@@ -107,7 +107,8 @@ cannot hide who wrote what.
   in-place form, as the pencil box does; a double-click on a link, check
   box or button does nothing special. The caret is put near the clicked
   place: the text before the click, as shown, is matched against the
-  plain text ignoring white space (its last 30 visible characters, then
+  plain text ignoring white space and Markdown punctuation (`* _ ~ ` | #
+  > [ ] ( ) ! \ -`; its last 30 visible characters, then
   shorter pieces, so Markdown syntax in between does not stop it; the
   occurrence closest to the click's position wins); without a match the
   caret goes to the end. Focusing never scrolls the page. The pencil

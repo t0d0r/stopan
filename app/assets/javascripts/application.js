@@ -404,6 +404,83 @@ function setUpPreview(dialog) {
   dialog.addEventListener("close", () => media.replaceChildren(), { signal: pageSignal });
 }
 
+// Double-click to edit (specs/timeline.md "Editing"): opens the in-place
+// form of a message the user may edit, with the caret near the click. The
+// visible text before the click is matched against the plain text without
+// white space and Markdown punctuation, so syntax and paragraph breaks do
+// not get in the way.
+const CARET_SKIP = /[\s*_~`|#>[\]()!\\-]/;
+
+function textBeforePoint(element, x, y) {
+  let node;
+  let offset;
+  if (document.caretPositionFromPoint) {
+    const position = document.caretPositionFromPoint(x, y);
+    node = position?.offsetNode;
+    offset = position?.offset;
+  } else if (document.caretRangeFromPoint) {
+    const range = document.caretRangeFromPoint(x, y);
+    node = range?.startContainer;
+    offset = range?.startOffset;
+  }
+  if (!node || !element.contains(node)) return null;
+  const before = document.createRange();
+  before.selectNodeContents(element);
+  before.setEnd(node, offset);
+  return before.toString();
+}
+
+function caretOffset(source, before) {
+  if (before === null) return source.length;
+  const visible = [...before].filter((char) => !CARET_SKIP.test(char)).join("");
+  if (!visible) return 0;
+  const map = [];
+  let compact = "";
+  for (let i = 0; i < source.length; i++) {
+    if (CARET_SKIP.test(source[i])) continue;
+    compact += source[i];
+    map.push(i);
+  }
+  for (let length = Math.min(30, visible.length); length >= 3; length = Math.floor(length / 2)) {
+    const piece = visible.slice(-length);
+    let best = -1;
+    for (let at = compact.indexOf(piece); at !== -1; at = compact.indexOf(piece, at + 1)) {
+      if (best === -1 || Math.abs(at + length - visible.length) < Math.abs(best + length - visible.length)) best = at;
+    }
+    if (best !== -1) return map[best + length - 1] + 1;
+  }
+  return source.length;
+}
+
+function setUpDoubleClickEdit() {
+  document.addEventListener("dblclick", (event) => {
+    const text = event.target.closest?.("[data-message-text]");
+    if (!text || event.target.closest("a, input, button, summary")) return;
+    const link = text.closest(".message")?.querySelector(".message__bar a.edit-link");
+    const frame = text.closest("turbo-frame");
+    if (!link || !frame) return;
+    const before = textBeforePoint(text, event.clientX, event.clientY);
+    window.getSelection()?.removeAllRanges();
+    frame.addEventListener("turbo:frame-load", () => {
+      const field = frame.querySelector("textarea");
+      if (!field) return;
+      const at = caretOffset(field.value, before);
+      field.focus({ preventScroll: true });
+      field.setSelectionRange(at, at);
+    }, { once: true });
+    link.click();
+  }, { signal: pageSignal });
+
+  // Escape cancels an unchanged edit form; a changed one is left alone.
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    const form = event.target.closest?.("form.edit-form");
+    if (!form) return;
+    const changed = [...form.querySelectorAll("input:not([type=hidden]), textarea")].some((field) => field.value !== field.defaultValue);
+    if (!changed) form.querySelector(".edit-form__actions a")?.click();
+  }, { signal: pageSignal });
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -419,6 +496,7 @@ function setUpPage() {
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
   setUpCopyBoxes();
+  setUpDoubleClickEdit();
   setUpDropdowns();
 
   // A sideways-scrolling tab row (queue views on phones) shows the current tab.
@@ -478,6 +556,12 @@ function setUpPage() {
     flash.addEventListener("focusout", resume);
   });
 }
+
+// The in-place edit form arrives in a Turbo frame after turbo:load, so its
+// text area is set up to grow here.
+document.addEventListener("turbo:frame-load", (event) => {
+  event.target.querySelectorAll("textarea[data-autogrow]").forEach(autoGrow);
+});
 
 // Turbo fires turbo:load after the first page and after every visit. If
 // Turbo did not load (old browser, blocked module), set up the page once.

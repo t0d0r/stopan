@@ -112,7 +112,7 @@ module TicketsHelper
   # Pencil box that opens the edit form in place of the text (a Turbo frame).
   def edit_link(path, frame:)
     link_to path, class: "sticky__box sticky__box--icon edit-link", data: { turbo_frame: frame },
-                  title: t("ui.edit.edit"), aria: { label: t("ui.edit.edit") } do
+                  title: t("ui.edit.edit_hint"), aria: { label: t("ui.edit.edit") } do
       icon(:pencil, size: 10)
     end
   end

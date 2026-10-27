@@ -199,6 +199,13 @@ Operator requests, in order:
   to the Markdown and Copy boxes. Checked at 1280px (light and dark) and
   390px (wraps, no horizontal scroll).
 
+- Plan item 3 done: double-click on editable text opens the in-place
+  form with the caret matched from the visible text before the click
+  (white space and Markdown punctuation ignored); Escape cancels an
+  unchanged form only; frame-loaded text areas auto-grow. Checked in
+  headless Chrome: caret at "sec|ond" in plain text and "bl|ank" inside a
+  Markdown table, no scroll, Escape both ways.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
