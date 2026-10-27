@@ -42,6 +42,7 @@ bg:
       theme: "Тема"
       theme_hint: "Как изглежда Stopan в този браузър. Бутонът слънце/луна пак избира светло или тъмно."
       save_theme: "Запази темата"
+      site_look: "По подразбиране за сайта (%{look})"
       looks:
         notes: "Notes"
         omarchy: "Omarchy"
@@ -312,6 +313,9 @@ bg:
         deepl_key_none: "Няма запазен ключ."
         deepl_key_hint: "От профила ви в DeepL, раздел API Keys. Ключовете, завършващи на :fx, са за безплатния план."
         deepl_key_remove: "Изтрий запазения ключ"
+        look_caption: "Тема"
+        look_title: "Тема за всички"
+        look_hint: "Всички виждат тази тема, освен ако не изберат друга от профила си."
         google_caption: "Google"
         google_title: "Google акаунти за пощата на организациите"
         google_intro: "OAuth клиент от Google Cloud (APIs & Services, Credentials, тип Web application) позволява на администраторите да свържат Gmail или Google Workspace кутия на организация вместо парола. Добавете този redirect URI в клиента:"

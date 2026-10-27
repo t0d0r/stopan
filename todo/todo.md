@@ -135,7 +135,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] phone menu bar in three rows: icon and tools, section pills on their own row, search (specs/ui.md "Menu bar")
 - [x] themes: notes (Stickies) and omarchy (omamobile.org look, Tokyo Night / Catppuccin Latte), chosen on the account page (specs/ui.md "Themes")
 - [ ] themes later: bundle JetBrains Mono and Geist (OFL) so omarchy does not depend on the system's fonts (specs/ui.md "Themes")
-- [ ] site-wide default theme in /admin/settings; users may still pick their own (operator, 2026-10-27; specs/ui.md "Themes")
+- [x] site-wide default theme in /admin/settings; users may still pick their own (operator, 2026-10-27; specs/ui.md "Themes")
 - [ ] Google mail setup as a step-by-step wizard instead of manual settings (operator, 2026-10-27; specs/mail-oauth.md)
 - [x] mobile rules from Apple / Material / WCAG: 44px targets, 16px fields, no sideways scrolling, no hover-only content (specs/mobile.md)
 - [x] production: deployed 8730df2 (omarchy theme, phone menu bar), after a database backup

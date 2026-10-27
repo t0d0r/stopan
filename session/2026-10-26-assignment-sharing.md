@@ -630,6 +630,11 @@ menu and Take; open /tickets/new and pick a requester.
   text fields 16px. A scratch Chrome sweep (360 and 390px, staff and
   requester pages) reports no small targets, no small fields and no
   sideways scrolling outside the board.
+- Site theme (operator): `app_settings.default_look` (migration
+  `AddDefaultLookToAppSettings`), "Theme for everyone" on
+  /admin/settings; the account page offers "Site default (X)", Notes,
+  Omarchy; `look=default` deletes the browser's cookie. `AppSetting::LOOKS`
+  is the list.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

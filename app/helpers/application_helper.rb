@@ -12,8 +12,17 @@ module ApplicationHelper
     cookies[:width].presence_in(PreferencesController::WIDTHS) || "normal"
   end
 
+  # The browser's own theme, else the site's (ui.md "Themes").
   def look_preference
-    cookies[:look].presence_in(PreferencesController::LOOKS) || "notes"
+    own_look || site_look
+  end
+
+  def own_look
+    cookies[:look].presence_in(PreferencesController::LOOKS)
+  end
+
+  def site_look
+    @site_look ||= AppSetting.current.default_look
   end
 
   # Each language named in itself, for the language switch (ui.md "Language").

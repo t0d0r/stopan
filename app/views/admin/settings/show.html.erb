@@ -4,6 +4,22 @@
   <%= render "admin/tabs" %>
 </div>
 
+<section class="sticky sticky--yellow panel panel--form" aria-labelledby="look-title" id="site-look">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.look_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="look-title"><%= t("ui.admin.settings.look_title") %></h2>
+    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+      <div class="field">
+        <%= f.label :default_look, t("ui.admin.settings.look_title"), class: "sr-only" %>
+        <%= f.select :default_look, PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] }, {},
+                     class: "select", aria: { describedby: "look-hint" } %>
+        <small class="field-hint" id="look-hint"><%= t("ui.admin.settings.look_hint") %></small>
+      </div>
+      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
+    <% end %>
+  </div>
+</section>
+
 <section class="sticky sticky--purple panel panel--form" aria-labelledby="postpone-title" id="auto-postpone">
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.postpone_caption") %></span></header>
   <div class="panel__body">

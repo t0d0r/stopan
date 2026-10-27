@@ -39,6 +39,7 @@ en:
       theme: "Theme"
       theme_hint: "How Stopan looks in this browser. The sun and moon switch still picks light or dark."
       save_theme: "Save theme"
+      site_look: "Site default (%{look})"
       looks:
         notes: "Notes"
         omarchy: "Omarchy"
@@ -309,6 +310,9 @@ en:
         deepl_key_none: "No key stored."
         deepl_key_hint: "From your DeepL account, API Keys. Keys ending in :fx are for the free plan."
         deepl_key_remove: "Remove the stored key"
+        look_caption: "Theme"
+        look_title: "Theme for everyone"
+        look_hint: "Everyone sees this theme unless they pick another one on their account page."
         google_caption: "Google"
         google_title: "Google accounts for organization mail"
         google_intro: "An OAuth client from Google Cloud (APIs & Services, Credentials, type Web application) lets administrators connect an organization's Gmail or Google Workspace mailbox instead of a password. Add this redirect URI to the client:"

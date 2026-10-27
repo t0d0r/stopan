@@ -201,10 +201,18 @@ https://omamobile.org/".
   names JetBrains Mono and Geist first and falls back to the system's
   monospace (`ui-monospace`, SF Mono, Menlo, Consolas) and sans-serif
   faces.
-- Chosen on the account page ("Theme": Notes, Omarchy), kept like the
-  other preferences in the `look` cookie (`notes` or `omarchy`, one year,
-  SameSite=Lax) and rendered as `<html data-look>` before any script
-  runs; `PATCH /preferences` with `look`. It applies to this browser.
+- **Site default** (operator, 2026-10-27: "themes configurable for the
+  whole site in settings, and users may change them if they want"): an
+  administrator picks the theme for everyone on `/admin/settings`
+  ("Theme" panel; `app_settings.default_look`, `notes` by default).
+- **Own choice:** the account page offers "Site default (Notes)",
+  "Notes" and "Omarchy". A choice is kept like the other preferences in
+  the `look` cookie (`notes` or `omarchy`, one year, SameSite=Lax) for
+  this browser; "Site default" deletes the cookie, so the site's theme
+  applies again, including when an administrator changes it later. The
+  page renders `<html data-look>` from the cookie, else the site
+  default, before any script runs; `PATCH /preferences` with `look`
+  (`default` clears it).
 
 ### Language
 

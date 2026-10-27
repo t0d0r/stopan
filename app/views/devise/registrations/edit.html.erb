@@ -60,8 +60,9 @@
   <h3><%= t("ui.account_page.theme") %></h3>
   <div class="field">
     <%= label_tag :look, t("ui.account_page.theme"), class: "sr-only" %>
-    <%= select_tag :look, options_for_select(PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] }, look_preference),
-                   class: "select" %>
+    <% choices = [ [ t("ui.account_page.site_look", look: t("ui.account_page.looks.#{site_look}")), "default" ] ] +
+                 PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] } %>
+    <%= select_tag :look, options_for_select(choices, own_look || "default"), class: "select" %>
     <i><%= t("ui.account_page.theme_hint") %></i>
   </div>
   <div class="actions">

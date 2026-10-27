@@ -42,6 +42,7 @@ de:
       theme: "Design"
       theme_hint: "Wie Stopan in diesem Browser aussieht. Der Sonne/Mond-Schalter wählt weiterhin hell oder dunkel."
       save_theme: "Design speichern"
+      site_look: "Standard der Website (%{look})"
       looks:
         notes: "Notes"
         omarchy: "Omarchy"
@@ -312,6 +313,9 @@ de:
         deepl_key_none: "Kein Schlüssel gespeichert."
         deepl_key_hint: "Aus Ihrem DeepL-Konto, API Keys. Schlüssel mit der Endung :fx gehören zum kostenlosen Plan."
         deepl_key_remove: "Gespeicherten Schlüssel entfernen"
+        look_caption: "Design"
+        look_title: "Design für alle"
+        look_hint: "Alle sehen dieses Design, außer sie wählen auf ihrer Kontoseite ein anderes."
         google_caption: "Google"
         google_title: "Google-Konten für die E-Mail der Organisationen"
         google_intro: "Ein OAuth-Client aus Google Cloud (APIs & Services, Credentials, Typ Web application) erlaubt Administratoren, das Gmail- oder Google-Workspace-Postfach einer Organisation statt mit einem Passwort zu verbinden. Tragen Sie diesen Redirect-URI im Client ein:"

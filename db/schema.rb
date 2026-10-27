@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -47,6 +47,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_110000) do
     t.text "deepl_api_key"
     t.string "google_client_id"
     t.text "google_client_secret"
+    t.string "default_look", default: "notes", null: false
   end
 
   create_table "comments", force: :cascade do |t|

@@ -41,6 +41,37 @@ class PreferencesControllerTest < ActionDispatch::IntegrationTest
     get edit_user_registration_url
     assert_select "form#look[action=?] select[name=look] option[selected][value=omarchy]", preferences_path, "Omarchy"
     assert_select "form#look select[name=look] option[value=notes]", "Notes"
+    assert_select "form#look select[name=look] option[value=default]", "Site default (Notes)"
+  end
+
+  test "an administrator sets the theme for everyone; a browser's own choice wins until it goes back to the default" do
+    sign_in users(:admin)
+    get admin_settings_url
+    assert_select "#site-look select[name='app_setting[default_look]'] option[selected][value=notes]"
+    patch admin_settings_url, params: { app_setting: { default_look: "omarchy" } }
+    assert_equal "omarchy", AppSetting.current.reload.default_look
+    patch admin_settings_url, params: { app_setting: { default_look: "neon" } }
+    assert_response :unprocessable_content
+    assert_equal "omarchy", AppSetting.current.reload.default_look
+
+    # Visitors get the site's theme.
+    sign_out :user
+    get new_user_session_url
+    assert_select "html[data-look=omarchy]"
+
+    sign_in users(:anna)
+    patch preferences_url, params: { look: "notes" }
+    get tickets_url
+    assert_select "html[data-look=notes]"
+    get edit_user_registration_url
+    assert_select "form#look option[selected][value=notes]"
+    assert_select "form#look option[value=default]", "Site default (Omarchy)"
+
+    patch preferences_url, params: { look: "default" }
+    get tickets_url
+    assert_select "html[data-look=omarchy]"
+    get edit_user_registration_url
+    assert_select "form#look option[selected][value=default]"
   end
 
   test "the menu bar has the theme switch and text sizes" do

@@ -3,6 +3,9 @@
 class AppSetting < ApplicationRecord
   include RefreshesAdminPages
 
+  # Themes (specs/ui.md "Themes"): notes is the Stickies look.
+  LOOKS = %w[notes omarchy].freeze
+
   # Write-only in the form, like the organizations' mail passwords.
   encrypts :deepl_api_key, :google_client_secret
   attr_accessor :remove_deepl_api_key, :remove_google_client_secret
@@ -10,6 +13,7 @@ class AppSetting < ApplicationRecord
   normalizes :deepl_api_key, :google_client_id, :google_client_secret, with: ->(value) { value.strip.presence }
 
   validates :auto_postpone_days, numericality: { only_integer: true, in: 0..3650 }
+  validates :default_look, inclusion: { in: LOOKS }
   validate :translation_needs_a_key
 
   before_validation do
