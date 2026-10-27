@@ -42,7 +42,7 @@
       <% if user_signed_in? %>
         <%= link_to edit_user_registration_path, class: "menubar__user", title: t("ui.account") do %>
           <span class="menubar__user-name"><%= current_user.display_name %></span>
-          <span class="menubar__role"><%= role_label(current_user) %></span>
+          <%= role_icon(current_user) %>
         <% end %>
         <%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "menubar__button" %>
       <% end %>

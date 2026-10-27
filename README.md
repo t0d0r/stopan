@@ -6,7 +6,8 @@ administrators manage users, roles and organizations. Every change to a
 ticket is kept in its timeline, and requesters only ever see their own
 tickets and the public part of each timeline.
 
-The UI is in English and Bulgarian (following the browser), has a light and
+The UI is in English, Bulgarian and German (following the browser, or a
+switch in the menu bar and on the account page), has a light and
 a dark theme and three text sizes, and keeps the macOS Stickies look of the
 notes app it started from (g0no). Turbo Drive makes page changes feel
 instant.

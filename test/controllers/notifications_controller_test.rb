@@ -42,7 +42,7 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     get tickets_url
     assert_equal "bg", users(:anna).reload.locale, "no header keeps the stored language"
 
-    get tickets_url, headers: { "Accept-Language" => "de-DE" }
+    get tickets_url, headers: { "Accept-Language" => "fr-FR" }
     assert_equal "bg", users(:anna).reload.locale, "an unsupported language keeps it too"
 
     get tickets_url, headers: { "Accept-Language" => "en-US" }

@@ -459,6 +459,21 @@ Operator requests, in order:
   Applied on request (Remote API, record saved first; Cyrillic POST now
   422 from Rails, blocks show a real 403), then deployed cbf319b after a
   backup (`pre-deploy-3e50793.sqlite3`); checks in specs/deploy.md.
+- German UI (operator: "add German"): `de.yml`, `devise.de.yml`,
+  `rails.de.yml` (translated by a subagent from en.yml / rails.bg.yml,
+  formal "Sie"; keys and placeholders checked by script, plus
+  `current_password`/`remember_me` added by hand). The header shows one
+  button per other language ("BG DE" on English pages). The menu bar now
+  wraps under 1024px (a German admin needed about 985px); swept 561-1280px
+  for all roles in en/bg/de with no overflow.
+  `test/integration/german_pages_test.rb` renders every staff, requester
+  and public page in German (missing translations raise in tests) and
+  checks the German reset and ticket emails.
+- Menu bar role is an icon instead of the word (operator): person /
+  headset / shield (`role_icon`, new `headset` and `shield` icons), name
+  as tooltip and aria-label; shown at every width now that it is small.
+- Translate button (operator chose DeepL): spec written,
+  specs/translation.md; not built yet.
 
 ## Decisions
 

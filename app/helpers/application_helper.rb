@@ -13,11 +13,11 @@ module ApplicationHelper
   end
 
   # Each language named in itself, for the language switch (ui.md "Language").
-  LANGUAGE_NAMES = { "en" => "English", "bg" => "Български" }.freeze
+  LANGUAGE_NAMES = { "en" => "English", "bg" => "Български", "de" => "Deutsch" }.freeze
 
-  # The language the header switch offers: the one not shown now.
-  def other_language
-    (LANGUAGE_NAMES.keys - [ I18n.locale.to_s ]).first
+  # The languages the header switch offers: all but the one shown now.
+  def other_languages
+    LANGUAGE_NAMES.keys - [ I18n.locale.to_s ]
   end
 
   # data-* attributes for a form that asks before submitting; the confirm
@@ -84,6 +84,15 @@ module ApplicationHelper
 
   def role_label(user)
     t("ui.roles.#{user.role}")
+  end
+
+  # The menu bar shows the role as an icon, named for screen readers and in
+  # its tooltip (ui.md "Menu bar").
+  ROLE_ICONS = { "requester" => :user, "agent" => :headset, "admin" => :shield }.freeze
+
+  def role_icon(user)
+    tag.span(icon(ROLE_ICONS.fetch(user.role), label: role_label(user), size: 13),
+             class: "menubar__role menubar__role--#{user.role}", title: role_label(user))
   end
 
   # Errors of a form, listed at the top (role=alert, ui.md).

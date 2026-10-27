@@ -20,8 +20,11 @@
               aria-label="<%= t("ui.prefs.text_size") %>: <%= t("ui.prefs.scales.#{scale}") %>">A</button>
     <% end %>
   </span>
-  <%# The other language, named in itself (ui.md "Language"); the page reloads. %>
-  <% language = other_language %>
-  <button type="submit" name="locale" value="<%= language %>" class="tool-button language-switch" lang="<%= language %>" data-turbo="false"
-          title="<%= ApplicationHelper::LANGUAGE_NAMES[language] %>" aria-label="<%= ApplicationHelper::LANGUAGE_NAMES[language] %>"><%= language.upcase %></button>
+  <%# The other languages, each named in itself (ui.md "Language"); the page reloads. %>
+  <span class="language-switches">
+    <% other_languages.each do |language| %>
+      <button type="submit" name="locale" value="<%= language %>" class="tool-button language-switch" lang="<%= language %>" data-turbo="false"
+              title="<%= ApplicationHelper::LANGUAGE_NAMES[language] %>" aria-label="<%= ApplicationHelper::LANGUAGE_NAMES[language] %>"><%= language.upcase %></button>
+    <% end %>
+  </span>
 <% end %>

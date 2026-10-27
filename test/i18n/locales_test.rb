@@ -1,6 +1,6 @@
 require "test_helper"
 
-# Every UI string must exist in both languages (YAML also turns keys such as
+# Every UI string must exist in every language (YAML also turns keys such as
 # on/off/yes/no into booleans, which this catches too).
 class LocalesTest < ActiveSupport::TestCase
   # flash.actions.* comes from the responders gem (a Devise dependency), in
@@ -17,8 +17,17 @@ class LocalesTest < ActiveSupport::TestCase
   end
 
   %i[ui flash mailer].each do |scope|
-    test "#{scope} keys match in English and Bulgarian" do
-      assert_equal keys(:en, scope), keys(:bg, scope)
+    %i[bg de].each do |locale|
+      test "#{scope} keys match in English and #{locale}" do
+        assert_equal keys(:en, scope), keys(locale, scope)
+      end
+    end
+  end
+
+  # Rails' own texts (dates, numbers, validation messages) and Devise's.
+  %i[date time datetime number errors devise].each do |scope|
+    test "#{scope} keys match in Bulgarian and German" do
+      assert_equal keys(:bg, scope), keys(:de, scope)
     end
   end
 end

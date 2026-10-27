@@ -379,9 +379,13 @@ form.button_to {
   opacity: 1;
 }
 
-/* The other language's code, "BG" or "EN" (ui.md "Language"). */
-.language-switch {
+/* The other languages' codes, such as "BG DE" (ui.md "Language"). */
+.language-switches {
+  display: inline-flex;
   margin-left: 4px;
+}
+
+.language-switch {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -1286,8 +1290,9 @@ form.button_to {
 }
 
 .menubar__role {
+  display: inline-flex;
+  align-self: center;
   color: var(--desk-ink-soft);
-  font-size: 11px;
 }
 
 .muted {
@@ -2814,7 +2819,7 @@ turbo-frame {
 
 /* The menu bar wraps and the search gets its own row (ui.md "Menu bar"):
    the tools no longer fit next to it. */
-@media (max-width: 960px) {
+@media (max-width: 1023px) {
   .menubar {
     flex-wrap: wrap;
     gap: 6px 14px;
@@ -2834,10 +2839,6 @@ turbo-frame {
 }
 
 @media (max-width: 900px) {
-  .menubar__role {
-    display: none;
-  }
-
 
   .ticket-page {
     grid-template-columns: minmax(0, 1fr);

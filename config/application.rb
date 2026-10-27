@@ -39,8 +39,8 @@ module Stopan
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    # The UI is in Bulgarian and English; the locale follows Accept-Language.
-    config.i18n.available_locales = [ :en, :bg ]
+    # The UI is in English, Bulgarian and German (specs/ui.md "Language").
+    config.i18n.available_locales = [ :en, :bg, :de ]
     config.i18n.default_locale = :en
 
     # Attachments are served by AttachmentsController after the ticket's

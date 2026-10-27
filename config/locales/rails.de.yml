@@ -1,0 +1,248 @@
+# Rails defaults in German: dates, times, numbers and validation
+# messages. App texts are in de.yml.
+
+de:
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d. %b"
+      long: "%d. %B %Y"
+
+    day_names: [Sonntag, Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag]
+    standalone_day_names: [Sonntag, Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag]
+    abbr_day_names: [So, Mo, Di, Mi, Do, Fr, Sa]
+
+    # should start with nil cause there is no 0-th month
+    month_names: [~, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
+    abbr_month_names: [~, Jan, Feb, Mär, Apr, Mai, Jun, Jul, Aug, Sep, Okt, Nov, Dez]
+
+    order:
+      - :day
+      - :month
+      - :year
+
+  time:
+    formats:
+      default: "%a, %d. %b %Y, %H:%M:%S %z"
+      short: "%d. %b, %H:%M"
+      long: "%d. %B %Y, %H:%M"
+
+    am: "vormittags"
+    pm: "nachmittags"
+
+  number:
+    format:
+      separator: ","
+      delimiter: "."
+      precision: 3
+
+    currency:
+      format:
+        format: "%n %u"
+        unit: "€"
+        separator: ","
+        delimiter: "."
+        precision: 2
+
+    percentage:
+      format:
+        delimiter: ""
+
+    precision:
+      format:
+        delimiter: ""
+
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+      # Rails 2.2
+      # storage_units: [Byte, KB, MB, GB, TB]
+
+      # Rails 2.3
+      storage_units:
+        # Storage units output formatting.
+        # %u is the storage unit, %n is the number (default: 2 MB)
+        format: "%n %u"
+        units:
+          byte:
+            one: "Byte"
+            few: "Bytes"
+            many: "Bytes"
+            other: "Bytes"
+          kb: "KB"
+          mb: "MB"
+          gb: "GB"
+          tb: "TB"
+
+  # The app shows these only inside ui.ago ("vor %{time}"), so the
+  # plural forms are dative: "vor 3 Tagen", "vor etwa 2 Monaten".
+  # German needs only one/other; few/many repeat other to keep the
+  # key set of rails.bg.yml.
+  datetime:
+    distance_in_words:
+      half_a_minute: "einer halben Minute"
+      less_than_x_seconds:
+        one: "weniger als %{count} Sekunde"
+        few: "weniger als %{count} Sekunden"
+        many: "weniger als %{count} Sekunden"
+        other: "weniger als %{count} Sekunden"
+      x_seconds:
+        one: "%{count} Sekunde"
+        few: "%{count} Sekunden"
+        many: "%{count} Sekunden"
+        other: "%{count} Sekunden"
+      less_than_x_minutes:
+        one: "weniger als %{count} Minute"
+        few: "weniger als %{count} Minuten"
+        many: "weniger als %{count} Minuten"
+        other: "weniger als %{count} Minuten"
+      x_minutes:
+        one: "%{count} Minute"
+        few: "%{count} Minuten"
+        many: "%{count} Minuten"
+        other: "%{count} Minuten"
+      about_x_hours:
+        one: "etwa %{count} Stunde"
+        few: "etwa %{count} Stunden"
+        many: "etwa %{count} Stunden"
+        other: "etwa %{count} Stunden"
+      x_days:
+        one: "%{count} Tag"
+        few: "%{count} Tagen"
+        many: "%{count} Tagen"
+        other: "%{count} Tagen"
+      about_x_months:
+        one: "etwa %{count} Monat"
+        few: "etwa %{count} Monaten"
+        many: "etwa %{count} Monaten"
+        other: "etwa %{count} Monaten"
+      x_months:
+        one: "%{count} Monat"
+        few: "%{count} Monaten"
+        many: "%{count} Monaten"
+        other: "%{count} Monaten"
+      almost_x_years:
+        one: "fast %{count} Jahr"
+        few: "fast %{count} Jahren"
+        many: "fast %{count} Jahren"
+        other: "fast %{count} Jahren"
+      about_x_years:
+        one: "etwa %{count} Jahr"
+        few: "etwa %{count} Jahren"
+        many: "etwa %{count} Jahren"
+        other: "etwa %{count} Jahren"
+      over_x_years:
+        one: "mehr als %{count} Jahr"
+        few: "mehr als %{count} Jahren"
+        many: "mehr als %{count} Jahren"
+        other: "mehr als %{count} Jahren"
+    prompts:
+      year: "Jahr"
+      month: "Monat"
+      day: "Tag"
+      hour: "Stunde"
+      minute: "Minute"
+      second: "Sekunde"
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one: "%{model} konnte wegen %{count} Fehler nicht gespeichert werden"
+          few: "%{model} konnte wegen %{count} Fehlern nicht gespeichert werden"
+          many: "%{model} konnte wegen %{count} Fehlern nicht gespeichert werden"
+          other: "%{model} konnte wegen %{count} Fehlern nicht gespeichert werden"
+
+        body: "Bitte überprüfen Sie die folgenden Felder:"
+
+      messages:
+        inclusion: "ist kein gültiger Wert"
+        exclusion: "ist nicht verfügbar"
+        invalid: "ist nicht gültig"
+        confirmation: "stimmt nicht mit %{attribute} überein"
+        accepted: "muss akzeptiert werden"
+        empty: "muss ausgefüllt werden"
+        blank: "muss ausgefüllt werden"
+        too_long:
+          one: "ist zu lang (höchstens %{count} Zeichen)"
+          few: "ist zu lang (höchstens %{count} Zeichen)"
+          many: "ist zu lang (höchstens %{count} Zeichen)"
+          other: "ist zu lang (höchstens %{count} Zeichen)"
+        too_short:
+          one: "ist zu kurz (mindestens %{count} Zeichen)"
+          few: "ist zu kurz (mindestens %{count} Zeichen)"
+          many: "ist zu kurz (mindestens %{count} Zeichen)"
+          other: "ist zu kurz (mindestens %{count} Zeichen)"
+        wrong_length:
+          one: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+          few: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+          many: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+          other: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+        taken: "ist bereits vergeben"
+        required: "muss ausgewählt werden"
+        not_a_number: "ist keine Zahl"
+        greater_than: "muss größer als %{count} sein"
+        greater_than_or_equal_to: "muss größer oder gleich %{count} sein"
+        equal_to: "muss genau %{count} sein"
+        less_than: "muss kleiner als %{count} sein"
+        less_than_or_equal_to: "muss kleiner oder gleich %{count} sein"
+        odd: "muss ungerade sein"
+        even: "muss gerade sein"
+        record_invalid: "Gültigkeitsprüfung fehlgeschlagen: %{errors}"
+
+  errors:
+    template:
+      header:
+        one: "%{model} konnte wegen %{count} Fehler nicht gespeichert werden"
+        few: "%{model} konnte wegen %{count} Fehlern nicht gespeichert werden"
+        many: "%{model} konnte wegen %{count} Fehlern nicht gespeichert werden"
+        other: "%{model} konnte wegen %{count} Fehlern nicht gespeichert werden"
+
+      body: "Bitte überprüfen Sie die folgenden Felder:"
+
+    messages:
+      inclusion: "ist kein gültiger Wert"
+      exclusion: "ist nicht verfügbar"
+      invalid: "ist nicht gültig"
+      confirmation: "stimmt nicht mit %{attribute} überein"
+      accepted: "muss akzeptiert werden"
+      empty: "muss ausgefüllt werden"
+      blank: "muss ausgefüllt werden"
+      too_long:
+        one: "ist zu lang (höchstens %{count} Zeichen)"
+        few: "ist zu lang (höchstens %{count} Zeichen)"
+        many: "ist zu lang (höchstens %{count} Zeichen)"
+        other: "ist zu lang (höchstens %{count} Zeichen)"
+      too_short:
+        one: "ist zu kurz (mindestens %{count} Zeichen)"
+        few: "ist zu kurz (mindestens %{count} Zeichen)"
+        many: "ist zu kurz (mindestens %{count} Zeichen)"
+        other: "ist zu kurz (mindestens %{count} Zeichen)"
+      wrong_length:
+        one: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+        few: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+        many: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+        other: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+      taken: "ist bereits vergeben"
+      required: "muss ausgewählt werden"
+      not_a_number: "ist keine Zahl"
+      greater_than: "muss größer als %{count} sein"
+      greater_than_or_equal_to: "muss größer oder gleich %{count} sein"
+      equal_to: "muss genau %{count} sein"
+      less_than: "muss kleiner als %{count} sein"
+      less_than_or_equal_to: "muss kleiner oder gleich %{count} sein"
+      odd: "muss ungerade sein"
+      even: "muss gerade sein"
+      record_invalid: "Gültigkeitsprüfung fehlgeschlagen: %{errors}"
+
+  support:
+    array:
+      # Rails 2.2
+      sentence_connector: "und"
+      skip_last_comma: true
+
+      # Rails 2.3
+      words_connector: ", "
+      two_words_connector: " und "
+      last_word_connector: " und "

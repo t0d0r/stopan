@@ -25,7 +25,7 @@ Devise 5 with `database_authenticatable`, `registerable`, `recoverable`,
   (`DELETE /users` redirects back with a message), because ticket history
   must keep its people; administrators deactivate accounts instead.
 - Account pages (sign in, sign up, password reset, edit account) and
-  Devise's messages are translated (`bg`, `en`). The language follows the
+  Devise's messages are translated (`en`, `bg`, `de`). The language follows the
   user's choice, the header switch or the browser's `Accept-Language`
   (ui.md "Language"). Devise's own views and its English error
   partial are not used: form errors use the app's `form_errors` box.

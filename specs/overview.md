@@ -15,7 +15,7 @@ Stopan started on 2026-10-25 as a copy of g0no, a Rails 8.1 notes app with a
 macOS Stickies look. The copy is deliberately isolated: g0no stays a notes
 app in its own repository and is never changed from here. Stopan keeps the
 technical baseline (Rails, SQLite, Devise, Turbo Drive, plain CSS and JS, the
-Bulgarian/English UI, the light/dark theme and text sizes, the Stickies
+English/Bulgarian/German UI, the light/dark theme and text sizes, the Stickies
 visual language) and drops the notes domain completely: notes, tags,
 expenses, note history, share links, live note updates, the CouchDB import
 and g0no's server deployment files. They remain in git history only.

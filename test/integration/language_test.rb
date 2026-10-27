@@ -3,14 +3,33 @@ require "test_helper"
 # Choosing the language in the header or on the account page
 # (specs/ui.md "Language").
 class LanguageTest < ActionDispatch::IntegrationTest
-  test "the header offers the other language, signed in and out" do
+  test "the header offers the other languages, signed in and out" do
     get new_user_session_url
     assert_select "html[lang=en]"
+    assert_select ".menubar form.prefs button.language-switch", 2
     assert_select ".menubar form.prefs button.language-switch[name=locale][value=bg][title=Български]", "BG"
+    assert_select ".menubar form.prefs button.language-switch[name=locale][value=de][title=Deutsch]", "DE"
 
     get new_user_session_url, headers: { "Accept-Language" => "bg" }
     assert_select "html[lang=bg]"
     assert_select ".menubar form.prefs button.language-switch[name=locale][value=en][title=English]", "EN"
+    assert_select ".menubar form.prefs button.language-switch[value=de]", "DE"
+
+    sign_in users(:agent)
+    get tickets_url, headers: { "Accept-Language" => "de-DE,de;q=0.9" }
+    assert_select "html[lang=de]"
+    assert_select ".menubar form.prefs button.language-switch", 2
+    assert_select ".menubar form.prefs button.language-switch[value=de]", 0
+  end
+
+  test "German is chosen like the others and used for emails" do
+    anna = users(:anna)
+    sign_in anna
+    patch preferences_url, params: { locale: "de" }
+    assert_equal %w[de de], [ anna.reload.language, anna.locale ]
+    get edit_user_registration_url
+    assert_select "html[lang=de]"
+    assert_select "form#language select[name='user[language]'] option[selected]", "Deutsch"
   end
 
   test "the switch keeps the language in a cookie when signed out" do
@@ -20,7 +39,7 @@ class LanguageTest < ActionDispatch::IntegrationTest
     assert_select "html[lang=bg]"
 
     # An unknown language changes nothing.
-    patch preferences_url, params: { locale: "de" }
+    patch preferences_url, params: { locale: "fr" }
     get new_user_session_url
     assert_select "html[lang=bg]"
   end

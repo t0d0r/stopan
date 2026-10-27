@@ -285,7 +285,7 @@ to `tmp/mails/` (`delivery_method :file`); tests use `:test`.
   for messages from administrators (above); a check keeps either a ticket
   or a message on every row.
 
-- `users.locale` string, nullable (`en` / `bg`).
+- `users.locale` string, nullable (`en` / `bg` / `de`).
 - `users.notify_new_tickets` boolean, not null, default false; only
   meaningful for staff (ignored for requesters).
 
