@@ -36,8 +36,33 @@ or a note can be written in Markdown and is then shown formatted.
   is not a page), code and tables get a light grey background and rules,
   quotes a left rule. Long code lines scroll inside their block.
 - Copy box: copies the text as shown (formatted, without Markdown syntax).
-- Task list items (`- [ ]`, `- [x]`) are shown as disabled check boxes in
-  this phase (clickable later, plan item 6).
+- Task list items (`- [ ]`, `- [x]`) are check boxes; see "Task lists".
+
+## Task lists
+
+Plan item 6 (g0no markdown.md "Task lists"): users who may edit a message
+can tick its task list items on the ticket page.
+
+- Each check box of an editable message carries `data-task-line`, the
+  source line of its list item (from the renderer's source positions, so a
+  "- [ ]" inside a code block is never touched). It is rendered disabled
+  and application.js enables it, so without JavaScript nothing looks
+  clickable. Everyone else, shared pages and emails get disabled boxes
+  without a line.
+- A click sends `PATCH /tickets/:number/description/task` or
+  `PATCH /tickets/:number/comments/:id/task` with `line` and `checked`
+  ("1"/"0") through Turbo's `fetch` (so this tab skips its own live
+  refresh). The server checks the edit right, flips `[ ]` / `[x]` on that
+  line only when it is a task item (`- [ ]`, `* [x]`, `1. [ ]`, also
+  inside quotes), and saves it as an edit (`Editable#edit`): the message
+  is marked as edited and other open pages refresh. It answers 204; 422
+  when the line is not a task item, 403/404 as for edits. On an error the
+  box flips back.
+- **One revision per series:** clicks by the same person on the same
+  message less than 10 minutes after their previous edit of it do not add
+  another earlier version; the earliest text of the series stays as the
+  one earlier version (`edit(group: true)`), so ticking ten items does not
+  fill the list with ten versions.
 
 ## Emails
 
@@ -60,8 +85,8 @@ Safety, in three layers:
    lists, emphasis, code, quotes, tables, links, check boxes) and
    attributes (`href`, `type`, `checked`, `disabled`, `align`, `start`);
 3. links get `rel="noopener noreferrer nofollow"` and `target="_blank"`;
-   empty `href`s are removed; only check box inputs survive, always
-   disabled.
+   empty `href`s are removed; only check box inputs survive, disabled
+   unless they are task boxes of an editable message (above).
 
 Images are not allowed, so a message cannot load content from other sites
 (no tracking pixels in a ticket or its emails).
@@ -73,7 +98,9 @@ dropped, `javascript:` links removed, images dropped, link attributes,
 disabled check boxes) and `test/controllers/markdown_test.rb` (the check
 box on create, the switch per role, no revision or edited marker, plain
 messages unchanged, formatted on shared pages and in the HTML email,
-plain in the text email).
+plain in the text email) and `test/controllers/task_list_test.rb` (task
+lines only for editors, flipping the right line, code blocks untouched,
+422 for other lines, rights, one revision per series).
 
 ## Security Note
 
