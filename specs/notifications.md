@@ -218,14 +218,17 @@ Read from the environment at boot (`config/environments/production.rb`):
 
 | variable | default | purpose |
 |----------|---------|---------|
-| `SMTP_ADDRESS` | - | SMTP host; when empty, email is switched off (`perform_deliveries = false`) and a warning is logged at boot |
+| `SMTP_ADDRESS` | - | SMTP host; when empty, only organizations with their own SMTP (organization-mail.md) send mail and every other message is skipped (a warning is logged at boot) |
 | `SMTP_PORT` | 587 | port |
 | `SMTP_USERNAME`, `SMTP_PASSWORD` | - | credentials; authentication is used only when a username is set |
 | `SMTP_AUTHENTICATION` | plain | `plain`, `login` or `cram_md5` |
 | `SMTP_TLS` | false | `true` for implicit TLS (port 465); otherwise STARTTLS is used when offered |
 | `SMTP_DOMAIN` | - | HELO domain |
 
-Timeouts are 5 s to connect and 10 s to read. Development writes emails
+These are the global settings. An organization with its own SMTP enabled
+sends the mail about its tickets through it, with its own From and
+Reply-To (organization-mail.md "Outgoing mail"). Timeouts are 5 s to
+connect and 10 s to read. Development writes emails
 to `tmp/mails/` (`delivery_method :file`); tests use `:test`.
 
 ## Data

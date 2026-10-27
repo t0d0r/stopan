@@ -77,6 +77,16 @@
 - [x] edit the request and replies, with earlier versions for staff (specs/timeline.md "Editing")
 - [x] deploy revision fa69269 to production with a database backup first; migrations ran (specs/deploy.md "Update 2026-10-27")
 
+Organizations: own SMTP, mailbox and public form (operator, 2026-10-27;
+decisions: IMAP, address = identity, magic links, form off by default):
+
+- [ ] encryption keys from SECRET_KEY_BASE and TRUSTED_PROXIES (specs/organization-mail.md, specs/public-form.md)
+- [ ] organization mail settings in admin with test buttons; outgoing mail through the organization's SMTP (specs/organization-mail.md)
+- [ ] magic sign-in links and "email me a sign-in link"; choosing a first password (specs/public-form.md)
+- [ ] public request page per organization with accounts by email and abuse limits (specs/public-form.md)
+- [ ] IMAP mailbox per organization: poller, new tickets and replies from mail (specs/organization-mail.md)
+- [ ] operator: set TRUSTED_PROXIES and MAILBOX_POLLING in production when used (specs/deploy.md)
+
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):
 

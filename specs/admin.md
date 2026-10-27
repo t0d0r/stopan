@@ -38,8 +38,10 @@ Rules:
 |-------|-----------|
 | `GET /admin/organizations` | table: name, members, unsolved tickets, all tickets; search by name (Enter, no button) |
 | `GET /admin/organizations/new`, `POST` | name (required, unique case-insensitively, at most 120 characters), notes (optional, staff-only text) |
-| `GET /admin/organizations/:id` | details, member list with role and "Remove", "Add member" (select of users not yet members) |
-| `GET /admin/organizations/:id/edit`, `PATCH` | name, notes |
+| `GET /admin/organizations/:id` | details (with the public form's address and copy button when on, and the mailbox status: last check, messages taken in, last error), member list with role and "Remove", "Add member" (select of users not yet members) |
+| `GET /admin/organizations/:id/edit`, `PATCH` | name, notes, URL name (`slug`), public form on/off and intro (public-form.md), the "Mail" panel with SMTP and mailbox settings (organization-mail.md) |
+| `POST /admin/organizations/:id/mail_test` | send a test email through the organization's SMTP to the signed-in admin |
+| `POST /admin/organizations/:id/mailbox_check` | log in to the organization's mailbox and report the unseen count |
 | `DELETE /admin/organizations/:id` | only without tickets; memberships are removed with it |
 | `POST /admin/organizations/:id/memberships` | add a member (`user_id`) |
 | `DELETE /admin/memberships/:id` | remove a member; their access to that organization's tickets ends at once |

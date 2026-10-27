@@ -15,6 +15,7 @@ declared in the database.
 | deactivated_at | set = cannot sign in, not assignable |
 | locale | nullable, `en`/`bg`: language of the browser last used; emails use it (notifications.md) |
 | notify_new_tickets | boolean, default false: staff opt-in to "new ticket" emails (notifications.md) |
+| password_chosen | boolean, default true; false for requesters created by the public form or the mailbox until they choose a password (public-form.md) |
 | failed_attempts, locked_at | Devise lockable |
 | reset_password_*, remember_created_at, trackable columns | Devise |
 
@@ -26,6 +27,11 @@ declared in the database.
 |--------|-------|
 | name | required, unique (case-insensitive index on `lower(name)`), at most 120 |
 | notes | optional text, staff only |
+| slug | unique, URL name of the public form (public-form.md) |
+| public_form, public_intro | public request page on/off (default off) and its intro text |
+| smtp_enabled, smtp_address, smtp_port, smtp_security, smtp_username, smtp_password (encrypted), mail_from | outgoing mail (organization-mail.md) |
+| imap_enabled, imap_address, imap_port, imap_ssl, imap_username, imap_password (encrypted), imap_folder, mailbox_address | mailbox |
+| imap_last_checked_at, imap_last_error, imap_messages_count | mailbox status |
 
 ## memberships
 
@@ -49,6 +55,7 @@ declared in the database.
 | shared_at | datetime |
 | edited_at, edited_by_id | last edit of subject or description (FK users, nullable; timeline.md "Editing") |
 | markdown | boolean, default false: the description is Markdown (markdown.md) |
+| source | `app` (default), `web_form` or `email` (organization-mail.md, public-form.md) |
 | created_at, updated_at | indexed `updated_at` for the default sort |
 
 Files: `has_many_attached :files`.
@@ -58,7 +65,8 @@ Files: `has_many_attached :files`.
 `ticket_id` (FK), `author_id` (FK users), `body` (text), `internal`
 (boolean, default false), `created_at`, `updated_at`, `edited_at`,
 `edited_by_id` (FK users, nullable), `markdown` (boolean, default false;
-markdown.md). Index on `[ticket_id, created_at]`.
+markdown.md), `source` (`app` default or `email`). Index on
+`[ticket_id, created_at]`.
 Files: `has_many_attached :files`.
 
 ## revisions

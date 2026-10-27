@@ -14,8 +14,12 @@ Devise 5 with `database_authenticatable`, `registerable`, `recoverable`,
   deactivated. Contact your service desk administrator."), and a signed-in
   session ends on the next request.
 - Sign-out is `DELETE /users/sign_out` (a `button_to` in the menu bar).
+- **Magic sign-in links** for requesters (public-form.md "Magic sign-in
+  links"): `GET /magic/:token`, one use, 24 hours, never for staff; the
+  sign-in page has "Email me a sign-in link".
 - **Own account** (`/users/edit`, the user's name in the menu bar): name,
-  email and password, confirmed with the current password; the page lists
+  email and password, confirmed with the current password (except for a
+  requester who has not chosen a password yet, public-form.md); the page lists
   the user's organizations. Users cannot delete their own account
   (`DELETE /users` redirects back with a message), because ticket history
   must keep its people; administrators deactivate accounts instead.

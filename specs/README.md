@@ -7,6 +7,8 @@
 | [tickets.md](tickets.md) | ticket fields, numbering, statuses, allowed transitions, creating and updating |
 | [timeline.md](timeline.md) | public replies, internal notes, the append-only event log, editing with earlier versions and the composer |
 | [markdown.md](markdown.md) | Markdown per message: switch, sanitized rendering, emails |
+| [organization-mail.md](organization-mail.md) | SMTP and IMAP mailbox per organization: settings, outgoing routing, incoming mail to tickets |
+| [public-form.md](public-form.md) | public request page per organization, accounts by email, magic sign-in links, abuse limits |
 | [attachments.md](attachments.md) | file limits, allowed types, authorized downloads and the preview dialog |
 | [queues.md](queues.md) | agent queue views, filters, search, sort, pagination and the requester's "My tickets" |
 | [admin.md](admin.md) | admin dashboard, users and roles, organizations and memberships |

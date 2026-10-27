@@ -58,6 +58,11 @@ Generated on the server with umask 077 and never copied off it:
 `ADMIN_EMAIL=admin@stopan.linuxfan.org` (no address was given; change it
 at the account page), `RAILS_FORCE_SSL=true`,
 `RAILS_ASSUME_SSL=true`, `REGISTRATION_OPEN=false` (docker.md, auth.md).
+For the public forms and mailboxes (public-form.md,
+organization-mail.md) production also needs `TRUSTED_PROXIES=<the
+server's own address>` (Apache reaches the container through pasta,
+which shows the server's address to the app) and `MAILBOX_POLLING=true`;
+both are set by the operator in `stopan.env` when the features are used.
 The admin password is handed to the operator on the server only, in
 `/root/stopan/admin-password.txt` (root, mode 600); delete it after the
 first sign-in and password change. It is never printed in a terminal log.
