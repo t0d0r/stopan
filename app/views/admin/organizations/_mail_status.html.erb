@@ -1,5 +1,16 @@
 <%# Mail settings at a glance and the test button (specs/organization-mail.md).
     Never shows usernames or passwords. Locals: organization. %>
+<% if organization.public_form? %>
+  <h3 class="section-title"><%= t("ui.public_request.address") %></h3>
+  <div class="sharing__link">
+    <%= label_tag "public-form-url", t("ui.public_request.address"), class: "sr-only" %>
+    <%= text_field_tag "public-form-url", public_request_url(organization.slug), readonly: true, class: "field-input",
+                       data: { select_on_focus: true } %>
+    <button type="button" class="btn" data-copy="public-form-url" data-copied-label="<%= t("ui.share.copied") %>">
+      <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.share.copy") %></span>
+    </button>
+  </div>
+<% end %>
 <h3 class="section-title"><%= t("ui.admin.mail.panel") %></h3>
 <dl class="facts">
   <dt><%= t("ui.admin.mail.smtp_status") %></dt>

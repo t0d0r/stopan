@@ -178,6 +178,9 @@ en:
         staff: "Reply from the service desk"
         internal: "Internal note"
       created: "%{actor} opened the ticket"
+      created_web_form: "%{actor} opened the ticket through the web form"
+      created_email: "%{actor} opened the ticket by email"
+      by_email: "by email"
       status_changed: "%{actor} changed the status from %{from} to %{to}"
       priority_changed: "%{actor} changed the priority from %{from} to %{to}"
       assigned: "%{actor} assigned the ticket to %{to}"
@@ -245,6 +248,10 @@ en:
       role_hint: "Agents and administrators work all tickets; administrators also manage users and organizations. Demoting an agent unassigns their unsolved tickets."
       password_keep: "Leave blank to keep the current password."
       notes_hint: "Visible to administrators only."
+      public_form:
+        title: "Public request page"
+        enabled: "Anyone can send a request without an account at this organization's page"
+        slug_hint: "Lower-case letters, digits and dashes. The page: %{example}"
       mail:
         title: "Mail"
         intro: "Mail about this organization's tickets goes out through its own SMTP, and mail to its mailbox becomes tickets and replies. Passwords are stored encrypted and never shown."
@@ -294,6 +301,20 @@ en:
       turn_on: "Format as Markdown"
       turn_off: "Show as plain text"
 
+    public_request:
+      title: "Contact %{name} support"
+      intro: "Describe your question or problem. We reply by email; you do not need an account."
+      email_hint: "We send the confirmation and our replies here."
+      website: "Leave this field empty"
+      submit: "Send request"
+      account_hint_html: "Already have an account? %{sign_in} to see all your tickets."
+      thanks_title: "Thank you"
+      thanks: "We received your request and sent a confirmation to %{email}."
+      thanks_plain: "We received your request."
+      another: "Send another request"
+      missing_title: "This page is not available"
+      missing_hint: "Check the address, or contact the organization another way."
+      address: "Public request page"
     magic:
       request_title: "Email me a sign-in link"
       request_intro: "Requesters can sign in with a one-time link instead of a password. Enter your email address and we send you a link."
@@ -426,6 +447,11 @@ en:
 
   mailer:
     greeting: "Hello %{name},"
+    public_request:
+      subject: "[Stopan #%{number}] We received your request: %{subject}"
+      intro: "%{organization} received your request %{reference}:"
+      action: "Sign in to follow your request"
+      validity: "The sign-in link works once, for 24 hours. Later you can ask for a new one on the sign-in page. Reply to this email to add to your request."
     magic_link:
       subject: "Your sign-in link"
       intro: "Use this link to sign in to the service desk. It works once."
@@ -497,6 +523,7 @@ en:
     user_has_history: "%{name} has ticket history and cannot be deleted. Deactivate the account instead."
     organization_created: "Organization %{name} was created."
     organization_updated: "Organization %{name} was updated."
+    public_request_too_many: "Too many requests from your address. Please try again later."
     magic_link_sent: "If an account exists for this address, we sent a sign-in link to it."
     magic_signed_in: "You are signed in."
     magic_too_many: "Too many requests. Please try again in a few minutes."
@@ -510,6 +537,14 @@ en:
     notifications_saved: "Notification settings saved."
     account_delete_disabled: "Accounts cannot be deleted here. Ask an administrator to deactivate yours."
     registration_closed: "Sign-up is closed. Ask an administrator for an account."
+
+  activemodel:
+    attributes:
+      public_request:
+        name: "Name"
+        email: "Email"
+        subject: "Subject"
+        description: "Description"
 
   activerecord:
     models:
@@ -554,6 +589,8 @@ en:
         imap_password: "IMAP password"
         imap_folder: "Folder"
         mailbox_address: "Mailbox address"
+        slug: "URL name"
+        public_intro: "Intro text"
     errors:
       messages:
         private_host: "must be a public mail server, not an address inside the network"

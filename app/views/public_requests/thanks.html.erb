@@ -1,0 +1,9 @@
+<% content_for :title, t("ui.public_request.thanks_title") %>
+<section class="sticky sticky--green panel panel--form public-request" aria-labelledby="thanks-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= @organization.name %></span></header>
+  <div class="panel__body">
+    <h1 class="panel__title" id="thanks-title"><%= t("ui.public_request.thanks_title") %></h1>
+    <p><%= @email.present? ? t("ui.public_request.thanks", email: @email) : t("ui.public_request.thanks_plain") %></p>
+    <p><%= link_to t("ui.public_request.another"), public_request_path(@organization.slug) %></p>
+  </div>
+</section>

@@ -1,0 +1,45 @@
+<% content_for :title, t("ui.public_request.title", name: @organization.name) %>
+<section class="sticky sticky--yellow panel panel--form public-request" aria-labelledby="public-request-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= @organization.name %></span></header>
+  <div class="panel__body">
+    <h1 class="panel__title" id="public-request-title"><%= t("ui.public_request.title", name: @organization.name) %></h1>
+    <p class="panel__intro"><%= @organization.public_intro.presence || t("ui.public_request.intro") %></p>
+    <%= form_with model: @request, scope: :public_request, url: public_request_path(@organization.slug), class: "stack-form",
+                  data: { turbo: false } do |f| %>
+      <%= form_errors @request %>
+      <%= hidden_field_tag :started, form_verifier.generate(Time.current.to_i, purpose: @organization.slug, expires_in: 1.day) %>
+      <%# People leave this empty; it is hidden from them (specs/public-form.md). %>
+      <div class="hp-field" aria-hidden="true">
+        <label for="website"><%= t("ui.public_request.website") %></label>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <%= f.label :name, t("ui.fields.name") %>
+          <%= f.text_field :name, class: "field-input", required: true, maxlength: 100, autocomplete: "name",
+                           aria: { invalid: invalid?(@request, :name) } %>
+        </div>
+        <div class="field">
+          <%= f.label :email, t("ui.fields.email") %>
+          <%= f.email_field :email, class: "field-input", required: true, maxlength: 254, autocomplete: "email",
+                            aria: { invalid: invalid?(@request, :email), describedby: "email-hint" } %>
+          <small class="field-hint" id="email-hint"><%= t("ui.public_request.email_hint") %></small>
+        </div>
+      </div>
+      <div class="field">
+        <%= f.label :subject, t("ui.fields.subject") %>
+        <%= f.text_field :subject, class: "field-input", required: true, maxlength: 200, aria: { invalid: invalid?(@request, :subject) } %>
+      </div>
+      <div class="field">
+        <%= f.label :description, t("ui.fields.description") %>
+        <%= f.text_area :description, class: "field-input", rows: 8, required: true, maxlength: 20_000, data: { autogrow: true },
+                        aria: { invalid: invalid?(@request, :description) } %>
+        <%= render "partials/markdown_check", f: f %>
+      </div>
+      <div class="form-actions">
+        <%= f.submit t("ui.public_request.submit"), class: "btn btn--primary" %>
+      </div>
+    <% end %>
+    <p class="field-hint"><%= t("ui.public_request.account_hint_html", sign_in: link_to(t("ui.links.sign_in"), new_user_session_path)) %></p>
+  </div>
+</section>

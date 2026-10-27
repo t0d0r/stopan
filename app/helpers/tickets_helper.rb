@@ -65,7 +65,9 @@ module TicketsHelper
   def event_sentence(event)
     actor = user_name(event.actor)
     case event.action
-    when "created" then t("ui.timeline.created", actor: actor)
+    when "created"
+      source = event.ticket.source
+      source == "app" ? t("ui.timeline.created", actor: actor) : t("ui.timeline.created_#{source}", actor: actor)
     when "status_changed"
       t("ui.timeline.status_changed", actor: actor, from: status_name(event.from_value), to: status_name(event.to_value))
     when "priority_changed"

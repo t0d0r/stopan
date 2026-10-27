@@ -77,7 +77,7 @@ module Admin
     # Passwords are write-only: a blank field keeps the stored one
     # (specs/organization-mail.md).
     def organization_params
-      params.expect(organization: [ :name, :notes, *MAIL_FIELDS ]).tap do |permitted|
+      params.expect(organization: [ :name, :notes, :slug, :public_form, :public_intro, *MAIL_FIELDS ]).tap do |permitted|
         %i[smtp_password imap_password].each { |name| permitted.delete(name) if permitted[name].blank? }
       end
     end

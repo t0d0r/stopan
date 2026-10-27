@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_160000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_150000) do
     t.datetime "edited_at"
     t.integer "edited_by_id"
     t.boolean "markdown", default: false, null: false
+    t.string "source", default: "app", null: false
     t.index ["author_id"], name: "index_comments_on_author_id"
     t.index ["edited_by_id"], name: "index_comments_on_edited_by_id"
     t.index ["ticket_id", "created_at"], name: "index_comments_on_ticket_id_and_created_at"
@@ -103,7 +104,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_150000) do
     t.datetime "imap_last_checked_at"
     t.text "imap_last_error"
     t.integer "imap_messages_count", default: 0, null: false
+    t.string "slug"
+    t.boolean "public_form", default: false, null: false
+    t.text "public_intro"
     t.index "lower(name)", name: "index_organizations_on_lower_name", unique: true
+    t.index ["slug"], name: "index_organizations_on_slug", unique: true
   end
 
   create_table "revisions", force: :cascade do |t|
@@ -150,6 +155,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_150000) do
     t.datetime "edited_at"
     t.integer "edited_by_id"
     t.boolean "markdown", default: false, null: false
+    t.string "source", default: "app", null: false
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
     t.index ["edited_by_id"], name: "index_tickets_on_edited_by_id"
     t.index ["number"], name: "index_tickets_on_number", unique: true

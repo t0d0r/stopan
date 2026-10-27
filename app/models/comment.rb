@@ -11,7 +11,10 @@ class Comment < ApplicationRecord
   # edit a no-op and diffs clean (specs/timeline.md "Editing").
   normalizes :body, with: ->(body) { body.gsub(/\r\n?/, "\n").strip }
 
+  SOURCES = %w[app email].freeze
+
   validates :body, presence: true, length: { maximum: 20_000 }
+  validates :source, inclusion: { in: SOURCES }
   validate :only_staff_write_internal_notes
   validate :ticket_accepts_replies, on: :create
 

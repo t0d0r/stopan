@@ -2879,3 +2879,17 @@ turbo-frame {
 .field .field-file {
   flex: none;
 }
+
+/* Public request page (public-form.md): the honeypot field is off screen. */
+.hp-field {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.public-request {
+  max-width: 760px;
+  margin: 0 auto;
+}

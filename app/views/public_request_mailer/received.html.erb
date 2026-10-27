@@ -1,0 +1,6 @@
+<p><%= t("mailer.greeting", name: @resource.display_name) %></p>
+<p><%= t("mailer.public_request.intro", organization: @ticket.organization.name, reference: @ticket.reference) %></p>
+<p><strong><%= @ticket.subject %></strong></p>
+<div><%= formatted_text(@ticket) %></div>
+<p><a href="<%= @url %>"><%= t("mailer.public_request.action") %></a></p>
+<p><%= t("mailer.public_request.validity") %></p>

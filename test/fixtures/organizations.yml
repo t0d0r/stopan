@@ -1,6 +1,8 @@
 acme:
+  slug: acme
   name: Acme Bakery
   notes: Three shops.
 
 globex:
+  slug: globex
   name: Globex Logistics

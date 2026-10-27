@@ -45,6 +45,11 @@ Rails.application.routes.draw do
   get "s/:token/files/:id" => "shared_tickets#file", as: :shared_ticket_file
   get "s/:token/files/:id/preview" => "shared_tickets#file_preview", as: :shared_ticket_file_preview
 
+  # Public request pages of organizations (specs/public-form.md).
+  get "support/:slug" => "public_requests#show", as: :public_request
+  post "support/:slug" => "public_requests#create"
+  get "support/:slug/thanks" => "public_requests#thanks", as: :public_request_thanks
+
   # One-time sign-in links (specs/public-form.md "Magic sign-in links").
   resources :magic_links, only: %i[new create], path: "magic"
   get "magic/:token" => "magic_links#show", as: :magic_link

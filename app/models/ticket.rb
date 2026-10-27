@@ -16,6 +16,8 @@ class Ticket < ApplicationRecord
     "closed" => %w[open]
   }.freeze
   FIRST_NUMBER = 1001
+  # Where a ticket came from (specs/public-form.md, organization-mail.md).
+  SOURCES = %w[app web_form email].freeze
   SHARE_PASSWORD_LENGTH = 6..72
   # Fields whose changes are written to the timeline, and whether the
   # requester may see them (specs/timeline.md).
@@ -45,6 +47,7 @@ class Ticket < ApplicationRecord
   validates :description, presence: true, length: { maximum: 20_000 }
   validates :status, inclusion: { in: STATUSES }
   validates :priority, inclusion: { in: PRIORITIES }
+  validates :source, inclusion: { in: SOURCES }
   validate :requester_belongs_to_organization, if: -> { requester_id_changed? || organization_id_changed? }
   validate :assignee_is_active_staff, if: -> { assignee_id_changed? && assignee_id.present? }
   validate :status_transition_allowed, if: -> { persisted? && status_changed? }

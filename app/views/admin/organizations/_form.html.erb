@@ -9,6 +9,20 @@
     <%= f.text_area :notes, class: "field-input", rows: 4, maxlength: 5_000, data: { autogrow: true }, aria: { describedby: "notes-hint" } %>
     <small class="field-hint" id="notes-hint"><%= t("ui.admin.notes_hint") %></small>
   </div>
+  <fieldset class="mail-settings__part" id="public-form-settings">
+    <legend><%= t("ui.admin.public_form.title") %></legend>
+    <label class="check-field"><%= f.check_box :public_form %> <%= t("ui.admin.public_form.enabled") %></label>
+    <div class="field">
+      <%= f.label :slug %>
+      <%= f.text_field :slug, class: "field-input", maxlength: 60, pattern: "[a-z0-9][a-z0-9-]*[a-z0-9]",
+                       aria: { invalid: invalid?(organization, :slug), describedby: "slug-hint" } %>
+      <small class="field-hint" id="slug-hint"><%= t("ui.admin.public_form.slug_hint", example: "#{request.base_url}/support/#{organization.slug.presence || "acme"}") %></small>
+    </div>
+    <div class="field">
+      <%= f.label :public_intro %>
+      <%= f.text_area :public_intro, class: "field-input", rows: 3, maxlength: 1_000, data: { autogrow: true } %>
+    </div>
+  </fieldset>
   <%= render "admin/organizations/mail_fields", f: f, organization: organization %>
   <div class="form-actions">
     <%= link_to t("ui.cancel"), organization.persisted? ? admin_organization_path(organization) : admin_organizations_path, class: "btn" %>

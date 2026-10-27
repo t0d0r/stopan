@@ -37,7 +37,7 @@ same rules apply to the mailbox, organization-mail.md):
 
 | the address belongs to | result |
 |------------------------|--------|
-| nobody | a new requester: name and email from the form, a random password nobody knows, a membership in the organization |
+| nobody | a new requester: name and email from the form, the page's language (for their emails), a random password nobody knows, a membership in the organization |
 | an active requester | the ticket is theirs; they become a member of the organization when they were not |
 | a deactivated user, an agent or an administrator | nothing is created; the page answers as if it had worked (below) and the attempt is logged; staff must sign in to open tickets |
 
