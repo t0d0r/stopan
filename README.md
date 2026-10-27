@@ -61,8 +61,15 @@ The screenshots use the fictional data from `make demo`.
   the shared page and the ticket's Sharing panel show live how many have
   the link open; administrators see and stop every shared link
   (`specs/sharing.md`).
-- **Admin** - dashboard, users (roles, memberships, deactivation),
-  organizations and members (`specs/admin.md`).
+- **Admin** - dashboard, users (roles, memberships, deactivation,
+  impersonation with a banner and a record), organizations and members
+  (`specs/admin.md`).
+- **Mail per organization** - each organization can send through its own
+  SMTP and have an IMAP mailbox whose mail becomes tickets and replies;
+  passwords are stored encrypted (`specs/organization-mail.md`).
+- **Public request page** - `/support/<organization>` lets anyone send a
+  request without an account; the email address is the identity and new
+  requesters get a one-time sign-in link (`specs/public-form.md`).
 - **Secure defaults** - scoped queries everywhere (404 for tickets you may
   not see), per-role strong parameters, CSRF protection, Content Security
   Policy, account lockout, closed sign-up in production, ticket text

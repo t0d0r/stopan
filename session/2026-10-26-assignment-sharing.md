@@ -276,6 +276,32 @@ Operator requests, in order:
   origins get 404; Stopan and g0no answer. Live updates work in
   production. Still open: SMTP.
 
+- Organizations: own SMTP, mailbox and public form (operator; decisions:
+  IMAP polling, address = identity, magic links, form off by default),
+  in five commits: encryption keys from SECRET_KEY_BASE and
+  TRUSTED_PROXIES; admin Mail panel (encrypted write-only passwords,
+  private hosts refused, test email) and per-organization routing in
+  ApplicationMailer (also Devise's parent; without global SMTP only
+  organizations with SMTP send); magic sign-in links (button + POST so
+  prefetching scanners do not use them, one use, 24 h, requesters only,
+  "email me a link", first password without the current one); public
+  page /support/<slug> (rate limits, honeypot, signed form time, same
+  answer for every address, confirmation with a link); IMAP poller in
+  the web process (MAILBOX_POLLING), mail to tickets and replies with
+  loop protection and quote stripping. Found in the browser: a new
+  requester's mails were in English, now the page's language is kept.
+  Not tested against a real IMAP server (fake server in tests only).
+- Admin impersonation (operator: "admin to have option: impersonate"):
+  agents and requesters only, bypass_sign_in, red banner with the way
+  back, account page locked, records with IP on the user's admin page.
+- Process slip: one commit (2824094) was made after a flaky make check
+  failure (SQLite lock in parallel tests); the rerun passed with the same
+  code. Commits now run only as `make check && git commit`.
+- Next: deploy when the operator asks (migrations AddMailSettings...,
+  AddPasswordChosen..., AddPublicFormAndSources, CreateImpersonations),
+  then set TRUSTED_PROXIES and MAILBOX_POLLING in stopan.env and try a
+  real mailbox.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
