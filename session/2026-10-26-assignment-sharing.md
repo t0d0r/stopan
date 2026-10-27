@@ -754,6 +754,10 @@ menu and Take; open /tickets/new and pick a requester.
   Mistake: 057e9e0 was committed while make check failed (`make check |
   tail -1 && git commit` takes tail's exit code); the failing board test
   caught the stage shown to requesters, fixed in the next commit.
+- Translation "Hide" now folds the block back to a "Translate" button
+  (`data-translation-show`) that shows the stored translation again;
+  hidden state kept per page in memory across live refreshes. Checked on
+  dev #1033.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

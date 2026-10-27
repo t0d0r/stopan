@@ -439,10 +439,24 @@ function setUpPreview(dialog) {
 // Turbo's fetch carries a request id, so this tab skips its own refresh.
 // "Hide" on a machine translation removes it from this page; without
 // JavaScript the button stays hidden (specs/translation.md).
+// "Hide" folds a translation back to the Translate button, which shows the
+// stored translation again (specs/translation.md); kept across refreshes.
+const hiddenTranslations = new Set();
+
 function setUpTranslations() {
   document.querySelectorAll("[data-translation-hide]").forEach((button) => {
+    const block = button.closest("[data-translation]");
+    const key = `${location.pathname}#${block.dataset.translation}`;
+    const show = document.querySelector(`[data-translation-show="${block.dataset.translation}"]`);
+    const toggle = (hidden) => {
+      block.hidden = hidden;
+      if (show) show.hidden = !hidden;
+      if (hidden) hiddenTranslations.add(key); else hiddenTranslations.delete(key);
+    };
     button.hidden = false;
-    button.addEventListener("click", () => button.closest("[data-translation]").remove());
+    button.addEventListener("click", () => { toggle(true); show?.focus(); }, { signal: pageSignal });
+    show?.addEventListener("click", () => { toggle(false); button.focus(); }, { signal: pageSignal });
+    toggle(hiddenTranslations.has(key));
   });
 }
 

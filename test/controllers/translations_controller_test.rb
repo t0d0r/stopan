@@ -90,6 +90,10 @@ class TranslationsControllerTest < ActionDispatch::IntegrationTest
       assert_select ".ticket-text[lang=en]", /Translated: Принтерът пак печата празно\./
       assert_select "button.translation__hide[hidden]", "Hide"
     end
+    # "Hide" folds back to this button, which shows the stored translation again.
+    assert_select "#event-#{@reply.event.id} button.translation__button[type=button][hidden][data-translation-show=?]",
+                  "comment-#{@reply.id}", /Translate/
+    assert_select "#event-#{@reply.event.id} .translation[data-translation=?]", "comment-#{@reply.id}"
     assert_select "#event-#{@reply.event.id} form.translation__form", 0
     assert_select "#description form.translation__form"
 

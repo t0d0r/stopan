@@ -2639,6 +2639,11 @@ turbo-frame {
   margin-top: 8px;
 }
 
+/* The Translate button a hidden translation folds back to (specs/translation.md). */
+.translation__button[data-translation-show] {
+  margin-top: 8px;
+}
+
 .translation__button,
 .translation__hide {
   display: inline-flex;

@@ -4,7 +4,10 @@
     comment), ticket. %>
 <% translation = Translation.for(message, I18n.locale) %>
 <% if translation %>
-  <section class="translation" data-translation aria-label="<%= t("ui.translation.label") %>">
+  <% key = message.is_a?(Ticket) ? "description" : "comment-#{message.id}" %>
+  <%# Hidden, the block folds back to this button, which shows it again (translation.md). %>
+  <button type="button" class="translation__button" data-translation-show="<%= key %>" hidden><%= icon :globe, size: 12 %> <%= t("ui.translation.translate") %></button>
+  <section class="translation" data-translation="<%= key %>" aria-label="<%= t("ui.translation.label") %>">
     <% if translation.already_in_target? %>
       <p class="translation__note"><%= t("ui.translation.already", language: language_name(translation.target_language)) %></p>
     <% else %>

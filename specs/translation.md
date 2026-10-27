@@ -63,8 +63,11 @@ the original left as it is.
 - The ticket page then shows, under the message, a dashed block "Machine
   translation (DeepL), original: German" (the language named in the
   viewer's language, so no grammar case changes it) with the text, and a "Hide" button
-  that removes it from view in this page (JavaScript; without it the
-  block stays). Plain messages render the translation as plain text with
+  that folds it back to the small "Translate" button (operator,
+  2026-10-27: "hiding removes the whole translation; let it go back to
+  the Translate button"). That button then shows the stored translation
+  again at once, without asking DeepL; the choice holds across live
+  refreshes of the page. Without JavaScript the block stays. Plain messages render the translation as plain text with
   line breaks; Markdown messages render it through the same sanitized
   Markdown pipeline (markdown.md). If DeepL says the source is already
   the target language, the block says "This message is already in
