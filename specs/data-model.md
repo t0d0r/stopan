@@ -92,6 +92,13 @@ nullable), `kind`, `event_id` (nullable), `status` (nullable), `read_at`,
 `created_at`, `updated_at`. Indexes `[user_id, created_at]`,
 `[user_id, read_at]`.
 
+## impersonations
+
+Administrators acting as another user (admin.md "Impersonation"):
+`admin_id` (FK users), `user_id` (FK users), `started_at`, `ended_at`
+(nullable), `ip`. Index on `[user_id, started_at]`. Kept with the users
+(restrict), never deleted in the app.
+
 ## Active Storage
 
 The standard three tables. Blobs are served only by

@@ -48,6 +48,32 @@ Rules:
 
 Destructive actions ask in the confirm dialog, naming what will be lost.
 
+## Impersonation
+
+Requested by the operator on 2026-10-27 ("admin to have option:
+impersonate"): an administrator can see and use the app as another user,
+to check what they see or help them.
+
+- "Sign in as <name>" on the user's admin edit page, with a confirm
+  dialog: `POST /admin/users/:id/impersonation`. Only for active agents
+  and requesters: never for administrators (no taking over an equal
+  account), deactivated users or oneself (403).
+- The session keeps the administrator's id (`session[:impersonator_id]`)
+  and signs in the user with Devise's `bypass_sign_in`, so the user's
+  own sign-in times stay untouched (their magic links stay valid, the
+  admin list's "last sign-in" stays true).
+- Every page then shows a red banner under the menu bar: "You are signed
+  in as Anna Petrova (Requester) by impersonation." with "Back to my
+  account" (`DELETE /impersonation`), which signs the administrator back
+  in and opens that user's admin page. Signing out ends both.
+- While impersonating, everything is done as the user (replies, status
+  changes appear under their name), except the account page: changing
+  their name, email or password is refused with a notice.
+- Every impersonation is recorded in `impersonations` (administrator,
+  user, started at, ended at, IP); the user's admin edit page lists the
+  last ten, and the log has a line for start and end. The records are
+  never deleted in the app.
+
 ## Live updates
 
 Operator, 2026-10-26: "the admin pages should refresh live too". Every
@@ -72,9 +98,14 @@ URL and scroll position:
 
 `test/controllers/admin/*_test.rb`: access control, CRUD, self-protection,
 delete refusal with history, unassignment on demotion/deactivation,
-membership add/remove.
+membership add/remove; `impersonations_controller_test.rb`: who may be
+impersonated, the banner, the way back, sign-in times untouched, the
+account page locked, the records.
 
 ## Security Note
 
 Admins can set passwords and grant roles. Keep the number of admins small
-and keep the seeded admin password (in `.env`) private.
+and keep the seeded admin password (in `.env`) private. Impersonation lets
+an admin act under another user's name: it is recorded with time and IP,
+shown in a banner the whole time, cannot reach other admins or the
+user's own credentials, and should be used only to help that user.

@@ -50,6 +50,7 @@ the role, and cannot be chosen as assignee.
 | change priority, assignee | no | yes | yes |
 | share a ticket by link (sharing.md) | own ticket, in own organization | any ticket | any ticket; also sees and stops every shared link |
 | open `/admin` | no | no | yes |
+| impersonate another user (admin.md "Impersonation") | no | no | agents and requesters, not admins |
 | manage users, roles, memberships, organizations | no | no | yes |
 
 ## Enforcement
