@@ -4152,6 +4152,79 @@ turbo-frame {
   margin: 10px 0 0;
 }
 
+/* Advanced search under the queue filters (specs/queues.md "Advanced search"). */
+.advanced-search {
+  flex-basis: 100%;
+}
+
+.advanced-search__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.advanced-search__fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px dashed var(--rule);
+  border-radius: 6px;
+}
+
+.advanced-search__wide {
+  flex: 1 1 16em;
+}
+
+.advanced-search__wide .field-input {
+  width: 100%;
+}
+
+.advanced-search__dates {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.advanced-search__dates legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 0;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.advanced-search__check label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .advanced-search__summary,
+  .advanced-search__check label {
+    min-height: 44px;
+  }
+
+  .advanced-search__dates {
+    flex-wrap: wrap;
+  }
+}
+
 /* An email that copies itself on click (specs/ui.md "Emails copy on click"). */
 .copy-value {
   display: inline-flex;

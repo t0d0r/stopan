@@ -30,18 +30,61 @@
     <%= select_tag :sort, options_for_select(TicketFilter::SORTS.map { |s| [ t("ui.queue.sorts.#{s}"), s ] }, filter.sort),
                    class: "select", data: { auto_submit: true } %>
   </div>
-<%# One requester's tickets, from their profile (specs/people.md "Queue filter"). %>
-<% if filter.requester %>
-  <div class="filters__field filters__chip">
-    <span class="chip"><%= t("ui.people.requester_chip", name: filter.requester.display_name) %>
-      <%= link_to url + "?" + filter.params_with(requester: nil, page: nil).to_query, class: "chip__remove",
-                  "aria-label": t("ui.people.remove_requester") do %>&times;<% end %></span>
-  </div>
-<% end %>
-<div class="filters__actions">
+  <%# One requester's tickets, from their profile (specs/people.md "Queue filter"). %>
+  <% if filter.requester %>
+    <div class="filters__field filters__chip">
+      <span class="chip"><%= t("ui.people.requester_chip", name: filter.requester.display_name) %>
+        <%= link_to url + "?" + filter.params_with(requester: nil, page: nil).to_query, class: "chip__remove",
+                    "aria-label": t("ui.people.remove_requester") do %>&times;<% end %></span>
+    </div>
+  <% end %>
+  <div class="filters__actions">
     <noscript><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></noscript>
     <% if filter.filtered? %>
       <%= link_to t("ui.queue.clear"), clear_path, class: "filters__clear" %>
     <% end %>
   </div>
+  <%# Advanced search (specs/queues.md "Advanced search"): applied with its own button. %>
+  <% advanced = filter.advanced %>
+  <details class="advanced-search"<%= " open" if advanced.any? %>>
+    <summary class="advanced-search__summary">
+      <%= t("ui.search.advanced") %><% if advanced.any? %> <span class="tab__count"><%= advanced.size %></span><% end %>
+    </summary>
+    <div class="advanced-search__fields">
+      <div class="filters__field advanced-search__wide">
+        <%= label_tag :words, t("ui.search.words") %>
+        <%= text_field_tag :words, advanced[:words], class: "field-input", autocomplete: "off", placeholder: t("ui.search.words_hint") %>
+      </div>
+      <div class="filters__field advanced-search__check">
+        <label><%= check_box_tag :in_comments, "1", advanced[:in_comments].present?, id: "in_comments" %> <%= t("ui.search.in_comments") %></label>
+      </div>
+      <div class="filters__field">
+        <%= label_tag :requester_q, t("ui.fields.requester") %>
+        <%= text_field_tag :requester_q, advanced[:requester_q], class: "field-input", autocomplete: "off", placeholder: t("ui.search.requester_hint") %>
+      </div>
+      <fieldset class="filters__field advanced-search__dates">
+        <legend><%= t("ui.fields.created") %></legend>
+        <%= date_field_tag :created_from, advanced[:created_from], class: "field-input", "aria-label": t("ui.search.created_from") %>
+        <span aria-hidden="true">-</span>
+        <%= date_field_tag :created_to, advanced[:created_to], class: "field-input", "aria-label": t("ui.search.created_to") %>
+      </fieldset>
+      <fieldset class="filters__field advanced-search__dates">
+        <legend><%= t("ui.fields.updated") %></legend>
+        <%= date_field_tag :updated_from, advanced[:updated_from], class: "field-input", "aria-label": t("ui.search.updated_from") %>
+        <span aria-hidden="true">-</span>
+        <%= date_field_tag :updated_to, advanced[:updated_to], class: "field-input", "aria-label": t("ui.search.updated_to") %>
+      </fieldset>
+      <div class="filters__field">
+        <%= label_tag :source, t("ui.search.source") %>
+        <%= select_tag :source, options_for_select(Ticket::SOURCES.map { |source| [ t("ui.people.source.#{source}"), source ] }, advanced[:source]),
+                       include_blank: t("ui.queue.any"), class: class_names("select", "is-set": advanced[:source]) %>
+      </div>
+      <div class="filters__field advanced-search__check">
+        <label><%= check_box_tag :files, "1", advanced[:files].present?, id: "files" %> <%= t("ui.search.files") %></label>
+      </div>
+      <div class="filters__field advanced-search__go">
+        <%= submit_tag t("ui.search.go"), name: nil, class: "btn btn--primary" %>
+      </div>
+    </div>
+  </details>
 <% end %>

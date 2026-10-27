@@ -784,6 +784,11 @@ menu and Take; open /tickets/new and pick a requester.
 - Requester email copies on click (`ApplicationHelper#copy_email`, a button with
   data-copy-value and a live "Copied" status) in the Requester panel and on the
   profile; no mailto. Checked on dev #1094.
+- Advanced search (operator: "search should be able to use advanced search"):
+  `TicketFilter::ADVANCED` (words, in_comments, requester_q, created/updated
+  from/to, source, files) parsed and kept in params_with (menu bar search,
+  pagination, bulk list); SQL in constants (Brakeman). A `<details>` in the
+  filter bar with its own Search button. Checked on dev.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

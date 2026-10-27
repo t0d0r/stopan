@@ -59,6 +59,31 @@ filter keeps the search. A select with a value other than "Any" is
 highlighted in yellow paper, so the active filters are visible at a
 glance. "Clear filters" keeps only the view.
 
+### Advanced search
+
+Operator, 2026-10-27: "search should be able to use advanced search when
+needed". Staff only, on the queue (and so on search results) and the
+board, which share the filter bar.
+
+- Under the filters a disclosure "Advanced search" (`<details>`, open
+  when any of its fields is set, with the count of set fields in its
+  summary). Its fields join the same GET form and apply on "Search"
+  (they do not submit on change, as some are typed):
+  - **Words** (`words`): every word must appear in the subject or text,
+    in any order (the menu bar `q` stays a single phrase);
+  - **Also in replies and notes** (`in_comments=1`): the text search
+    (`q` and `words`) also looks in the comments' bodies;
+  - **Requester** (`requester_q`): part of the requester's name or email;
+  - **Created** from / to and **Last activity** from / to (`created_from`,
+    `created_to`, `updated_from`, `updated_to`; dates, both ends
+    included, in the app's time zone);
+  - **Came in by** (`source`: app, web form, email);
+  - **With attachments** (`files=1`): the request or a comment has a file.
+- Unknown or broken values are ignored, as for the other filters. The
+  fields are kept by the other filters, the menu bar search, the bulk
+  bar's "whole list" and pagination; "Clear filters" clears them too.
+- The API's ticket list takes the same parameters (api.md).
+
 ### Search
 
 The search field is in the menu bar on every page (ui.md), for staff and

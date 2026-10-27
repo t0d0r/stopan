@@ -4,7 +4,7 @@
 # the change is not allowed are skipped and reported.
 class TicketBulkUpdate
   MAX = 500
-  LIST_FILTERS = %i[view status priority assignee organization requester q].freeze
+  LIST_FILTERS = (%i[view status priority assignee organization requester q] + TicketFilter::ADVANCED).freeze
 
   Skipped = Struct.new(:ticket, :reason, keyword_init: true)
 
