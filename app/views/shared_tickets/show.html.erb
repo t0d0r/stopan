@@ -7,7 +7,8 @@
     <%# This page subscribes after it loads, so it counts itself. %>
     <%= share_viewers_tag ShareViewers.count(@ticket) + 1, scope: :page %>
     <%# The request as one note, as on the ticket page (ui.md). %>
-    <article class="sticky sticky--yellow message message--description" id="description">
+    <article class="sticky sticky--yellow message message--description" id="description"
+             data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>">
       <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
                  icon_name: :note, width_box: true %>
       <div class="message__body">

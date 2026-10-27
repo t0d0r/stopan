@@ -18,6 +18,12 @@ class PreferencesController < ApplicationController
     remember :width, params[:width].presence_in(WIDTHS)
     # "default" goes back to the site's theme (ui.md "Themes").
     params[:look] == "default" ? cookies.delete(:look) : remember(:look, params[:look].presence_in(LOOKS))
+    # The same for the order of the ticket timeline (timeline.md).
+    if params[:timeline_order] == "default"
+      cookies.delete(:timeline_order)
+    else
+      remember :timeline_order, params[:timeline_order].presence_in(AppSetting::TIMELINE_ORDERS)
+    end
     remember_language params[:locale].presence_in(I18n.available_locales.map(&:to_s))
     redirect_back fallback_location: root_path
   end

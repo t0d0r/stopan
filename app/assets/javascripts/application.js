@@ -603,6 +603,42 @@ function setUpMessageForm(select) {
   show();
 }
 
+// A long original request is cut to about a third of the window with a
+// button to open it (specs/timeline.md "Long requests collapse"). Opened
+// requests stay open for this page across live refreshes and edits.
+const openedRequests = new Set();
+
+function setUpLongRequest() {
+  const article = document.querySelector("[data-long-request]");
+  const text = article?.querySelector("[data-message-text]");
+  if (!text) return;
+  article.querySelector(".long-request__toggle")?.remove();
+  text.classList.remove("is-collapsed");
+  const height = Math.round(Math.max(window.innerHeight * 0.35, 200));
+  if (text.scrollHeight <= height * 1.3) return;
+
+  const key = location.pathname;
+  text.id ||= "request-text";
+  text.style.setProperty("--collapsed-height", `${height}px`);
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "long-request__toggle";
+  button.setAttribute("aria-controls", text.id);
+  const show = (open) => {
+    text.classList.toggle("is-collapsed", !open);
+    button.setAttribute("aria-expanded", String(open));
+    button.textContent = open ? article.dataset.less : article.dataset.more;
+  };
+  button.addEventListener("click", () => {
+    const open = button.getAttribute("aria-expanded") !== "true";
+    if (open) openedRequests.add(key); else openedRequests.delete(key);
+    show(open);
+    if (!open) article.scrollIntoView({ block: "nearest" });
+  }, { signal: pageSignal });
+  text.after(button);
+  show(openedRequests.has(key));
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -618,6 +654,7 @@ function setUpPage() {
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
   setUpCopyBoxes();
+  setUpLongRequest();
   setUpDoubleClickEdit();
   setUpTaskLists();
   setUpTranslations();
@@ -851,6 +888,7 @@ function setUpBoard(board) {
 // text area is set up to grow here.
 document.addEventListener("turbo:frame-load", (event) => {
   event.target.querySelectorAll("textarea[data-autogrow]").forEach(autoGrow);
+  if (event.target.id === "description-text") setUpLongRequest();
 });
 
 // Turbo fires turbo:load after the first page and after every visit. If

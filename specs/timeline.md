@@ -72,6 +72,42 @@ scope, so internal text never reaches a requester's HTML.
 - Attachments of a comment are listed under its body as download links with
   size.
 
+### Long requests collapse
+
+Operator, 2026-10-27: "make the Original request collapse like an
+accordion when it is too long and takes the whole screen, so the
+comments can be read".
+
+- On the ticket page and the shared page, when the request's text is
+  taller than 1.3 times the collapsed height (the larger of 35% of the
+  window height and 200px), JavaScript shows it cut to that height, the
+  last lines fading out, with a button under it: "Show the whole
+  request" / "Collapse the request" (`aria-expanded`, `aria-controls`).
+  The heading, pills, translation, versions and files stay visible.
+- Without JavaScript, and when printing, the whole text shows. Nothing
+  is removed from the page: the copy box copies the whole text.
+- The choice holds for that ticket while the page is open (also across
+  live refreshes and after an in-place edit); a new visit starts
+  collapsed again.
+
+### Order of the timeline
+
+Operator, 2026-10-27: "reverse the order of the comments; a global
+option for the order, and per user too: oldest or newest on top".
+
+- `/admin/settings`, panel "Ticket page": "Order of replies and events":
+  "Oldest first" (default) or "Newest first"
+  (`app_settings.timeline_order`, `oldest_first` / `newest_first`).
+- The account page offers "Site default (Oldest first)", "Oldest first"
+  and "Newest first", kept like the theme in a cookie (`timeline_order`,
+  one year, SameSite=Lax) for this browser; "Site default" deletes it
+  (`PATCH /preferences` with `timeline_order`, `default` clears it).
+  Visitors of shared pages follow the site default or their cookie.
+- Newest first lists the timeline from the newest entry down, and the
+  composer moves above the timeline, under its heading, so writing a
+  reply happens where the latest entries are. The original request
+  stays first on the page in both orders.
+
 ## Editing
 
 Requested by the operator on 2026-10-27: "an option to edit replies and

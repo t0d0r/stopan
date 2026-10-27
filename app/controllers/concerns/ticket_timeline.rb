@@ -19,7 +19,7 @@ module TicketTimeline
     comment << { revisions: :editor } if policy.see_revisions?
     @events = TicketEvent.visible_to(current_user).where(ticket: @ticket)
                          .includes(:actor, comment: comment)
-                         .order(:created_at, :id).to_a
+                         .order(created_at: timeline_direction, id: timeline_direction).to_a
     @staff = @ticket.assignable_staff.to_a if current_user.staff?
   end
 end

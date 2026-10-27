@@ -7,6 +7,8 @@ class AppSetting < ApplicationRecord
   LOOKS = %w[notes omarchy].freeze
   # How often the mailboxes are checked (specs/organization-mail.md "Fetching").
   MAILBOX_POLL_SECONDS = [ 60, 120, 300, 600, 900 ].freeze
+  # Order of the ticket timeline (specs/timeline.md "Order of the timeline").
+  TIMELINE_ORDERS = %w[oldest_first newest_first].freeze
 
   # Write-only in the form, like the organizations' mail passwords.
   encrypts :deepl_api_key, :google_client_secret
@@ -17,6 +19,7 @@ class AppSetting < ApplicationRecord
   validates :auto_postpone_days, numericality: { only_integer: true, in: 0..3650 }
   validates :default_look, inclusion: { in: LOOKS }
   validates :mailbox_poll_seconds, inclusion: { in: MAILBOX_POLL_SECONDS }
+  validates :timeline_order, inclusion: { in: TIMELINE_ORDERS }
   # A Google OAuth client (specs/mail-oauth.md "Setup wizard").
   validates :google_client_id, format: { with: /\A[\w.-]+\.apps\.googleusercontent\.com\z/, message: :google_client_id },
                                allow_blank: true

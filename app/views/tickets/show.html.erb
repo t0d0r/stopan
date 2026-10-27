@@ -4,7 +4,8 @@
 <%= turbo_stream_from(*@ticket.page_stream(current_user), channel: TicketsChannel, data: { ticket: @ticket.number }) %>
 <div class="ticket-page">
   <%# The request as one note: strip, "#1001 Subject", pills, text (ui.md). %>
-  <article class="sticky sticky--yellow message message--description ticket-head" id="description">
+  <article class="sticky sticky--yellow message message--description ticket-head" id="description"
+         data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>">
     <% editable = policy.edit_description? %>
     <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
                icon_name: :note, frame: "description-text",
@@ -36,12 +37,14 @@
   <div class="ticket-main">
     <p class="callout live-notice" data-live-notice hidden role="status"><%= t("ui.ticket.changed_elsewhere") %></p>
     <h2 class="section-heading" id="timeline-title"><%= t("ui.timeline.title") %></h2>
-    <ol class="timeline" aria-labelledby="timeline-title">
+    <%# Newest first puts the composer above the timeline (timeline.md "Order of the timeline"). %>
+    <% if newest_first? %><%= render "tickets/composer", ticket: @ticket, comment: @comment %><% end %>
+    <ol class="timeline<%= " timeline--newest-first" if newest_first? %>" aria-labelledby="timeline-title">
       <% @events.each do |event| %>
         <%= render "tickets/event", event: event, ticket: @ticket %>
       <% end %>
     </ol>
 
-    <%= render "tickets/composer", ticket: @ticket, comment: @comment %>
+    <% unless newest_first? %><%= render "tickets/composer", ticket: @ticket, comment: @comment %><% end %>
   </div>
 </div>

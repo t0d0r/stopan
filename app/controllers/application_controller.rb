@@ -12,9 +12,23 @@ class ApplicationController < ActionController::Base
 
   rescue_from NotAuthorized, with: :forbidden
 
-  helper_method :impersonator, :without_organization?
+  helper_method :impersonator, :without_organization?, :own_timeline_order, :newest_first?
 
   private
+
+  # The order of the ticket timeline: this browser's choice, else the
+  # site's (specs/timeline.md "Order of the timeline").
+  def own_timeline_order
+    cookies[:timeline_order].presence_in(AppSetting::TIMELINE_ORDERS)
+  end
+
+  def newest_first?
+    (own_timeline_order || AppSetting.current.timeline_order) == "newest_first"
+  end
+
+  def timeline_direction
+    newest_first? ? :desc : :asc
+  end
 
   # A requester or agent without a membership sees nothing but a notice
   # (specs/roles.md); administrators are never limited by membership.

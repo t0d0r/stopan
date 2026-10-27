@@ -2668,6 +2668,61 @@ turbo-frame {
   border-top: 1px dashed var(--rule);
 }
 
+/* A long original request, cut with a button to open it (specs/timeline.md "Long requests collapse"). */
+.ticket-text.is-collapsed {
+  max-height: var(--collapsed-height, 35vh);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
+}
+
+.long-request__toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--field-bg);
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.long-request__toggle::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-left: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.long-request__toggle[aria-expanded="true"]::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+@media (max-width: 760px) {
+  .long-request__toggle {
+    min-height: 44px;
+  }
+}
+
+@media print {
+  .ticket-text.is-collapsed {
+    max-height: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .long-request__toggle {
+    display: none;
+  }
+}
+
 .message--internal {
   outline: 2px dashed rgba(179, 38, 30, 0.35);
   outline-offset: -2px;

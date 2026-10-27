@@ -27,7 +27,7 @@ class SharedTicketsController < ApplicationController
   def show
     @events = TicketEvent.where(ticket: @ticket, internal: false)
                          .includes(:actor, comment: [ :author, :edited_by, { files_attachments: :blob } ])
-                         .order(:created_at, :id).to_a
+                         .order(created_at: timeline_direction, id: timeline_direction).to_a
   end
 
   def unlock

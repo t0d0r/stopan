@@ -42,6 +42,10 @@ de:
       theme: "Design"
       theme_hint: "Wie Stopan in diesem Browser aussieht. Der Sonne/Mond-Schalter wählt weiterhin hell oder dunkel."
       save_theme: "Design speichern"
+      timeline_order: "Reihenfolge der Antworten"
+      site_timeline_order: "Standard der Seite (%{order})"
+      timeline_order_hint: "Auf der Ticketseite in diesem Browser: die älteste oder die neueste Antwort oben."
+      save_timeline_order: "Reihenfolge speichern"
       site_look: "Standard der Website (%{look})"
       looks:
         notes: "Notes"
@@ -175,6 +179,8 @@ de:
       nobody: "Niemand"
 
     ticket:
+      show_whole: "Ganze Anfrage anzeigen"
+      collapse: "Anfrage einklappen"
       assigned_to: "Zugewiesen an"
       changed_elsewhere: "Dieses Ticket wurde an anderer Stelle geändert. Die Seite wird aktualisiert, sobald Sie hier fertig sind."
       details: "Ticketdetails"
@@ -187,6 +193,9 @@ de:
       resolve_body: "Verwenden Sie dies, wenn Ihr Problem gelöst ist. Sie können später trotzdem antworten; dadurch wird das Ticket wieder geöffnet."
 
     timeline:
+      orders:
+        oldest_first: "Älteste zuerst"
+        newest_first: "Neueste zuerst"
       title: "Aktivität"
       system: "System"
       removed_user: "ein gelöschter Benutzer"
@@ -309,6 +318,9 @@ de:
           one: "Jede Minute"
           other: "Alle %{count} Minuten"
         mailbox_hint: "Geprüft wird jede Organisation mit aktiviertem Postfach: höchstens 50 neue Nachrichten pro Prüfung, im Postfach als gelesen markiert. Postfach prüfen auf der Seite der Organisation ruft sofort ab."
+        timeline_caption: "Ticketseite"
+        timeline_title: "Reihenfolge von Antworten und Ereignissen"
+        timeline_hint: "Für alle, außer sie wählen auf ihrer Kontoseite eine andere Reihenfolge. Bei neueste zuerst steht das Antwortfeld über dem Verlauf."
         translation_caption: "Übersetzung"
         translation_title: "Maschinelle Übersetzung (DeepL)"
         translation_enabled: "Schaltfläche Übersetzen an Nachrichten für Mitarbeiter anbieten"
@@ -976,6 +988,7 @@ de:
         public_intro: "Einleitungstext"
         public_allowed_senders: "Erlaubte E-Mail-Adressen"
       app_setting:
+        timeline_order: "Reihenfolge von Antworten und Ereignissen"
         mailbox_poll_seconds: "Wie oft"
         auto_postpone_days: "Tage ohne Aktivität"
         deepl_api_key: "DeepL-API-Schlüssel"

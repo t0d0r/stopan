@@ -686,6 +686,18 @@ menu and Take; open /tickets/new and pick a requester.
   callout under a read-only ticket. New-ticket notifications to members
   now reach staff members only (the notifier filters by visible_to).
   A colleague's ticket is now a 404 instead of a read-only page/403.
+- Long request collapse: `setUpLongRequest` in application.js cuts the
+  request text (`#description[data-long-request]`) to max(35vh, 200px)
+  when it is over 1.3 times that, with a fade (mask-image) and a toggle
+  button (aria-expanded); opened state kept per path in memory, re-run
+  after the in-place edit frame loads; print shows all. Checked on dev
+  #1010: 315px collapsed, copy still copies the whole text.
+- Timeline order: `app_settings.timeline_order` (migration
+  `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
+  cookie `timeline_order` from the account page (default clears it);
+  `ApplicationController#newest_first?` / `timeline_direction` used by
+  the ticket and shared pages; newest first renders the composer above
+  the timeline.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

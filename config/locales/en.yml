@@ -39,6 +39,10 @@ en:
       theme: "Theme"
       theme_hint: "How Stopan looks in this browser. The sun and moon switch still picks light or dark."
       save_theme: "Save theme"
+      timeline_order: "Order of replies"
+      site_timeline_order: "Site default (%{order})"
+      timeline_order_hint: "On the ticket page in this browser: the oldest or the newest reply on top."
+      save_timeline_order: "Save order"
       site_look: "Site default (%{look})"
       looks:
         notes: "Notes"
@@ -172,6 +176,8 @@ en:
       nobody: "Nobody"
 
     ticket:
+      show_whole: "Show the whole request"
+      collapse: "Collapse the request"
       assigned_to: "Assigned to"
       changed_elsewhere: "This ticket has changed elsewhere. The page will update when you finish what you are doing here."
       details: "Ticket details"
@@ -184,6 +190,9 @@ en:
       resolve_body: "Use this when your problem is solved. You can still reply later, which opens the ticket again."
 
     timeline:
+      orders:
+        oldest_first: "Oldest first"
+        newest_first: "Newest first"
       title: "Activity"
       system: "System"
       removed_user: "a removed user"
@@ -306,6 +315,9 @@ en:
           one: "Every minute"
           other: "Every %{count} minutes"
         mailbox_hint: "Each organization with its mailbox turned on is checked: at most 50 new messages per check, marked as read in the mailbox. Check the mailbox on an organization's page fetches at once."
+        timeline_caption: "Ticket page"
+        timeline_title: "Order of replies and events"
+        timeline_hint: "For everyone, unless they pick another order on their account page. With newest first the reply box is above the timeline."
         translation_caption: "Translation"
         translation_title: "Machine translation (DeepL)"
         translation_enabled: "Offer a Translate button on messages for staff"
@@ -971,6 +983,7 @@ en:
         public_intro: "Intro text"
         public_allowed_senders: "Allowed email addresses"
       app_setting:
+        timeline_order: "Order of replies and events"
         mailbox_poll_seconds: "How often"
         auto_postpone_days: "Days without activity"
         deepl_api_key: "DeepL API key"

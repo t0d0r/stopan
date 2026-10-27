@@ -70,6 +70,22 @@
   </div>
 <% end %>
 
+<%# The timeline order, a browser preference like the theme (timeline.md "Order of the timeline"). %>
+<%= form_with url: preferences_path, method: :patch, id: "timeline-order", data: { turbo: false } do %>
+  <h3><%= t("ui.account_page.timeline_order") %></h3>
+  <div class="field">
+    <%= label_tag :timeline_order, t("ui.account_page.timeline_order"), class: "sr-only" %>
+    <% site_order = AppSetting.current.timeline_order %>
+    <% choices = [ [ t("ui.account_page.site_timeline_order", order: t("ui.timeline.orders.#{site_order}")), "default" ] ] +
+                 AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] } %>
+    <%= select_tag :timeline_order, options_for_select(choices, own_timeline_order || "default"), class: "select" %>
+    <i><%= t("ui.account_page.timeline_order_hint") %></i>
+  </div>
+  <div class="actions">
+    <%= submit_tag t("ui.account_page.save_timeline_order"), name: nil %>
+  </div>
+<% end %>
+
 <% if resource.staff? %>
   <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
     <h3><%= t("ui.account_page.notifications") %></h3>

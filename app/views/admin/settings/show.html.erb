@@ -37,6 +37,23 @@
   </div>
 </section>
 
+<%# Order of the ticket timeline for everyone (specs/timeline.md "Order of the timeline"). %>
+<section class="sticky sticky--blue panel panel--form" aria-labelledby="timeline-order-title" id="timeline-order">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.timeline_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="timeline-order-title"><%= t("ui.admin.settings.timeline_title") %></h2>
+    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+      <div class="field">
+        <%= f.label :timeline_order, t("ui.admin.settings.timeline_title"), class: "sr-only" %>
+        <%= f.select :timeline_order, AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] }, {},
+                     class: "select", aria: { describedby: "timeline-order-hint" } %>
+        <small class="field-hint" id="timeline-order-hint"><%= t("ui.admin.settings.timeline_hint") %></small>
+      </div>
+      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
+    <% end %>
+  </div>
+</section>
+
 <%# Automatic fetching from the organizations' mailboxes (specs/organization-mail.md "Fetching"). %>
 <section class="sticky sticky--pink panel panel--form" aria-labelledby="mailboxes-title" id="mailboxes">
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.mailbox_caption") %></span></header>
