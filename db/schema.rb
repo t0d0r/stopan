@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_230000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_090000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -43,6 +43,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_230000) do
     t.integer "auto_postpone_days", default: 30, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "translation_enabled", default: false, null: false
   end
 
   create_table "comments", force: :cascade do |t|
@@ -194,6 +195,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_230000) do
     t.index ["stage_id"], name: "index_tickets_on_stage_id"
     t.index ["status"], name: "index_tickets_on_status"
     t.index ["updated_at"], name: "index_tickets_on_updated_at"
+  end
+
+  create_table "translations", force: :cascade do |t|
+    t.string "translatable_type", null: false
+    t.integer "translatable_id", null: false
+    t.string "target_language", null: false
+    t.string "source_language", null: false
+    t.text "text", null: false
+    t.string "source_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["translatable_type", "translatable_id", "target_language"], name: "index_translations_on_message_and_language", unique: true
   end
 
   create_table "users", force: :cascade do |t|

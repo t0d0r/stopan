@@ -63,6 +63,8 @@ organization-mail.md) production also needs `TRUSTED_PROXIES=<the
 server's own address>` (Apache reaches the container through pasta,
 which shows the server's address to the app) and `MAILBOX_POLLING=true`;
 both are set by the operator in `stopan.env` when the features are used.
+The "Translate" button (translation.md) needs `DEEPL_API_KEY` there too,
+also set by the operator, and an administrator switch.
 The admin password is handed to the operator on the server only, in
 `/root/stopan/admin-password.txt` (root, mode 600); delete it after the
 first sign-in and password change. It is never printed in a terminal log.

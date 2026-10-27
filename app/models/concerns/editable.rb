@@ -8,6 +8,7 @@ module Editable
   included do
     belongs_to :edited_by, class_name: "User", optional: true
     has_many :revisions, -> { newest_first }, as: :record, inverse_of: :record, dependent: :restrict_with_error
+    has_many :translations, as: :translatable, dependent: :delete_all
   end
 
   def edited?

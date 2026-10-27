@@ -52,7 +52,8 @@ the original left as it is.
   so the button shows again. A new translation of the same message and
   language replaces the old row.
 - The ticket page then shows, under the message, a dashed block "Machine
-  translation from German (DeepL)" with the text, and a "Hide" button
+  translation (DeepL), original: German" (the language named in the
+  viewer's language, so no grammar case changes it) with the text, and a "Hide" button
   that removes it from view in this page (JavaScript; without it the
   block stays). Plain messages render the translation as plain text with
   line breaks; Markdown messages render it through the same sanitized

@@ -15,6 +15,7 @@
         <%= render "tickets/note_heading", ticket: @ticket, priority: staff %>
         <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>
       <% end %>
+      <% if translation_offered? %><%= render "tickets/translation", message: @ticket, ticket: @ticket %><% end %>
       <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket, ticket: @ticket %><% end %>
       <% if @ticket.files.attached? %>
         <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">

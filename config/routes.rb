@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       patch :task
     end
     resource :share, only: %i[create destroy], controller: "ticket_shares"
+    resources :translations, only: :create
     resources :attachments, only: :show do
       get :preview, on: :member
     end

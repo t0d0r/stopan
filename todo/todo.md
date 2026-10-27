@@ -120,7 +120,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] header language switch only when signed out and on shared pages; signed-in users choose on the account page (specs/ui.md "Language")
 - [x] production: deployed 0f52988 (language buttons only for visitors and shared pages), after a database backup
 - [x] language buttons as one group like the text sizes: "EN BG DE", current shaded (specs/ui.md "Language")
-- [ ] "Translate" button on messages for staff with DeepL, admin switch, stored translations (specs/translation.md)
+- [x] "Translate" button on messages for staff with DeepL, admin switch, stored translations (specs/translation.md)
+- [ ] operator: set DEEPL_API_KEY in production and switch translation on in /admin/settings after checking DeepL's data terms (specs/translation.md)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

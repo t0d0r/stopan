@@ -8,7 +8,7 @@ module Admin
 
     def update
       @setting = AppSetting.current
-      if @setting.update(params.expect(app_setting: [ :auto_postpone_days ]))
+      if @setting.update(params.expect(app_setting: [ :auto_postpone_days, :translation_enabled ]))
         redirect_to admin_settings_path, notice: t("flash.settings_saved")
       else
         render :show, status: :unprocessable_content

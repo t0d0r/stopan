@@ -1,0 +1,21 @@
+<%# Machine translation of a message for staff (specs/translation.md):
+    the stored translation into the viewer's language, or the Translate
+    button. Locals: message (the ticket for its description, or a
+    comment), ticket. %>
+<% translation = Translation.for(message, I18n.locale) %>
+<% if translation %>
+  <section class="translation" data-translation aria-label="<%= t("ui.translation.label") %>">
+    <% if translation.already_in_target? %>
+      <p class="translation__note"><%= t("ui.translation.already", language: language_name(translation.target_language)) %></p>
+    <% else %>
+      <p class="translation__note"><%= t("ui.translation.from", language: language_name(translation.source_language)) %></p>
+      <div class="ticket-text<%= " markdown-body" if message.markdown? %>" lang="<%= translation.target_language %>">
+        <%= message.markdown? ? render_markdown(translation.text) : ticket_text(translation.text) %>
+      </div>
+    <% end %>
+    <button type="button" class="translation__hide" data-translation-hide hidden><%= t("ui.translation.hide") %></button>
+  </section>
+<% else %>
+  <%= button_to ticket_translations_path(ticket), params: { message: message.is_a?(Ticket) ? "description" : "comment-#{message.id}" },
+                form_class: "translation__form", class: "translation__button" do %><%= icon :globe, size: 12 %> <%= t("ui.translation.translate") %><% end %>
+<% end %>

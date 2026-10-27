@@ -482,8 +482,19 @@ Operator requests, in order:
   "DE" looked like two controls): all codes, current one shaded and
   aria-pressed. The dev container needed `make docker-dev-restart` to
   pick up `de` in config/application.rb.
-- Translate button (operator chose DeepL): spec written,
-  specs/translation.md; not built yet.
+- Translate button (operator chose DeepL, specs/translation.md): built.
+  `DeeplClient` (Net::HTTP, `:fx` keys -> Free host, `DEEPL_API_URL`
+  override, 10 s timeouts, errors never carry the key), `Translation`
+  (polymorphic on ticket description / comment, digest of the source so
+  edits make it stale, one row per message and language), migration
+  `CreateTranslations` (also `app_settings.translation_enabled`),
+  `TranslationsController#create` (staff, visible ticket, setting on and
+  key set, 30/min per user), partial `tickets/_translation` under the
+  request and each comment (not on shared pages), "Hide" via JS, admin
+  switch on /admin/settings (disabled without a key). Tests use a fake
+  client (`Translation.client`) and, for the HTTP request, a one-request
+  local TCP server. Checked in Chrome against a local fake DeepL (no
+  real text sent anywhere), light and dark.
 
 ## Decisions
 
@@ -538,6 +549,8 @@ menu and Take; open /tickets/new and pick a requester.
 
 ## Next
 
+- Production needs `DEEPL_API_KEY` (operator) before the Translate
+  button can be switched on; the next deploy runs `CreateTranslations`.
 - Production runs cbf319b (2026-10-27). If users still see 403/404 on
   some action, read the site's Apache error log for the ModSecurity rule
   id first (specs/deploy.md "ModSecurity false positives").

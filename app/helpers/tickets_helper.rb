@@ -46,6 +46,19 @@ module TicketsHelper
             data: { message_text: true, task_path: task_path })
   end
 
+  # The "Translate" button and translations show for staff when an
+  # administrator switched them on and a DeepL key is set (translation.md).
+  def translation_offered?
+    return @translation_offered if defined?(@translation_offered)
+
+    @translation_offered = user_signed_in? && current_user.staff? && Translation.available?
+  end
+
+  # A language named in the current UI language; DeepL may detect any.
+  def language_name(code)
+    t("ui.translation.languages.#{code}", default: code.to_s.upcase)
+  end
+
   # "M" box in a message's title strip that switches Markdown on or off.
   def markdown_box(path, on:)
     label = on ? t("ui.markdown.turn_off") : t("ui.markdown.turn_on")

@@ -422,6 +422,15 @@ function setUpPreview(dialog) {
 // Task lists (specs/markdown.md "Task lists"): editors tick check boxes in
 // place; the server flips the "[ ]" on that line and saves it as an edit.
 // Turbo's fetch carries a request id, so this tab skips its own refresh.
+// "Hide" on a machine translation removes it from this page; without
+// JavaScript the button stays hidden (specs/translation.md).
+function setUpTranslations() {
+  document.querySelectorAll("[data-translation-hide]").forEach((button) => {
+    button.hidden = false;
+    button.addEventListener("click", () => button.closest("[data-translation]").remove());
+  });
+}
+
 function setUpTaskLists() {
   document.querySelectorAll("[data-task-path] input[type=checkbox][data-task-line]").forEach((box) => {
     box.disabled = false;
@@ -564,6 +573,7 @@ function setUpPage() {
   setUpCopyBoxes();
   setUpDoubleClickEdit();
   setUpTaskLists();
+  setUpTranslations();
   document.querySelectorAll("select[data-message-recipients]").forEach(setUpMessageForm);
   setUpDropdowns();
 

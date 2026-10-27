@@ -39,6 +39,7 @@ module IconsHelper
     spark: '<path d="M8 2v3M8 11v3M2 8h3M11 8h3" /><circle cx="8" cy="8" r="1.2" />',
     headset: '<path d="M3 9.5V8a5 5 0 0 1 10 0v1.5" /><rect x="2.5" y="9" width="2.5" height="4" rx="1" />' \
              '<rect x="11" y="9" width="2.5" height="4" rx="1" /><path d="M12.2 13v.3a1.7 1.7 0 0 1-1.7 1.7H8.5" />',
+    globe: '<circle cx="8" cy="8" r="6" /><path d="M2 8h12M8 2c1.7 1.8 2.5 3.8 2.5 6S9.7 12.2 8 14C6.3 12.2 5.5 10.2 5.5 8S6.3 3.8 8 2z" />',
     shield: '<path d="M8 1.8 13 3.6v4.1c0 3.1-2.1 5.4-5 6.5-2.9-1.1-5-3.4-5-6.5V3.6z" /><path d="m5.8 8 1.6 1.6 2.9-3" />'
   }.freeze
 

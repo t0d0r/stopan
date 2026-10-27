@@ -21,6 +21,23 @@
   </div>
 </section>
 
+<section class="sticky sticky--blue panel panel--form" aria-labelledby="translation-title" id="translation">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.translation_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="translation-title"><%= t("ui.admin.settings.translation_title") %></h2>
+    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
+      <% keyed = DeeplClient.configured? %>
+      <div class="field">
+        <%= f.check_box :translation_enabled, disabled: !keyed, aria: { describedby: "translation-hint" } %>
+        <%= f.label :translation_enabled, t("ui.admin.settings.translation_enabled") %>
+        <small class="field-hint" id="translation-hint"><%= t("ui.admin.settings.translation_hint") %>
+          <% unless keyed %><strong><%= t("ui.admin.settings.translation_no_key") %></strong><% end %></small>
+      </div>
+      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary", disabled: !keyed %></div>
+    <% end %>
+  </div>
+</section>
+
 <section class="sticky sticky--gray panel panel--form stages-panel" aria-labelledby="stages-title" id="stages">
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.stages_caption") %></span></header>
   <div class="panel__body">

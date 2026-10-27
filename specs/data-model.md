@@ -99,7 +99,17 @@ nullable), `kind`, `event_id` (nullable), `status` (nullable), `read_at`,
 
 `stages`: `status`, `name`, `color`, `position`, timestamps; board
 sub-columns (board.md). `app_settings`: one row, `auto_postpone_days`
-(integer, default 30, 0 = off).
+(integer, default 30, 0 = off), `translation_enabled` (boolean, default
+false; translation.md).
+
+## translations
+
+Machine translations of messages for staff (translation.md):
+`translatable_type`/`translatable_id` (the ticket for its description,
+or a comment), `target_language`, `source_language`, `text`,
+`source_digest` (SHA-256 of the original it was made from), timestamps.
+Unique on (`translatable_type`, `translatable_id`, `target_language`);
+deleted with their message.
 
 ## impersonations
 
