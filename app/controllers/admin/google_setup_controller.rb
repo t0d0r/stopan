@@ -5,6 +5,8 @@ module Admin
   class GoogleSetupController < BaseController
     STEPS = 6
     KINDS = %w[workspace gmail].freeze
+    # One partial per step, chosen from this list, never from a parameter.
+    STEP_PARTIALS = (1..STEPS).map { |step| "admin/google_setup/step_#{step}" }.freeze
 
     before_action :set_wizard
 

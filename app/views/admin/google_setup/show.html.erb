@@ -18,6 +18,6 @@
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.google_setup.step_of", step: @step, count: Admin::GoogleSetupController::STEPS) %></span></header>
   <div class="panel__body">
     <h2 class="wizard__title" id="wizard-title"><%= t("ui.google_setup.steps.s#{@step}") %></h2>
-    <%= render "admin/google_setup/step_#{@step}" %>
+    <%= render Admin::GoogleSetupController::STEP_PARTIALS.fetch(@step - 1) %>
   </div>
 </section>
