@@ -64,12 +64,25 @@ Times are calendar time (no business hours), in the app's time zone.
    focusing a group shows a tooltip with the date and both values (plain
    text, `textContent`); each group also has an SVG `<title>`. A "Show as
    table" disclosure under the chart lists every bucket.
-3. **Open now by status:** one row per status (and stage) with its count
+3. **Burndown** (operator, 2026-10-27: "add a burndown chart"): one
+   line, the number of open (not Done) tickets at the end of each day,
+   week or month of the period (the last point is now). It is replayed
+   from the status events (`status_changed`): a ticket counts as open at
+   a moment if it was created by then and its last status change before
+   then was not to Done, so a ticket that was done and reopened counts
+   right at every point. A ticket with no status events at all (older or
+   imported data) counts as Done from its `done_at`. A single series, so no legend: the title names
+   it ("Open tickets at the end of each day"), and the last value is
+   written at the end of the line. 2px line in `#2a78d6` with a 10%
+   wash under it, the same frame, ticks and dates as the volume chart;
+   hovering or focusing a point shows the date and the count, with a
+   hairline at that point; "Show as table" lists every point.
+4. **Open now by status:** one row per status (and stage) with its count
    and a thin single-hue bar (`#2a78d6`) proportional to the largest.
-4. **By organization:** table with New, Done, Open now, median first
+5. **By organization:** table with New, Done, Open now, median first
    response, median resolution, for each visible organization with any
    ticket; sorted by Open now, then name.
-5. **By person:** table of active staff who have tickets assigned now or
+6. **By person:** table of active staff who have tickets assigned now or
    activity in the period: Open assigned now, Done in the period (as
    assignee), Public replies and Internal notes written in the period,
    median first response of the tickets where they wrote the first
@@ -93,7 +106,8 @@ Requesters 403; agents see only their organizations' numbers; the
 definitions above on known fixtures (new, done, reopened not done,
 first response by staff only and public only, medians, waiting count);
 period and organization filters and their fallbacks; buckets per period;
-the chart has a legend, titles and a table; German and Bulgarian render.
+the chart has a legend, titles and a table; the burndown replays
+reopened tickets and ends at the open count now; German and Bulgarian render.
 
 ## Later
 

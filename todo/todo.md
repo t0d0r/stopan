@@ -125,6 +125,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] production: deployed ff0f444 (translation, key in settings, language group), after a database backup (specs/deploy.md)
 - [ ] operator: after the next deploy, enter the DeepL key and switch translation on in /admin/settings, after checking DeepL's data terms (specs/translation.md)
 - [x] statistical reports page for staff: tiles, created/done chart, open by status, by organization, by person (specs/reports.md)
+- [x] burndown chart on the reports page, replayed from status events (specs/reports.md "Burndown")
+- [x] separate "Board" pill in the menu bar; the bar wraps under 1180px, the search shrinks first, pills wrap on phones (specs/ui.md "Menu bar")
 - [ ] reports later: CSV export, custom date ranges, business hours (specs/reports.md "Later")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,

@@ -568,6 +568,18 @@ menu and Take; open /tickets/new and pick a requester.
   with the dataviz validator on the #efeeea paper (orange < 3:1, relieved
   by legend, tooltip and table). Checked in Chrome with fictional volume
   in en/bg/de, dark theme and 390px.
+- Burndown (operator): open tickets at the end of each bucket, replayed
+  from `status_changed` events (done and reopened counts right; tickets
+  without status events fall back to done_at); one 2px line with a 10%
+  wash, end value in the title row, crosshair and tooltip per point,
+  table view. The chart tooltip JS now reads `data-rows` JSON, shared by
+  both charts.
+- "Board" pill (operator: "a separate button for the board"): purple,
+  staff only, current on the board (no longer "Queue"). Measured the bar:
+  a German admin needs about 1260px with a 300px search, so the bar
+  wraps under 1180px, the search shrinks first (flex-shrink 100), the
+  right-hand tools never shrink (names capped at 14em), and the pills
+  wrap on phones (before, "Admin" was cut off at 390px).
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

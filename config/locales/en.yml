@@ -55,6 +55,7 @@ en:
       label: "Sections"
       queue: "Queue"
       my_tickets: "My tickets"
+      board: "Board"
       new_ticket: "New ticket"
       reports: "Reports"
       admin: "Admin"
@@ -626,8 +627,18 @@ en:
       series:
         created: "Created"
         done: "Done"
+        open: "Open"
       tooltip: "%{label}: %{created} created, %{done} done"
       show_table: "Show as table"
+      burndown_caption: "Burndown"
+      burndown_titles:
+        day: "Open tickets at the end of each day"
+        week: "Open tickets at the end of each week"
+        month: "Open tickets at the end of each month"
+      burndown_now:
+        one: "%{count} open now"
+        other: "%{count} open now"
+      burndown_tooltip: "%{label}: %{count} open"
       status_caption: "Backlog"
       status_title: "Open now by status"
       org_caption: "Organizations"

@@ -58,6 +58,7 @@ de:
       label: "Bereiche"
       queue: "Warteschlange"
       my_tickets: "Meine Tickets"
+      board: "Board"
       new_ticket: "Neues Ticket"
       reports: "Berichte"
       admin: "Verwaltung"
@@ -629,8 +630,18 @@ de:
       series:
         created: "Neu"
         done: "Erledigt"
+        open: "Offen"
       tooltip: "%{label}: %{created} neu, %{done} erledigt"
       show_table: "Als Tabelle anzeigen"
+      burndown_caption: "Burndown"
+      burndown_titles:
+        day: "Offene Tickets am Ende jedes Tages"
+        week: "Offene Tickets am Ende jeder Woche"
+        month: "Offene Tickets am Ende jedes Monats"
+      burndown_now:
+        one: "%{count} jetzt offen"
+        other: "%{count} jetzt offen"
+      burndown_tooltip: "%{label}: %{count} offen"
       status_caption: "Rückstand"
       status_title: "Jetzt offen nach Status"
       org_caption: "Organisationen"

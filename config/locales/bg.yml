@@ -58,6 +58,7 @@ bg:
       label: "Раздели"
       queue: "Опашка"
       my_tickets: "Моите заявки"
+      board: "Дъска"
       new_ticket: "Нова заявка"
       reports: "Отчети"
       admin: "Администрация"
@@ -629,8 +630,18 @@ bg:
       series:
         created: "Нови"
         done: "Готови"
+        open: "Отворени"
       tooltip: "%{label}: %{created} нови, %{done} готови"
       show_table: "Покажи като таблица"
+      burndown_caption: "Burndown"
+      burndown_titles:
+        day: "Отворени заявки в края на всеки ден"
+        week: "Отворени заявки в края на всяка седмица"
+        month: "Отворени заявки в края на всеки месец"
+      burndown_now:
+        one: "%{count} отворена сега"
+        other: "%{count} отворени сега"
+      burndown_tooltip: "%{label}: %{count} отворени"
       status_caption: "Натрупване"
       status_title: "Отворени сега по състояние"
       org_caption: "Организации"

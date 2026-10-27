@@ -24,7 +24,8 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
       assert_select ".board-card__move form[action=?]", move_ticket_path(printer), Ticket::TRANSITIONS[printer.status].size
     end
     assert_select ".view-switch a[aria-current=page]", "Board"
-    assert_select ".menubar__nav a[aria-current=page][href=?]", tickets_path, /Queue/
+    assert_select ".menubar__nav a[aria-current=page][href=?]", board_path, /Board/
+    assert_select ".menubar__nav a[aria-current=page]", 1
     assert_select "turbo-cable-stream-source[channel=TicketListsChannel]"
   end
 

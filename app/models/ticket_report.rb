@@ -6,6 +6,7 @@ class TicketReport
   UNITS = { "7d" => :day, "30d" => :day, "90d" => :week, "12m" => :month }.freeze
 
   Bucket = Struct.new(:starts_at, :created, :done, keyword_init: true)
+  Point = Struct.new(:starts_at, :open, keyword_init: true)
   StatusRow = Struct.new(:status, :stage, :count, keyword_init: true)
   OrganizationRow = Struct.new(:organization, :created, :done, :open, :first_response, :resolution, keyword_init: true)
   PersonRow = Struct.new(:user, :open, :done, :replies, :notes, :first_response, keyword_init: true)
@@ -85,6 +86,24 @@ class TicketReport
       created = created_in(range).pluck(:created_at).map { |time| bucket_of(time) }.tally
       done = done_in(range).pluck(:done_at).map { |time| bucket_of(time) }.tally
       bucket_starts.map { |start| Bucket.new(starts_at: start, created: created.fetch(start, 0), done: done.fetch(start, 0)) }
+    end
+  end
+
+  # Open tickets at the end of each bucket, the last one now (reports.md
+  # "Burndown"), replayed from the status events so that a ticket done
+  # and reopened counts right at every point.
+  def burndown
+    @burndown ||= begin
+      tickets = scope.where(created_at: ..now).pluck(:id, :created_at, :done_at)
+      changes = TicketEvent.where(ticket_id: tickets.map(&:first), action: "status_changed", created_at: ..now)
+                           .order(:created_at, :id).pluck(:ticket_id, :created_at, :to_value)
+                           .group_by(&:first)
+      starts = buckets.map(&:starts_at)
+      ends = starts.drop(1).map { |start| start - 1.second } << now
+      starts.zip(ends).map do |start, moment|
+        open = tickets.count { |id, at, done_at| at <= moment && !done_at?(changes[id], done_at, moment) }
+        Point.new(starts_at: start, open: open)
+      end
     end
   end
 
@@ -170,6 +189,16 @@ class TicketReport
   def resolutions
     @resolutions ||= done_in(range).pluck(:organization_id, :created_at, :done_at)
                                    .map { |org_id, created, done| [ org_id, done - created ] }
+  end
+
+  # Was the ticket Done at that moment? The last status change by then
+  # says. A ticket with no status events at all (imported, or older data)
+  # falls back to its done_at.
+  def done_at?(changes, done_at, moment)
+    return done_at.present? && done_at <= moment if changes.nil?
+
+    last = changes.take_while { |_, at, _| at <= moment }.last
+    last&.last == Ticket::DONE
   end
 
   def median(values)

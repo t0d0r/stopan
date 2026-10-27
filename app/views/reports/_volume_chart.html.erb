@@ -34,7 +34,8 @@
             <% label = report_bucket_label(bucket.starts_at, report.unit) %>
             <% summary = t("ui.reports.tooltip", label: label, created: bucket.created, done: bucket.done) %>
             <g class="report-chart__group" tabindex="0" role="img" aria-label="<%= summary %>"
-               data-chart-group data-label="<%= label %>" data-created="<%= bucket.created %>" data-done="<%= bucket.done %>">
+               data-chart-group data-label="<%= label %>"
+               data-rows="<%= [ [ "created", t("ui.reports.series.created"), bucket.created ], [ "done", t("ui.reports.series.done"), bucket.done ] ].to_json %>">
               <title><%= summary %></title>
               <rect class="report-chart__hit" x="<%= index * 100 %>" y="0" width="100" height="<%= height.to_i %>" />
               <% [ [ bucket.created, "created", 50 - gap / 2 - bar ], [ bucket.done, "done", 50 + gap / 2 ] ].each do |value, series, x| %>

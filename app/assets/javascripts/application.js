@@ -431,26 +431,26 @@ function setUpTranslations() {
   });
 }
 
-// Reports chart (specs/reports.md): one tooltip per date group on hover
-// and focus, built with textContent; the table under the chart has the
-// same numbers without it.
+// Reports charts (specs/reports.md): one tooltip per date group on hover
+// and focus, built with textContent from the group's data-rows
+// ([series, name, value], ...); the tables under the charts have the same
+// numbers without it.
 function setUpReportCharts() {
   document.querySelectorAll("[data-report-chart]").forEach((chart) => {
     const plot = chart.querySelector(".report-chart__plot");
     const tooltip = chart.querySelector("[data-chart-tooltip]");
-    const legend = [...chart.querySelectorAll(".report-legend li")].map((item) => item.textContent.trim());
     const show = (group) => {
       tooltip.replaceChildren();
       const title = document.createElement("div");
       title.textContent = group.dataset.label;
       tooltip.append(title);
-      [ [ group.dataset.created, "created", legend[0] ], [ group.dataset.done, "done", legend[1] ] ].forEach(([ value, series, name ]) => {
+      JSON.parse(group.dataset.rows).forEach(([ series, name, value ]) => {
         const row = document.createElement("div");
         row.className = "report-chart__tooltip-row";
         const key = document.createElement("span");
         key.className = `report-chart__tooltip-key report-legend__key--${series}`;
         const number = document.createElement("strong");
-        number.textContent = value;
+        number.textContent = String(value);
         const label = document.createElement("span");
         label.textContent = name;
         row.append(key, number, label);

@@ -98,6 +98,22 @@ class TicketReportTest < ActiveSupport::TestCase
     assert_equal 2, months.last.created
   end
 
+  test "burndown replays status changes, so reopened tickets count right" do
+    a = ticket(created: 5.days.ago)
+    TicketEvent.create!(ticket: a, action: "status_changed", from_value: "new", to_value: "done", created_at: 3.days.ago)
+    TicketEvent.create!(ticket: a, action: "status_changed", from_value: "done", to_value: "open", created_at: 1.day.ago)
+    a.update_columns(status: "open", done_at: nil)
+    b = ticket(created: 4.days.ago, status: "done", done: 2.days.ago)
+    TicketEvent.create!(ticket: b, action: "status_changed", from_value: "new", to_value: "done", created_at: 2.days.ago)
+    ticket(created: 10.days.ago)
+
+    points = report(period: "7d").burndown
+    assert_equal 7, points.size
+    # Day by day from 6 days ago: c only; c+a; c+a+b; a done; b done too; a reopened; now.
+    assert_equal [ 1, 2, 3, 2, 1, 2, 2 ], points.map(&:open)
+    assert_equal report.open_count, points.last.open
+  end
+
   test "open now by status lists every open status and busy stages" do
     stage = Stage.create!(status: "open", name: "Waiting for parts", color: "pink")
     ticket(created: 1.day.ago, status: "open").update_columns(stage_id: stage.id)

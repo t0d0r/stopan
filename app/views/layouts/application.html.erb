@@ -29,6 +29,9 @@
       <nav class="menubar__nav" aria-label="<%= t("ui.nav.label") %>">
         <%= nav_link current_user.staff? ? t("ui.nav.queue") : t("ui.nav.my_tickets"), tickets_path, dot: "yellow",
                      current: current_section == :tickets %>
+        <% if current_user.staff? %>
+          <%= nav_link t("ui.nav.board"), board_path, dot: "purple", current: current_section == :board %>
+        <% end %>
         <%= nav_link t("ui.nav.new_ticket"), new_ticket_path, dot: "green", current: current_section == :new_ticket %>
         <% if current_user.staff? %>
           <%= nav_link t("ui.nav.reports"), reports_path, dot: "blue", current: current_section == :reports %>

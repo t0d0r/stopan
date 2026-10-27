@@ -1,0 +1,75 @@
+<%# Open tickets at the end of each day, week or month (specs/reports.md
+    "Burndown"): one line in an SVG stretched to the panel, the same frame
+    as the volume chart, a tooltip and a hairline per point, a table view.
+    Locals: report. %>
+<% points = report.burndown %>
+<% top, ticks = report_ticks(points.map(&:open).max.to_i) %>
+<% every = (points.size / ReportsHelper::CHART_LABELS.to_f).ceil %>
+<% height = 200.0 %>
+<% y = ->(value) { (height - value * height / top).round(2) } %>
+<% line = points.each_with_index.map { |point, index| "#{index * 100 + 50},#{y.call(point.open)}" }.join(" ") %>
+<section class="sticky sticky--gray panel report-chart report-chart--burndown" aria-labelledby="report-burndown-title" data-report-chart>
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.reports.burndown_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="report-burndown-title">
+      <span><%= t("ui.reports.burndown_titles.#{report.unit}") %></span>
+      <span class="report-chart__end"><%= t("ui.reports.burndown_now", count: points.last&.open.to_i) %></span>
+    </h2>
+    <div class="report-chart__frame">
+      <div class="report-chart__ticks" aria-hidden="true">
+        <% ticks.reverse_each do |tick| %><span><%= tick %></span><% end %>
+      </div>
+      <div class="report-chart__plot">
+        <svg class="report-chart__svg" viewBox="0 0 <%= points.size * 100 %> <%= height.to_i %>" preserveAspectRatio="none"
+             role="group" aria-label="<%= t("ui.reports.burndown_titles.#{report.unit}") %>">
+          <% ticks.each do |tick| %>
+            <line class="report-chart__grid" x1="0" x2="<%= points.size * 100 %>" y1="<%= y.call(tick) %>" y2="<%= y.call(tick) %>" vector-effect="non-scaling-stroke" />
+          <% end %>
+          <% if points.any? %>
+            <polygon class="report-chart__area" points="50,<%= height.to_i %> <%= line %> <%= (points.size - 1) * 100 + 50 %>,<%= height.to_i %>" />
+            <polyline class="report-chart__line" points="<%= line %>" vector-effect="non-scaling-stroke" />
+          <% end %>
+          <% points.each_with_index do |point, index| %>
+            <% label = report_bucket_label(point.starts_at, report.unit) %>
+            <% summary = t("ui.reports.burndown_tooltip", label: label, count: point.open) %>
+            <g class="report-chart__group" tabindex="0" role="img" aria-label="<%= summary %>" data-chart-group data-label="<%= label %>"
+               data-rows="<%= [ [ "open", t("ui.reports.series.open"), point.open ] ].to_json %>">
+              <title><%= summary %></title>
+              <rect class="report-chart__hit" x="<%= index * 100 %>" y="0" width="100" height="<%= height.to_i %>" />
+              <line class="report-chart__crosshair" x1="<%= index * 100 + 50 %>" x2="<%= index * 100 + 50 %>" y1="0" y2="<%= height.to_i %>" vector-effect="non-scaling-stroke" />
+            </g>
+          <% end %>
+        </svg>
+        <div class="report-chart__tooltip" data-chart-tooltip hidden></div>
+      </div>
+      <div></div>
+      <div class="report-chart__labels" aria-hidden="true">
+        <% points.each_with_index do |point, index| %>
+          <% shown = (index % every).zero? %>
+          <span class="<%= "is-secondary" if shown && (index / every).odd? %>"><%= report_bucket_label(point.starts_at, report.unit) if shown %></span>
+        <% end %>
+      </div>
+    </div>
+    <details class="report-chart__table">
+      <summary><%= t("ui.reports.show_table") %></summary>
+      <div class="table-scroll">
+        <table class="ledger report-table">
+          <thead>
+            <tr>
+              <th scope="col"><%= t("ui.reports.units.#{report.unit}") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.series.open") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% points.each do |point| %>
+              <tr>
+                <td class="text report-table__name"><%= report_bucket_label(point.starts_at, report.unit) %></td>
+                <td class="num"><%= point.open %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>

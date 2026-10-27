@@ -16,11 +16,12 @@ Turbo Drive for page changes.
 - **Menu bar:** translucent bar at the top. Left: the sticky icon and
   "Stopan" (icon only under 560px), then section pills with a paper-colour
   square: "Queue" (staff, yellow) or "My tickets" (requesters, yellow),
-  "New ticket" (green), "Reports" (staff, blue; reports.md), "Admin"
-  (admins, grey). The current section has
-  `aria-current="page"`; the board (board.md) is part of "Queue", like
-  the list and the ticket pages. Then the ticket search field (signed-in users,
-  queues.md "Search"; on its own full-width row under 1024px, where the
+  "Board" (staff, purple; board.md), "New ticket" (green), "Reports"
+  (staff, blue; reports.md), "Admin" (admins, grey). The current section
+  has `aria-current="page"`: "Queue" on the list and the ticket pages,
+  "Board" on the board (operator, 2026-10-27: "a separate button for the
+  board in the header"; before, the board counted as "Queue"). Then the ticket search field (signed-in users,
+  queues.md "Search"; on its own full-width row under 1180px, where the
   bar wraps instead of running off the screen). Right: the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
