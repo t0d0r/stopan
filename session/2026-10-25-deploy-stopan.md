@@ -116,8 +116,9 @@ cookies and `<script>` in the query string -> still blocked; headers,
 `/cable` 101, configtest, g0no `/up` 200. Immediate workaround for a
 locked-out browser was: delete the site's cookies.
 
-Open: g0no runs under the same CRS and may hit the same random match on
-its session cookie; not touched (needs its own decision).
+g0no: on the operator's request the same exclusion was added to site 24
+for `_g0no_session` (SecAction id 13182), recorded and committed in the
+g0no repository (specs/deploy.md there).
 
 ## Demo data in the dev container (2026-10-26 evening)
 
