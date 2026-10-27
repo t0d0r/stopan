@@ -189,8 +189,10 @@ approved "go in this order", all done 2026-10-27):
 ## Logo (2026-10-27, specs/ui.md "Logo")
 
 - [x] redraw the mark from stopan.png as SVG and draw seven candidates in the app's style (docs/logos/)
-- [~] operator: pick a candidate (or a mix: tab icon, menu bar, Omarchy)
-- [ ] use the chosen logo: public/icon.svg, icon.png, apple-touch-icon.png, favicon.ico, menu bar brand, email header; wordmark text to paths
+- [x] operator: pick a candidate (or a mix: tab icon, menu bar, Omarchy) - chose 3, sticky icon
+- [x] use the chosen logo: public/icon.svg, icon.png, apple-touch-icon.png, favicon.ico (the menu bar already shows icon.svg)
+- [x] candidate 1 in black instead of teal (operator)
+- [ ] decide: own icon for the Omarchy theme (candidate 6) and a logo header in emails (specs/ui.md "Logo")
 - [ ] refresh the README screenshots after the logo changes (specs/ui.md "Screenshots")
 
 ## Later (specs/roadmap.md)

@@ -58,13 +58,21 @@ Turbo Drive for page changes.
 Operator, 2026-10-27: "adopt stopan.png to visual app style, generate
 several logos, I will review them". `stopan.png` (repository root) is the
 new brand: a teal (`#024146`) circle over a house with a door, and the
-word STOPAN under it. Until a candidate is chosen, the app keeps the
-yellow sticky icon in `public/icon.svg`.
+word STOPAN under it.
+
+**Chosen** (operator, 2026-10-27: "i liked 3"): candidate 3, the teal
+mark on the yellow sticky note, is the site icon. `public/icon.svg` is
+that drawing; it is the menu bar icon (18 px, next to "Stopan") in both
+themes, the SVG tab icon, and the source of `public/icon.png` (512 px),
+`public/apple-touch-icon.png` (180 px on white, no transparency) and
+`public/favicon.ico` (16, 32 and 48 px PNGs), rendered with
+`rsvg-convert`. Change those four files together.
 
 - The mark is redrawn as vector on a 64-unit grid: circle `cx 32, cy
   17.7, r 8.6`; house `M32 27 56 43.5V55H39.35V43.2L32 38l-7.35
   5.2V55H8V43.5z`.
-- Candidates in `docs/logos/`: 1 original (teal, with wordmark), 2 yellow
+- Candidates in `docs/logos/`: 1 original (black, with wordmark;
+  operator, 2026-10-27: "make it black, not a shade of green"), 2 yellow
   sun (head in the yellow strip colour), 3 sticky icon (mark on today's
   yellow sticky), 4 paper house (the house as a yellow sticky, roof as
   title strip), 5 teal tile (mark in paper yellow on a teal tile), 6
@@ -76,8 +84,8 @@ yellow sticky icon in `public/icon.svg`.
   Logos stay static SVG (no scripts, links or external references) and
   are served from the app, as the CSP requires. Wordmark text becomes
   paths before use so it does not depend on the system's fonts.
-- Open: which candidate goes where (tab icon, menu bar, Omarchy theme,
-  email header).
+- Open: whether the Omarchy theme gets its own icon (candidate 6) and
+  whether emails get a logo header; neither has one now.
 
 ## Pages
 
