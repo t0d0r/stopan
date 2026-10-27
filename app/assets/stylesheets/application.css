@@ -760,9 +760,9 @@ form.button_to {
 }
 
 .field-input,
-.auth input[type="email"],
-.auth input[type="password"],
-.auth input[type="text"] {
+:is(.auth, .account-page) input[type="email"],
+:is(.auth, .account-page) input[type="password"],
+:is(.auth, .account-page) input[type="text"] {
   min-width: 0;
   padding: 6px 9px;
   border: 1px solid var(--field-border);
@@ -773,7 +773,7 @@ form.button_to {
 }
 
 .field-input:focus,
-.auth input:focus {
+:is(.auth, .account-page) input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-ring);
   outline: none;
@@ -822,34 +822,34 @@ form.button_to {
   font-weight: 600;
 }
 
-.auth .field {
+:is(.auth, .account-page) .field {
   margin-bottom: 12px;
 }
 
-.auth .field br {
+:is(.auth, .account-page) .field br {
   display: none;
 }
 
-.auth label {
+:is(.auth, .account-page) label {
   display: block;
   margin-bottom: 4px;
   color: var(--ink-soft);
   font-size: 13px;
 }
 
-.auth input[type="email"],
-.auth input[type="password"],
-.auth input[type="text"] {
+:is(.auth, .account-page) input[type="email"],
+:is(.auth, .account-page) input[type="password"],
+:is(.auth, .account-page) input[type="text"] {
   width: 100%;
 }
 
-.auth input[type="checkbox"] + label {
+:is(.auth, .account-page) input[type="checkbox"] + label {
   display: inline;
   margin: 0 0 0 4px;
 }
 
-.auth .field em,
-.auth .field i {
+:is(.auth, .account-page) .field em,
+:is(.auth, .account-page) .field i {
   display: block;
   margin-top: 2px;
   color: var(--ink-soft);
@@ -857,11 +857,11 @@ form.button_to {
   font-style: normal;
 }
 
-.auth .actions {
+:is(.auth, .account-page) .actions {
   margin: 16px 0 14px;
 }
 
-.auth input[type="submit"] {
+:is(.auth, .account-page) input[type="submit"] {
   width: 100%;
   padding: 7px 14px;
   border: 0;
@@ -872,8 +872,44 @@ form.button_to {
   cursor: pointer;
 }
 
-.auth input[type="submit"]:hover {
+:is(.auth, .account-page) input[type="submit"]:hover {
   background: #0857bd;
+}
+
+/* The own account page: panels side by side (specs/ui.md "Own account page"). */
+.account-page {
+  column-width: 320px;
+  column-gap: 20px;
+}
+
+/* Panels flow down the columns and never split; the wide one spans all. */
+.account-page .panel {
+  margin: 0 0 20px;
+  break-inside: avoid;
+}
+
+.account-panel--wide {
+  column-span: all;
+  margin-top: 20px;
+}
+
+.account-page .actions {
+  margin: 14px 0 0;
+}
+
+.api-tokens #new-api-token-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 0 16px;
+  align-items: end;
+}
+
+.api-tokens #new-api-token-form .actions {
+  margin: 0 0 12px;
+}
+
+.account-page + .auth__meta {
+  margin-top: 16px;
 }
 
 .auth__links {

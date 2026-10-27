@@ -83,7 +83,18 @@ Turbo Drive for page changes.
   the same note (status pill only) under the read-only notice.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
   sticky.
-- **Account pages:** a small yellow sticky centred on the desk.
+- **Account pages:** a small yellow sticky centred on the desk (sign in,
+  sign up, password reset).
+- **Own account page** (`/users/edit`; operator, 2026-10-27: "the
+  personal settings are vertical, make them fit the screen like the
+  administration"): a page title "My account" and a grid of sticky
+  panels across the desk (as many columns as fit, each at least 320px,
+  one column on phones; the panels flow down the columns without gaps),
+  each with its caption strip and its own Save:
+  Profile (name, email, password; yellow), Language (blue), Theme
+  (purple), Order of replies (green), Email notifications (pink, staff
+  only), and API tokens (gray, the full width of the grid, api.md). The
+  organizations the user belongs to are a line under the grid.
 - **Flash messages:** stickies (yellow "Notice", pink "Attention") in a
   band at the top of the desk, under the menu bar and any banner, centred
   and at most 560px wide, on every screen size (operator, 2026-10-27:

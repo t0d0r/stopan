@@ -1,160 +1,185 @@
-<h2><%= t("ui.account_page.title") %></h2>
+<%# The own account page as a grid of panels, like the admin pages (specs/ui.md "Own account page"). %>
+<% content_for :wide_page, "1" %>
+<% content_for :title, t("ui.account_page.title") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.account_page.title") %></h1>
+</div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= form_errors resource %>
+<div class="account-page">
+  <section class="sticky sticky--yellow panel account-panel" id="profile-panel" aria-labelledby="profile-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="profile-title"><%= t("ui.account_page.profile") %></span></header>
+    <div class="panel__body">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+        <%= form_errors resource %>
 
-  <div class="field">
-    <%= f.label :name, t("ui.fields.name") %>
-    <%= f.text_field :name, autocomplete: "name", maxlength: 120 %>
-  </div>
+        <div class="field">
+          <%= f.label :name, t("ui.fields.name") %>
+          <%= f.text_field :name, autocomplete: "name", maxlength: 120 %>
+        </div>
 
-  <div class="field">
-    <%= f.label :email, t("ui.fields.email") %>
-    <%= f.email_field :email, autocomplete: "email" %>
-  </div>
+        <div class="field">
+          <%= f.label :email, t("ui.fields.email") %>
+          <%= f.email_field :email, autocomplete: "email" %>
+        </div>
 
-  <div class="field">
-    <%= f.label :password, t("ui.new_password") %>
-    <i><%= t("ui.account_page.password_keep") %></i>
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <em><%= t("ui.password_minimum", count: @minimum_password_length) %></em>
-    <% end %>
-  </div>
+        <div class="field">
+          <%= f.label :password, t("ui.new_password") %>
+          <i><%= t("ui.account_page.password_keep") %></i>
+          <%= f.password_field :password, autocomplete: "new-password" %>
+          <% if @minimum_password_length %>
+            <em><%= t("ui.password_minimum", count: @minimum_password_length) %></em>
+          <% end %>
+        </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation, t("ui.confirm_new_password") %>
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+        <div class="field">
+          <%= f.label :password_confirmation, t("ui.confirm_new_password") %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+        </div>
 
-  <% if resource.password_chosen? %>
-    <div class="field">
-      <%= f.label :current_password, t("ui.account_page.current_password") %>
-      <i><%= t("ui.account_page.current_password_hint") %></i>
-      <%= f.password_field :current_password, autocomplete: "current-password" %>
-    </div>
-  <% else %>
-    <p class="field-hint"><%= t("ui.account_page.first_password_hint") %></p>
-  <% end %>
+        <% if resource.password_chosen? %>
+          <div class="field">
+            <%= f.label :current_password, t("ui.account_page.current_password") %>
+            <i><%= t("ui.account_page.current_password_hint") %></i>
+            <%= f.password_field :current_password, autocomplete: "current-password" %>
+          </div>
+        <% else %>
+          <p class="field-hint"><%= t("ui.account_page.first_password_hint") %></p>
+        <% end %>
 
-  <div class="actions">
-    <%= f.submit t("ui.save") %>
-  </div>
-<% end %>
-
-<%= form_with model: resource, url: user_language_path, method: :patch, id: "language" do |f| %>
-  <h3><%= t("ui.account_page.language") %></h3>
-  <div class="field">
-    <%= f.label :language, t("ui.account_page.language"), class: "sr-only" %>
-    <%= f.select :language, [ [ t("ui.account_page.browser_language"), "" ] ] + ApplicationHelper::LANGUAGE_NAMES.invert.to_a,
-                 {}, class: "select" %>
-    <i><%= t("ui.account_page.language_hint") %></i>
-  </div>
-  <div class="actions">
-    <%= f.submit t("ui.account_page.save_language") %>
-  </div>
-<% end %>
-
-<%# The theme is a browser preference, like light/dark (ui.md "Themes"). %>
-<%= form_with url: preferences_path, method: :patch, id: "look", data: { turbo: false } do %>
-  <h3><%= t("ui.account_page.theme") %></h3>
-  <div class="field">
-    <%= label_tag :look, t("ui.account_page.theme"), class: "sr-only" %>
-    <% choices = [ [ t("ui.account_page.site_look", look: t("ui.account_page.looks.#{site_look}")), "default" ] ] +
-                 PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] } %>
-    <%= select_tag :look, options_for_select(choices, own_look || "default"), class: "select" %>
-    <i><%= t("ui.account_page.theme_hint") %></i>
-  </div>
-  <div class="actions">
-    <%= submit_tag t("ui.account_page.save_theme"), name: nil %>
-  </div>
-<% end %>
-
-<%# The timeline order, a browser preference like the theme (timeline.md "Order of the timeline"). %>
-<%= form_with url: preferences_path, method: :patch, id: "timeline-order", data: { turbo: false } do %>
-  <h3><%= t("ui.account_page.timeline_order") %></h3>
-  <div class="field">
-    <%= label_tag :timeline_order, t("ui.account_page.timeline_order"), class: "sr-only" %>
-    <% site_order = AppSetting.current.timeline_order %>
-    <% choices = [ [ t("ui.account_page.site_timeline_order", order: t("ui.timeline.orders.#{site_order}")), "default" ] ] +
-                 AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] } %>
-    <%= select_tag :timeline_order, options_for_select(choices, own_timeline_order || "default"), class: "select" %>
-    <i><%= t("ui.account_page.timeline_order_hint") %></i>
-  </div>
-  <div class="actions">
-    <%= submit_tag t("ui.account_page.save_timeline_order"), name: nil %>
-  </div>
-<% end %>
-
-<% if resource.staff? %>
-  <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
-    <h3><%= t("ui.account_page.notifications") %></h3>
-    <div class="field">
-      <%= f.check_box :notify_new_tickets %><%= f.label :notify_new_tickets, t("ui.account_page.notify_new_tickets") %>
-      <i><%= t("ui.account_page.notifications_hint") %></i>
-    </div>
-    <div class="actions">
-      <%= f.submit t("ui.account_page.save_notifications") %>
-    </div>
-  <% end %>
-<% end %>
-
-<%# Personal tokens for the JSON API (specs/api.md "Tokens"). %>
-<section id="api-tokens" class="api-tokens" aria-labelledby="api-tokens-title">
-  <h3 id="api-tokens-title"><%= t("ui.api_tokens.title") %></h3>
-  <p class="field-hint"><%= t("ui.api_tokens.intro") %></p>
-  <% if (plain = flash[:api_token]) %>
-    <div class="callout api-tokens__new" role="status">
-      <p><strong><%= t("ui.api_tokens.copy_now") %></strong></p>
-      <div class="sharing__link">
-        <%= text_field_tag "new-api-token", plain, readonly: true, class: "field-input", data: { select_on_focus: true },
-                           "aria-label": t("ui.api_tokens.new_token") %>
-        <button type="button" class="btn" data-copy="new-api-token" data-copied-label="<%= t("ui.share.copied") %>">
-          <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.google_setup.copy") %></span>
-        </button>
-      </div>
-    </div>
-  <% end %>
-  <% tokens = resource.api_tokens.newest_first.to_a %>
-  <% if tokens.any? %>
-    <ul class="share-list api-tokens__list">
-      <% tokens.each do |token| %>
-        <li class="share-list__item">
-          <p class="share-list__title"><strong><%= token.name %></strong> <span class="api-tokens__hint">...<%= token.token_hint %></span></p>
-          <p class="share-list__meta">
-            <%= token.read_only? ? t("ui.api_tokens.read_only") : t("ui.api_tokens.read_write") %> &middot;
-            <%= t("ui.api_tokens.created", time: time_ago(token.created_at)) %> &middot;
-            <%= token.last_used_at ? t("ui.api_tokens.used", time: time_ago(token.last_used_at)) : t("ui.api_tokens.never_used") %>
-            <% if token.expires_at %> &middot; <%= token.expired? ? t("ui.api_tokens.expired") : t("ui.api_tokens.expires", date: l(token.expires_at.to_date, format: :long)) %><% end %>
-          </p>
-          <%= button_to t("ui.api_tokens.revoke"), api_token_path(token), method: :delete, class: "btn",
-                        data: confirm_data(title: t("ui.api_tokens.revoke"), body: t("ui.api_tokens.revoke_body", name: token.name),
-                                           button: t("ui.api_tokens.revoke")) %>
-        </li>
+        <div class="actions">
+          <%= f.submit t("ui.save") %>
+        </div>
       <% end %>
-    </ul>
+    </div>
+  </section>
+  <section class="sticky sticky--blue panel account-panel" id="language-panel" aria-labelledby="language-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="language-title"><%= t("ui.account_page.language") %></span></header>
+    <div class="panel__body">
+      <%= form_with model: resource, url: user_language_path, method: :patch, id: "language" do |f| %>
+        <div class="field">
+          <%= f.label :language, t("ui.account_page.language"), class: "sr-only" %>
+          <%= f.select :language, [ [ t("ui.account_page.browser_language"), "" ] ] + ApplicationHelper::LANGUAGE_NAMES.invert.to_a,
+                       {}, class: "select" %>
+          <i><%= t("ui.account_page.language_hint") %></i>
+        </div>
+        <div class="actions">
+          <%= f.submit t("ui.account_page.save_language") %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+  <%# The theme is a browser preference, like light/dark (ui.md "Themes"). %>
+  <section class="sticky sticky--purple panel account-panel" id="look-panel" aria-labelledby="look-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="look-title"><%= t("ui.account_page.theme") %></span></header>
+    <div class="panel__body">
+      <%= form_with url: preferences_path, method: :patch, id: "look", data: { turbo: false } do %>
+        <div class="field">
+          <%= label_tag :look, t("ui.account_page.theme"), class: "sr-only" %>
+          <% choices = [ [ t("ui.account_page.site_look", look: t("ui.account_page.looks.#{site_look}")), "default" ] ] +
+                       PreferencesController::LOOKS.map { |look| [ t("ui.account_page.looks.#{look}"), look ] } %>
+          <%= select_tag :look, options_for_select(choices, own_look || "default"), class: "select" %>
+          <i><%= t("ui.account_page.theme_hint") %></i>
+        </div>
+        <div class="actions">
+          <%= submit_tag t("ui.account_page.save_theme"), name: nil %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+  <%# The timeline order, a browser preference like the theme (timeline.md "Order of the timeline"). %>
+  <section class="sticky sticky--green panel account-panel" id="timeline-order-panel" aria-labelledby="timeline-order-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="timeline-order-title"><%= t("ui.account_page.timeline_order") %></span></header>
+    <div class="panel__body">
+      <%= form_with url: preferences_path, method: :patch, id: "timeline-order", data: { turbo: false } do %>
+        <div class="field">
+          <%= label_tag :timeline_order, t("ui.account_page.timeline_order"), class: "sr-only" %>
+          <% site_order = AppSetting.current.timeline_order %>
+          <% choices = [ [ t("ui.account_page.site_timeline_order", order: t("ui.timeline.orders.#{site_order}")), "default" ] ] +
+                       AppSetting::TIMELINE_ORDERS.map { |order| [ t("ui.timeline.orders.#{order}"), order ] } %>
+          <%= select_tag :timeline_order, options_for_select(choices, own_timeline_order || "default"), class: "select" %>
+          <i><%= t("ui.account_page.timeline_order_hint") %></i>
+        </div>
+        <div class="actions">
+          <%= submit_tag t("ui.account_page.save_timeline_order"), name: nil %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+  <% if resource.staff? %>
+    <section class="sticky sticky--pink panel account-panel" id="notifications-panel" aria-labelledby="notifications-title">
+      <header class="sticky__bar"><span class="sticky__caption" id="notifications-title"><%= t("ui.account_page.notifications") %></span></header>
+      <div class="panel__body">
+        <%= form_with model: resource, url: user_notifications_path, method: :patch, id: "notifications" do |f| %>
+          <div class="field">
+            <%= f.check_box :notify_new_tickets %><%= f.label :notify_new_tickets, t("ui.account_page.notify_new_tickets") %>
+            <i><%= t("ui.account_page.notifications_hint") %></i>
+          </div>
+          <div class="actions">
+            <%= f.submit t("ui.account_page.save_notifications") %>
+          </div>
+        <% end %>
+      </div>
+    </section>
   <% end %>
-  <% if tokens.size < ApiToken::MAX_PER_USER %>
-    <%= form_with model: ApiToken.new, url: api_tokens_path, id: "new-api-token-form" do |f| %>
-      <div class="field">
-        <%= f.label :name, t("ui.api_tokens.name") %>
-        <%= f.text_field :name, required: true, maxlength: 60, autocomplete: "off", placeholder: t("ui.api_tokens.name_placeholder") %>
-      </div>
-      <div class="field">
-        <%= f.label :expires_in_days, t("ui.api_tokens.expiry") %>
-        <%= f.select :expires_in_days, ApiToken::EXPIRIES.map { |days| [ days ? t("ui.api_tokens.days", count: days) : t("ui.api_tokens.never"), days.to_s ] },
-                     {}, class: "select" %>
-      </div>
-      <div class="field">
-        <%= f.check_box :read_only %><%= f.label :read_only, t("ui.api_tokens.read_only_option") %>
-        <i><%= t("ui.api_tokens.read_only_hint") %></i>
-      </div>
-      <div class="actions"><%= f.submit t("ui.api_tokens.create") %></div>
-    <% end %>
-  <% else %>
-    <p class="field-hint"><%= t("ui.api_tokens.limit", count: ApiToken::MAX_PER_USER) %></p>
-  <% end %>
-</section>
+  <%# Personal tokens for the JSON API (specs/api.md "Tokens"). %>
+  <section class="sticky sticky--gray panel account-panel account-panel--wide api-tokens" id="api-tokens" aria-labelledby="api-tokens-title">
+    <header class="sticky__bar"><span class="sticky__caption" id="api-tokens-title"><%= t("ui.api_tokens.title") %></span></header>
+    <div class="panel__body">
+      <p class="field-hint"><%= t("ui.api_tokens.intro") %></p>
+      <% if (plain = flash[:api_token]) %>
+        <div class="callout api-tokens__new" role="status">
+          <p><strong><%= t("ui.api_tokens.copy_now") %></strong></p>
+          <div class="sharing__link">
+            <%= text_field_tag "new-api-token", plain, readonly: true, class: "field-input", data: { select_on_focus: true },
+                               "aria-label": t("ui.api_tokens.new_token") %>
+            <button type="button" class="btn" data-copy="new-api-token" data-copied-label="<%= t("ui.share.copied") %>">
+              <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.google_setup.copy") %></span>
+            </button>
+          </div>
+        </div>
+      <% end %>
+      <% tokens = resource.api_tokens.newest_first.to_a %>
+      <% if tokens.any? %>
+        <ul class="share-list api-tokens__list">
+          <% tokens.each do |token| %>
+            <li class="share-list__item">
+              <p class="share-list__title"><strong><%= token.name %></strong> <span class="api-tokens__hint">...<%= token.token_hint %></span></p>
+              <p class="share-list__meta">
+                <%= token.read_only? ? t("ui.api_tokens.read_only") : t("ui.api_tokens.read_write") %> &middot;
+                <%= t("ui.api_tokens.created", time: time_ago(token.created_at)) %> &middot;
+                <%= token.last_used_at ? t("ui.api_tokens.used", time: time_ago(token.last_used_at)) : t("ui.api_tokens.never_used") %>
+                <% if token.expires_at %> &middot; <%= token.expired? ? t("ui.api_tokens.expired") : t("ui.api_tokens.expires", date: l(token.expires_at.to_date, format: :long)) %><% end %>
+              </p>
+              <%= button_to t("ui.api_tokens.revoke"), api_token_path(token), method: :delete, class: "btn",
+                            data: confirm_data(title: t("ui.api_tokens.revoke"), body: t("ui.api_tokens.revoke_body", name: token.name),
+                                               button: t("ui.api_tokens.revoke")) %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+      <% if tokens.size < ApiToken::MAX_PER_USER %>
+        <%= form_with model: ApiToken.new, url: api_tokens_path, id: "new-api-token-form" do |f| %>
+          <div class="field">
+            <%= f.label :name, t("ui.api_tokens.name") %>
+            <%= f.text_field :name, required: true, maxlength: 60, autocomplete: "off", placeholder: t("ui.api_tokens.name_placeholder") %>
+          </div>
+          <div class="field">
+            <%= f.label :expires_in_days, t("ui.api_tokens.expiry") %>
+            <%= f.select :expires_in_days, ApiToken::EXPIRIES.map { |days| [ days ? t("ui.api_tokens.days", count: days) : t("ui.api_tokens.never"), days.to_s ] },
+                         {}, class: "select" %>
+          </div>
+          <div class="field">
+            <%= f.check_box :read_only %><%= f.label :read_only, t("ui.api_tokens.read_only_option") %>
+            <i><%= t("ui.api_tokens.read_only_hint") %></i>
+          </div>
+          <div class="actions"><%= f.submit t("ui.api_tokens.create") %></div>
+        <% end %>
+      <% else %>
+        <p class="field-hint"><%= t("ui.api_tokens.limit", count: ApiToken::MAX_PER_USER) %></p>
+      <% end %>
+    </div>
+  </section>
+</div>
 
 <p class="auth__meta"><%= t("ui.account_page.organizations") %>:
   <%= resource.organizations.map(&:name).join(", ").presence || t("ui.account_page.no_organizations") %></p>

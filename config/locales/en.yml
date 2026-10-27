@@ -20,6 +20,7 @@ en:
       other: "Up to %{count} files, %{size} MB each. Images, PDF, text, CSV, ZIP and office documents."
 
     account_page:
+      profile: "Profile"
       title: "Your account"
       password_keep: "Leave blank to keep your current password."
       current_password: "Current password"

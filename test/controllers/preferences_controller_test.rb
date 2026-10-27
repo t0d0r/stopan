@@ -74,6 +74,24 @@ class PreferencesControllerTest < ActionDispatch::IntegrationTest
     assert_select "form#look option[selected][value=default]"
   end
 
+  test "the own account page is a grid of panels, not the narrow sign-in card (specs/ui.md)" do
+    sign_in users(:agent)
+    get edit_user_registration_url
+    assert_select ".auth", 0
+    assert_select "h1.desk__title", "Your account"
+    assert_select ".account-page > section.account-panel", 6
+    assert_select ".account-page #profile-panel form input[name='user[email]']"
+    assert_select ".account-page section.account-panel--wide#api-tokens"
+
+    sign_in users(:anna)
+    get edit_user_registration_url
+    assert_select ".account-page > section.account-panel", 5, "no notifications panel for requesters"
+
+    sign_out :user
+    get new_user_session_url
+    assert_select ".auth"
+  end
+
   test "the menu bar has the theme switch and text sizes" do
     sign_in users(:admin)
     get tickets_url

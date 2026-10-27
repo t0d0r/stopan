@@ -738,6 +738,14 @@ menu and Take; open /tickets/new and pick a requester.
   row check boxes joined by `form="bulk-form"`, `setUpBulkActions` shows
   the bar, page select, "select all N in this list" (scope=list).
   Checked in Chrome at 1280 and 390px on dev.
+- Own account page (operator: "personal settings are vertical, fit them
+  on the screen like the administration"): `devise/registrations/edit`
+  sets `content_for :wide_page`, so the layout skips the narrow `.auth`
+  card; panels (Profile, Language, Theme, Order of replies,
+  Notifications for staff, API tokens full width) flow in CSS columns
+  (column-width 320px, break-inside avoid, the tokens panel
+  column-span all). The `.auth` form styles now also apply to
+  `.account-page`. Checked at 1440 and 390px.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

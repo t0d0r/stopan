@@ -23,6 +23,7 @@ bg:
       other: "До %{count} файла, до %{size} MB всеки. Изображения, PDF, текст, CSV, ZIP и офис документи."
 
     account_page:
+      profile: "Профил"
       title: "Вашият профил"
       password_keep: "Оставете празно, за да запазите текущата парола."
       current_password: "Текуща парола"

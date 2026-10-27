@@ -70,7 +70,8 @@
       </div>
     <% end %>
 
-    <% if devise_controller? %>
+    <%# The own account page is a grid of panels (ui.md "Own account page"). %>
+    <% if devise_controller? && !content_for?(:wide_page) %>
       <div class="sticky sticky--yellow auth">
         <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
         <div class="auth__body"><%= yield %></div>
