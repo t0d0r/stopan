@@ -254,6 +254,11 @@ Operator requests, in order:
   subject at the heading's size. Checked in headless Chrome at 1280px,
   390px, editing and the shared page.
 
+- README screenshots refreshed with `make screenshots` against a scratch
+  server with the demo data (queue with row shading, ticket page with the
+  request note and title strips, requester phone view in Bulgarian, admin
+  users in the dark theme); scratch data removed afterwards.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
