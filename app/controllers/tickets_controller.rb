@@ -25,6 +25,11 @@ class TicketsController < ApplicationController
       @ticket.organization ||= current_user.organizations.first if current_user.organizations.one?
     end
 
+    # Agents create tickets only in their own organizations (roles.md).
+    unless current_user.admin? || !current_user.staff? || @ticket.organization.nil? || current_user.member_of?(@ticket.organization)
+      @ticket.errors.add(:organization, :not_yours)
+      return render(:new, status: :unprocessable_content)
+    end
     if TicketPolicy.new(current_user, @ticket).create? && @ticket.save
       redirect_to @ticket, notice: t("flash.ticket_created", reference: @ticket.reference)
     else
@@ -73,7 +78,7 @@ class TicketsController < ApplicationController
   # ticket starts work on it (specs/tickets.md "Assigning").
   def assign
     authorize! policy.update?
-    assignee = User.staff.active.find_by(id: params[:assignee_id]) if params[:assignee_id].present?
+    assignee = @ticket.assignable_staff.find_by(id: params[:assignee_id]) if params[:assignee_id].present?
     if params[:assignee_id].present? && assignee.nil?
       return redirect_back_or_to(@ticket, allow_other_host: false, alert: t("flash.assignee_invalid"))
     end

@@ -98,7 +98,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] "Not now" status (postponed), no email to requesters (specs/board.md "Not now")
 - [x] automatic postponing after N days with a setting and a stamp on cards (specs/board.md)
 - [x] stages as board sub-columns, managed by admins (specs/board.md "Stages")
-- [~] agents see and work only their own organizations; admins everything (specs/roles.md)
+- [x] agents see and work only their own organizations; admins everything (specs/roles.md)
 - [ ] operator: make production agents members of their organizations before deploying this (specs/roles.md)
 - [x] board scrolls better: full window width, columns scroll on their own, edge scrolling while dragging (operator)
 - [x] organization list of email addresses or domains allowed to use the public request page (operator)

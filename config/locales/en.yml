@@ -751,12 +751,14 @@ en:
               not_a_member: "is not a member of this organization"
             assignee:
               not_staff: "must be an active agent or administrator"
+              not_in_organization: "must be an administrator or an agent of this organization"
             status:
               transition: "cannot change from %{from} to %{to}"
             stage:
               other_status: "belongs to another status"
             organization:
               no_membership: "is missing: your account is not part of an organization yet"
+              not_yours: "must be one of your organizations"
         comment:
           attributes:
             internal:

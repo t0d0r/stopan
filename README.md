@@ -23,7 +23,9 @@ The screenshots use the fictional data from `make demo`.
 
 ## Features
 
-- **Roles** - requester, agent, administrator (`specs/roles.md`).
+- **Roles** - requester, agent, administrator; requesters and agents work
+  the tickets of the organizations they belong to, administrators all
+  (`specs/roles.md`).
 - **Organizations and memberships** - requesters open tickets only for
   organizations they belong to and lose access when removed.
 - **Tickets** - number (`#1001`), subject, description, status (new, in progress,

@@ -20,6 +20,6 @@ module TicketTimeline
     @events = TicketEvent.visible_to(current_user).where(ticket: @ticket)
                          .includes(:actor, comment: comment)
                          .order(:created_at, :id).to_a
-    @staff = User.staff.active.ordered.to_a if current_user.staff?
+    @staff = @ticket.assignable_staff.to_a if current_user.staff?
   end
 end

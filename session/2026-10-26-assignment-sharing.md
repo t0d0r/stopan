@@ -393,6 +393,16 @@ Operator requests, in order:
   Checked in headless Chrome: stage columns, drag into QA kept after
   reload, stamps on cards 3 days and today away.
 
+- Agents scoped to their organizations (operator): Ticket.visible_to
+  gives all only to admins; agents without a membership get the
+  no-organization notice; assignable staff = admins + the ticket
+  organization's agents (validation, assign menus, Properties, filters);
+  agents create tickets only in their organizations; org filters list
+  only theirs; mailbox replies from agents outside the organization are
+  ignored. Demo: Maria in both organizations, Petar in Globex. Test
+  fixtures make both test agents members of both organizations.
+  Operator must add production agents as members before deploying.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

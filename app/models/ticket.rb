@@ -74,7 +74,7 @@ class Ticket < ApplicationRecord
   # organizations they still belong to (specs/roles.md).
   def self.visible_to(user)
     return none unless user
-    return all if user.staff?
+    return all if user.admin?
 
     where(organization_id: user.memberships.select(:organization_id))
   end
@@ -179,6 +179,26 @@ class Ticket < ApplicationRecord
     user.staff? ? [ :queue, :staff ] : [ user, :tickets ]
   end
 
+  # Who may be assigned tickets of an organization: administrators and its
+  # agents (specs/roles.md).
+  def self.assignable_staff(organization_id)
+    User.active.where(role: "admin")
+        .or(User.active.where(role: "agent", id: Membership.where(organization_id: organization_id).select(:user_id)))
+        .ordered
+  end
+
+  # Staff an agent may pick in filters: administrators and the agents of
+  # the user's organizations (everyone's for administrators).
+  def self.assignable_staff_for(user)
+    return User.staff.active.ordered if user.admin?
+
+    assignable_staff(user.memberships.select(:organization_id))
+  end
+
+  def assignable_staff
+    self.class.assignable_staff(organization_id)
+  end
+
   # Every list stream a user's ticket list listens to: a requester also
   # hears about their organizations' tickets (specs/queues.md).
   def self.list_streams(user)
@@ -271,7 +291,9 @@ class Ticket < ApplicationRecord
   end
 
   def assignee_is_active_staff
-    errors.add(:assignee, :not_staff) unless assignee&.staff? && !assignee.deactivated?
+    return errors.add(:assignee, :not_staff) unless assignee&.staff? && !assignee.deactivated?
+
+    errors.add(:assignee, :not_in_organization) unless assignee.admin? || assignee.member_of?(organization)
   end
 
   def status_transition_allowed

@@ -13,8 +13,10 @@
             <div class="field">
               <%= f.label :requester_id, t("ui.fields.requester") %>
               <%= f.select :requester_id,
-                           User.active.with_membership.ordered.includes(:memberships).map { |user|
-                             [ user.display_name, user.id, { data: { organizations: user.memberships.map(&:organization_id).join(" ") } } ]
+                           User.active.where(id: Membership.where(organization_id: current_user.visible_organizations.select(:id)).select(:user_id))
+                               .ordered.includes(:memberships).map { |user|
+                             orgs = user.memberships.map(&:organization_id) & current_user.visible_organizations.pluck(:id)
+                             [ user.display_name, user.id, { data: { organizations: orgs.join(" ") } } ]
                            },
                            { include_blank: t("ui.new_ticket.choose") },
                            class: "select", required: true, aria: { invalid: invalid?(@ticket, :requester) },
@@ -22,7 +24,7 @@
             </div>
             <div class="field">
               <%= f.label :organization_id, t("ui.fields.organization") %>
-              <%= f.collection_select :organization_id, Organization.ordered, :id, :name,
+              <%= f.collection_select :organization_id, current_user.visible_organizations.ordered, :id, :name,
                                       { include_blank: t("ui.new_ticket.choose") },
                                       class: "select", required: true, aria: { invalid: invalid?(@ticket, :organization) } %>
               <small class="field-hint" id="organization-hint"
@@ -58,7 +60,7 @@
             </div>
             <div class="field">
               <%= f.label :assignee_id, t("ui.fields.assignee") %>
-              <%= f.collection_select :assignee_id, User.staff.active.ordered, :id, :display_name,
+              <%= f.collection_select :assignee_id, Ticket.assignable_staff_for(current_user), :id, :display_name,
                                       { include_blank: t("ui.unassigned") }, class: "select" %>
             </div>
           </div>

@@ -17,7 +17,7 @@ class AdminMessage
   # Active users the message goes to, never the sender.
   def recipient_users
     audience.active.where.not(id: sender&.id)
-            .where("users.role <> 'requester' OR EXISTS (SELECT 1 FROM memberships m WHERE m.user_id = users.id)").distinct
+            .where("users.role = 'admin' OR EXISTS (SELECT 1 FROM memberships m WHERE m.user_id = users.id)").distinct
   end
 
   # Creates one notification per recipient and returns how many.

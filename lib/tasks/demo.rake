@@ -24,6 +24,10 @@ namespace :stopan do
       chris = user.("Chris Taylor", "chris@example.com")
       acme.users << [ anna, boris ]
       globex.users << chris
+      # Agents work their own organizations only (specs/roles.md): Maria
+      # both, Petar Globex.
+      acme.users << agent
+      globex.users << [ agent, second_agent ]
 
       printer = Ticket.create!(subject: "Receipt printer in shop 2 prints blank pages",
                                description: "Since this morning the receipt printer at the second till prints empty " \

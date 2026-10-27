@@ -16,12 +16,12 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # A requester without a membership sees nothing but a notice
-  # (specs/roles.md); staff are never limited by membership.
+  # A requester or agent without a membership sees nothing but a notice
+  # (specs/roles.md); administrators are never limited by membership.
   def without_organization?
     return @without_organization if defined?(@without_organization)
 
-    @without_organization = user_signed_in? && current_user.requester? && !current_user.memberships.exists?
+    @without_organization = user_signed_in? && !current_user.admin? && !current_user.memberships.exists?
   end
 
   def require_organization

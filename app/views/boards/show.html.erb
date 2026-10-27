@@ -19,7 +19,7 @@
   </div>
   <div class="filters__field">
     <%= label_tag :organization, t("ui.fields.organization") %>
-    <%= select_tag :organization, options_from_collection_for_select(Organization.ordered, :id, :name, filter.organization_id),
+    <%= select_tag :organization, options_from_collection_for_select(current_user.visible_organizations.ordered, :id, :name, filter.organization_id),
                    include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true } %>
   </div>
   <div class="filters__actions">

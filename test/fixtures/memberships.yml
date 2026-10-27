@@ -9,3 +9,25 @@ boris_acme:
 carl_globex:
   user: carl
   organization: globex
+
+# Agents work their own organizations (specs/roles.md); both test agents
+# belong to both organizations, the retired one to Acme.
+agent_acme:
+  user: agent
+  organization: acme
+
+agent_globex:
+  user: agent
+  organization: globex
+
+agent_two_acme:
+  user: agent_two
+  organization: acme
+
+agent_two_globex:
+  user: agent_two
+  organization: globex
+
+retired_acme:
+  user: retired
+  organization: acme

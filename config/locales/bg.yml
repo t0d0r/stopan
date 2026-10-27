@@ -756,12 +756,14 @@ bg:
               not_a_member: "не е член на тази организация"
             assignee:
               not_staff: "трябва да е активен агент или администратор"
+              not_in_organization: "трябва да е администратор или агент на тази организация"
             status:
               transition: "не може да се смени от %{from} на %{to}"
             stage:
               other_status: "принадлежи на друг статус"
             organization:
               no_membership: "липсва: профилът ви все още не е част от организация"
+              not_yours: "трябва да е една от вашите организации"
         comment:
           attributes:
             internal:

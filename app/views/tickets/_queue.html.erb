@@ -1,4 +1,6 @@
-<% staff = User.staff.active.ordered.to_a %>
+<% staff = Ticket.assignable_staff_for(current_user).to_a %>
+<%# Who each row's assign menu may offer: admins and the ticket organization's agents (roles.md). %>
+<% agent_orgs = Membership.where(user_id: staff.reject(&:admin?).map(&:id)).pluck(:user_id, :organization_id).group_by(&:last).transform_values { |pairs| pairs.map(&:first) } %>
 <div class="desk__header">
   <h1 class="desk__title"><%= t("ui.queue.title") %></h1>
   <%= render "tickets/view_switch", current: :list %>
@@ -47,7 +49,7 @@
         </div>
         <div class="filters__field">
           <%= label_tag :organization, t("ui.fields.organization") %>
-          <%= select_tag :organization, options_from_collection_for_select(Organization.ordered, :id, :name, filter.organization_id),
+          <%= select_tag :organization, options_from_collection_for_select(current_user.visible_organizations.ordered, :id, :name, filter.organization_id),
                          include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true } %>
         </div>
         <div class="filters__field">
@@ -90,7 +92,8 @@
                   <td class="col-priority"><%= priority_pill ticket.priority %></td>
                   <td class="text col-assignee">
                     <div class="assignee">
-                      <%= render "assign_menu", ticket: ticket, staff: staff %>
+                      <%= render "assign_menu", ticket: ticket,
+                                 staff: staff.select { |user| user.admin? || agent_orgs.fetch(ticket.organization_id, []).include?(user.id) } %>
                       <%= render "take_button", ticket: ticket if ticket.assignee_id.nil? %>
                     </div>
                   </td>

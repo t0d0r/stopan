@@ -65,6 +65,7 @@ class MailboxMessage
   def staff_reply(user)
     ticket = referenced_ticket
     return ignore("staff sender without an open ticket") unless ticket && !ticket.closed?
+    return ignore("agent outside the ticket's organization") unless Ticket.visible_to(user).exists?(ticket.id)
 
     reply(ticket, user)
   end
