@@ -1,0 +1,26 @@
+<%# Mail settings at a glance and the test button (specs/organization-mail.md).
+    Never shows usernames or passwords. Locals: organization. %>
+<h3 class="section-title"><%= t("ui.admin.mail.panel") %></h3>
+<dl class="facts">
+  <dt><%= t("ui.admin.mail.smtp_status") %></dt>
+  <dd><%= organization.smtp_enabled? ? "#{t("ui.admin.mail.status_on")}: #{organization.smtp_address}" : t("ui.admin.mail.status_off") %></dd>
+  <% if organization.smtp_enabled? %>
+    <dt><%= t("ui.fields.from") %></dt>
+    <dd><%= organization.mail_from %></dd>
+  <% end %>
+  <dt><%= t("ui.admin.mail.imap_status") %></dt>
+  <dd><%= organization.imap_enabled? ? "#{t("ui.admin.mail.status_on")}: #{organization.mailbox_address}" : t("ui.admin.mail.status_off") %></dd>
+  <% if organization.imap_enabled? %>
+    <dt><%= t("ui.admin.mail.last_check") %></dt>
+    <dd><%= organization.imap_last_checked_at ? time_ago(organization.imap_last_checked_at) : t("ui.admin.mail.never") %></dd>
+    <dt><%= t("ui.admin.mail.messages_in") %></dt>
+    <dd><%= organization.imap_messages_count %></dd>
+    <% if organization.imap_last_error.present? %>
+      <dt><%= t("ui.admin.mail.last_error") %></dt>
+      <dd class="mail-error"><%= organization.imap_last_error %></dd>
+    <% end %>
+  <% end %>
+</dl>
+<% if organization.smtp_enabled? %>
+  <%= button_to t("ui.admin.mail.send_test"), mail_test_admin_organization_path(organization), class: "btn" %>
+<% end %>

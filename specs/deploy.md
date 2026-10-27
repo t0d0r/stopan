@@ -23,7 +23,7 @@ The deployment waited on ISPConfig Remote API access on 2026-10-25/26
 | part | where |
 |------|-------|
 | website | ISPConfig site `stopan.linuxfan.org`, client 1 (the same client and settings as the g0no site), created with `sites_web_domain_add` from `deploy/ispconfig-site.json`: no PHP, SSL with Let's Encrypt, rewrite HTTP to HTTPS, PageSpeed off, proxy in the site's "Apache directives" field |
-| proxy | the site's Apache directives (`deploy/ispconfig-site.json`): `ProxyPass / http://127.0.0.1:3183/ retry=0 upgrade=websocket`, `ProxyPreserveHost On`, `X-Forwarded-Proto https`, ACME challenge path excluded. They are stored in the ISPConfig site record, so a panel resync regenerates them |
+| proxy | the site's Apache directives (`deploy/ispconfig-site.json`): `ProxyPass / http://127.0.0.1:3183/ retry=0 upgrade=websocket`, `ProxyPreserveHost On`, `X-Forwarded-Proto https`, ACME challenge path excluded, and a ModSecurity exclusion for the session cookie (below). They are stored in the ISPConfig site record, so a panel resync regenerates them |
 | system user | `stopan` (system account, no login shell, home `/srv/stopan`, own subuid/subgid range, lingering so its services run without a login) |
 | container | rootless Podman as `stopan`, from the quadlet `deploy/stopan.container`, installed as `~stopan/.config/containers/systemd/stopan.container`; systemd user service `stopan.service`, `Restart=always`, `WantedBy=default.target` |
 | image | `localhost/stopan:latest` (also tagged with the git revision), built on the server from `Dockerfile` |
@@ -279,6 +279,45 @@ Operator: "add upgrade=websocket through the ISPConfig API".
   check).
 - Rollback: `sudo /root/stopan/bin/ispconfig-remote sites_web_domain_update`
   with the old line (built from the saved record the same way).
+
+## ModSecurity and the session cookie (2026-10-27)
+
+Apache runs ModSecurity 2.9 with the OWASP CRS 3.3 (`SecRuleEngine On`,
+server-wide). The operator got 404 on `/`: CRS rule 941120 ("XSS Event
+Handler Vector") matched `REQUEST_COOKIES:_stopan_session`. The cookie is
+random base64 (AES-GCM encrypted, new on every response), so now and then
+it contains something like `7onAbcd=-`; the request is denied with 403,
+the 403 error document is missing, so the browser shows 404. Because the
+blocked response never replaces the cookie, that browser stays locked out
+until the cookie is deleted.
+
+Fix (operator approved): the site's Apache directives end with
+
+```
+<IfModule security2_module>
+	SecAction "id:13183,phase:1,pass,nolog,ctl:ruleRemoveTargetByTag=OWASP_CRS;REQUEST_COOKIES:_stopan_session"
+</IfModule>
+```
+
+- It removes only that one cookie from the CRS rules' targets, per request,
+  for this site. URLs, arguments, headers and other cookies are still
+  inspected. It is safe because Rails rejects any `_stopan_session` value
+  that does not decrypt and authenticate before using it.
+- The configure-time form `SecRuleUpdateTargetByTag "OWASP_CRS"
+  "!REQUEST_COOKIES:_stopan_session"` was tried first and had no effect:
+  inside a VirtualHost it does not change rules loaded at server level.
+- Applied with `sites_web_domain_update` the same way as the WebSocket
+  change (current `log_retention`/`pm_*` passed). Records before each
+  step: `/root/stopan/site-25-before-modsecurity.json` and
+  `site-25-before-secaction.json` (root, 600). ISPConfig restarted Apache
+  twice (a few seconds each for every site).
+- Checked: a session cookie with the pattern -> 302 to sign-in (app);
+  the same pattern in another cookie -> blocked; `<script>` in the query
+  string -> blocked; no cookie -> 302; HSTS, CSP, X-Frame-Options,
+  nosniff present; `/cable` 101; `configtest` OK; g0no `/up` 200.
+- Rollback: `sites_web_domain_update` with the `apache_directives` of
+  `site-25-before-modsecurity.json`.
+- Rule id 13183 is in the local range and was unused on the server.
 
 ## Rollback
 

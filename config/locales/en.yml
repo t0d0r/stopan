@@ -71,6 +71,7 @@ en:
 
     fields:
       number: "Ticket"
+      from: "From"
       subject: "Subject"
       description: "Description"
       status: "Status"
@@ -243,6 +244,33 @@ en:
       role_hint: "Agents and administrators work all tickets; administrators also manage users and organizations. Demoting an agent unassigns their unsolved tickets."
       password_keep: "Leave blank to keep the current password."
       notes_hint: "Visible to administrators only."
+      mail:
+        title: "Mail"
+        intro: "Mail about this organization's tickets goes out through its own SMTP, and mail to its mailbox becomes tickets and replies. Passwords are stored encrypted and never shown."
+        smtp: "Outgoing mail (SMTP)"
+        smtp_enabled: "Send this organization's mail through its own SMTP"
+        imap: "Mailbox (IMAP)"
+        imap_enabled: "Turn mail to this mailbox into tickets and replies"
+        imap_ssl: "TLS"
+        security:
+          starttls: "STARTTLS (port 587)"
+          tls: "TLS (port 465)"
+          none: "None"
+        from_placeholder: "Acme Support <support@acme.example>"
+        mailbox_hint: "The address customers write to; also the Reply-To of outgoing mail."
+        password_stored: "A password is stored. Leave empty to keep it."
+        password_none: "No password stored."
+        password_remove: "Remove the stored password"
+        panel: "Mail"
+        smtp_status: "Outgoing"
+        imap_status: "Mailbox"
+        status_on: "on"
+        status_off: "off"
+        last_check: "Last check"
+        messages_in: "Messages taken in"
+        last_error: "Last error"
+        never: "never"
+        send_test: "Send a test email"
       search_users: "Search name, username or email"
       search_organizations: "Search organizations"
       busiest: "Most unsolved tickets"
@@ -387,6 +415,9 @@ en:
 
   mailer:
     greeting: "Hello %{name},"
+    organization:
+      test_subject: "Test email for %{name}"
+      test_body: "This test email went out through the SMTP settings of %{name}, from %{from}. They work."
     reset_password:
       intro: "Someone asked for a link to change the password of your Stopan account."
       action: "Change my password"
@@ -450,6 +481,9 @@ en:
     user_has_history: "%{name} has ticket history and cannot be deleted. Deactivate the account instead."
     organization_created: "Organization %{name} was created."
     organization_updated: "Organization %{name} was updated."
+    mail_test_sent: "A test email was sent to %{email}."
+    mail_test_failed: "The test email could not be sent: %{error}"
+    mail_test_disabled: "Turn on this organization's SMTP first."
     organization_deleted: "Organization %{name} was deleted."
     organization_has_tickets: "%{name} has tickets and cannot be deleted."
     member_added: "%{name} was added."
@@ -489,8 +523,21 @@ en:
       organization:
         name: "Name"
         notes: "Internal notes"
+        smtp_address: "SMTP server"
+        smtp_port: "SMTP port"
+        smtp_security: "Encryption"
+        smtp_username: "SMTP username"
+        smtp_password: "SMTP password"
+        mail_from: "From"
+        imap_address: "IMAP server"
+        imap_port: "IMAP port"
+        imap_username: "IMAP username"
+        imap_password: "IMAP password"
+        imap_folder: "Folder"
+        mailbox_address: "Mailbox address"
     errors:
       messages:
+        private_host: "must be a public mail server, not an address inside the network"
         too_many: "may contain at most %{count} files"
         too_big: "%{filename} is larger than %{limit} MB"
         type_not_allowed: "%{filename} is not an allowed file type"

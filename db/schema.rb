@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_140000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -85,6 +85,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "smtp_enabled", default: false, null: false
+    t.string "smtp_address"
+    t.integer "smtp_port", default: 587, null: false
+    t.string "smtp_security", default: "starttls", null: false
+    t.string "smtp_username"
+    t.text "smtp_password"
+    t.string "mail_from"
+    t.boolean "imap_enabled", default: false, null: false
+    t.string "imap_address"
+    t.integer "imap_port", default: 993, null: false
+    t.boolean "imap_ssl", default: true, null: false
+    t.string "imap_username"
+    t.text "imap_password"
+    t.string "imap_folder", default: "INBOX", null: false
+    t.string "mailbox_address"
+    t.datetime "imap_last_checked_at"
+    t.text "imap_last_error"
+    t.integer "imap_messages_count", default: 0, null: false
     t.index "lower(name)", name: "index_organizations_on_lower_name", unique: true
   end
 

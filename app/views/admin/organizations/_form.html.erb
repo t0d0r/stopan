@@ -9,6 +9,7 @@
     <%= f.text_area :notes, class: "field-input", rows: 4, maxlength: 5_000, data: { autogrow: true }, aria: { describedby: "notes-hint" } %>
     <small class="field-hint" id="notes-hint"><%= t("ui.admin.notes_hint") %></small>
   </div>
+  <%= render "admin/organizations/mail_fields", f: f, organization: organization %>
   <div class="form-actions">
     <%= link_to t("ui.cancel"), organization.persisted? ? admin_organization_path(organization) : admin_organizations_path, class: "btn" %>
     <%= f.submit t("ui.save"), class: "btn btn--primary" %>

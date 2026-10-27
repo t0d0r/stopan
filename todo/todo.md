@@ -81,7 +81,7 @@ Organizations: own SMTP, mailbox and public form (operator, 2026-10-27;
 decisions: IMAP, address = identity, magic links, form off by default):
 
 - [x] encryption keys from SECRET_KEY_BASE and TRUSTED_PROXIES (specs/organization-mail.md, specs/public-form.md)
-- [ ] organization mail settings in admin with test buttons; outgoing mail through the organization's SMTP (specs/organization-mail.md)
+- [x] organization mail settings in admin with test buttons; outgoing mail through the organization's SMTP (specs/organization-mail.md)
 - [ ] magic sign-in links and "email me a sign-in link"; choosing a first password (specs/public-form.md)
 - [ ] public request page per organization with accounts by email and abuse limits (specs/public-form.md)
 - [ ] IMAP mailbox per organization: poller, new tickets and replies from mail (specs/organization-mail.md)
@@ -167,6 +167,7 @@ to Stopan unless they are listed above.
 - [ ] check the app comes back after a server reboot (specs/deploy.md)
 - [ ] check file uploads through Apache and mod_security in production (specs/deploy.md)
 - [ ] back up ~g0no/storage on the server (specs/deploy.md)
+- [x] fix 404 on stopan.linuxfan.org: ModSecurity CRS 941120 false positive on the session cookie, excluded per site (specs/deploy.md)
 - [ ] configure SMTP from environment variables so password reset emails work (specs/auth.md)
 - [ ] expose the tag field in the note form (it was commented out in 2011) (specs/features.md)
 - [ ] add gitleaks as a pre-commit hook (../AGENTS.md)

@@ -74,6 +74,7 @@ bg:
 
     fields:
       number: "Заявка"
+      from: "Подател"
       subject: "Тема"
       description: "Описание"
       status: "Състояние"
@@ -246,6 +247,33 @@ bg:
       role_hint: "Агентите и администраторите работят по всички заявки; администраторите управляват и потребителите и организациите. При понижаване на агент нерешените му заявки остават без отговорник."
       password_keep: "Оставете празно, за да запазите текущата парола."
       notes_hint: "Виждат се само от администраторите."
+      mail:
+        title: "Поща"
+        intro: "Писмата за заявките на тази организация излизат през нейния SMTP, а писмата до пощенската ѝ кутия стават заявки и отговори. Паролите се пазят криптирани и никога не се показват."
+        smtp: "Изходяща поща (SMTP)"
+        smtp_enabled: "Изпращай писмата на организацията през нейния SMTP"
+        imap: "Пощенска кутия (IMAP)"
+        imap_enabled: "Превръщай писмата до тази кутия в заявки и отговори"
+        imap_ssl: "TLS"
+        security:
+          starttls: "STARTTLS (порт 587)"
+          tls: "TLS (порт 465)"
+          none: "Без"
+        from_placeholder: "Acme Support <support@acme.example>"
+        mailbox_hint: "Адресът, на който пишат клиентите; също Reply-To на изходящите писма."
+        password_stored: "Има запазена парола. Оставете празно, за да я запазите."
+        password_none: "Няма запазена парола."
+        password_remove: "Изтрий запазената парола"
+        panel: "Поща"
+        smtp_status: "Изходяща"
+        imap_status: "Пощенска кутия"
+        status_on: "включена"
+        status_off: "изключена"
+        last_check: "Последна проверка"
+        messages_in: "Приети писма"
+        last_error: "Последна грешка"
+        never: "никога"
+        send_test: "Изпрати тестово писмо"
       search_users: "Търсене по име, потребителско име или имейл"
       search_organizations: "Търсене на организации"
       busiest: "С най-много нерешени заявки"
@@ -390,6 +418,9 @@ bg:
 
   mailer:
     greeting: "Здравейте, %{name}!"
+    organization:
+      test_subject: "Тестово писмо за %{name}"
+      test_body: "Това тестово писмо излезе през SMTP настройките на %{name}, от %{from}. Те работят."
     reset_password:
       intro: "Някой поиска връзка за смяна на паролата на профила ви в Stopan."
       action: "Смяна на паролата"
@@ -453,6 +484,9 @@ bg:
     user_has_history: "%{name} има история по заявки и не може да бъде изтрит. Деактивирайте профила."
     organization_created: "Организация %{name} е създадена."
     organization_updated: "Организация %{name} е обновена."
+    mail_test_sent: "Изпратено е тестово писмо до %{email}."
+    mail_test_failed: "Тестовото писмо не можа да се изпрати: %{error}"
+    mail_test_disabled: "Първо включете SMTP на организацията."
     organization_deleted: "Организация %{name} е изтрита."
     organization_has_tickets: "%{name} има заявки и не може да бъде изтрита."
     member_added: "%{name} е добавен."
@@ -494,8 +528,21 @@ bg:
       organization:
         name: "Име"
         notes: "Вътрешни бележки"
+        smtp_address: "SMTP сървър"
+        smtp_port: "SMTP порт"
+        smtp_security: "Криптиране"
+        smtp_username: "SMTP потребител"
+        smtp_password: "SMTP парола"
+        mail_from: "Подател"
+        imap_address: "IMAP сървър"
+        imap_port: "IMAP порт"
+        imap_username: "IMAP потребител"
+        imap_password: "IMAP парола"
+        imap_folder: "Папка"
+        mailbox_address: "Адрес на пощенската кутия"
     errors:
       messages:
+        private_host: "трябва да е публичен пощенски сървър, не адрес във вътрешната мрежа"
         too_many: "може да са най-много %{count} файла"
         too_big: "%{filename} е по-голям от %{limit} MB"
         type_not_allowed: "%{filename} не е от разрешен вид"

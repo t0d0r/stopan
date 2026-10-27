@@ -59,6 +59,7 @@
         <h3 class="section-title"><%= t("ui.fields.notes") %></h3>
         <div class="ticket-text"><%= ticket_text @organization.notes %></div>
       <% end %>
+      <%= render "admin/organizations/mail_status", organization: @organization %>
       <div class="form-actions form-actions--start">
         <%= link_to t("ui.admin.edit"), edit_admin_organization_path(@organization), class: "btn" %>
         <% if @ticket_count.zero? %>

@@ -1,5 +1,6 @@
 class Organization < ApplicationRecord
   include RefreshesAdminPages
+  include MailSettings
 
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships

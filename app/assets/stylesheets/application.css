@@ -1171,6 +1171,43 @@ form.button_to {
   width: 100%;
 }
 
+/* Mail settings of an organization (organization-mail.md). */
+.mail-settings {
+  margin: 18px 0 8px;
+  padding: 0;
+  border: 0;
+}
+
+.mail-settings__part {
+  margin: 12px 0 0;
+  padding: 12px 14px 4px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+.mail-settings__part legend {
+  padding: 0 6px;
+  font-weight: 600;
+}
+
+.check-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+
+.check-field--inline {
+  align-self: end;
+  margin-bottom: 22px;
+}
+
+.mail-error {
+  color: #a3221a;
+  overflow-wrap: anywhere;
+}
+
 .admin-form .field--check label {
   display: inline;
   margin-left: 4px;

@@ -1,6 +1,6 @@
 module Admin
   class OrganizationsController < BaseController
-    before_action :set_organization, only: %i[show edit update destroy]
+    before_action :set_organization, only: %i[show edit update destroy mail_test]
 
     def index
       @query = params[:q].to_s.squish.first(100).presence
@@ -43,6 +43,19 @@ module Admin
       end
     end
 
+    # Sends a test email through the organization's SMTP to the signed-in
+    # admin, right away, and reports the result.
+    def mail_test
+      unless @organization.smtp_enabled?
+        return redirect_to admin_organization_path(@organization), alert: t("flash.mail_test_disabled")
+      end
+
+      OrganizationMailer.with(organization: @organization, recipient: current_user).test_email.deliver_now
+      redirect_to admin_organization_path(@organization), notice: t("flash.mail_test_sent", email: current_user.email)
+    rescue StandardError => error
+      redirect_to admin_organization_path(@organization), alert: t("flash.mail_test_failed", error: error.message.truncate(200))
+    end
+
     def destroy
       if @organization.destroy
         redirect_to admin_organizations_path, notice: t("flash.organization_deleted", name: @organization.name)
@@ -57,8 +70,16 @@ module Admin
       @organization = Organization.find(params[:id])
     end
 
+    MAIL_FIELDS = %i[smtp_enabled smtp_address smtp_port smtp_security smtp_username smtp_password remove_smtp_password
+                     mail_from imap_enabled imap_address imap_port imap_ssl imap_username imap_password
+                     remove_imap_password imap_folder mailbox_address].freeze
+
+    # Passwords are write-only: a blank field keeps the stored one
+    # (specs/organization-mail.md).
     def organization_params
-      params.expect(organization: %i[name notes])
+      params.expect(organization: [ :name, :notes, *MAIL_FIELDS ]).tap do |permitted|
+        %i[smtp_password imap_password].each { |name| permitted.delete(name) if permitted[name].blank? }
+      end
     end
   end
 end

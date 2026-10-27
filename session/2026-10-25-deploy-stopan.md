@@ -96,6 +96,29 @@ its own commit 254b538; the frozen-lockfile fix, spec and notes are in
 the follow-up commit. The dev container is left running on
 127.0.0.1:3000 (`make docker-dev-down` stops it).
 
+## 404 on stopan.linuxfan.org (2026-10-27)
+
+The operator got 404 on `https://stopan.linuxfan.org`. Cause:
+ModSecurity (OWASP CRS 3.3, server-wide) rule 941120 matched the random
+encrypted `_stopan_session` cookie of that browser (403, the error
+document is missing -> 404), and the blocked response never replaces the
+cookie, so the browser stays locked out. Requests without the cookie
+worked. Unrelated to the WebSocket change of 04:08, but the same random
+match can hit any browser at any time.
+
+With the operator's approval, `sites_web_domain_update` added a
+per-site `SecAction` (id 13183) that removes only `_stopan_session` from
+the CRS targets (specs/deploy.md "ModSecurity and the session cookie").
+A first attempt with `SecRuleUpdateTargetByTag` in the vhost had no
+effect and was replaced. Apache restarted twice through ISPConfig.
+Verified: session cookie with the pattern -> app; same pattern in other
+cookies and `<script>` in the query string -> still blocked; headers,
+`/cable` 101, configtest, g0no `/up` 200. Immediate workaround for a
+locked-out browser was: delete the site's cookies.
+
+Open: g0no runs under the same CRS and may hit the same random match on
+its session cookie; not touched (needs its own decision).
+
 ## Demo data in the dev container (2026-10-26 evening)
 
 The operator asked for users and organizations besides the admin, for

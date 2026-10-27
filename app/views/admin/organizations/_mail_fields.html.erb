@@ -1,0 +1,70 @@
+<%# SMTP and mailbox settings of an organization (specs/organization-mail.md).
+    Passwords are write-only. Locals: f, organization. %>
+<fieldset class="mail-settings" id="mail-settings">
+  <legend class="section-title"><%= t("ui.admin.mail.title") %></legend>
+  <p class="field-hint"><%= t("ui.admin.mail.intro") %></p>
+
+  <fieldset class="mail-settings__part">
+    <legend><%= t("ui.admin.mail.smtp") %></legend>
+    <label class="check-field"><%= f.check_box :smtp_enabled %> <%= t("ui.admin.mail.smtp_enabled") %></label>
+    <div class="field-row">
+      <div class="field">
+        <%= f.label :smtp_address %>
+        <%= f.text_field :smtp_address, class: "field-input", placeholder: "smtp.example.com", aria: { invalid: invalid?(organization, :smtp_address) } %>
+      </div>
+      <div class="field">
+        <%= f.label :smtp_port %>
+        <%= f.number_field :smtp_port, class: "field-input", min: 1, max: 65_535 %>
+      </div>
+      <div class="field">
+        <%= f.label :smtp_security %>
+        <%= f.select :smtp_security, MailSettings::SMTP_SECURITY.map { |s| [ t("ui.admin.mail.security.#{s}"), s ] }, {}, class: "select" %>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <%= f.label :smtp_username %>
+        <%= f.text_field :smtp_username, class: "field-input", autocomplete: "off" %>
+      </div>
+      <%= render "admin/organizations/password_field", f: f, organization: organization, attribute: :smtp_password %>
+    </div>
+    <div class="field">
+      <%= f.label :mail_from %>
+      <%= f.text_field :mail_from, class: "field-input", placeholder: t("ui.admin.mail.from_placeholder"), aria: { invalid: invalid?(organization, :mail_from) } %>
+    </div>
+  </fieldset>
+
+  <fieldset class="mail-settings__part">
+    <legend><%= t("ui.admin.mail.imap") %></legend>
+    <label class="check-field"><%= f.check_box :imap_enabled %> <%= t("ui.admin.mail.imap_enabled") %></label>
+    <div class="field-row">
+      <div class="field">
+        <%= f.label :imap_address %>
+        <%= f.text_field :imap_address, class: "field-input", placeholder: "imap.example.com", aria: { invalid: invalid?(organization, :imap_address) } %>
+      </div>
+      <div class="field">
+        <%= f.label :imap_port %>
+        <%= f.number_field :imap_port, class: "field-input", min: 1, max: 65_535 %>
+      </div>
+      <label class="check-field check-field--inline"><%= f.check_box :imap_ssl %> <%= t("ui.admin.mail.imap_ssl") %></label>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <%= f.label :imap_username %>
+        <%= f.text_field :imap_username, class: "field-input", autocomplete: "off" %>
+      </div>
+      <%= render "admin/organizations/password_field", f: f, organization: organization, attribute: :imap_password %>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <%= f.label :imap_folder %>
+        <%= f.text_field :imap_folder, class: "field-input" %>
+      </div>
+      <div class="field">
+        <%= f.label :mailbox_address %>
+        <%= f.email_field :mailbox_address, class: "field-input", placeholder: "support@example.com", aria: { invalid: invalid?(organization, :mailbox_address), describedby: "mailbox-hint" } %>
+        <small class="field-hint" id="mailbox-hint"><%= t("ui.admin.mail.mailbox_hint") %></small>
+      </div>
+    </div>
+  </fieldset>
+</fieldset>

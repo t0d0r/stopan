@@ -62,9 +62,10 @@ Rails.application.configure do
                                                protocol: config.force_ssl ? "https" : "http" }
 
   # Outgoing email from SMTP_* environment variables (specs/notifications.md).
-  # Without SMTP_ADDRESS no email is sent at all.
+  # Without SMTP_ADDRESS only organizations with their own SMTP send email
+  # (specs/organization-mail.md); ApplicationMailer drops everything else.
+  config.action_mailer.delivery_method = :smtp
   if ENV["SMTP_ADDRESS"].present?
-    config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address: ENV["SMTP_ADDRESS"],
       port: Integer(ENV.fetch("SMTP_PORT", "587")),
@@ -78,8 +79,8 @@ Rails.application.configure do
       read_timeout: 10
     }.compact
   else
-    config.action_mailer.perform_deliveries = false
-    config.after_initialize { Rails.logger.warn("SMTP_ADDRESS is not set; Stopan sends no email") }
+    config.x.global_smtp = false
+    config.after_initialize { Rails.logger.warn("SMTP_ADDRESS is not set; only organizations with their own SMTP send email") }
   end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

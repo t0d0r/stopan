@@ -60,4 +60,36 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to root_url
   end
+
+  test "mail settings: passwords are write-only, the test email goes through the organization" do
+    org = organizations(:acme)
+    settings = { smtp_enabled: "1", smtp_address: "smtp.acme.example", smtp_port: "587", smtp_security: "starttls",
+                 smtp_username: "desk", smtp_password: "s3cret-pass", mail_from: "Acme <support@acme.example>" }
+    patch admin_organization_url(org), params: { organization: settings }
+    assert_equal "s3cret-pass", org.reload.smtp_password
+
+    get edit_admin_organization_url(org)
+    assert_select "input[type=password][name='organization[smtp_password]']:not([value])"
+    assert_not_includes response.body, "s3cret-pass"
+    assert_select "input[type=checkbox][name='organization[remove_smtp_password]']"
+
+    patch admin_organization_url(org), params: { organization: settings.merge(smtp_password: "") }
+    assert_equal "s3cret-pass", org.reload.smtp_password
+
+    get admin_organization_url(org)
+    assert_select "form[action=?]", mail_test_admin_organization_path(org)
+    assert_not_includes response.body, "s3cret-pass"
+
+    post mail_test_admin_organization_url(org)
+    assert_redirected_to admin_organization_url(org)
+    assert_equal "A test email was sent to #{users(:admin).email}.", flash[:notice]
+    mail = ActionMailer::Base.deliveries.last
+    assert_equal [ users(:admin).email ], mail.to
+    assert_equal "smtp.acme.example", mail.delivery_method.settings[:address]
+  end
+
+  test "the test email needs SMTP turned on" do
+    post mail_test_admin_organization_url(organizations(:globex))
+    assert_equal "Turn on this organization's SMTP first.", flash[:alert]
+  end
 end
