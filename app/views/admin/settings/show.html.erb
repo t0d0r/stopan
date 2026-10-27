@@ -71,30 +71,12 @@
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.google_caption") %></span></header>
   <div class="panel__body">
     <h2 class="section-title" id="google-title"><%= t("ui.admin.settings.google_title") %></h2>
-    <p class="field-hint"><%= t("ui.admin.settings.google_intro") %></p>
-    <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
-      <div class="field">
-        <span class="field-label"><%= t("ui.admin.settings.google_redirect") %></span>
-        <code class="copy-value" id="google-redirect"><%= admin_mail_oauth_callback_url %></code>
-      </div>
-      <div class="field">
-        <%= f.label :google_client_id, t("ui.admin.settings.google_client_id") %>
-        <%= f.text_field :google_client_id, class: "field-input", autocomplete: "off", spellcheck: false %>
-      </div>
-      <%# Write-only secret, like the DeepL key. %>
-      <% stored = @setting.google_client_secret_in_database.present? %>
-      <div class="field">
-        <%= f.label :google_client_secret, t("ui.admin.settings.google_client_secret") %>
-        <%= f.password_field :google_client_secret, value: nil, class: "field-input", autocomplete: "off", aria: { describedby: "google-secret-hint" } %>
-        <small class="field-hint" id="google-secret-hint">
-          <%= stored ? t("ui.admin.settings.google_secret_stored") : t("ui.admin.settings.google_secret_none") %>
-        </small>
-        <% if stored %>
-          <label class="check-field"><%= f.check_box :remove_google_client_secret %> <%= t("ui.admin.settings.google_secret_remove") %></label>
-        <% end %>
-      </div>
-      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
-    <% end %>
+    <%# Set up through the wizard (specs/mail-oauth.md "Setup wizard"). %>
+    <p><%= @setting.google_ready? ? t("ui.admin.settings.google_ready", count: MailConnection.count) : t("ui.admin.settings.google_not_set_up") %></p>
+    <div class="form-actions">
+      <%= link_to (@setting.google_ready? ? t("ui.admin.settings.google_open_wizard") : t("ui.admin.settings.google_start_wizard")),
+                  admin_google_setup_path(step: @setting.google_ready? ? 5 : 1), class: "btn btn--primary" %>
+    </div>
   </div>
 </section>
 

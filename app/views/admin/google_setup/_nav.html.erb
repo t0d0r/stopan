@@ -1,0 +1,9 @@
+<%# Back and Next of a wizard step. Locals: back (step or nil), next_step (step or nil). %>
+<div class="wizard__nav">
+  <% if local_assigns[:back] %>
+    <%= link_to t("ui.google_setup.back"), admin_google_setup_path(step: back), class: "btn" %>
+  <% end %>
+  <% if local_assigns[:next_step] %>
+    <%= link_to t("ui.google_setup.next"), admin_google_setup_path(step: next_step), class: "btn btn--primary" %>
+  <% end %>
+</div>

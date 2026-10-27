@@ -105,6 +105,48 @@ adds that as a third way to sign in, next to the password.
    in: "Password" (as today), "Google" or "Microsoft". Usually both parts
    use the same connected account.
 
+## Setup wizard (Google)
+
+Operator, 2026-10-27: "I want Google accounts for organization mail to
+work as a wizard: follow steps, not set anything up by hand". Google has
+no public API that creates an OAuth client for a consent screen, so the
+part in Google Cloud stays a few clicks there; the wizard takes the
+administrator through it with direct links and every value ready to
+copy, then does the rest in Stopan.
+
+`/admin/google_setup` (administrators only), one step per page with a
+progress list ("Step 2 of 6") and Back / Next:
+
+1. **Your Google account:** "Google Workspace (your own domain)" or
+   "Personal Gmail". Workspace gives an Internal app (recommended);
+   Gmail an External app in Testing with the 7-day limit explained. The
+   answer is kept in the session and shapes the later steps.
+2. **Project and consent screen:** links to create a project
+   (`console.cloud.google.com/projectcreate`) and to the Branding page
+   (`/auth/branding`); values to copy: app name "Stopan", the support
+   email (the administrator's address); Audience Internal (Workspace) or
+   External plus "add your Gmail address as a test user" (Gmail, link to
+   `/auth/audience`).
+3. **Mail access:** link to Data access (`/auth/scopes`), "Add or remove
+   scopes", the scope `https://mail.google.com/` to copy.
+4. **OAuth client:** link to `/auth/clients/create`, type "Web
+   application", name "Stopan", the redirect URI to copy; then the
+   Client ID and Client secret are pasted into the wizard's form (the
+   secret write-only as before) and saved. A Client ID must end in
+   `.apps.googleusercontent.com`; a wrong one is refused with that hint.
+5. **Connect a mailbox:** pick the organization, "Connect with Google";
+   Google's sign-in follows, and the callback returns to the wizard.
+6. **Done:** the connected organizations with their mailbox, and links
+   to each organization page for "Send a test email" and "Check the
+   mailbox".
+
+Steps 5 and 6 need a saved client; before that the wizard sends the
+administrator back to step 4. `/admin/settings` no longer holds the
+Google fields: its Google panel shows the state ("Not set up",
+"Ready, N organizations connected") and a button to the wizard. The
+organization page shows "Set up Google" (to the wizard) when no client
+is saved, and "Connect with Google" otherwise.
+
 ## Provider details
 
 | | Google | Microsoft |

@@ -1,0 +1,22 @@
+<ol class="wizard-list">
+  <li>
+    <p><%= t("ui.google_setup.s2.project") %></p>
+    <%= render "admin/google_setup/external", url: "https://console.cloud.google.com/projectcreate", label: t("ui.google_setup.s2.open_project") %>
+  </li>
+  <li>
+    <p><%= t("ui.google_setup.s2.branding") %></p>
+    <%= render "admin/google_setup/external", url: "https://console.cloud.google.com/auth/branding", label: t("ui.google_setup.s2.open_branding") %>
+    <%= render "admin/google_setup/copy_field", id: "wizard-app-name", label: t("ui.google_setup.s2.app_name"), value: "Stopan" %>
+    <%= render "admin/google_setup/copy_field", id: "wizard-support-email", label: t("ui.google_setup.s2.support_email"), value: current_user.email %>
+  </li>
+  <li>
+    <% if @kind == "workspace" %>
+      <p><%= t("ui.google_setup.s2.audience_internal") %></p>
+    <% else %>
+      <p><%= t("ui.google_setup.s2.audience_external") %></p>
+      <%= render "admin/google_setup/external", url: "https://console.cloud.google.com/auth/audience", label: t("ui.google_setup.s2.open_audience") %>
+      <p class="callout"><%= t("ui.google_setup.s2.testing_note") %></p>
+    <% end %>
+  </li>
+</ol>
+<%= render "admin/google_setup/nav", back: 1, next_step: 3 %>

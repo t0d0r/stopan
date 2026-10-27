@@ -1,0 +1,12 @@
+<ol class="wizard-list">
+  <li>
+    <p><%= t("ui.google_setup.s3.open") %></p>
+    <%= render "admin/google_setup/external", url: "https://console.cloud.google.com/auth/scopes", label: t("ui.google_setup.s3.open_scopes") %>
+  </li>
+  <li>
+    <p><%= t("ui.google_setup.s3.add") %></p>
+    <%= render "admin/google_setup/copy_field", id: "wizard-scope", label: t("ui.google_setup.s3.scope"), value: "https://mail.google.com/" %>
+    <p class="field-hint"><%= t("ui.google_setup.s3.why") %></p>
+  </li>
+</ol>
+<%= render "admin/google_setup/nav", back: 2, next_step: 4 %>

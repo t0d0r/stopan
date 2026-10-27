@@ -8,14 +8,12 @@ module Admin
 
     def start
       organization = Organization.find(params[:organization_id])
-      unless google_configured?
-        return redirect_to admin_organization_path(organization), alert: t("flash.google_not_configured")
-      end
+      return redirect_to admin_google_setup_path(step: 4), alert: t("flash.google_not_configured") unless google_configured?
 
       state = SecureRandom.urlsafe_base64(32)
       verifier = GoogleOauth.verifier
       session[:mail_oauth] = { "state" => state, "verifier" => verifier, "organization_id" => organization.id,
-                               "expires_at" => STATE_TTL.from_now.to_i }
+                               "expires_at" => STATE_TTL.from_now.to_i, "wizard" => params[:return_to] == "wizard" }
       redirect_to MailConnection.client.authorize_url(redirect_uri: admin_mail_oauth_callback_url, state: state, verifier: verifier),
                   allow_other_host: true
     end
@@ -28,18 +26,19 @@ module Admin
       end
 
       organization = Organization.find(pending["organization_id"])
-      if params[:error].present? || params[:code].blank?
-        return redirect_to admin_organization_path(organization), alert: t("flash.google_denied")
-      end
+      # From the setup wizard, back to it (specs/mail-oauth.md "Setup wizard").
+      wizard = pending["wizard"]
+      back = wizard ? admin_google_setup_path(step: 5) : admin_organization_path(organization)
+      return redirect_to back, alert: t("flash.google_denied") if params[:error].present? || params[:code].blank?
 
       account = MailConnection.client.exchange(code: params[:code], verifier: pending["verifier"],
                                                redirect_uri: admin_mail_oauth_callback_url)
       connect(organization, account)
-      redirect_to admin_organization_path(organization), notice: t("flash.google_connected", email: account[:email])
+      redirect_to (wizard ? admin_google_setup_path(step: 6) : admin_organization_path(organization)),
+                  notice: t("flash.google_connected", email: account[:email])
     rescue GoogleOauth::Error => e
       Rails.logger.warn("Google mail connect for organization #{organization&.id} failed: #{e.message}")
-      redirect_to(organization ? admin_organization_path(organization) : admin_organizations_path,
-                  alert: t("flash.google_failed"))
+      redirect_to(back || admin_organizations_path, alert: t("flash.google_failed"))
     end
 
     def destroy
@@ -56,8 +55,7 @@ module Admin
     private
 
     def google_configured?
-      setting = AppSetting.current
-      setting.google_client_id.present? && setting.google_client_secret.present?
+      AppSetting.current.google_ready?
     end
 
     # Stores the account and points both parts of the organization's mail

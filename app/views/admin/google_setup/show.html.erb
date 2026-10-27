@@ -1,0 +1,23 @@
+<% content_for :title, t("ui.google_setup.title") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.google_setup.title") %></h1>
+  <%= render "admin/tabs" %>
+</div>
+
+<%# The Google setup wizard (specs/mail-oauth.md "Setup wizard"). %>
+<ol class="wizard-steps" aria-label="<%= t("ui.google_setup.progress") %>">
+  <% (1..Admin::GoogleSetupController::STEPS).each do |step| %>
+    <li class="wizard-steps__item<%= " is-done" if step < @step %>" <%= "aria-current=step" if step == @step %>>
+      <span class="wizard-steps__number" aria-hidden="true"><%= step < @step ? icon(:check, size: 12) : step %></span>
+      <span class="wizard-steps__label"><%= t("ui.google_setup.steps.s#{step}") %></span>
+    </li>
+  <% end %>
+</ol>
+
+<section class="sticky sticky--green panel wizard" aria-labelledby="wizard-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.google_setup.step_of", step: @step, count: Admin::GoogleSetupController::STEPS) %></span></header>
+  <div class="panel__body">
+    <h2 class="wizard__title" id="wizard-title"><%= t("ui.google_setup.steps.s#{@step}") %></h2>
+    <%= render "admin/google_setup/step_#{@step}" %>
+  </div>
+</section>

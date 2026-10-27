@@ -1,0 +1,11 @@
+<%# A value to copy into Google Cloud, with a Copy button.
+    Locals: id, label, value. %>
+<div class="wizard-copy">
+  <%= label_tag id, label, class: "wizard-copy__label" %>
+  <div class="sharing__link">
+    <%= text_field_tag id, value, readonly: true, class: "field-input", data: { select_on_focus: true } %>
+    <button type="button" class="btn" data-copy="<%= id %>" data-copied-label="<%= t("ui.share.copied") %>">
+      <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.google_setup.copy") %></span>
+    </button>
+  </div>
+</div>

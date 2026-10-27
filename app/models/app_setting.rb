@@ -14,6 +14,10 @@ class AppSetting < ApplicationRecord
 
   validates :auto_postpone_days, numericality: { only_integer: true, in: 0..3650 }
   validates :default_look, inclusion: { in: LOOKS }
+  # A Google OAuth client (specs/mail-oauth.md "Setup wizard").
+  validates :google_client_id, format: { with: /\A[\w.-]+\.apps\.googleusercontent\.com\z/, message: :google_client_id },
+                               allow_blank: true
+  validate :google_client_needs_secret
   validate :translation_needs_a_key
 
   before_validation do
@@ -30,7 +34,15 @@ class AppSetting < ApplicationRecord
     deepl_api_key.presence || ENV["DEEPL_API_KEY"].presence
   end
 
+  def google_ready?
+    google_client_id.present? && google_client_secret.present?
+  end
+
   private
+
+  def google_client_needs_secret
+    errors.add(:google_client_secret, :blank) if google_client_id.present? && google_client_secret.blank?
+  end
 
   def translation_needs_a_key
     errors.add(:deepl_api_key, :required_for_translation) if translation_enabled? && deepl_key.blank?

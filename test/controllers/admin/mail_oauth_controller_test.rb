@@ -84,12 +84,13 @@ class Admin::MailOauthControllerTest < ActionDispatch::IntegrationTest
     assert_not @org.google_mail?
   end
 
-  test "without a client the button is hidden and connecting is refused" do
-    AppSetting.current.update!(google_client_id: nil, remove_google_client_secret: "1")
+  test "without a client the organization page leads to the wizard and connecting is refused" do
+    AppSetting.current.update_columns(google_client_id: nil, google_client_secret: nil)
     get admin_organization_url(@org)
     assert_select "a[href=?]", admin_organization_google_connect_path(@org), 0
+    assert_select "a.btn[href=?]", admin_google_setup_path, "Set up Google"
     get admin_organization_google_connect_url(@org)
-    assert_redirected_to admin_organization_url(@org)
+    assert_redirected_to admin_google_setup_url(step: 4)
     assert_match(/Google client ID and secret/, flash[:alert])
   end
 
@@ -114,15 +115,15 @@ class Admin::MailOauthControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
 
-  test "the settings page shows the redirect URI and keeps the secret write-only" do
-    get admin_settings_url
-    assert_select "#google code", admin_mail_oauth_callback_url
-    assert_select "#google input[name='app_setting[google_client_id]'][value=?]", "cid.apps.googleusercontent.com"
-    assert_select "#google input[name='app_setting[google_client_secret]']:not([value])"
-    assert_select "#google", /A secret is stored/
-    assert_no_match(/s3cret/, response.body)
+  test "connecting from the wizard returns to the wizard" do
+    get admin_organization_google_connect_url(@org, return_to: "wizard")
+    query = URI.decode_www_form(URI(response.location).query).to_h
+    get admin_mail_oauth_callback_url(state: query["state"], code: "abc")
+    assert_redirected_to admin_google_setup_url(step: 6)
 
-    patch admin_settings_url, params: { app_setting: { google_client_id: "new-id", google_client_secret: "" } }
-    assert_equal [ "new-id", "s3cret" ], AppSetting.current.reload.values_at(:google_client_id, :google_client_secret)
+    get admin_organization_google_connect_url(@org, return_to: "wizard")
+    query = URI.decode_www_form(URI(response.location).query).to_h
+    get admin_mail_oauth_callback_url(state: query["state"], error: "access_denied")
+    assert_redirected_to admin_google_setup_url(step: 5)
   end
 end

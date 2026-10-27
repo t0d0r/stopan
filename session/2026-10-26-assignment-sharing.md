@@ -635,6 +635,18 @@ menu and Take; open /tickets/new and pick a requester.
   /admin/settings; the account page offers "Site default (X)", Notes,
   Omarchy; `look=default` deletes the browser's cookie. `AppSetting::LOOKS`
   is the list.
+- Google setup wizard (operator: "work as a wizard, follow steps"):
+  `/admin/google_setup`, six steps (account kind Workspace / personal
+  Gmail kept in the session; project and consent screen; mail scope;
+  OAuth client with the redirect URI to copy and the Client ID / secret
+  form; connect each organization, the OAuth callback returns to the
+  wizard via `return_to=wizard`; done with test links). Direct links to
+  the Google Auth Platform pages, every value with a Copy button. Client
+  ID must end in .apps.googleusercontent.com and needs a secret. The
+  manual Google fields left /admin/settings (status plus a wizard
+  button); the organization page shows "Set up Google" without a client.
+  Google cannot create the OAuth client by API, so those clicks remain
+  in Google Cloud.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

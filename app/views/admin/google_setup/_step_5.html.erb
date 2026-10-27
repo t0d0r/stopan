@@ -1,0 +1,26 @@
+<p><%= t("ui.google_setup.s5.intro") %></p>
+<% if @organizations.any? %>
+  <ul class="share-list">
+    <% @organizations.each do |organization| %>
+      <% connection = organization.mail_connection %>
+      <li class="share-list__item">
+        <p class="share-list__title"><strong><%= organization.name %></strong></p>
+        <p class="share-list__meta">
+          <% if connection %>
+            <%= t("ui.admin.mail.google_as", email: connection.email) %>
+            <% unless connection.connected? %><strong class="mail-error"><%= t("ui.admin.mail.google_reconnect") %></strong><% end %>
+          <% else %>
+            <%= t("ui.google_setup.s5.not_connected") %>
+          <% end %>
+        </p>
+        <%= link_to (connection ? t("ui.admin.mail.google_reconnect_button") : t("ui.admin.mail.google_connect")),
+                    admin_organization_google_connect_path(organization, return_to: "wizard"),
+                    class: "btn#{' btn--primary' unless connection}", data: { turbo: false } %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="panel__empty"><%= t("ui.google_setup.s5.no_organizations") %></p>
+<% end %>
+<p class="field-hint"><%= t("ui.google_setup.s5.sign_in_as") %></p>
+<%= render "admin/google_setup/nav", back: 4, next_step: (6 if @organizations.any? { |o| o.mail_connection }) %>

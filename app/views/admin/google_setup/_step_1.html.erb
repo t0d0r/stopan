@@ -1,0 +1,17 @@
+<p><%= t("ui.google_setup.s1.intro") %></p>
+<%= form_with url: admin_google_setup_path, method: :get, class: "stack-form" do %>
+  <%= hidden_field_tag :step, 2, id: nil %>
+  <fieldset class="wizard-choice">
+    <legend class="sr-only"><%= t("ui.google_setup.steps.s1") %></legend>
+    <% Admin::GoogleSetupController::KINDS.each do |kind| %>
+      <label class="wizard-choice__option">
+        <%= radio_button_tag :kind, kind, @kind == kind %>
+        <span>
+          <strong><%= t("ui.google_setup.s1.#{kind}") %></strong>
+          <span class="field-hint"><%= t("ui.google_setup.s1.#{kind}_hint") %></span>
+        </span>
+      </label>
+    <% end %>
+  </fieldset>
+  <div class="wizard__nav"><%= submit_tag t("ui.google_setup.next"), name: nil, class: "btn btn--primary" %></div>
+<% end %>

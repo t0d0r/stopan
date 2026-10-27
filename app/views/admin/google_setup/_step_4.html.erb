@@ -1,0 +1,35 @@
+<ol class="wizard-list">
+  <li>
+    <p><%= t("ui.google_setup.s4.open") %></p>
+    <%= render "admin/google_setup/external", url: "https://console.cloud.google.com/auth/clients/create", label: t("ui.google_setup.s4.open_clients") %>
+  </li>
+  <li>
+    <p><%= t("ui.google_setup.s4.fill") %></p>
+    <%= render "admin/google_setup/copy_field", id: "wizard-client-name", label: t("ui.google_setup.s4.name"), value: "Stopan" %>
+    <%= render "admin/google_setup/copy_field", id: "wizard-redirect", label: t("ui.google_setup.s4.redirect"), value: admin_mail_oauth_callback_url %>
+  </li>
+  <li>
+    <p><%= t("ui.google_setup.s4.paste") %></p>
+    <%= form_with model: @setting, url: admin_google_setup_path, method: :patch, class: "stack-form" do |f| %>
+      <%= form_errors @setting %>
+      <div class="field">
+        <%= f.label :google_client_id, t("ui.admin.settings.google_client_id") %>
+        <%= f.text_field :google_client_id, class: "field-input", autocomplete: "off", spellcheck: false,
+                         placeholder: "1234-abc.apps.googleusercontent.com", aria: { invalid: invalid?(@setting, :google_client_id) } %>
+      </div>
+      <% stored = @setting.google_client_secret_in_database.present? %>
+      <div class="field">
+        <%= f.label :google_client_secret, t("ui.admin.settings.google_client_secret") %>
+        <%= f.password_field :google_client_secret, value: nil, class: "field-input", autocomplete: "off",
+                             aria: { describedby: "wizard-secret-hint", invalid: invalid?(@setting, :google_client_secret) } %>
+        <small class="field-hint" id="wizard-secret-hint">
+          <%= stored ? t("ui.admin.settings.google_secret_stored") : t("ui.admin.settings.google_secret_none") %>
+        </small>
+      </div>
+      <div class="wizard__nav">
+        <%= link_to t("ui.google_setup.back"), admin_google_setup_path(step: 3), class: "btn" %>
+        <%= f.submit t("ui.google_setup.s4.save"), class: "btn btn--primary" %>
+      </div>
+    <% end %>
+  </li>
+</ol>

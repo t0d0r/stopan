@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     resources :messages, only: %i[new create]
     resource :settings, only: %i[show update]
     # Google accounts for organization mail (specs/mail-oauth.md).
+    resource :google_setup, only: %i[show update], controller: "google_setup"
     get "organizations/:organization_id/mail_oauth/google" => "mail_oauth#start", as: :organization_google_connect
     delete "organizations/:organization_id/mail_oauth" => "mail_oauth#destroy", as: :organization_mail_oauth
     get "mail_oauth/callback" => "mail_oauth#callback", as: :mail_oauth_callback

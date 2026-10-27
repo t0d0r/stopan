@@ -37,9 +37,11 @@
 </dl>
 <div class="form-actions form-actions--start">
   <%# Google accounts (specs/mail-oauth.md): a GET link, since a form may not redirect to Google under the CSP. %>
-  <% if AppSetting.current.google_client_id.present? %>
+  <% if AppSetting.current.google_ready? %>
     <%= link_to (connection ? t("ui.admin.mail.google_reconnect_button") : t("ui.admin.mail.google_connect")),
                 admin_organization_google_connect_path(organization), class: "btn", data: { turbo: false } %>
+  <% else %>
+    <%= link_to t("ui.admin.mail.google_set_up"), admin_google_setup_path, class: "btn" %>
   <% end %>
   <% if connection %>
     <%= button_to t("ui.admin.mail.google_disconnect"), admin_organization_mail_oauth_path(organization), method: :delete, class: "btn",

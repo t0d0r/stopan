@@ -1,0 +1,2 @@
+<%# A link into Google Cloud, in a new tab. Locals: url, label. %>
+<%= link_to url, class: "btn wizard__open", target: "_blank", rel: "noopener noreferrer" do %><%= label %><span class="sr-only"> (<%= t("ui.google_setup.new_tab") %>)</span><% end %>
