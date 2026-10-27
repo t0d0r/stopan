@@ -25,8 +25,12 @@
 | pending | waiting for the requester | agent |
 | resolved | a solution was given; the requester can still reply, which reopens it | agent or requester |
 | closed | finished; no more public replies | agent |
+| postponed | parked for later, not worked on now ("Not now", "Отложена" in Bulgarian; board.md) | agent, or the system after inactivity |
 
 "Unsolved" means new, open or pending. "Solved" means resolved or closed.
+"Postponed" is neither: it has its own queue view "Not now" and stays out
+of "All unsolved" and the dashboard's unsolved count; a requester sees it
+in their "Open" tab, labelled "Not now" / "Отложена".
 
 Labels: the `open` status is shown as "In progress" ("В процес" in
 Bulgarian), because it means an agent is working on the ticket. Only the
@@ -40,9 +44,10 @@ Allowed manual changes by staff (`Ticket::TRANSITIONS`):
 
 | from | to |
 |------|----|
-| new | open, pending, resolved, closed |
-| open | pending, resolved, closed |
-| pending | open, resolved, closed |
+| new | open, pending, resolved, closed, postponed |
+| open | pending, resolved, closed, postponed |
+| pending | open, resolved, closed, postponed |
+| postponed | open, resolved, closed |
 | resolved | open, closed |
 | closed | open |
 
@@ -52,8 +57,12 @@ nothing. An invalid transition is a validation error on `status`.
 Automatic changes, recorded as status events with the replying user as
 actor:
 
-- A requester's public reply on a `pending` or `resolved` ticket sets it to
-  `open`.
+- A requester's public reply on a `pending`, `resolved` or `postponed`
+  ticket sets it to `open`.
+- **Automatic postponing** (board.md): a `new`, `open` or `pending`
+  ticket without activity (`updated_at`) for the number of days set by
+  administrators becomes `postponed`, recorded as a status event without
+  an actor ("The system moved it to Not now").
 - A staff public reply on a `new` ticket sets it to `open`, unless the reply
   form chose another status ("Submit as ...").
 - A staff reply or note may choose any allowed status in the same request.

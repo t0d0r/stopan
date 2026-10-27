@@ -77,17 +77,74 @@ so it reloads itself when tickets change elsewhere, keeping its scroll
 position; a reload waits while a card is being dragged or a Move menu is
 open (the busy check, timeline.md).
 
+## Not now, automatic postponing and stages
+
+Added on 2026-10-27 at the operator's request ("add" the three proposals:
+a "Not now" status, automatic postponing with a stamp, sub-columns).
+
+### Not now
+
+- The status `postponed` (tickets.md), purple, shown as "Not now"
+  ("Отложена"). On the board it is the leftmost column, collapsed by
+  default, like Fizzy's NOT NOW.
+- Requesters see it as their ticket's status and in their "Open" tab;
+  they get the in-app notification of the change but **no email** when
+  their ticket is postponed (manually or automatically); their reply
+  reopens it.
+
+### Automatic postponing
+
+- Administrators set the number of days in `/admin/settings` ("Postpone
+  tickets after N days without activity"; default 30; 0 turns it off).
+  The setting is one row of `app_settings` (`auto_postpone_days`).
+- Once an hour the web process (started under `rails server`, like the
+  mailbox poller; `bin/rails stopan:postpone_inactive` by hand) moves
+  every `new`, `open` or `pending` ticket whose last activity is older
+  than N days to `postponed`, one transaction per ticket, as a status
+  event without an actor (the timeline says "Stopan moved it to Not now",
+  public like every status change). Notifications follow the rule above
+  (in the app, no email to the requester).
+- **Stamp:** a card that will be postponed within 7 days shows a round
+  stamp at its top right, like Fizzy's "closes in": "Not now in 3 days"
+  (the number large, the words around it small); "today" when it is due
+  in less than a day. Staff also see "Moves to Not now in 3 days" under
+  the status on the ticket page.
+
+### Stages (sub-columns)
+
+- Administrators define stages for a status in `/admin/settings`, for
+  example "Investigating" and "QA to confirm" for In progress: a name (at
+  most 40 characters), a colour from the paper set, and an order; rename,
+  recolour, move up or down, delete (tickets in a deleted stage go back to
+  the plain status). Table `stages` (`status`, `name`, `color`,
+  `position`); `tickets.stage_id` (nullable).
+- On the board every stage is its own column right after its status's
+  column, with its colour and the label "In progress / Investigating";
+  it collapses and expands like the others. Cards in a stage sit only in
+  the stage column.
+- Dragging a card to a stage column sets the status (when different,
+  under the usual transition rules) and the stage; to the plain status
+  column it clears the stage; the Move menu lists stages too. A status
+  change anywhere else clears a stage that belongs to another status.
+- Stages are for staff only: a stage change is an internal event
+  ("Maria moved it to Investigating"), requesters never see stages, and
+  staff see the stage on the ticket page (a Stage select in Properties)
+  and as "In progress · Investigating" in the queue.
+
 ## Not in this phase
 
-Custom columns, reordering cards by hand, a "Not now" lane, automatic
-postponing after inactivity (Fizzy's auto close; roadmap.md lists
-auto-close of resolved tickets), card background images.
+Reordering cards by hand (Fizzy has none either: golden tickets are the
+only way to the top), card background images, per-board settings.
 
 ## Acceptance
 
 `test/controllers/boards_controller_test.rb` (staff only, columns and
 counts, card content, golden order, the 50-card limit for solved
-columns, filters) and `test/controllers/ticket_moves_test.rb`
+columns, filters, the Not now column, stage columns, stamps),
+`test/models/auto_postpone_test.rb` (who is postponed, events, no email
+to requesters, the setting, off at 0),
+`test/controllers/admin/settings_controller_test.rb` (the setting and
+stages, admins only) and `test/controllers/ticket_moves_test.rb`
 (allowed and refused transitions, 204 and 422 for fetch, redirect for
 forms, events written, staff only).
 

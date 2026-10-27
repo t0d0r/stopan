@@ -56,6 +56,7 @@ declared in the database.
 | edited_at, edited_by_id | last edit of subject or description (FK users, nullable; timeline.md "Editing") |
 | markdown | boolean, default false: the description is Markdown (markdown.md) |
 | source | `app` (default), `web_form` or `email` (organization-mail.md, public-form.md) |
+| stage_id | FK stages, nullable: the board stage within the status (board.md) |
 | created_at, updated_at | indexed `updated_at` for the default sort |
 
 Files: `has_many_attached :files`.
@@ -91,6 +92,12 @@ In-app notifications (notifications.md "Notification panel"): `user_id`
 nullable), `kind`, `event_id` (nullable), `status` (nullable), `read_at`,
 `created_at`, `updated_at`. Indexes `[user_id, created_at]`,
 `[user_id, read_at]`.
+
+## stages and app_settings
+
+`stages`: `status`, `name`, `color`, `position`, timestamps; board
+sub-columns (board.md). `app_settings`: one row, `auto_postpone_days`
+(integer, default 30, 0 = off).
 
 ## impersonations
 

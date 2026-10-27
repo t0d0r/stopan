@@ -37,6 +37,10 @@ Each candidate is dropped when they are A, deactivated, cannot see T, or
 can see none of the batch's events. A person who is both requester and
 assignee, or assignee and subscriber, gets one email.
 
+**Postponing sends no email to the requester** (board.md "Not now"): a
+batch whose only requester-visible change is a move to `postponed` gives
+the requester the in-app notification only.
+
 **New tickets to the organization's members** (operator, 2026-10-27):
 for a batch with a `created` event, every active member of T's
 organization (requesters and staff members alike), other than A and

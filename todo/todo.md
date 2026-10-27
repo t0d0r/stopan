@@ -95,6 +95,9 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] members see their organizations' tickets and get in-app notifications of new ones (specs/roles.md, specs/notifications.md)
 - [x] kanban board of tickets by status, like Fizzy (specs/board.md)
 - [x] requesters without an organization see nothing but a notice (specs/roles.md)
+- [ ] "Not now" status (postponed), no email to requesters (specs/board.md "Not now")
+- [ ] automatic postponing after N days with a setting and a stamp on cards (specs/board.md)
+- [ ] stages as board sub-columns, managed by admins (specs/board.md "Stages")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

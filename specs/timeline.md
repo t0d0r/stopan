@@ -36,6 +36,7 @@ up to 5 attached files.
 | `assignee_changed` | assignee changes | old / new user id (blank = unassigned) | yes |
 | `shared` | share link created or replaced (sharing.md) | to: `password` for a password link, else blank | yes |
 | `unshared` | sharing stopped | - | yes |
+| `stage_changed` | the board stage changes (board.md) | old / new stage name | yes |
 
 Assignee values are stored as user ids and shown with the user's current
 display name; users that appear in history cannot be deleted (only
