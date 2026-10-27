@@ -178,6 +178,12 @@ Operator requests, in order:
   staff and internal here), autosave (replies are sent messages), the
   note board and sorting.
 
+- Plan item 1 done (operator: "go in this order"): copy box in the title
+  strip of the request, replies and notes, also on shared pages
+  (`copy_box`, `[data-message-text]`, `copyText` with execCommand
+  fallback). Checked in headless Chrome: the clipboard got the request
+  and a note's text, the check mark showed and reset after 1.5 seconds.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

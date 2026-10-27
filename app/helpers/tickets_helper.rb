@@ -74,6 +74,16 @@ module TicketsHelper
     end
   end
 
+  # Copies the text of the message it sits in ([data-message-text]); shown
+  # by application.js (specs/ui.md "Copy box").
+  def copy_box
+    tag.button(type: "button", class: "sticky__box sticky__box--icon copy-box", hidden: true,
+               title: t("ui.copy.label"), aria: { label: t("ui.copy.label") },
+               data: { copy_message: true, label: t("ui.copy.label"), copied: t("ui.copy.copied") }) do
+      icon(:copy, size: 10) + tag.span(icon(:check, size: 10), class: "copy-box__done")
+    end
+  end
+
   # Opens the edit form in place of the text (a Turbo frame).
   def edit_link(path, frame:)
     link_to path, class: "edit-link", data: { turbo_frame: frame } do

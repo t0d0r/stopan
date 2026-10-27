@@ -160,6 +160,47 @@ function setUpCopyButtons() {
   });
 }
 
+// Puts text on the clipboard; plain HTTP (other than localhost) has no
+// Clipboard API, so a hidden text area and execCommand stand in.
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {}
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.readOnly = true;
+  area.style.cssText = "position: fixed; top: 0; opacity: 0;";
+  document.body.append(area);
+  area.select();
+  document.execCommand("copy");
+  area.remove();
+}
+
+// Copy box in a message's title strip (specs/ui.md "Copy box"): copies the
+// message's text as shown. The text is looked up on click, because the
+// in-place edit form can replace it.
+function setUpCopyBoxes() {
+  document.querySelectorAll("[data-copy-message]").forEach((button) => {
+    const message = button.closest(".message");
+    if (!message?.querySelector("[data-message-text]")) return;
+    button.hidden = false;
+    button.addEventListener("click", async () => {
+      const text = message.querySelector("[data-message-text]");
+      if (!text) return;
+      await copyText(text.innerText.trim());
+      button.classList.add("is-copied");
+      button.title = button.dataset.copied;
+      button.setAttribute("aria-label", button.dataset.copied);
+      setTimeout(() => {
+        button.classList.remove("is-copied");
+        button.title = button.dataset.label;
+        button.setAttribute("aria-label", button.dataset.label);
+      }, 1500);
+    }, { signal: pageSignal });
+  });
+}
+
 // Menu bar dropdowns (the notification panel) close on a click outside
 // and on Escape, which returns focus to their button. They are looked up on
 // each event, because a live refresh replaces the notification panel.
@@ -377,6 +418,7 @@ function setUpPage() {
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
+  setUpCopyBoxes();
   setUpDropdowns();
 
   // A sideways-scrolling tab row (queue views on phones) shows the current tab.

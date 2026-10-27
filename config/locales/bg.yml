@@ -262,6 +262,10 @@ bg:
         staff: "агенти и администратори"
         requesters: "заявители"
 
+    copy:
+      label: "Копирай текста"
+      copied: "Копирано"
+
     preview:
       close: "Затвори прегледа"
       previous: "Предишен файл"

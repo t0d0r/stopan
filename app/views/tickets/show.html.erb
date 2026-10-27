@@ -25,7 +25,9 @@
   <div class="ticket-main">
     <article class="sticky sticky--yellow message message--description" id="description">
       <header class="sticky__bar">
+        <span class="sticky__box sticky__box--spacer" aria-hidden="true"></span>
         <span class="sticky__caption"><%= t("ui.ticket.description") %></span>
+        <%= copy_box %>
       </header>
       <div class="message__body">
         <p class="message__meta">
@@ -36,7 +38,7 @@
           <% if policy.edit_description? %><%= edit_link edit_ticket_description_path(@ticket), frame: "description-text" %><% end %>
         </p>
         <%= turbo_frame_tag "description-text" do %>
-          <div class="ticket-text"><%= ticket_text @ticket.description %></div>
+          <div class="ticket-text" data-message-text><%= ticket_text @ticket.description %></div>
         <% end %>
         <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket %><% end %>
         <% if @ticket.files.attached? %>

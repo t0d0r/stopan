@@ -536,6 +536,17 @@ form.button_to {
   vertical-align: 0;
 }
 
+/* Copy box (specs/ui.md): a check mark replaces the icon after copying. */
+.copy-box__done,
+.copy-box.is-copied > .icon {
+  display: none;
+}
+
+.copy-box.is-copied .copy-box__done {
+  display: inline-flex;
+  color: #1f7a33;
+}
+
 .form-errors {
   margin: 0 0 12px;
   padding: 8px 12px;

@@ -17,7 +17,9 @@
   <div class="ticket-main">
     <article class="sticky sticky--yellow message message--description" id="description">
       <header class="sticky__bar">
+        <span class="sticky__box sticky__box--spacer" aria-hidden="true"></span>
         <span class="sticky__caption"><%= t("ui.ticket.description") %></span>
+        <%= copy_box %>
       </header>
       <div class="message__body">
         <p class="message__meta">
@@ -26,7 +28,7 @@
           <%= time_ago @ticket.created_at %>
           <%= edited_note @ticket %>
         </p>
-        <div class="ticket-text"><%= ticket_text @ticket.description %></div>
+        <div class="ticket-text" data-message-text><%= ticket_text @ticket.description %></div>
         <% if @ticket.files.attached? %>
           <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
             <% @ticket.files.each do |file| %>

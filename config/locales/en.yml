@@ -259,6 +259,10 @@ en:
         staff: "agents and admins"
         requesters: "requesters"
 
+    copy:
+      label: "Copy text"
+      copied: "Copied"
+
     preview:
       close: "Close the preview"
       previous: "Previous file"
