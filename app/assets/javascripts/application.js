@@ -586,7 +586,7 @@ function setUpPage() {
         void flash.offsetHeight;
         flash.classList.add("is-collapsing");
         setTimeout(() => flash.remove(), 260);
-      }, 450);
+      }, 500);
     };
     const close = flash.querySelector("[data-dismiss]");
     if (close) close.addEventListener("click", dismiss);

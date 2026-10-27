@@ -79,10 +79,12 @@ Turbo Drive for page changes.
   "slide from right to left, stay in the centre, sweep to the left when
   they go"). They slide in from the right edge to the centre (0.5 s), and
   when they go (the close box, or 6 seconds for notices unless hovered or
-  focused; alerts stay until closed) they sweep out to the left (0.45 s)
-  and the band then closes smoothly, so the page below moves up without a
-  jump. The band clips them sideways, so the page never scrolls
-  horizontally. With reduced motion they appear and disappear without
+  focused; alerts stay until closed) they sweep out to the left (0.5 s),
+  fully visible until they pass the window's left edge (operator: "let
+  them pass the left side"), and the band then closes smoothly, so the
+  page below moves up without a jump. The band is as wide as the window
+  and clips them at its edges, so the page never scrolls horizontally.
+  With reduced motion they appear and disappear without
   movement.
 - **Confirm dialog:** a yellow sticky with a red "!" badge, a question, what
   will happen, Cancel and a red action button (`ApplicationHelper#confirm_data`).
