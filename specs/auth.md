@@ -15,7 +15,8 @@ Devise 5 with `database_authenticatable`, `registerable`, `recoverable`,
   session ends on the next request.
 - Sign-out is `DELETE /users/sign_out` (a `button_to` in the menu bar).
 - **Magic sign-in links** for requesters (public-form.md "Magic sign-in
-  links"): `GET /magic/:token`, one use, 24 hours, never for staff; the
+  links"): `GET /magic/:token` then a "Sign in" button (`POST`), one
+  use, 24 hours, never for staff; the
   sign-in page has "Email me a sign-in link".
 - **Own account** (`/users/edit`, the user's name in the menu bar): name,
   email and password, confirmed with the current password (except for a

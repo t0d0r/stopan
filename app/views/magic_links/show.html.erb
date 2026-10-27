@@ -1,0 +1,9 @@
+<% content_for :title, t("ui.magic.sign_in_title") %>
+<div class="sticky sticky--yellow auth">
+  <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
+  <div class="auth__body">
+    <h2><%= t("ui.magic.sign_in_as", name: @user.display_name) %></h2>
+    <%= button_to t("ui.magic.sign_in"), magic_link_session_path(params[:token], ticket: params[:ticket].presence),
+                  class: "btn btn--primary btn--block", data: { turbo: false } %>
+  </div>
+</div>

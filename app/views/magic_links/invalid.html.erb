@@ -1,0 +1,9 @@
+<% content_for :title, t("ui.magic.invalid_title") %>
+<div class="sticky sticky--yellow auth">
+  <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
+  <div class="auth__body">
+    <h2><%= t("ui.magic.invalid_title") %></h2>
+    <p><%= t("ui.magic.invalid_hint") %></p>
+    <%= link_to t("ui.magic.request_title"), new_magic_link_path, class: "btn btn--primary btn--block" %>
+  </div>
+</div>

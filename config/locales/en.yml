@@ -24,6 +24,7 @@ en:
       password_keep: "Leave blank to keep your current password."
       current_password: "Current password"
       current_password_hint: "Needed to confirm any change."
+      first_password_hint: "You have not chosen a password yet. Choose one above to sign in without a link; your current password is not needed."
       organizations: "Organizations"
       no_organizations: "none yet - ask your administrator"
       back: "Back to the tickets"
@@ -293,6 +294,16 @@ en:
       turn_on: "Format as Markdown"
       turn_off: "Show as plain text"
 
+    magic:
+      request_title: "Email me a sign-in link"
+      request_intro: "Requesters can sign in with a one-time link instead of a password. Enter your email address and we send you a link."
+      send: "Send the link"
+      sign_in_title: "Sign in"
+      sign_in_as: "Sign in as %{name}"
+      sign_in: "Sign in"
+      invalid_title: "This sign-in link is not valid any more"
+      invalid_hint: "Sign-in links work once and for 24 hours. Ask for a new one."
+
     copy:
       label: "Copy text"
       copied: "Copied"
@@ -415,6 +426,11 @@ en:
 
   mailer:
     greeting: "Hello %{name},"
+    magic_link:
+      subject: "Your sign-in link"
+      intro: "Use this link to sign in to the service desk. It works once."
+      action: "Sign in"
+      validity: "The link works for 24 hours. If you did not ask for it, you can ignore this email."
     organization:
       test_subject: "Test email for %{name}"
       test_body: "This test email went out through the SMTP settings of %{name}, from %{from}. They work."
@@ -481,6 +497,9 @@ en:
     user_has_history: "%{name} has ticket history and cannot be deleted. Deactivate the account instead."
     organization_created: "Organization %{name} was created."
     organization_updated: "Organization %{name} was updated."
+    magic_link_sent: "If an account exists for this address, we sent a sign-in link to it."
+    magic_signed_in: "You are signed in."
+    magic_too_many: "Too many requests. Please try again in a few minutes."
     mail_test_sent: "A test email was sent to %{email}."
     mail_test_failed: "The test email could not be sent: %{error}"
     mail_test_disabled: "Turn on this organization's SMTP first."

@@ -18,6 +18,13 @@ class User < ApplicationRecord
   has_many :ticket_events, foreign_key: :actor_id, inverse_of: :actor, dependent: :restrict_with_error
   has_many :revisions, foreign_key: :editor_id, inverse_of: :editor, dependent: :restrict_with_error
 
+  # One-time sign-in links for requesters (specs/public-form.md "Magic
+  # sign-in links"): any sign-in changes current_sign_in_at and so ends
+  # every link issued before it.
+  generates_token_for :magic_sign_in, expires_in: 24.hours do
+    current_sign_in_at
+  end
+
   normalizes :username, with: ->(username) { username.strip.presence }
   normalizes :name, with: ->(name) { name.strip.squish.presence }
 
@@ -92,6 +99,10 @@ class User < ApplicationRecord
   end
 
   # History keeps its people, so only users without any can be deleted.
+  def magic_sign_in_allowed?
+    role == "requester" && active_for_authentication? && !access_locked?
+  end
+
   def ticket_history?
     requested_tickets.exists? || assigned_tickets.exists? || comments.exists? || ticket_events.exists? ||
       revisions.exists?

@@ -1,0 +1,16 @@
+<% content_for :title, t("ui.magic.request_title") %>
+<div class="sticky sticky--yellow auth">
+  <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
+  <div class="auth__body">
+    <h2><%= t("ui.magic.request_title") %></h2>
+    <p><%= t("ui.magic.request_intro") %></p>
+    <%= form_with url: magic_links_path do |f| %>
+      <div class="field">
+        <%= f.label :email, t("ui.fields.email") %>
+        <%= f.email_field :email, required: true, autocomplete: "email", autofocus: true %>
+      </div>
+      <div class="actions"><%= f.submit t("ui.magic.send") %></div>
+    <% end %>
+    <div class="auth__links"><%= link_to t("ui.links.sign_in"), new_user_session_path %></div>
+  </div>
+</div>

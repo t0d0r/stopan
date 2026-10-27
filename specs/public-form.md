@@ -55,8 +55,12 @@ same rules apply to the mailbox, organization-mail.md):
 
 ## Magic sign-in links
 
-- A link `GET /magic/:token` signs in a requester and opens a page
-  (the ticket from the confirmation, else My tickets). The token is
+- A link `GET /magic/:token` shows a small page "Sign in as <name>"
+  with one "Sign in" button; `POST /magic/:token` signs the requester in
+  and opens a page (the ticket from the confirmation, else My tickets).
+  The button step exists because mail scanners and link previews (for
+  example Outlook's Safe Links) open links before the person does, and a
+  plain GET would use up the one-time link. The token is
   `User#generate_token_for(:magic_sign_in)`: signed, expiring after 24
   hours, and bound to the user's `current_sign_in_at`, so it works once
   (signing in changes that value) and stops working after any other

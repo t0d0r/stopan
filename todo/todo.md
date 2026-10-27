@@ -82,7 +82,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 
 - [x] encryption keys from SECRET_KEY_BASE and TRUSTED_PROXIES (specs/organization-mail.md, specs/public-form.md)
 - [x] organization mail settings in admin with test buttons; outgoing mail through the organization's SMTP (specs/organization-mail.md)
-- [ ] magic sign-in links and "email me a sign-in link"; choosing a first password (specs/public-form.md)
+- [x] magic sign-in links and "email me a sign-in link"; choosing a first password (specs/public-form.md)
 - [ ] public request page per organization with accounts by email and abuse limits (specs/public-form.md)
 - [ ] IMAP mailbox per organization: poller, new tickets and replies from mail (specs/organization-mail.md)
 - [ ] operator: set TRUSTED_PROXIES and MAILBOX_POLLING in production when used (specs/deploy.md)

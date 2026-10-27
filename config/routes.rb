@@ -45,6 +45,11 @@ Rails.application.routes.draw do
   get "s/:token/files/:id" => "shared_tickets#file", as: :shared_ticket_file
   get "s/:token/files/:id/preview" => "shared_tickets#file_preview", as: :shared_ticket_file_preview
 
+  # One-time sign-in links (specs/public-form.md "Magic sign-in links").
+  resources :magic_links, only: %i[new create], path: "magic"
+  get "magic/:token" => "magic_links#show", as: :magic_link
+  post "magic/:token" => "magic_links#create_session", as: :magic_link_session
+
   patch "preferences" => "preferences#update", as: :preferences
 
   # Health check for load balancers and container orchestrators.

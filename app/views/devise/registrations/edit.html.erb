@@ -27,11 +27,15 @@
     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
 
-  <div class="field">
-    <%= f.label :current_password, t("ui.account_page.current_password") %>
-    <i><%= t("ui.account_page.current_password_hint") %></i>
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
+  <% if resource.password_chosen? %>
+    <div class="field">
+      <%= f.label :current_password, t("ui.account_page.current_password") %>
+      <i><%= t("ui.account_page.current_password_hint") %></i>
+      <%= f.password_field :current_password, autocomplete: "current-password" %>
+    </div>
+  <% else %>
+    <p class="field-hint"><%= t("ui.account_page.first_password_hint") %></p>
+  <% end %>
 
   <div class="actions">
     <%= f.submit t("ui.save") %>

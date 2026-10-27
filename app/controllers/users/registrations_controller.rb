@@ -13,6 +13,18 @@ module Users
 
     private
 
+    # A requester created by the public form or the mailbox has never known
+    # a password: they choose the first one without the current password
+    # (specs/public-form.md).
+    def update_resource(resource, params)
+      return super if resource.password_chosen?
+
+      params = params.except(:current_password)
+      params = params.except(:password, :password_confirmation) if params[:password].blank?
+      resource.password_chosen = true if params[:password].present?
+      resource.update(params)
+    end
+
     def require_open_registration
       return if Rails.configuration.x.registration_open
 
