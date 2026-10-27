@@ -64,9 +64,17 @@ module TicketsHelper
   end
 
   # On a shared page (share_token) files go through the share link.
+  # A download link that opens the preview dialog for previewable kinds
+  # (specs/attachments.md "Preview"); modified clicks still download.
   def attachment_link(ticket, attachment, share_token: nil)
     path = share_token ? shared_ticket_file_path(share_token, attachment) : ticket_attachment_path(ticket, attachment)
-    link_to path, class: "file-link", data: { turbo: false } do
+    kind = Attachable.preview_kind(attachment.blob)
+    preview = if kind
+      share_token ? shared_ticket_file_preview_path(share_token, attachment) : preview_ticket_attachment_path(ticket, attachment)
+    end
+    data = { turbo: false, preview_item: true, preview_kind: kind || "none", preview_url: preview,
+             filename: attachment.filename.to_s, details: number_to_human_size(attachment.byte_size) }
+    link_to path, class: "file-link", data: data do
       icon(:clip) + tag.span(attachment.filename.to_s, class: "file-link__name") +
         tag.span(number_to_human_size(attachment.byte_size), class: "file-link__size")
     end

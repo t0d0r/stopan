@@ -19,6 +19,20 @@ module Attachable
     application/vnd.oasis.opendocument.spreadsheet
     application/vnd.oasis.opendocument.presentation
   ].freeze
+  # Only these are ever sent inline, for the preview dialog
+  # (specs/attachments.md "Preview").
+  PREVIEW_KINDS = {
+    "image" => %w[image/png image/jpeg image/gif image/webp],
+    "pdf" => %w[application/pdf],
+    "text" => %w[text/plain text/csv application/json]
+  }.freeze
+  TEXT_PREVIEW_LIMIT = 1.megabyte
+
+  # "image", "pdf", "text", or nil when the blob has no preview.
+  def self.preview_kind(blob)
+    kind = PREVIEW_KINDS.find { |_kind, types| types.include?(blob.content_type) }&.first
+    kind unless kind == "text" && blob.byte_size > TEXT_PREVIEW_LIMIT
+  end
 
   included do
     has_many_attached :files

@@ -38,16 +38,23 @@ class SharedTicketsController < ApplicationController
     end
   end
 
-  # Files of the ticket and of its public replies only.
   def file
-    public_comments = @ticket.comments.where(internal: false).select(:id)
-    attachment = ActiveStorage::Attachment.where(name: "files", record_type: "Ticket", record_id: @ticket.id)
-                   .or(ActiveStorage::Attachment.where(name: "files", record_type: "Comment", record_id: public_comments))
-                   .find(params[:id])
-    send_blob(attachment.blob)
+    send_blob(find_public_attachment.blob)
+  end
+
+  def file_preview
+    send_blob_preview(find_public_attachment.blob)
   end
 
   private
+
+  # Files of the ticket and of its public replies only.
+  def find_public_attachment
+    public_comments = @ticket.comments.where(internal: false).select(:id)
+    ActiveStorage::Attachment.where(name: "files", record_type: "Ticket", record_id: @ticket.id)
+      .or(ActiveStorage::Attachment.where(name: "files", record_type: "Comment", record_id: public_comments))
+      .find(params[:id])
+  end
 
   # The token is the secret: keep it out of Referer headers sent to other
   # sites, caches and search engines. "no-referrer" would make browsers send

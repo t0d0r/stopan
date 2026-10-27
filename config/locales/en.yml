@@ -259,6 +259,14 @@ en:
         staff: "agents and admins"
         requesters: "requesters"
 
+    preview:
+      close: "Close the preview"
+      previous: "Previous file"
+      next: "Next file"
+      download: "Download"
+      none: "No preview for this file type. Download it to open it."
+      error: "The preview could not be loaded."
+
     confirm:
       title: "Are you sure?"
       ok: "Delete"

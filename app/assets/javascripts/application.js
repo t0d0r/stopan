@@ -267,6 +267,89 @@ document.addEventListener("turbo:before-stream-render", (event) => {
   };
 });
 
+// Attachment preview (specs/attachments.md "Preview"): one <dialog> per
+// page, filled from the clicked [data-preview-item] link. Arrow keys move
+// between files; Escape closes. Modified clicks still download.
+function setUpPreview(dialog) {
+  const items = [...document.querySelectorAll("[data-preview-item]")];
+  if (!dialog || items.length === 0) return;
+
+  const media = dialog.querySelector("[data-preview-media]");
+  const caption = dialog.querySelector("[data-preview-caption]");
+  const meta = dialog.querySelector("[data-preview-meta]");
+  const count = dialog.querySelector("[data-preview-count]");
+  const download = dialog.querySelector("[data-preview-download]");
+  const navButtons = dialog.querySelectorAll("[data-preview-prev], [data-preview-next]");
+  let index = 0;
+
+  const message = (text) => {
+    const p = document.createElement("p");
+    p.className = "preview__none";
+    p.textContent = text;
+    return p;
+  };
+
+  const render = (kind, url, name) => {
+    switch (kind) {
+      case "image": {
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = name;
+        return img;
+      }
+      case "pdf": {
+        const frame = document.createElement("iframe");
+        frame.src = url;
+        frame.title = name;
+        return frame;
+      }
+      case "text": {
+        const pre = document.createElement("pre");
+        fetch(url, { credentials: "same-origin" })
+          .then((response) => (response.ok ? response.text() : Promise.reject(response.status)))
+          .then((text) => { pre.textContent = text; })
+          .catch(() => pre.replaceWith(message(dialog.dataset.loadError)));
+        return pre;
+      }
+      default:
+        return message(dialog.dataset.noPreview);
+    }
+  };
+
+  const show = (i) => {
+    index = (i + items.length) % items.length;
+    const item = items[index];
+    const { previewKind, previewUrl, filename, details } = item.dataset;
+    media.replaceChildren(render(previewKind, previewUrl, filename));
+    caption.textContent = filename;
+    meta.textContent = details;
+    count.textContent = items.length > 1 ? `${index + 1} / ${items.length}` : "";
+    download.href = item.href;
+    navButtons.forEach((button) => { button.hidden = items.length < 2; });
+  };
+
+  items.forEach((item, i) => {
+    item.addEventListener("click", (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      show(i);
+      dialog.showModal();
+    }, { signal: pageSignal });
+  });
+
+  dialog.querySelector("[data-preview-close]").addEventListener("click", () => dialog.close(), { signal: pageSignal });
+  dialog.querySelector("[data-preview-prev]").addEventListener("click", () => show(index - 1), { signal: pageSignal });
+  dialog.querySelector("[data-preview-next]").addEventListener("click", () => show(index + 1), { signal: pageSignal });
+  // A click on the backdrop lands on the dialog element itself.
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); }, { signal: pageSignal });
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") show(index - 1);
+    if (event.key === "ArrowRight") show(index + 1);
+  }, { signal: pageSignal });
+  // Emptying the media frees large images and stops a PDF viewer.
+  dialog.addEventListener("close", () => media.replaceChildren(), { signal: pageSignal });
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -277,6 +360,7 @@ function setUpPage() {
 
   document.querySelectorAll("textarea[data-autogrow]").forEach(autoGrow);
   setUpConfirm(document.querySelector("[data-confirm-dialog]"));
+  setUpPreview(document.querySelector("[data-preview-dialog]"));
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();

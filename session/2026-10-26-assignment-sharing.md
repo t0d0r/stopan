@@ -132,6 +132,18 @@ Operator requests, in order:
   own "Mark all as read" it kept the notice and did not reload; with the
   bell panel open it waited and refreshed once the panel closed.
 
+- Attachment preview (2026-10-27, operator: "attached files in a
+  previewable format should be previewed"): g0no's preview dialog
+  (image, PDF iframe, text in `<pre>`, previous/next, Download) on the
+  ticket page and the shared page; inline routes
+  `/tickets/:number/attachments/:id/preview` and
+  `/s/:token/files/:id/preview` reuse the download lookups;
+  `Attachable.preview_kind`; CSP sandbox on images and text,
+  `default-src 'none'; frame-ancestors 'self'` on PDFs (Chrome refuses a
+  sandboxed PDF; the app policy forbids framing). Checked in headless
+  Chrome: PNG, PDF viewer, text and "no preview" for ZIP on both pages,
+  arrow keys and Escape.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
@@ -152,6 +164,12 @@ Notifications page live refresh: specs/notifications.md,
 app/models/notification.rb, app/views/notifications/index.html.erb,
 app/assets/javascripts/application.js,
 test/integration/notification_live_updates_test.rb.
+Attachment preview: specs/attachments.md, app/models/concerns/attachable.rb,
+app/controllers/{attachments,shared_tickets}_controller.rb,
+app/controllers/concerns/file_sending.rb, config/routes.rb,
+app/helpers/tickets_helper.rb, app/views/partials/_preview_dialog.html.erb,
+layout, application.{js,css}, locales, attachment and shared ticket tests,
+test/fixtures/files/{dot.png,blank.pdf,notes.zip}.
 
 ## Verify
 

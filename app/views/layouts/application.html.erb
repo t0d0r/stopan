@@ -72,5 +72,6 @@
     <% if live_admin_page? %><%= turbo_stream_from :admin, channel: AdminChannel %><% end %>
     <%= render "partials/confirm_dialog" %>
   <% end %>
+  <%= render "partials/preview_dialog" unless devise_controller? %>
 </body>
 </html>

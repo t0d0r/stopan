@@ -71,7 +71,7 @@
 - [x] queue and My tickets refresh live (specs/queues.md "Live updates")
 - [x] admin pages refresh live (specs/admin.md "Live updates")
 - [x] notifications page refreshes live (specs/notifications.md "Live updates of the notifications page")
-- [~] preview dialog for images, PDFs and text files (specs/attachments.md "Preview")
+- [x] preview dialog for images, PDFs and text files (specs/attachments.md "Preview")
 - [ ] shared page shows how many people view it now (specs/sharing.md)
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 

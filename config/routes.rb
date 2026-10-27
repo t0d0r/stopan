@@ -14,7 +14,9 @@ Rails.application.routes.draw do
     end
     resources :comments, only: :create
     resource :share, only: %i[create destroy], controller: "ticket_shares"
-    resources :attachments, only: :show
+    resources :attachments, only: :show do
+      get :preview, on: :member
+    end
   end
 
   namespace :admin do
@@ -30,6 +32,7 @@ Rails.application.routes.draw do
   get "s/:token" => "shared_tickets#show", as: :shared_ticket
   post "s/:token" => "shared_tickets#unlock", as: :unlock_shared_ticket
   get "s/:token/files/:id" => "shared_tickets#file", as: :shared_ticket_file
+  get "s/:token/files/:id/preview" => "shared_tickets#file_preview", as: :shared_ticket_file_preview
 
   patch "preferences" => "preferences#update", as: :preferences
 

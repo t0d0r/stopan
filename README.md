@@ -39,7 +39,8 @@ The screenshots use the fictional data from `make demo`.
   append-only audit log of status, priority and assignee changes
   (`specs/timeline.md`).
 - **Attachments** - up to 5 files of 10 MB from an allow-list of types,
-  always downloaded, only after the ticket's visibility check
+  served only after the ticket's visibility check; images, PDFs and text
+  files open in a preview dialog, everything else downloads
   (`specs/attachments.md`).
 - **Email notifications** - requesters hear about public replies and
   status changes, assignees about replies, notes and assignment, and staff

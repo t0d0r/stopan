@@ -102,6 +102,24 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     token = share(ticket, password: "s3cret!")
     get shared_ticket_file_url(token, ticket.files.first)
     assert_redirected_to shared_ticket_url(token)
+    get shared_ticket_file_preview_url(token, ticket.files.first)
+    assert_redirected_to shared_ticket_url(token)
+  end
+
+  test "shared previews: public files inline, internal files not" do
+    ticket = tickets(:printer)
+    public_reply = ticket.add_comment(author: users(:agent), body: "See the file", files: [ upload ])
+    note = ticket.add_comment(author: users(:agent), body: "Internal file", internal: true, files: [ upload ])
+    token = share(ticket)
+
+    get shared_ticket_url(token)
+    assert_select "a.file-link[data-preview-url=?]", shared_ticket_file_preview_path(token, public_reply.files.first)
+    get shared_ticket_file_preview_url(token, public_reply.files.first)
+    assert_response :success
+    assert_match(/\Ainline/, response.headers["Content-Disposition"])
+    assert_equal "default-src 'none'; sandbox", response.headers["Content-Security-Policy"]
+    get shared_ticket_file_preview_url(token, note.files.first)
+    assert_response :not_found
   end
 
   test "an open shared page subscribes to a stream named by a hash of the token" do
