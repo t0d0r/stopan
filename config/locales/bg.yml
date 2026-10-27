@@ -92,6 +92,7 @@ bg:
       urgent: "Спешен"
 
     fields:
+      link: "Връзка"
       number: "Заявка"
       stage: "Етап"
       from: "Подател"

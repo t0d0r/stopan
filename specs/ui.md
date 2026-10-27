@@ -154,6 +154,17 @@ Turbo Drive for page changes.
   available (plain HTTP other than localhost). It is a `<button hidden>`
   that JavaScript shows, so pages without JavaScript have no dead button.
   Copying reads only what the page already shows; it sends nothing.
+- **The request copies the whole ticket** (operator, 2026-10-27: "copy
+  should copy all the data of the request, not only the description"):
+  the copy box of the original request puts a block of facts before the
+  text, one per line as "Label: value" in the reader's language, then an
+  empty line and the text. On the ticket page: "#1094 Subject",
+  status (and stage), priority, assignee (or "Unassigned"), requester
+  (with the email for staff), organization, created, the ticket's link,
+  and for staff the mail's From, To, Cc and Date when the ticket came
+  from a mailbox. On a shared page: "#1094 Subject", status and the
+  shared link, nothing more than that page shows. Replies and notes copy
+  their text only.
 
 ## Accessibility
 

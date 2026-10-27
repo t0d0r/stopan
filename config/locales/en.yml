@@ -89,6 +89,7 @@ en:
       urgent: "Urgent"
 
     fields:
+      link: "Link"
       number: "Ticket"
       stage: "Stage"
       from: "From"

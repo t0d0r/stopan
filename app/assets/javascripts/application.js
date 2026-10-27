@@ -215,6 +215,8 @@ function setUpCopyBoxes() {
         copied = text.innerText.trim();
         links.forEach((link, index) => { link.textContent = labels[index]; });
       }
+      // The request copies the ticket's facts before its text (specs/ui.md "Copy box").
+      if (message.dataset.copyHeader) copied = `${message.dataset.copyHeader}\n\n${copied}`;
       await copyText(copied);
       button.classList.add("is-copied");
       button.title = button.dataset.copied;

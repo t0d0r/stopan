@@ -746,6 +746,11 @@ menu and Take; open /tickets/new and pick a requester.
   (column-width 320px, break-inside avoid, the tokens panel
   column-span all). The `.auth` form styles now also apply to
   `.account-page`. Checked at 1440 and 390px.
+- Copy of the whole request (operator: "copy all the data of the
+  request, not only the description"): `TicketsHelper#ticket_copy_header`
+  renders "Label: value" lines into `data-copy-header` on the request
+  article (shared page: subject, status, shared link only); the copy box
+  prepends it with an empty line. Checked on dev #1094.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

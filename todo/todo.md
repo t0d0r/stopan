@@ -148,6 +148,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [ ] API later: webhooks for new tickets and replies; OpenAPI description
 - [x] bulk actions in the queue and search: check boxes, status/priority/assignee for the selection or the whole list (max 500), skipped tickets named; also PATCH /api/v1/tickets/bulk (operator, 2026-10-27; specs/queues.md "Bulk actions")
 - [x] own account page laid out as panels across the screen like the admin pages (operator, 2026-10-27; specs/ui.md "Own account page")
+- [x] the request's copy box copies the ticket's facts (status, priority, assignee, requester, organization, created, link, mail headers for staff) before the text (operator, 2026-10-27; specs/ui.md "Copy box")
 - [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")
 - [x] requesters see only their own tickets; "My organizations" tab, organization list stream and colleague notice removed (operator, 2026-10-27; specs/roles.md)
 - [x] long original request collapses with "Show the whole request" (operator, 2026-10-27; specs/timeline.md "Long requests collapse")

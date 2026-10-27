@@ -60,6 +60,29 @@ class TicketsHelperTest < ActionView::TestCase
     assert_equal "https://example.com/x?trk=1", html.css("a").first["href"]
   end
 
+  test "the request's copy header has the ticket's facts; staff also see emails and mail headers" do
+    ticket = tickets(:printer)
+    ticket.update_columns(mail_headers: { "from" => [ "Anna <anna@example.com>" ], "to" => [ "desk@example.com" ] })
+    define_singleton_method(:current_user) { users(:agent) }
+    header = ticket_copy_header(ticket)
+    lines = header.lines.map(&:chomp)
+    assert_equal "#1001 #{ticket.subject}", lines.first
+    assert_includes lines, "Status: #{status_name(ticket.status)}"
+    assert_includes lines, "Priority: #{priority_name(ticket.priority)}"
+    assert_includes lines, "Requester: #{users(:anna).display_name} <#{users(:anna).email}>"
+    assert_includes lines, "Organization: Acme Bakery"
+    assert_includes lines, "Link: #{ticket_url(ticket)}"
+    assert_includes lines, "From: Anna <anna@example.com>"
+
+    define_singleton_method(:current_user) { users(:anna) }
+    assert_not_includes ticket_copy_header(ticket), "From:"
+    assert_not_includes ticket_copy_header(ticket), users(:anna).email
+
+    ticket.share!(actor: users(:agent))
+    shared = ticket_copy_header(ticket, shared: true).lines.map(&:chomp)
+    assert_equal [ "#1001 #{ticket.subject}", "Status: #{status_name(ticket.status)}", "Link: #{shared_ticket_url(ticket.share_token)}" ], shared
+  end
+
   test "the layout follows the source of the message" do
     ticket = tickets(:printer)
     ticket.update_columns(description: "Hi\n-----\nfooter", source: "email")

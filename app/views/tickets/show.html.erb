@@ -5,7 +5,8 @@
 <div class="ticket-page">
   <%# The request as one note: strip, "#1001 Subject", pills, text (ui.md). %>
   <article class="sticky sticky--yellow message message--description ticket-head" id="description"
-         data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>">
+         data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>"
+         data-copy-header="<%= ticket_copy_header(@ticket) %>">
     <% editable = policy.edit_description? %>
     <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
                icon_name: :note, frame: "description-text",

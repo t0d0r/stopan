@@ -8,7 +8,8 @@
     <%= share_viewers_tag ShareViewers.count(@ticket) + 1, scope: :page %>
     <%# The request as one note, as on the ticket page (ui.md). %>
     <article class="sticky sticky--yellow message message--description" id="description"
-             data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>">
+             data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>"
+             data-copy-header="<%= ticket_copy_header(@ticket, shared: true) %>">
       <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
                  icon_name: :note, width_box: true %>
       <div class="message__body">

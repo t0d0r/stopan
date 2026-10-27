@@ -311,6 +311,38 @@ module TicketsHelper
     VIEW_COLORS.fetch(view, "gray")
   end
 
+  # The facts the request's copy box puts before its text, one "Label:
+  # value" per line (specs/ui.md "Copy box"). A shared page gives only what
+  # it shows.
+  def ticket_copy_header(ticket, shared: false)
+    status = status_name(ticket.status)
+    status += " (#{ticket.stage.name})" if ticket.stage
+    facts = { t("ui.fields.status") => status }
+    if shared
+      facts[t("ui.fields.link")] = shared_ticket_url(ticket.share_token)
+    else
+      staff = current_user&.staff?
+      requester = ticket.requester.display_name
+      requester += " <#{ticket.requester.email}>" if staff && requester != ticket.requester.email
+      facts.merge!(t("ui.fields.priority") => priority_name(ticket.priority),
+                   t("ui.fields.assignee") => ticket.assignee&.display_name || t("ui.unassigned"),
+                   t("ui.fields.requester") => requester, t("ui.fields.organization") => ticket.organization.name,
+                   t("ui.fields.created") => l(ticket.created_at, format: :long), t("ui.fields.link") => ticket_url(ticket))
+      facts.merge!(mail_copy_facts(ticket.mail_headers)) if staff && ticket.mail_headers.present?
+    end
+    [ "#{ticket.reference} #{ticket.subject}", *facts.map { |label, value| "#{label}: #{value}" } ].join("\n")
+  end
+
+  def mail_copy_facts(headers)
+    facts = {}
+    facts[t("ui.mail_headers.from")] = Array(headers["from"]).join(", ")
+    facts[t("ui.mail_headers.to")] = Array(headers["to"]).join(", ")
+    facts[t("ui.mail_headers.cc")] = Array(headers["cc"]).join(", ")
+    sent = mail_header_time(headers["date"])
+    facts[t("ui.mail_headers.date")] = "#{l(sent, format: :long)} (UTC#{sent.strftime("%:z")})" if sent
+    facts.compact_blank
+  end
+
   # "Name <address>" as [name, address]; a bare address has no name.
   def mail_party(value)
     match = value.to_s.match(/\A(.*?)\s*<([^<>]+)>\z/)

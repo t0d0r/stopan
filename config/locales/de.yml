@@ -92,6 +92,7 @@ de:
       urgent: "Dringend"
 
     fields:
+      link: "Link"
       number: "Ticket"
       stage: "Phase"
       from: "Von"
