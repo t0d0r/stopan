@@ -98,10 +98,16 @@ cannot hide who wrote what.
   comment through `Comment.visible_to` on that ticket (404 otherwise); the
   policy (`TicketPolicy#edit_description?`, `#edit_comment?(comment)`)
   decides the rest (403).
-- **UI:** an "Edit" link with a pencil icon in the message's meta line for
-  users who may edit it. With JavaScript the text turns into a form in
-  place (a Turbo frame around the text); without it the edit page shows
-  the same form. "Save" goes back to the ticket at the message with a
+- **UI:** a pencil box in the message's title strip for users who may
+  edit it. With JavaScript the text turns into a form in place (a Turbo
+  frame around the text); without it the edit page shows the same form.
+- **Looks like g0no's note editing** (operator, 2026-10-27: "editing a
+  note in g0no is stylish, here input forms show"): the fields sit on the
+  paper without a box or background, in the same font and size as the
+  text (the subject as a bold heading line), with only a dashed rule
+  under them; labels are for screen readers only. Below, a small hint
+  ("Ctrl+Enter saves, Esc cancels") and small Cancel / Save buttons.
+  Ctrl+Enter (Cmd+Enter on a Mac) saves. "Save" goes back to the ticket at the message with a
   notice ("Reply updated." / "Internal note updated." / "Request
   updated."); "Cancel" restores the text. Errors re-render the form
   (422).

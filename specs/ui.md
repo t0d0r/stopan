@@ -85,6 +85,14 @@ Turbo Drive for page changes.
   application.js and by `PATCH /preferences` without JavaScript. The
   width changes with a 0.25 s transition (none with reduced motion). The
   box is hidden under 760px, where pages already use the full width.
+  Operator, 2026-10-27 ("I don't see the widen button", from g0no where it
+  sits on the note): the same box also sits in the title strip of the
+  original request, on the ticket page and on shared pages; both boxes
+  set the one preference.
+- **Shared page width:** one column, 820px in the normal width and the
+  full desk width when wide (operator, 2026-10-27: "shared tickets should
+  scale properly"); the read-only note, header and messages share that
+  column.
 - Filter selects in the queue submit their form on change; there is no
   Apply button (only a `<noscript>` one).
 - Clearing the menu bar search with the field's clear button submits it.
