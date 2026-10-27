@@ -40,6 +40,9 @@ class EditsControllerTest < ActionDispatch::IntegrationTest
 
     sign_in users(:boris)
     patch ticket_description_url(@ticket), params: { ticket: { subject: "Hacked", description: "Hacked" } }
+    assert_response :forbidden
+    sign_in users(:carl)
+    patch ticket_description_url(@ticket), params: { ticket: { subject: "Hacked", description: "Hacked" } }
     assert_response :not_found
     assert_equal "Please send a photo.", @staff_reply.reload.body
   end

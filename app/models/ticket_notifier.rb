@@ -39,12 +39,25 @@ class TicketNotifier
     @events = events
   end
 
-  # Stores the in-app notification and queues the email for each recipient.
+  # Stores the in-app notification and queues the email for each recipient;
+  # a new ticket also reaches the organization's members, in the app only.
   def deliver_later
-    notifications.each do |recipient, kind|
+    recipients = notifications
+    recipients.each do |recipient, kind|
       store(recipient, kind)
       TicketMailer.with(recipient: recipient, ticket: @ticket, event_ids: @events.map(&:id)).public_send(kind).deliver_later
     end
+    members_to_tell(recipients.keys).each { |member| store(member, :created) }
+  end
+
+  # Active members of the ticket's organization, for a new ticket, other
+  # than the actor and those already told (specs/notifications.md
+  # "Recipients").
+  def members_to_tell(already)
+    return [] unless @events.any? { |event| event.action == "created" }
+
+    @ticket.organization.users.active.where.not(id: [ actor&.id, *already.map(&:id) ].compact).to_a
+           .select { |member| Ticket.visible_to(member).exists?(@ticket.id) }
   end
 
   # { recipient => kind } for this batch.

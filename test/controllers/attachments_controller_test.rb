@@ -22,8 +22,14 @@ class AttachmentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "other requesters cannot download anything" do
+  test "colleagues download public files only; other organizations nothing" do
     sign_in users(:boris)
+    get ticket_attachment_url(@ticket, @public)
+    assert_response :success
+    get ticket_attachment_url(@ticket, @internal)
+    assert_response :not_found
+
+    sign_in users(:carl)
     get ticket_attachment_url(@ticket, @public)
     assert_response :not_found
   end

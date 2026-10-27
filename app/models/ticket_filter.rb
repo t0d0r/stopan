@@ -3,7 +3,9 @@
 # Ticket.visible_to, and the parameters only narrow it.
 class TicketFilter
   STAFF_VIEWS = %w[unsolved mine unassigned pending solved all].freeze
-  REQUESTER_VIEWS = %w[open solved all].freeze
+  # The first three are the requester's own tickets; "organization" is every
+  # ticket of their organizations (specs/queues.md "My tickets").
+  REQUESTER_VIEWS = %w[open solved all organization].freeze
   SORTS = %w[updated created priority].freeze
   PER_PAGE = 25
   PRIORITY_ORDER = Arel.sql("CASE tickets.priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 " \
@@ -71,7 +73,14 @@ class TicketFilter
     Ticket.visible_to(user)
   end
 
+  def own
+    base.where(requester_id: user.id)
+  end
+
   def in_view(name)
+    return base if name == "organization"
+    return own_view(name) unless user.staff?
+
     case name
     when "unsolved", "open" then base.unsolved
     when "mine" then base.unsolved.where(assignee_id: user.id)
@@ -79,6 +88,14 @@ class TicketFilter
     when "pending" then base.where(status: "pending")
     when "solved" then base.solved
     else base
+    end
+  end
+
+  def own_view(name)
+    case name
+    when "open" then own.unsolved
+    when "solved" then own.solved
+    else own
     end
   end
 

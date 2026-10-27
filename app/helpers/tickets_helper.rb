@@ -7,7 +7,7 @@ module TicketsHelper
   PRIORITY_COLORS = { "low" => "gray", "normal" => "blue", "high" => "purple", "urgent" => "pink" }.freeze
   # Paper colour per list view (queues.md); pending and solved match their statuses.
   VIEW_COLORS = { "unsolved" => "yellow", "mine" => "purple", "unassigned" => "pink", "pending" => "blue",
-                  "solved" => "green", "all" => "gray", "open" => "yellow" }.freeze
+                  "solved" => "green", "all" => "gray", "open" => "yellow", "organization" => "purple" }.freeze
   AVATAR_COLORS = %w[yellow blue green pink purple gray].freeze
 
   def status_name(status)

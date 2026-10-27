@@ -15,9 +15,12 @@ class TicketPolicyTest < ActiveSupport::TestCase
     assert_not p.see_internal?
   end
 
-  test "requesters on someone else's ticket" do
-    assert_not policy(:boris, :printer).show?
+  test "requesters read colleagues' tickets but do not work on them" do
+    assert policy(:boris, :printer).show?
     assert_not policy(:boris, :printer).reply?
+    assert_not policy(:boris, :printer).resolve?
+    assert_not policy(:boris, :printer).share?
+    assert_not policy(:boris, :printer).edit_description?
     assert_not policy(:carl, :printer).show?
     assert_not policy(:carl, :printer).resolve?
   end

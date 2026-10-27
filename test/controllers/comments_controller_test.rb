@@ -21,11 +21,14 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "open", tickets(:printer).reload.status
   end
 
-  test "a requester cannot comment on tickets they cannot see" do
+  test "a requester cannot comment on a colleague's ticket or another organization's" do
     sign_in users(:boris)
     assert_no_difference "Comment.count" do
       post ticket_comments_url(tickets(:printer)), params: { comment: { body: "Me too" } }
     end
+    assert_response :forbidden
+    sign_in users(:carl)
+    post ticket_comments_url(tickets(:printer)), params: { comment: { body: "Me too" } }
     assert_response :not_found
   end
 

@@ -337,6 +337,18 @@ Operator requests, in order:
   page on in the list. Checked in headless Chrome: both copies put the URL
   on the clipboard and show "Copied".
 
+- Organization members (operator: every member gets a notification for
+  new tickets of their organization; chose that members can read them,
+  in the app only): Ticket.visible_to for requesters is now every ticket
+  of their organizations (public part); replying, resolving, editing and
+  sharing stay with the ticket's requester (403 for colleagues, 404 for
+  other organizations, tests updated); "My organizations" tab with the
+  requester under each subject; [organization, :tickets] list streams;
+  TicketNotifier stores in-app "created" notifications for active
+  members (no email). Checked in headless Chrome: Anna's new ticket
+  raised Boris's bell 1 -> 2 and appeared in his tab live; the colleague
+  page has no composer and says who can reply.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

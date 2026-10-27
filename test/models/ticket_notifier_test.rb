@@ -152,4 +152,19 @@ class TicketNotifierTest < ActiveSupport::TestCase
     assert_includes mail.html_part.body.decoded, "Maria &lt;Ops&gt; &amp; Co replied"
     assert_includes mail.text_part.body.decoded, "Maria <Ops> & Co replied"
   end
+
+  test "a new ticket reaches the organization's members in the app, without email" do
+    users(:boris).update!(notify_new_tickets: false)
+    sent = mails { open_ticket(actor: users(:anna)) }
+    ticket = Ticket.order(:id).last
+    assert_not sent.key?(users(:boris).email)
+    note = Notification.find_by!(user: users(:boris), ticket: ticket)
+    assert_equal [ "created", users(:anna) ], [ note.kind, note.actor ]
+    assert_not Notification.exists?(user: users(:anna), ticket: ticket)
+    assert_not Notification.exists?(user: users(:carl), ticket: ticket)
+    assert_equal 1, Notification.where(ticket: ticket, user: users(:boris)).count
+
+    perform_enqueued_jobs { ticket.add_comment(author: users(:agent), body: "On it") }
+    assert_not Notification.where(ticket: ticket, user: users(:boris)).where.not(kind: "created").exists?
+  end
 end

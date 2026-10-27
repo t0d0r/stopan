@@ -1,4 +1,6 @@
 <% content_for :title, current_user.staff? ? t("ui.queue.title") : t("ui.my_tickets.title") %>
 <% turbo_refreshes_with scroll: :preserve %>
-<%= turbo_stream_from(*Ticket.list_stream(current_user), channel: TicketListsChannel) %>
+<% Ticket.list_streams(current_user).each do |streamables| %>
+  <%= turbo_stream_from(*streamables, channel: TicketListsChannel) %>
+<% end %>
 <%= render current_user.staff? ? "queue" : "my_tickets", filter: @filter %>

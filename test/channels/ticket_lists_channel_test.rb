@@ -27,4 +27,12 @@ class TicketListsChannelTest < ActionCable::Channel::TestCase
     subscribe signed_stream_name: signed(:queue, :staff)
     assert subscription.rejected?
   end
+
+  test "members hear their organizations' lists, nobody else" do
+    stub_connection current_user: users(:anna)
+    subscribe signed_stream_name: signed(organizations(:acme), :tickets)
+    assert subscription.confirmed?
+    subscribe signed_stream_name: signed(organizations(:globex), :tickets)
+    assert subscription.rejected?
+  end
 end

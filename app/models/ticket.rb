@@ -66,7 +66,7 @@ class Ticket < ApplicationRecord
     return none unless user
     return all if user.staff?
 
-    where(requester_id: user.id, organization_id: user.memberships.select(:organization_id))
+    where(organization_id: user.memberships.select(:organization_id))
   end
 
   # Write transactions on SQLite are immediate (Rails 8), so reading the
@@ -169,6 +169,14 @@ class Ticket < ApplicationRecord
     user.staff? ? [ :queue, :staff ] : [ user, :tickets ]
   end
 
+  # Every list stream a user's ticket list listens to: a requester also
+  # hears about their organizations' tickets (specs/queues.md).
+  def self.list_streams(user)
+    return [ list_stream(user) ] if user.staff?
+
+    [ list_stream(user), *user.organizations.map { |organization| [ organization, :tickets ] } ]
+  end
+
   # Tells open ticket pages and ticket lists to reload themselves; internal
   # changes reach only staff. The signal carries no content.
   def refresh_pages(internal:)
@@ -179,6 +187,7 @@ class Ticket < ApplicationRecord
 
     Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :public)
     Turbo::StreamsChannel.broadcast_refresh_later_to(requester, :tickets)
+    Turbo::StreamsChannel.broadcast_refresh_later_to(organization, :tickets)
   end
 
   # Tells an open shared page to reload itself (specs/sharing.md); the
