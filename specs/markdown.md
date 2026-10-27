@@ -53,8 +53,9 @@ can tick its task list items on the ticket page.
   `PATCH /tickets/:number/comments/:id/task` with `line` and `checked`
   ("1"/"0") through Turbo's `fetch` (so this tab skips its own live
   refresh). The server checks the edit right, flips `[ ]` / `[x]` on that
-  line only when it is a task item (`- [ ]`, `* [x]`, `1. [ ]`, also
-  inside quotes), and saves it as an edit (`Editable#edit`): the message
+  line only when the rendered Markdown has a task box on it
+  (`MarkdownHelper.task_lines`, so a "- [ ]" in a code block is refused;
+  `- [ ]`, `* [x]`, `1. [ ]`, also inside quotes), and saves it as an edit (`Editable#edit`): the message
   is marked as edited and other open pages refresh. It answers 204; 422
   when the line is not a task item, 403/404 as for edits. On an error the
   box flips back.

@@ -16,6 +16,11 @@ class TicketDescriptionsController < ApplicationController
     end
   end
 
+  # Ticks a Markdown task item (specs/markdown.md "Task lists").
+  def task
+    head(@ticket.toggle_task(params[:line], params[:checked] == "1", editor: current_user) ? :no_content : :unprocessable_content)
+  end
+
   # Markdown on or off (specs/markdown.md); not an edit.
   def markdown
     @ticket.switch_markdown(params[:markdown] == "1")

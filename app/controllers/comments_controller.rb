@@ -3,7 +3,7 @@
 class CommentsController < ApplicationController
   include TicketTimeline
 
-  before_action :set_editable_comment, only: %i[edit update markdown]
+  before_action :set_editable_comment, only: %i[edit update markdown task]
 
   def create
     @ticket = find_visible_ticket(params[:ticket_id])
@@ -34,6 +34,11 @@ class CommentsController < ApplicationController
     else
       render :edit, status: :unprocessable_content
     end
+  end
+
+  # Ticks a Markdown task item (specs/markdown.md "Task lists").
+  def task
+    head(@comment.toggle_task(params[:line], params[:checked] == "1", editor: current_user) ? :no_content : :unprocessable_content)
   end
 
   # Markdown on or off (specs/markdown.md); not an edit.

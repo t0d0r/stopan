@@ -12,7 +12,7 @@
                  markdown_path: (markdown_ticket_comment_path(ticket, comment) if editable) %>
       <div class="message__body">
         <%= turbo_frame_tag dom_id(comment, :text) do %>
-          <%= message_text comment %>
+          <%= message_text comment, task_path: (task_ticket_comment_path(ticket, comment) if editable) %>
         <% end %>
         <% if !shared && policy.see_revisions? %><%= render "tickets/revisions", record: comment, ticket: ticket %><% end %>
         <% if comment.files.attached? %>

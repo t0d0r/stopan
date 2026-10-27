@@ -224,6 +224,17 @@ Operator requests, in order:
   generic preference JS). Checked in headless Chrome at 1800px: desk
   1120 -> 1800, kept after reload, back to normal; hidden at 390px.
 
+- Plan item 6 done, plan complete: clickable task lists for editors
+  (`data-task-line` from source positions, enabled by JS, Turbo fetch
+  PATCH `.../task`, server checks the rendered task lines so code blocks
+  are refused, `edit(group: true)` keeps one revision per 10-minute
+  series, saved ticks reset `defaultChecked` so live refreshes are not
+  held). Checked in headless Chrome: tick saved without reload, kept
+  after reload, marked edited, one new earlier version for two clicks.
+- Next: nothing open from the plan; operator items remain (deploy with
+  the AddSharingToTickets, CreateNotifications, AddEditing and
+  AddMarkdownToMessages migrations, `upgrade=websocket`, SMTP).
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

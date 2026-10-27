@@ -404,6 +404,32 @@ function setUpPreview(dialog) {
   dialog.addEventListener("close", () => media.replaceChildren(), { signal: pageSignal });
 }
 
+// Task lists (specs/markdown.md "Task lists"): editors tick check boxes in
+// place; the server flips the "[ ]" on that line and saves it as an edit.
+// Turbo's fetch carries a request id, so this tab skips its own refresh.
+function setUpTaskLists() {
+  document.querySelectorAll("[data-task-path] input[type=checkbox][data-task-line]").forEach((box) => {
+    box.disabled = false;
+    box.addEventListener("change", async () => {
+      const body = new FormData();
+      body.append("line", box.dataset.taskLine);
+      body.append("checked", box.checked ? "1" : "0");
+      const token = document.querySelector("meta[name=csrf-token]")?.content;
+      let ok = false;
+      try {
+        const send = window.Turbo?.fetch || window.fetch;
+        const response = await send(box.closest("[data-task-path]").dataset.taskPath, {
+          method: "PATCH", body, credentials: "same-origin", headers: { "X-CSRF-Token": token, Accept: "text/html" }
+        });
+        ok = response.ok;
+      } catch {}
+      // A saved tick is not work in progress for the live refresh check.
+      if (ok) box.defaultChecked = box.checked;
+      else box.checked = !box.checked;
+    }, { signal: pageSignal });
+  });
+}
+
 // Double-click to edit (specs/timeline.md "Editing"): opens the in-place
 // form of a message the user may edit, with the caret near the click. The
 // visible text before the click is matched against the plain text without
@@ -497,6 +523,7 @@ function setUpPage() {
   setUpCopyButtons();
   setUpCopyBoxes();
   setUpDoubleClickEdit();
+  setUpTaskLists();
   setUpDropdowns();
 
   // A sideways-scrolling tab row (queue views on phones) shows the current tab.

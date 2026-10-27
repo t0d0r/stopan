@@ -39,8 +39,10 @@ The screenshots use the fictional data from `make demo`.
   append-only audit log of status, priority and assignee changes
   (`specs/timeline.md`). The request and replies can be edited in place;
   edits are marked and staff see the earlier versions. Any message can be
-  written in Markdown, rendered safely (`specs/markdown.md`), and has a
-  copy box.
+  written in Markdown, rendered safely, with clickable task lists
+  (`specs/markdown.md`); double-click edits in place, a copy box copies
+  the text, earlier versions show word-by-word changes and can be
+  restored. A wide layout switch sits next to the theme switch.
 - **Attachments** - up to 5 files of 10 MB from an allow-list of types,
   served only after the ticket's visibility check; images, PDFs and text
   files open in a preview dialog, everything else downloads

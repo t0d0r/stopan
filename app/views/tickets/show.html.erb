@@ -31,7 +31,7 @@
                  markdown_path: (markdown_ticket_description_path(@ticket) if editable) %>
       <div class="message__body">
         <%= turbo_frame_tag "description-text" do %>
-          <%= message_text @ticket %>
+          <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>
         <% end %>
         <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket, ticket: @ticket %><% end %>
         <% if @ticket.files.attached? %>

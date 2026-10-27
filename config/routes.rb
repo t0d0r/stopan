@@ -14,12 +14,14 @@ Rails.application.routes.draw do
     end
     resources :comments, only: %i[create edit update] do
       patch :markdown, on: :member
+      patch :task, on: :member
     end
     resources :revisions, only: [] do
       post :restore, on: :member
     end
     resource :description, only: %i[edit update], controller: "ticket_descriptions" do
       patch :markdown
+      patch :task
     end
     resource :share, only: %i[create destroy], controller: "ticket_shares"
     resources :attachments, only: :show do

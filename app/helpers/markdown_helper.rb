@@ -13,10 +13,24 @@ module MarkdownHelper
 
   MARKDOWN_TAGS = %w[h1 h2 h3 h4 h5 h6 p br hr strong em del code pre blockquote ul ol li a
                      table thead tbody tr th td input].freeze
-  MARKDOWN_ATTRIBUTES = %w[href type checked disabled align start].freeze
+  MARKDOWN_ATTRIBUTES = %w[href type checked disabled align start data-sourcepos].freeze
 
-  def render_markdown(text)
-    html = Commonmarker.to_html(text.to_s, options: MARKDOWN_OPTIONS, plugins: { syntax_highlighter: nil })
+  # The source lines of real task list items (not "- [ ]" in a code block),
+  # for checking a click on the server.
+  def self.task_lines(text)
+    options = MARKDOWN_OPTIONS.merge(render: MARKDOWN_OPTIONS[:render].merge(sourcepos: true))
+    html = Commonmarker.to_html(text.to_s, options: options, plugins: { syntax_highlighter: nil })
+    Nokogiri::HTML5.fragment(html).css("input[type=checkbox]").filter_map do |input|
+      input.ancestors("li").first&.[]("data-sourcepos").to_s.to_i.nonzero?
+    end
+  end
+
+  # tasks: task list check boxes carry data-task-line, the line of their
+  # "- [ ]" in the text, so application.js can let editors tick them
+  # (specs/markdown.md "Task lists"). They stay disabled in the HTML.
+  def render_markdown(text, tasks: false)
+    options = MARKDOWN_OPTIONS.merge(render: MARKDOWN_OPTIONS[:render].merge(sourcepos: true))
+    html = Commonmarker.to_html(text.to_s, options: options, plugins: { syntax_highlighter: nil })
     html = sanitize(html, tags: MARKDOWN_TAGS, attributes: MARKDOWN_ATTRIBUTES)
     fragment = Nokogiri::HTML5.fragment(html)
     fragment.css("a").each do |link|
@@ -28,7 +42,10 @@ module MarkdownHelper
       next input.remove unless input["type"] == "checkbox"
 
       input["disabled"] = "disabled"
+      line = input.ancestors("li").first&.[]("data-sourcepos").to_s.to_i
+      input["data-task-line"] = line.to_s if tasks && line.positive?
     end
+    fragment.css("[data-sourcepos]").each { |element| element.remove_attribute("data-sourcepos") }
     fragment.to_html.html_safe # rubocop:disable Rails/OutputSafety
   end
 end

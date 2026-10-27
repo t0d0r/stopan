@@ -33,15 +33,17 @@ module TicketsHelper
 
   # The current text of a request or comment, formatted when it is
   # Markdown (specs/markdown.md); used by pages and emails.
-  def formatted_text(record)
+  def formatted_text(record, tasks: false)
     text = record.is_a?(Ticket) ? record.description : record.body
-    record.markdown? ? render_markdown(text) : ticket_text(text)
+    record.markdown? ? render_markdown(text, tasks: tasks) : ticket_text(text)
   end
 
-  # The message text as shown on a page; the copy box reads it.
-  def message_text(record)
-    tag.div(formatted_text(record), class: [ "ticket-text", ("markdown-body" if record.markdown?) ],
-                                    data: { message_text: true })
+  # The message text as shown on a page; the copy box reads it. task_path:
+  # where an editor's task list clicks go (specs/markdown.md "Task lists").
+  def message_text(record, task_path: nil)
+    tag.div(formatted_text(record, tasks: task_path.present?),
+            class: [ "ticket-text", ("markdown-body" if record.markdown?) ],
+            data: { message_text: true, task_path: task_path })
   end
 
   # "M" box in a message's title strip that switches Markdown on or off.
