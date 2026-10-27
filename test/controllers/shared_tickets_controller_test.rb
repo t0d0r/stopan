@@ -15,7 +15,7 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     token = share
     get shared_ticket_url(token)
     assert_response :success
-    assert_select "h1", tickets(:printer).subject
+    assert_select "#description h1", /#{tickets(:printer).reference}\s+#{tickets(:printer).subject}/
     assert_select ".pill--status", "In progress"
     assert_includes response.body, comments(:printer_reply).body
     assert_not_includes response.body, "STAFF-ONLY"

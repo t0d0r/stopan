@@ -3,18 +3,28 @@
 <% turbo_refreshes_with scroll: :preserve %>
 <%= turbo_stream_from(*@ticket.page_stream(current_user), channel: TicketsChannel, data: { ticket: @ticket.number }) %>
 <div class="ticket-page">
-  <header class="ticket-head">
-    <p class="ticket-head__crumbs">
-      <%= link_to staff ? t("ui.queue.title") : t("ui.my_tickets.title"), tickets_path %>
-      <span aria-hidden="true">/</span> <span class="ticket-number"><%= @ticket.reference %></span>
-    </p>
-    <h1 class="ticket-head__title"><%= @ticket.subject_was || @ticket.subject %></h1>
-    <p class="ticket-head__meta">
-      <%= status_pill(@ticket.status_was || @ticket.status) %>
-      <% if staff %><%= priority_pill(@ticket.priority_was || @ticket.priority) %><% end %>
-      <span><%= t("ui.ticket.opened_by", name: @ticket.requester.display_name) %> <%= time_ago @ticket.created_at %></span>
-    </p>
-  </header>
+  <%# The request as one note: strip, "#1001 Subject", pills, text (ui.md). %>
+  <article class="sticky sticky--yellow message message--description ticket-head" id="description">
+    <% editable = policy.edit_description? %>
+    <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
+               icon_name: :note, frame: "description-text",
+               edit_path: (edit_ticket_description_path(@ticket) if editable),
+               markdown_path: (markdown_ticket_description_path(@ticket) if editable), width_box: true %>
+    <div class="message__body">
+      <%= turbo_frame_tag "description-text" do %>
+        <%= render "tickets/note_heading", ticket: @ticket, priority: staff %>
+        <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>
+      <% end %>
+      <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket, ticket: @ticket %><% end %>
+      <% if @ticket.files.attached? %>
+        <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
+          <% @ticket.files.each do |file| %>
+            <li><%= attachment_link @ticket, file %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </article>
 
   <aside class="ticket-side" aria-label="<%= t("ui.ticket.details") %>">
     <%= render "tickets/properties", ticket: @ticket %>
@@ -23,27 +33,6 @@
   </aside>
 
   <div class="ticket-main">
-    <article class="sticky sticky--yellow message message--description" id="description">
-      <% editable = policy.edit_description? %>
-      <%= render "tickets/message_bar", record: @ticket, author: @ticket.requester, kind: t("ui.ticket.description"),
-                 icon_name: :note, frame: "description-text",
-                 edit_path: (edit_ticket_description_path(@ticket) if editable),
-                 markdown_path: (markdown_ticket_description_path(@ticket) if editable), width_box: true %>
-      <div class="message__body">
-        <%= turbo_frame_tag "description-text" do %>
-          <%= message_text @ticket, task_path: (task_ticket_description_path(@ticket) if editable) %>
-        <% end %>
-        <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket, ticket: @ticket %><% end %>
-        <% if @ticket.files.attached? %>
-          <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
-            <% @ticket.files.each do |file| %>
-              <li><%= attachment_link @ticket, file %></li>
-            <% end %>
-          </ul>
-        <% end %>
-      </div>
-    </article>
-
     <p class="callout live-notice" data-live-notice hidden role="status"><%= t("ui.ticket.changed_elsewhere") %></p>
     <h2 class="section-heading" id="timeline-title"><%= t("ui.timeline.title") %></h2>
     <ol class="timeline" aria-labelledby="timeline-title">

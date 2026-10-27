@@ -11,7 +11,7 @@ class ServiceDeskFlowTest < ActionDispatch::IntegrationTest
     post tickets_url, params: { ticket: { subject: "Card terminal offline", description: "The terminal shows error 42." } }
     ticket = Ticket.order(:number).last
     follow_redirect!
-    assert_select ".ticket-head__title", "Card terminal offline"
+    assert_select "h1.ticket-note__title", /#\d+\s+Card terminal offline/
     assert_select ".ticket-head .pill--status", "New"
 
     # An agent finds it in the unassigned view, takes it and leaves a note.

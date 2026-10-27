@@ -4,9 +4,13 @@
 <%= form_with model: ticket, url: ticket_description_path(ticket), method: :patch, class: "edit-form",
               data: { turbo_frame: "_top" } do |f| %>
   <%= form_errors ticket %>
-  <%= f.label :subject, t("ui.fields.subject"), class: "sr-only" %>
-  <%= f.text_field :subject, class: "edit-field edit-field--subject", required: true, maxlength: 200,
-                   placeholder: t("ui.fields.subject"), aria: { invalid: ticket.errors[:subject].any? } %>
+  <%# The number stays before the subject, as in the note's heading. %>
+  <div class="edit-subject">
+    <span class="ticket-note__number" aria-hidden="true"><%= ticket.reference %></span>
+    <%= f.label :subject, t("ui.fields.subject"), class: "sr-only" %>
+    <%= f.text_field :subject, class: "edit-field edit-field--subject", required: true, maxlength: 200,
+                     placeholder: t("ui.fields.subject"), aria: { invalid: ticket.errors[:subject].any? } %>
+  </div>
   <%= f.label :description, t("ui.fields.description"), class: "sr-only" %>
   <%= f.text_area :description, rows: 3, class: "edit-field edit-field--text", required: true, maxlength: 20_000,
                   autofocus: true, data: { autogrow: true }, aria: { invalid: ticket.errors[:description].any? } %>

@@ -229,4 +229,21 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     get tickets_url, headers: { "Accept-Language" => "bg,en;q=0.8" }
     assert_select "h1", "Опашка"
   end
+
+  test "the request is one note with the bold number before the subject" do
+    sign_in users(:agent)
+    get ticket_url(tickets(:printer))
+    assert_select "#description.ticket-head h1.ticket-note__title" do
+      assert_select ".ticket-note__number", "#1001"
+    end
+    assert_select "#description .ticket-note__meta .pill--status"
+    assert_select "#description .ticket-note__meta .pill--priority"
+    assert_select "h1", 1
+    assert_select ".ticket-head__crumbs", 0
+    assert_not_includes response.body, "Opened by"
+
+    sign_in users(:anna)
+    get ticket_url(tickets(:printer))
+    assert_select "#description .ticket-note__meta .pill--priority", 0
+  end
 end

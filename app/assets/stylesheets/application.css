@@ -2040,18 +2040,21 @@ form.button_to {
 
 /* ---------- ticket page ---------- */
 
+/* The request note is the head; the side column spans both rows. */
 .ticket-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
   grid-template-areas:
-    "head head"
+    "head side"
     "main side";
+  grid-template-rows: auto 1fr;
   gap: 4px 24px;
   align-items: start;
 }
 
 .ticket-head {
   grid-area: head;
+  min-width: 0;
   margin-bottom: 14px;
 }
 
@@ -2066,33 +2069,29 @@ form.button_to {
   top: 52px;
 }
 
-.ticket-head__crumbs {
-  margin: 0 0 4px;
-  color: var(--desk-ink-soft);
-  font-size: 13px;
-}
-
-.ticket-head__crumbs .ticket-number {
-  color: inherit;
-}
-
-.ticket-head__title {
+/* Heading inside the request note (ui.md): bold number, subject, pills. */
+.ticket-note__title {
   margin: 0 0 8px;
-  font-size: 24px;
+  color: var(--ink);
+  font-size: 22px;
   font-weight: 650;
   letter-spacing: -0.015em;
   line-height: 1.25;
   overflow-wrap: anywhere;
 }
 
-.ticket-head__meta {
+.ticket-note__number {
+  margin-right: 4px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.ticket-note__meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 10px;
-  margin: 0;
-  color: var(--desk-ink-soft);
-  font-size: 13px;
+  gap: 6px 8px;
+  margin: 0 0 12px;
 }
 
 .side-panel {
@@ -2343,9 +2342,20 @@ turbo-frame {
   border-bottom-color: var(--ink-soft);
 }
 
-.edit-field--subject {
+.edit-subject {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
   margin-bottom: 8px;
-  font: 600 17px/1.35 var(--font);
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.edit-field--subject {
+  flex: 1;
+  min-width: 0;
+  font: 650 22px/1.25 var(--font);
+  letter-spacing: -0.015em;
 }
 
 .edit-field--text {

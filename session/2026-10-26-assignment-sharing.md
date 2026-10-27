@@ -245,6 +245,15 @@ Operator requests, in order:
   Checked in headless Chrome: shared page 820 -> 1568px with the box,
   restyled form, Ctrl+Enter saved.
 
+- Request as one note (operator: header and original request as one
+  note, bold number before the subject, no "Queue" crumb): the request
+  sticky is the grid's head area with `tickets/_note_heading` (h1
+  "#1001 Subject", pills) inside the edit frame; the side column spans
+  both rows; under 900px the note comes first, then the side panels.
+  Same note on shared pages. The edit form keeps the number before the
+  subject at the heading's size. Checked in headless Chrome at 1280px,
+  390px, editing and the shared page.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
