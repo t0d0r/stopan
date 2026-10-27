@@ -88,7 +88,8 @@ class Ticket < ApplicationRecord
   # Write transactions on SQLite are immediate (Rails 8), so reading the
   # highest number and inserting happen under one lock.
   def self.next_number
-    (maximum(:number) || FIRST_NUMBER - 1) + 1
+    # Never reuse numbers of flushed tickets (specs/admin.md "Flush all tickets").
+    [ maximum(:number) || FIRST_NUMBER - 1, AppSetting.current.last_ticket_number ].max + 1
   end
 
   # Events written in the current transaction, waiting for TicketNotifier.

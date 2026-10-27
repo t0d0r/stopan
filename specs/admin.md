@@ -50,6 +50,39 @@ Rules:
 
 Destructive actions ask in the confirm dialog, naming what will be lost.
 
+### Flush all tickets of an organization
+
+Operator, 2026-10-27: "the administrator should have an option to flush
+all tickets / reset an organization, after an extra confirmation", and
+"this must not change the organization's other settings such as mail
+servers".
+
+- At the bottom of the organization page, administrators only, a pink
+  "Danger zone" panel: "Delete all tickets of this organization" with
+  the count ("This removes 63 tickets for good: their replies, notes,
+  files, history, translations and notifications"), a text field
+  "Type the organization's name to confirm" and the button "Delete all
+  tickets", disabled until the name is typed exactly (JavaScript; the
+  server checks it again, case-sensitive after trimming spaces).
+- `POST /admin/organizations/:id/flush` with `confirm_name`. A wrong
+  name changes nothing and says so. Otherwise, in one transaction, every
+  ticket of the organization (soft-deleted ones too) is removed for
+  good with all that hangs on it: notifications, events, translations,
+  revisions, comments and the files of the ticket and its comments
+  (the stored files are purged after the commit).
+- **Nothing else changes:** the organization's name, notes, URL name,
+  public form, mail settings (SMTP, mailbox, Google connection),
+  members and users stay as they were; requesters keep their accounts.
+- Ticket numbers are never reused: the highest number ever given is
+  kept in `app_settings.last_ticket_number`, so the next ticket
+  continues after the flushed ones (a mail that refers to an old number
+  then starts a new ticket instead of joining a stranger's).
+- The flash says how many tickets were removed; the server log records
+  who flushed which organization and how many tickets (no content).
+- API: `POST /api/v1/organizations/:id/flush` with `confirm_name`
+  (api.md). This cannot be undone; it is not the soft delete of
+  tickets.md "Deleting".
+
 ## Impersonation
 
 Requested by the operator on 2026-10-27 ("admin to have option:

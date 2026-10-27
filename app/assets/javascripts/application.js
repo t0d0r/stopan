@@ -735,6 +735,18 @@ function setUpBulkActions() {
   update();
 }
 
+// The organization flush button stays off until the exact name is typed
+// (specs/admin.md "Flush all tickets of an organization"); the server
+// checks it again.
+function setUpFlushConfirm() {
+  document.querySelectorAll("[data-flush-name]").forEach((field) => {
+    const button = field.form.querySelector("[data-flush-button]");
+    const update = () => { button.disabled = field.value.trim() !== field.dataset.flushName; };
+    field.addEventListener("input", update, { signal: pageSignal });
+    update();
+  });
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -753,6 +765,7 @@ function setUpPage() {
   setUpMailView();
   setUpLongRequest();
   setUpBulkActions();
+  setUpFlushConfirm();
   setUpDoubleClickEdit();
   setUpTaskLists();
   setUpTranslations();

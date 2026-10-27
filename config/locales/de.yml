@@ -334,6 +334,17 @@ de:
       done: "Dieses Ticket ist erledigt. Wenn Sie antworten, wird es wieder geöffnet."
 
     admin:
+      flush:
+        caption: "Gefahrenzone"
+        title: "Alle Tickets dieser Organisation löschen"
+        body:
+          one: "Dies entfernt 1 Ticket endgültig: Antworten, Notizen, Dateien, Verlauf, Übersetzungen und Benachrichtigungen. Das kann nicht rückgängig gemacht werden."
+          other: "Dies entfernt %{count} Tickets endgültig: Antworten, Notizen, Dateien, Verlauf, Übersetzungen und Benachrichtigungen. Das kann nicht rückgängig gemacht werden."
+        kept: "Die Organisation selbst bleibt unverändert: Name, Mitglieder, öffentliches Formular, Mailserver und Postfach, Google-Verbindung."
+        type_name: "Geben Sie zur Bestätigung den Namen der Organisation ein:"
+        button:
+          one: "1 Ticket endgültig löschen"
+          other: "Alle %{count} Tickets endgültig löschen"
       deleted:
         title: "Gelöschte Tickets"
         caption:
@@ -1018,6 +1029,11 @@ de:
     google_failed: "Die Verbindung mit Google hat nicht funktioniert. Prüfen Sie Client-ID, Secret und Redirect-URI und versuchen Sie es erneut."
     google_disconnected: "Google getrennt. Die E-Mail dieser Organisation ist aus."
     google_client_saved: "Google-Client gespeichert. Verbinden Sie jetzt ein Postfach."
+    flush_name_mismatch: "Der Name stimmt nicht. Nichts wurde gelöscht."
+    flushed:
+      zero: "%{name} hatte keine Tickets zum Löschen."
+      one: "1 Ticket von %{name} wurde endgültig gelöscht."
+      other: "%{count} Tickets von %{name} wurden endgültig gelöscht."
     ticket_deleted: "Ticket %{reference} gelöscht. Administratoren können es wiederherstellen."
     ticket_restored: "Ticket %{reference} wiederhergestellt."
     bulk_deleted:

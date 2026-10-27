@@ -7,7 +7,7 @@ module Api
       MAIL_FIELDS = Admin::OrganizationsController::MAIL_FIELDS
 
       before_action :require_admin!
-      before_action :set_organization, only: %i[show update destroy mail_test mailbox_check]
+      before_action :set_organization, only: %i[show update destroy mail_test mailbox_check flush]
 
       def index
         organizations = Organization.ordered
@@ -55,6 +55,15 @@ module Api
         render json: { unseen: MailboxCheck.new(@organization).probe }
       rescue StandardError => e
         render_error(:invalid, :bad_gateway, message: I18n.t("flash.mailbox_failed", error: e.message.truncate(200)))
+      end
+
+      # Removes all its tickets for good; confirm_name must be the exact
+      # name (specs/admin.md "Flush all tickets of an organization").
+      def flush
+        flush = OrganizationFlush.new(@organization, actor: current_user)
+        return render_error(:invalid, :unprocessable_content, message: I18n.t("flash.flush_name_mismatch")) unless flush.confirmed?(params[:confirm_name])
+
+        render json: { removed: flush.run.removed }
       end
 
       private

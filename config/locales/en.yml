@@ -331,6 +331,17 @@ en:
       done: "This ticket is done. If you reply, it opens again."
 
     admin:
+      flush:
+        caption: "Danger zone"
+        title: "Delete all tickets of this organization"
+        body:
+          one: "This removes 1 ticket for good: its replies, notes, files, history, translations and notifications. It cannot be undone."
+          other: "This removes %{count} tickets for good: their replies, notes, files, history, translations and notifications. It cannot be undone."
+        kept: "The organization itself stays as it is: name, members, public form, mail servers and mailbox, Google connection."
+        type_name: "Type the organization's name to confirm:"
+        button:
+          one: "Delete 1 ticket for good"
+          other: "Delete all %{count} tickets for good"
       deleted:
         title: "Deleted tickets"
         caption:
@@ -1015,6 +1026,11 @@ en:
     google_failed: "Connecting with Google did not work. Check the client ID, secret and redirect URI, and try again."
     google_disconnected: "Google disconnected. Mail for this organization is off."
     google_client_saved: "Google client saved. Now connect a mailbox."
+    flush_name_mismatch: "The name did not match. Nothing was deleted."
+    flushed:
+      zero: "%{name} had no tickets to delete."
+      one: "1 ticket of %{name} was deleted for good."
+      other: "%{count} tickets of %{name} were deleted for good."
     ticket_deleted: "Ticket %{reference} deleted. An administrator can restore it."
     ticket_restored: "Ticket %{reference} restored."
     bulk_deleted:

@@ -1,6 +1,6 @@
 module Admin
   class OrganizationsController < BaseController
-    before_action :set_organization, only: %i[show edit update destroy mail_test mailbox_check]
+    before_action :set_organization, only: %i[show edit update destroy mail_test mailbox_check flush]
 
     def index
       @query = params[:q].to_s.squish.first(100).presence
@@ -67,6 +67,18 @@ module Admin
       redirect_to admin_organization_path(@organization), notice: t("flash.mailbox_ok", count: count)
     rescue StandardError => error
       redirect_to admin_organization_path(@organization), alert: t("flash.mailbox_failed", error: error.message.truncate(200))
+    end
+
+    # Removes all the organization's tickets for good after the exact name
+    # is typed; its settings stay (specs/admin.md "Flush all tickets").
+    def flush
+      flush = OrganizationFlush.new(@organization, actor: current_user)
+      unless flush.confirmed?(params[:confirm_name])
+        return redirect_to admin_organization_path(@organization, anchor: "danger-zone"), alert: t("flash.flush_name_mismatch")
+      end
+
+      flush.run
+      redirect_to admin_organization_path(@organization), notice: t("flash.flushed", count: flush.removed, name: @organization.name)
     end
 
     def destroy

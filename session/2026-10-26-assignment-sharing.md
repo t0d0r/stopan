@@ -773,6 +773,14 @@ menu and Take; open /tickets/new and pick a requester.
   of their organizations), `PersonStats` (tiles, sources, recent), link from
   the requester card, `requester` filter in `TicketFilter` with a chip, API
   `GET /api/v1/people/:id`. Checked on dev (/people/26).
+- Organization flush (operator: "flush all tickets / reset an organization after
+  an extra confirmation", "must not change other settings"): `OrganizationFlush`
+  deletes notifications, events, translations, revisions, attachments,
+  comments and tickets in one transaction, purges blobs after; settings and
+  members untouched. `app_settings.last_ticket_number` (migration
+  `AddLastTicketNumberToAppSettings`) keeps numbers increasing. Danger zone
+  panel with the typed name (JS gate + server check), API flush. Checked the
+  panel on dev without submitting.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

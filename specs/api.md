@@ -106,6 +106,7 @@ Administrators only (403 for others):
 | `GET/POST /api/v1/users`, `GET/PATCH/DELETE /api/v1/users/:id` | as /admin/users: `user[name, username, email, password, role, deactivated, organization_ids]`; the same self-protection; a user with ticket history cannot be deleted |
 | `GET/POST /api/v1/organizations`, `GET/PATCH/DELETE /api/v1/organizations/:id` | as /admin/organizations, mail settings included; passwords write-only, never returned |
 | `POST /api/v1/organizations/:id/mail_test`, `POST /api/v1/organizations/:id/mailbox_check` | the two test buttons |
+| `POST /api/v1/organizations/:id/flush` | `confirm_name` (the exact name): removes all the organization's tickets for good, keeps its settings (admin.md "Flush all tickets of an organization") |
 | `POST /api/v1/organizations/:id/memberships` (`user_id`), `DELETE /api/v1/memberships/:id` | members |
 | `GET/PATCH /api/v1/settings` | `auto_postpone_days, default_look, mailbox_polling, mailbox_poll_seconds, timeline_order, translation_enabled, deepl_api_key` (write-only; `deepl_api_key_set` tells whether one is stored) |
 | `POST/PATCH/DELETE /api/v1/stages[/:id]`, `POST /api/v1/stages/:id/move` (`direction` up/down) | board stages |

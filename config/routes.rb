@@ -54,6 +54,8 @@ Rails.application.routes.draw do
       resources :memberships, only: :create
       post :mail_test, on: :member
       post :mailbox_check, on: :member
+      # Remove all its tickets for good (specs/admin.md).
+      post :flush, on: :member
     end
     resources :memberships, only: :destroy
     # Deleted tickets to review and restore (specs/tickets.md "Deleting").
@@ -130,6 +132,7 @@ Rails.application.routes.draw do
       resources :organizations, only: %i[index show create update destroy] do
         post :mail_test, on: :member
         post :mailbox_check, on: :member
+        post :flush, on: :member
         resources :memberships, only: :create
       end
       resources :memberships, only: :destroy

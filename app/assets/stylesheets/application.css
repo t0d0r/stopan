@@ -1138,6 +1138,17 @@ form.button_to {
   color: #fff;
 }
 
+/* Flushing all tickets of an organization (specs/admin.md). */
+.danger-zone {
+  margin-top: 24px;
+  border-left: 4px solid var(--danger);
+}
+
+.btn--destructive:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* A deleted ticket opened by an administrator; beats the desk callout. */
 .desk > .callout.deleted-banner {
   display: flex;

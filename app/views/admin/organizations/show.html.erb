@@ -72,3 +72,27 @@
     </div>
   </section>
 </div>
+
+<%# Remove all tickets for good after typing the name; settings stay
+    (specs/admin.md "Flush all tickets of an organization"). %>
+<% if @ticket_count.positive? %>
+  <section class="sticky sticky--pink panel danger-zone" id="danger-zone" aria-labelledby="danger-zone-title">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.flush.caption") %></span></header>
+    <div class="panel__body">
+      <h2 class="section-title" id="danger-zone-title"><%= t("ui.admin.flush.title") %></h2>
+      <p><%= t("ui.admin.flush.body", count: @ticket_count) %></p>
+      <p class="field-hint"><%= t("ui.admin.flush.kept") %></p>
+      <%= form_with url: flush_admin_organization_path(@organization), method: :post, class: "stack-form danger-zone__form",
+                    data: { turbo: false } do %>
+        <div class="field">
+          <%= label_tag :confirm_name do %><%= t("ui.admin.flush.type_name") %> <strong><%= @organization.name %></strong><% end %>
+          <%= text_field_tag :confirm_name, nil, class: "field-input", autocomplete: "off", spellcheck: false, required: true,
+                             data: { flush_name: @organization.name } %>
+        </div>
+        <div class="form-actions form-actions--start">
+          <%= submit_tag t("ui.admin.flush.button", count: @ticket_count), name: nil, class: "btn btn--destructive", data: { flush_button: true } %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+<% end %>
