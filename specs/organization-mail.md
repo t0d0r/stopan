@@ -8,6 +8,8 @@ account; new requesters get a magic sign-in link (public-form.md).
 
 ## Settings (admin, organization page)
 
+Google accounts can sign in instead of passwords (mail-oauth.md).
+
 A "Mail" panel on the organization edit page, two parts, each with an
 "enabled" switch. Nothing is sent or fetched for an organization until
 its part is enabled.

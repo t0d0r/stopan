@@ -62,7 +62,12 @@ class MailboxCheck
     ssl = organization.imap_ssl? ? { verify_mode: OpenSSL::SSL::VERIFY_PEER } : false
     imap = @imap_class.new(organization.imap_address, port: organization.imap_port, ssl: ssl, open_timeout: TIMEOUT)
     imap.starttls(verify_mode: OpenSSL::SSL::VERIFY_PEER) if !ssl && imap.capable?("STARTTLS")
-    imap.login(organization.imap_username, organization.imap_password.to_s)
+    if organization.google_mail?
+      connection = organization.mail_connection or raise GoogleOauth::Error, "no Google account connected"
+      imap.authenticate("XOAUTH2", connection.email, connection.access_token)
+    else
+      imap.login(organization.imap_username, organization.imap_password.to_s)
+    end
     yield imap
   ensure
     begin

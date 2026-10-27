@@ -1,6 +1,7 @@
 # Google and Microsoft accounts for organization mail (plan)
 
-Status: planned, Google first. Operator, 2026-10-27: "plan support for
+Status: Google built (phases 2 and 3), live check pending; Microsoft
+planned. Operator, 2026-10-27: "plan support for
 Google and Microsoft accounts for the mailboxes", then "Google Workspace
 first, Internal, outgoing also through the account".
 
@@ -23,6 +24,55 @@ first, Internal, outgoing also through the account".
 - Still open: who registers the Google Cloud OAuth client (Internal
   consent screen, redirect URI below) and which Workspace mailbox serves
   for the live check.
+- **Personal Gmail** (operator asked, 2026-10-27): works with the same
+  code, but a personal Google account can only make an "External" OAuth
+  client. In "Testing" status (own address added as a test user, no
+  verification) Google's refresh tokens last 7 days, so the mailbox must
+  be reconnected weekly; fine for trying it out. For lasting use of a
+  personal Gmail, an app password (2-Step Verification on) in the
+  existing password fields needs no OAuth at all.
+
+## As built (Google)
+
+- One sign-in choice per organization, `organizations.mail_auth`
+  (`password`, `google`), for both parts, since outgoing mail goes
+  through the account too (instead of the per-part `smtp_auth` and
+  `imap_auth` below).
+- `/admin/settings`, panel "Google": the redirect URI to copy
+  (`admin_mail_oauth_callback_url`), Client ID, and the Client secret,
+  encrypted and write-only (blank keeps it, a check box removes it).
+- Organization page, Mail facts: "Sign-in: Username and password" or
+  "Google account support@...", with "Needs reconnecting" when the
+  refresh token was refused. Buttons: "Connect with Google" (or
+  "Reconnect with Google") when a client is set, a GET link with Turbo
+  off, because a form may not redirect to Google under the CSP
+  (`form-action 'self'`); "Disconnect Google" (with confirmation). The
+  edit form hides the username and password fields while a Google
+  account is connected and says so.
+- `GET /admin/organizations/:id/mail_oauth/google` (start),
+  `GET /admin/mail_oauth/callback`, `DELETE
+  /admin/organizations/:id/mail_oauth`; administrators only. The state,
+  PKCE verifier, organization and expiry (10 minutes) live in the
+  session and are deleted when the callback arrives, whatever its
+  outcome, so a state works once.
+- Connecting stores the account in `mail_connections` and sets the
+  organization to `mail_auth: google`, both parts enabled,
+  `smtp.gmail.com:587` STARTTLS and `imap.gmail.com:993` SSL with the
+  account as username, clears the stored passwords, and keeps a From and
+  mailbox address already set (else the account's address).
+  Disconnecting revokes the refresh token at Google (best effort),
+  deletes the connection, and sets `mail_auth: password` with both parts
+  off.
+- `GoogleOauth`: authorize URL (`access_type=offline`,
+  `prompt=consent`, S256), code exchange, refresh, revoke; reads the ID
+  token from the token response (TLS, no signature check, OpenID
+  Connect Core 3.1.3.7) and requires `aud` = the client, a Google
+  `iss`, and `email_verified`; `invalid_grant` raises InvalidGrant.
+- `MailConnection#access_token` caches tokens in memory until a minute
+  before expiry; InvalidGrant marks the connection `needs_reconnect`.
+  `smtp_ready?`/`imap_ready?` are false then: the poller skips the
+  mailbox and mail goes through the global SMTP. SMTP uses
+  `authentication: :xoauth2`, IMAP `authenticate("XOAUTH2", ...)`.
 
 Today an organization's mail (organization-mail.md) signs in to SMTP and
 IMAP with a username and password. Google (Gmail, Google Workspace) and

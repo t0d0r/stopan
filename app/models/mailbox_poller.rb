@@ -8,7 +8,10 @@ module MailboxPoller
 
   def self.check_all
     Rails.application.executor.wrap do
-      Organization.where(imap_enabled: true).find_each { |organization| MailboxCheck.new(organization).run }
+      # A Google account that needs reconnecting is skipped (specs/mail-oauth.md).
+      Organization.where(imap_enabled: true).find_each do |organization|
+        MailboxCheck.new(organization).run if organization.imap_ready?
+      end
     end
   rescue StandardError => e
     Rails.logger.error("Mailbox poller: #{e.class}: #{e.message}")

@@ -46,7 +46,7 @@ module Admin
     # Sends a test email through the organization's SMTP to the signed-in
     # admin, right away, and reports the result.
     def mail_test
-      unless @organization.smtp_enabled?
+      unless @organization.smtp_ready?
         return redirect_to admin_organization_path(@organization), alert: t("flash.mail_test_disabled")
       end
 
@@ -59,7 +59,7 @@ module Admin
     # Logs in to the organization's mailbox and reports the unseen count,
     # without taking any mail in.
     def mailbox_check
-      unless @organization.imap_enabled?
+      unless @organization.imap_ready?
         return redirect_to admin_organization_path(@organization), alert: t("flash.mailbox_disabled")
       end
 

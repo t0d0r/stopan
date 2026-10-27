@@ -590,6 +590,21 @@ menu and Take; open /tickets/new and pick a requester.
   through the account too. XOAUTH2 confirmed in net-smtp 0.5.2, mail
   2.9.1 and net-imap 0.6.8 (locally). Open: who registers the Google
   OAuth client and which mailbox to test with.
+- Built Google phases 2 and 3 (specs/mail-oauth.md "As built"):
+  migration `CreateMailConnections` (`mail_connections`,
+  `organizations.mail_auth`, `app_settings.google_client_id/secret`),
+  `GoogleOauth` (authorize URL with PKCE, exchange with ID-token checks,
+  refresh, revoke), `MailConnection` (encrypted refresh token, cached
+  access token, needs_reconnect on invalid_grant),
+  `Admin::MailOauthController` (start / callback / destroy, one-time
+  session state), XOAUTH2 in SMTP settings and MailboxCheck, poller and
+  mailer skip or fall back when not ready; Google panel on
+  /admin/settings, connect / reconnect / disconnect on the organization
+  page. Tests use `FakeGoogleOauth` (test/support). Checked in Chrome:
+  the panels, and that "Connect with Google" reaches Google's OAuth
+  endpoint (a fake client id, so Google showed its error page).
+  Personal Gmail works the same with an External client in Testing
+  (7-day tokens); an app password needs no OAuth.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

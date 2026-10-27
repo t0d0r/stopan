@@ -1,0 +1,28 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "55de7f521f06e488ec463d1ceff3ecb2d4d6dd7999062e52c3964a7313ee6d6f",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/admin/mail_oauth_controller.rb",
+      "line": 19,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(MailConnection.client.authorize_url(:redirect_uri => admin_mail_oauth_callback_url, :state => SecureRandom.urlsafe_base64(32), :verifier => GoogleOauth.verifier), :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::MailOauthController",
+        "method": "start"
+      },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "Not an open redirect: the target is GoogleOauth::AUTHORIZE_URL with a query built from the stored client id, our own callback URL and server-made state and PKCE values; no request parameter reaches it (specs/mail-oauth.md)."
+    }
+  ],
+  "brakeman_version": "8.1.0"
+}

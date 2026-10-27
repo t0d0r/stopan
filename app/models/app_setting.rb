@@ -4,16 +4,17 @@ class AppSetting < ApplicationRecord
   include RefreshesAdminPages
 
   # Write-only in the form, like the organizations' mail passwords.
-  encrypts :deepl_api_key
-  attr_accessor :remove_deepl_api_key
+  encrypts :deepl_api_key, :google_client_secret
+  attr_accessor :remove_deepl_api_key, :remove_google_client_secret
 
-  normalizes :deepl_api_key, with: ->(key) { key.strip.presence }
+  normalizes :deepl_api_key, :google_client_id, :google_client_secret, with: ->(value) { value.strip.presence }
 
   validates :auto_postpone_days, numericality: { only_integer: true, in: 0..3650 }
   validate :translation_needs_a_key
 
   before_validation do
     self.deepl_api_key = nil if ActiveModel::Type::Boolean.new.cast(remove_deepl_api_key)
+    self.google_client_secret = nil if ActiveModel::Type::Boolean.new.cast(remove_google_client_secret)
   end
 
   def self.current

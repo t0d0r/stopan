@@ -1,13 +1,16 @@
 # SMTP and IMAP settings of an organization (specs/organization-mail.md).
 # Passwords are encrypted and write-only: a blank value in a form keeps the
-# stored one, and remove_*_password clears it.
+# stored one, and remove_*_password clears it. With mail_auth "google" both
+# sign in with the connected Google account instead (specs/mail-oauth.md).
 module MailSettings
   extend ActiveSupport::Concern
 
   SMTP_SECURITY = %w[starttls tls none].freeze
+  MAIL_AUTHS = %w[password google].freeze
 
   included do
     encrypts :smtp_password, :imap_password
+    has_one :mail_connection, dependent: :destroy
 
     attr_accessor :remove_smtp_password, :remove_imap_password
 
@@ -15,6 +18,7 @@ module MailSettings
                with: ->(value) { value.strip.presence }
 
     validates :smtp_security, inclusion: { in: SMTP_SECURITY }
+    validates :mail_auth, inclusion: { in: MAIL_AUTHS }
     validates :smtp_port, :imap_port, numericality: { only_integer: true, in: 1..65_535 }
     with_options if: :smtp_enabled? do
       validates :smtp_address, presence: true
@@ -33,16 +37,32 @@ module MailSettings
     end
   end
 
+  def google_mail?
+    mail_auth == "google"
+  end
+
+  # Enabled, and for a Google account still connected.
+  def smtp_ready?
+    smtp_enabled? && (!google_mail? || mail_connection&.connected? || false)
+  end
+
+  def imap_ready?
+    imap_enabled? && (!google_mail? || mail_connection&.connected? || false)
+  end
+
   # Settings for ActionMailer's SMTP delivery. Every key is set, so nothing
-  # of the global settings leaks into an organization's delivery.
+  # of the global settings leaks into an organization's delivery. A Google
+  # account signs in with XOAUTH2 and a fresh access token, which may raise
+  # GoogleOauth::Error.
   def smtp_settings
+    google = google_mail? && mail_connection
     {
       address: smtp_address,
       port: smtp_port,
       domain: Mail::Address.new(mail_from).domain,
-      user_name: smtp_username,
-      password: smtp_password.presence,
-      authentication: (:plain if smtp_username.present?),
+      user_name: google ? mail_connection.email : smtp_username,
+      password: google ? mail_connection.access_token : smtp_password.presence,
+      authentication: google ? :xoauth2 : (:plain if smtp_username.present?),
       tls: smtp_security == "tls",
       enable_starttls: smtp_security == "starttls",
       enable_starttls_auto: false,

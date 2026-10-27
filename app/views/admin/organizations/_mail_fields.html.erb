@@ -3,6 +3,10 @@
 <fieldset class="mail-settings" id="mail-settings">
   <legend class="section-title"><%= t("ui.admin.mail.title") %></legend>
   <p class="field-hint"><%= t("ui.admin.mail.intro") %></p>
+  <% google = organization.google_mail? && organization.mail_connection %>
+  <% if google %>
+    <p class="callout"><%= t("ui.admin.mail.google_fields", email: organization.mail_connection.email) %></p>
+  <% end %>
 
   <fieldset class="mail-settings__part">
     <legend><%= t("ui.admin.mail.smtp") %></legend>
@@ -21,13 +25,15 @@
         <%= f.select :smtp_security, MailSettings::SMTP_SECURITY.map { |s| [ t("ui.admin.mail.security.#{s}"), s ] }, {}, class: "select" %>
       </div>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <%= f.label :smtp_username %>
-        <%= f.text_field :smtp_username, class: "field-input", autocomplete: "off" %>
+    <% unless google %>
+      <div class="field-row">
+        <div class="field">
+          <%= f.label :smtp_username %>
+          <%= f.text_field :smtp_username, class: "field-input", autocomplete: "off" %>
+        </div>
+        <%= render "admin/organizations/password_field", f: f, organization: organization, attribute: :smtp_password %>
       </div>
-      <%= render "admin/organizations/password_field", f: f, organization: organization, attribute: :smtp_password %>
-    </div>
+    <% end %>
     <div class="field">
       <%= f.label :mail_from %>
       <%= f.text_field :mail_from, class: "field-input", placeholder: t("ui.admin.mail.from_placeholder"), aria: { invalid: invalid?(organization, :mail_from) } %>
@@ -48,13 +54,15 @@
       </div>
       <label class="check-field check-field--inline"><%= f.check_box :imap_ssl %> <%= t("ui.admin.mail.imap_ssl") %></label>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <%= f.label :imap_username %>
-        <%= f.text_field :imap_username, class: "field-input", autocomplete: "off" %>
+    <% unless google %>
+      <div class="field-row">
+        <div class="field">
+          <%= f.label :imap_username %>
+          <%= f.text_field :imap_username, class: "field-input", autocomplete: "off" %>
+        </div>
+        <%= render "admin/organizations/password_field", f: f, organization: organization, attribute: :imap_password %>
       </div>
-      <%= render "admin/organizations/password_field", f: f, organization: organization, attribute: :imap_password %>
-    </div>
+    <% end %>
     <div class="field-row">
       <div class="field">
         <%= f.label :imap_folder %>

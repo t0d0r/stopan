@@ -3914,3 +3914,15 @@ turbo-frame {
     font-size: 22px;
   }
 }
+
+/* A value to copy as it is, such as the Google redirect URI (mail-oauth.md). */
+.copy-value {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--ink);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}

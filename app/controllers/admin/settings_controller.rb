@@ -17,11 +17,14 @@ module Admin
 
     private
 
-    # The DeepL key is write-only: a blank field keeps the stored one
-    # (specs/translation.md).
+    # The DeepL key and the Google client secret are write-only: a blank
+    # field keeps the stored one (specs/translation.md, specs/mail-oauth.md).
     def setting_params
-      params.expect(app_setting: [ :auto_postpone_days, :translation_enabled, :deepl_api_key, :remove_deepl_api_key ])
-            .tap { |permitted| permitted.delete(:deepl_api_key) if permitted[:deepl_api_key].blank? }
+      params.expect(app_setting: [ :auto_postpone_days, :translation_enabled, :deepl_api_key, :remove_deepl_api_key,
+                                   :google_client_id, :google_client_secret, :remove_google_client_secret ])
+            .tap do |permitted|
+              %i[deepl_api_key google_client_secret].each { |name| permitted.delete(name) if permitted[name].blank? }
+            end
     end
   end
 end

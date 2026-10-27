@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_110000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,6 +45,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
     t.datetime "updated_at", null: false
     t.boolean "translation_enabled", default: false, null: false
     t.text "deepl_api_key"
+    t.string "google_client_id"
+    t.text "google_client_secret"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -71,6 +73,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
     t.string "ip"
     t.index ["admin_id"], name: "index_impersonations_on_admin_id"
     t.index ["user_id", "started_at"], name: "index_impersonations_on_user_id_and_started_at"
+  end
+
+  create_table "mail_connections", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.string "provider", null: false
+    t.string "email", null: false
+    t.text "refresh_token", null: false
+    t.string "status", default: "connected", null: false
+    t.datetime "connected_at", null: false
+    t.text "last_error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_mail_connections_on_organization_id", unique: true
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -128,6 +143,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
     t.boolean "public_form", default: false, null: false
     t.text "public_intro"
     t.text "public_allowed_senders"
+    t.string "mail_auth", default: "password", null: false
     t.index "lower(name)", name: "index_organizations_on_lower_name", unique: true
     t.index ["slug"], name: "index_organizations_on_slug", unique: true
   end
@@ -246,6 +262,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
   add_foreign_key "comments", "users", column: "edited_by_id"
   add_foreign_key "impersonations", "users"
   add_foreign_key "impersonations", "users", column: "admin_id"
+  add_foreign_key "mail_connections", "organizations"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "notifications", "ticket_events", column: "event_id"
