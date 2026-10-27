@@ -30,7 +30,8 @@ class TaskListTest < ActionDispatch::IntegrationTest
 
   test "a click flips only that line and is an edit" do
     sign_in users(:anna)
-    patch task_ticket_comment_url(@ticket, @reply), params: { line: 3, checked: "1" }
+    # Sent as POST with _method, as the page script does (specs/deploy.md "ModSecurity").
+    post task_ticket_comment_url(@ticket, @reply), params: { _method: "patch", line: 3, checked: "1" }
     assert_response :no_content
     assert_equal TEXT.sub("- [ ] cable", "- [x] cable"), @reply.reload.body
     assert @reply.edited?

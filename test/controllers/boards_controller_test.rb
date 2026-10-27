@@ -89,6 +89,15 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
     assert_equal tickets(:printer).reference, css_select(".board-column[data-status=open] .board-card__number").first.text.strip
   end
 
+  test "a move sent as POST with _method, as the board script does, works" do
+    ticket = tickets(:printer)
+    sign_in users(:agent)
+    post move_ticket_url(ticket), params: { _method: "patch", status: "pending", stage: "" },
+                                  headers: { "Accept" => "application/json" }
+    assert_response :no_content
+    assert_equal "pending", ticket.reload.status
+  end
+
   test "requesters may not open the board; the queue links to it" do
     sign_in users(:anna)
     get board_url

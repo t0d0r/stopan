@@ -111,6 +111,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] one line per ticket row: requester in its own column, subject ends in an ellipsis from 1024px (specs/queues.md "Table")
 - [x] language switch in the header (BG/EN) and a Language choice on the account page, kept per user and used for emails (specs/ui.md "Language")
 - [x] menu bar wraps under 960px with the search on its own row, so it never runs off the screen (specs/ui.md "Menu bar")
+- [x] board moves and task boxes send POST with `_method` (the server WAF refuses PATCH) (specs/deploy.md "ModSecurity false positives")
+- [~] production: ModSecurity exclusions for Cyrillic text (941310) and Accept-Charset, `ProxyPass /error/ !` (specs/deploy.md "ModSecurity false positives")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

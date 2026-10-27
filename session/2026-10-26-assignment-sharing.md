@@ -449,6 +449,13 @@ Operator requests, in order:
   (up to 240px for an admin in Bulgarian); under 960px it now wraps with
   the search on its own row. Measured 0px overflow at 561-1280px for
   requester, agent and admin in en and bg.
+- Production 404 again (operator): ModSecurity CRS blocked replies in
+  Bulgarian (941310 reads UTF-8 Cyrillic bytes as < >), board moves and
+  task boxes (911100, PATCH) and the Accept-Charset header (920450); the
+  403 page was proxied to Rails, hence 404. App: scripts send POST with
+  `_method=patch`. Site: SecAction 13183 also drops 941310 and
+  accept-charset, plus `ProxyPass /error/ !` (specs/deploy.md
+  "ModSecurity false positives"; `deploy/ispconfig-site.json`).
 
 ## Decisions
 

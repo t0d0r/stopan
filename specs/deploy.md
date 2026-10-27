@@ -319,6 +319,45 @@ Fix (operator approved): the site's Apache directives end with
   `site-25-before-modsecurity.json`.
 - Rule id 13183 is in the local range and was unused on the server.
 
+## ModSecurity false positives (2026-10-27)
+
+Operator: "I get 404 again, fix it". The same server-wide CRS 3.3 blocked
+ordinary use of the app, each time with 403, shown as 404 because the
+403 error document `/error/403.html` was proxied to Rails:
+
+| rule | what it blocked | why it is a false positive |
+|---|---|---|
+| 941310 "US-ASCII Malformed Encoding XSS" | replies and edits in Bulgarian | it reads the UTF-8 bytes of Cyrillic letters (`\xbc`, `\xbe` in "м", "о") as `<` and `>` with the high bit cut off, a trick only for old US-ASCII apps; Rails takes UTF-8 and escapes all output |
+| 911100 "Method is not allowed" | moving a card on the board, ticking a task list box | the scripts sent `PATCH`; CRS allows GET, HEAD, POST, OPTIONS |
+| 920450 "restricted header" `accept-charset` | some browsers and clients on any page | CRS 3.3.5 moved this header out of the list for the same reason |
+
+Fix:
+
+- App: the two scripts send `POST` with `_method=patch`, like Rails
+  forms (`application.js`), so no method needs to be allowed.
+- Site directives (`deploy/ispconfig-site.json`): the existing phase-1
+  `SecAction` 13183 also removes rule 941310 for this site and sets
+  `tx.restricted_headers` to the CRS list without `/accept-charset/`
+  (`/content-encoding/ /proxy/ /lock-token/ /content-range/ /if/`). All
+  three rules run in phase 2, after it, so the runtime `ctl`/`setvar`
+  work (the configure-time forms do not inside a VirtualHost, see above).
+  The other XSS, SQLi and protocol rules stay.
+- `ProxyPass /error/ !`: Apache serves its own error pages, so a blocked
+  request shows 403 instead of a misleading 404.
+- Applied as root on the server through the Remote API: read the record
+  (`sites_web_domain_get`, primary_id 25) to
+  `/root/stopan/site-25-before-modsec-fp.json` (mode 600), then
+  `sites_web_domain_update` with the whole record and only
+  `apache_directives` changed (so no field falls back to a default).
+  ISPConfig restarts Apache within a minute (a few seconds for every
+  site).
+- Check (no sign-in needed): a POST with Cyrillic text to `/tickets`
+  reaches Rails (422, CSRF) instead of 403; `Accept-Charset: utf-8` on
+  `/` -> 302; `PATCH` still 403 (not needed); `<script>` in the query
+  string still 403; `/cable` 101; g0no `/up` 200.
+- Rollback: `sites_web_domain_update` with the `apache_directives` of
+  `site-25-before-modsec-fp.json`.
+
 ## Update 2026-10-27 (revision 3e50793)
 
 - Before: checked the data the release changes (two administrators, no

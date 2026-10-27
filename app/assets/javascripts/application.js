@@ -427,6 +427,9 @@ function setUpTaskLists() {
     box.disabled = false;
     box.addEventListener("change", async () => {
       const body = new FormData();
+      // POST with _method like Rails forms: the server's WAF allows only
+      // GET, HEAD, POST and OPTIONS (specs/deploy.md "ModSecurity").
+      body.append("_method", "patch");
       body.append("line", box.dataset.taskLine);
       body.append("checked", box.checked ? "1" : "0");
       const token = document.querySelector("meta[name=csrf-token]")?.content;
@@ -434,7 +437,7 @@ function setUpTaskLists() {
       try {
         const send = window.Turbo?.fetch || window.fetch;
         const response = await send(box.closest("[data-task-path]").dataset.taskPath, {
-          method: "PATCH", body, credentials: "same-origin", headers: { "X-CSRF-Token": token, Accept: "text/html" }
+          method: "POST", body, credentials: "same-origin", headers: { "X-CSRF-Token": token, Accept: "text/html" }
         });
         ok = response.ok;
       } catch {}
@@ -764,11 +767,12 @@ function setUpBoard(board) {
     let response;
     try {
       const send = window.Turbo?.fetch || window.fetch;
+      // POST with _method, as for task lists (the WAF refuses PATCH).
       response = await send(card.dataset.moveUrl, {
-        method: "PATCH",
+        method: "POST",
         credentials: "same-origin",
         headers: { "X-CSRF-Token": token, Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ status, stage })
+        body: new URLSearchParams({ _method: "patch", status, stage })
       });
     } catch {}
     if (!response?.ok) {
