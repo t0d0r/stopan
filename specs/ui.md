@@ -82,6 +82,17 @@ Turbo Drive for page changes.
 - Text areas grow with their text.
 - Confirm dialog for `form[data-confirm]`; flash dismissal.
 - All page setup runs on `turbo:load`; page listeners use an abort signal.
+- **Copy box** (operator, 2026-10-27, from g0no's note window): a small
+  copy icon at the right end of the title strip of the request, of every
+  reply and note on the ticket page, and of the request and replies on a
+  shared page. It puts that message's text on the clipboard as the reader
+  sees it (the rendered text's `innerText`, so paragraphs and line breaks
+  are kept and Markdown, once added, comes out as text) and shows a green
+  check mark for 1.5 seconds (the box's label says "Copied" meanwhile).
+  It falls back to `execCommand("copy")` where the Clipboard API is not
+  available (plain HTTP other than localhost). It is a `<button hidden>`
+  that JavaScript shows, so pages without JavaScript have no dead button.
+  Copying reads only what the page already shows; it sends nothing.
 
 ## Accessibility
 
