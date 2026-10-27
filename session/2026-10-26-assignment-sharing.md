@@ -472,6 +472,11 @@ Operator requests, in order:
 - Menu bar role is an icon instead of the word (operator): person /
   headset / shield (`role_icon`, new `headset` and `shield` icons), name
   as tooltip and aria-label; shown at every width now that it is small.
+- Deployed 8f4eb97 (German, role icon) after a backup
+  (`pre-deploy-cbf319b.sqlite3`); no migrations; checks in specs/deploy.md.
+- Header language buttons now only for visitors who are not signed in
+  and on shared ticket pages (also when signed in); signed-in users use
+  the account page (operator). `language_switch?` helper.
 - Translate button (operator chose DeepL): spec written,
   specs/translation.md; not built yet.
 

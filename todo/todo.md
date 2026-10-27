@@ -116,6 +116,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] production: deployed cbf319b with `AddLanguageToUsers`, after a database backup (specs/deploy.md)
 - [x] German UI (`de`): app, Devise and Rails texts, header switch with one button per other language, German page and email tests (specs/ui.md "Translations", "Language")
 - [x] menu bar shows the role as an icon (person, headset, shield) with its name as tooltip and label (specs/ui.md "Menu bar")
+- [x] production: deployed 8f4eb97 (German, role icon), after a database backup (specs/deploy.md)
+- [x] header language switch only when signed out and on shared pages; signed-in users choose on the account page (specs/ui.md "Language")
 - [ ] "Translate" button on messages for staff with DeepL, admin switch, stored translations (specs/translation.md)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,

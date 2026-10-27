@@ -15,6 +15,12 @@ module ApplicationHelper
   # Each language named in itself, for the language switch (ui.md "Language").
   LANGUAGE_NAMES = { "en" => "English", "bg" => "Български", "de" => "Deutsch" }.freeze
 
+  # The header language switch is for visitors and shared pages; signed-in
+  # users choose on the account page (ui.md "Language").
+  def language_switch?
+    !user_signed_in? || controller_name == "shared_tickets"
+  end
+
   # The languages the header switch offers: all but the one shown now.
   def other_languages
     LANGUAGE_NAMES.keys - [ I18n.locale.to_s ]

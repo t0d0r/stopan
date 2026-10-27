@@ -23,7 +23,8 @@ Turbo Drive for page changes.
   bar wraps instead of running off the screen). Right: the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
-  the language switch, the user's name with a role icon (operator,
+  the language switch (only where it applies, see "Language"), the
+  user's name with a role icon (operator,
   2026-10-27: "replace the word administrator / the role with an icon":
   a person for requesters, a headset for agents, a shield for
   administrators; the role's name is its tooltip and its label for screen
@@ -180,10 +181,15 @@ profile or the header". The language of a page is the first of:
   pages, "EN DE" on Bulgarian ones, "EN BG" on German ones), so any
   language is one click away; each tooltip and label names that language
   in itself ("English", "Български", "Deutsch"). They are submit buttons
-  of the preferences form (`PATCH /preferences`, `locale=de`), shown signed
-  in and out, and the page reloads in the new language (no script
-  shortcut, unlike theme and size). Signed in (and not impersonating), it
-  also saves the choice to the user.
+  of the preferences form (`PATCH /preferences`, `locale=de`), and the
+  page reloads in the new language (no script shortcut, unlike theme and
+  size). Shown only to visitors who are not signed in (sign-in, password
+  and magic link pages, the public request form) and on shared ticket
+  pages and their file previews, also when signed in (operator,
+  2026-10-27: "when a user is signed in, the language is set only in the
+  profile; for the shared link / preview keep it in the header"). Signed
+  in (and not impersonating), a click there also saves the choice to the
+  user.
 - **Account page:** a "Language" section with a select: "Browser
   language" (follow `Accept-Language`; clears the choice and the cookie),
   "English", "Български", "Deutsch", and its own Save button

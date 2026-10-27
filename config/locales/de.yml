@@ -37,7 +37,7 @@ de:
       save_notifications: "Benachrichtigungen speichern"
       language: "Sprache"
       browser_language: "Sprache des Browsers"
-      language_hint: "Die Sprache der Seiten und Ihrer E-Mails. Die Schaltfläche neben den Textgrößen wechselt sie ebenfalls."
+      language_hint: "Die Sprache der Seiten und Ihrer E-Mails."
       save_language: "Sprache speichern"
 
     sign_in: "Anmelden"

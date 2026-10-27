@@ -419,6 +419,22 @@ the wrapping menu bar and the `POST` + `_method` scripts.
   restart the service; the new column can stay (the old code ignores
   it), so the database need not be restored.
 
+## Update 2026-10-27 (revision 8f4eb97)
+
+Operator: "add German" and "then deploy to production". German UI and
+the role icon in the menu bar; no migrations.
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-cbf319b.sqlite3`
+  (mode 600; 4 users, 2 tickets, schema 20261027230000).
+- `DEPLOY_HOST=<ssh host> make deploy`: built and restarted.
+- Checked: healthy; no pending migrations; available locales en, bg, de;
+  `Accept-Language: de` gives a German sign-in page; `http://` -> 301;
+  HSTS, CSP, `X-Frame-Options`, `nosniff`; `/tickets/board` redirects to
+  sign-in; a Cyrillic POST reaches Rails (422); `/cable` 101; only
+  `127.0.0.1:3183` listens; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:cbf319b` as `latest` and restart; the
+  database is unchanged by this release.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

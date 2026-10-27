@@ -15,11 +15,28 @@ class LanguageTest < ActionDispatch::IntegrationTest
     assert_select ".menubar form.prefs button.language-switch[name=locale][value=en][title=English]", "EN"
     assert_select ".menubar form.prefs button.language-switch[value=de]", "DE"
 
-    sign_in users(:agent)
-    get tickets_url, headers: { "Accept-Language" => "de-DE,de;q=0.9" }
+    get new_user_session_url, headers: { "Accept-Language" => "de-DE,de;q=0.9" }
     assert_select "html[lang=de]"
     assert_select ".menubar form.prefs button.language-switch", 2
     assert_select ".menubar form.prefs button.language-switch[value=de]", 0
+  end
+
+  test "signed in, only the account page and shared pages offer the language" do
+    ticket = tickets(:printer)
+    ticket.share!(actor: users(:agent), password: nil)
+    sign_in users(:agent)
+    get tickets_url
+    assert_select ".menubar form.prefs"
+    assert_select ".language-switch", 0
+    get edit_user_registration_url
+    assert_select ".language-switch", 0
+    assert_select "form#language select[name='user[language]']"
+
+    get shared_ticket_url(ticket.share_token)
+    assert_select ".menubar form.prefs button.language-switch", 2
+    sign_out :user
+    get shared_ticket_url(ticket.share_token)
+    assert_select ".menubar form.prefs button.language-switch", 2
   end
 
   test "German is chosen like the others and used for emails" do

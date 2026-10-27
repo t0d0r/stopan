@@ -34,7 +34,7 @@ en:
       save_notifications: "Save notifications"
       language: "Language"
       browser_language: "Browser language"
-      language_hint: "The language of the pages and of your emails. The button next to the text sizes switches it too."
+      language_hint: "The language of the pages and of your emails."
       save_language: "Save language"
 
     sign_in: "Sign in"
