@@ -45,6 +45,23 @@ class TicketPolicy
     user.staff? || own?
   end
 
+  # Editing text (specs/timeline.md "Editing"): staff any request, reply or
+  # note; the requester their own request and own public replies while the
+  # ticket is open to replies.
+  def edit_description?
+    user.staff? || (own? && !ticket.closed?)
+  end
+
+  def edit_comment?(comment)
+    return true if user.staff?
+
+    comment.author_id == user.id && !comment.internal? && own? && !ticket.closed?
+  end
+
+  def see_revisions?
+    user.staff?
+  end
+
   def see_internal?
     user.staff?
   end

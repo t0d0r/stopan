@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_202818) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_100000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -46,7 +46,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_202818) do
     t.boolean "internal", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "edited_at"
+    t.integer "edited_by_id"
     t.index ["author_id"], name: "index_comments_on_author_id"
+    t.index ["edited_by_id"], name: "index_comments_on_edited_by_id"
     t.index ["ticket_id", "created_at"], name: "index_comments_on_ticket_id_and_created_at"
   end
 
@@ -84,6 +87,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_202818) do
     t.index "lower(name)", name: "index_organizations_on_lower_name", unique: true
   end
 
+  create_table "revisions", force: :cascade do |t|
+    t.string "record_type", null: false
+    t.integer "record_id", null: false
+    t.integer "editor_id", null: false
+    t.string "subject"
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.index ["editor_id"], name: "index_revisions_on_editor_id"
+    t.index ["record_type", "record_id", "created_at"], name: "index_revisions_on_record_type_and_record_id_and_created_at"
+  end
+
   create_table "ticket_events", force: :cascade do |t|
     t.integer "ticket_id", null: false
     t.integer "actor_id"
@@ -114,7 +128,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_202818) do
     t.string "share_token"
     t.string "share_password_digest"
     t.datetime "shared_at"
+    t.datetime "edited_at"
+    t.integer "edited_by_id"
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
+    t.index ["edited_by_id"], name: "index_tickets_on_edited_by_id"
     t.index ["number"], name: "index_tickets_on_number", unique: true
     t.index ["organization_id"], name: "index_tickets_on_organization_id"
     t.index ["requester_id"], name: "index_tickets_on_requester_id"
@@ -154,16 +171,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_202818) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "tickets"
   add_foreign_key "comments", "users", column: "author_id"
+  add_foreign_key "comments", "users", column: "edited_by_id"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "notifications", "ticket_events", column: "event_id"
   add_foreign_key "notifications", "tickets"
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "actor_id"
+  add_foreign_key "revisions", "users", column: "editor_id"
   add_foreign_key "ticket_events", "comments"
   add_foreign_key "ticket_events", "tickets"
   add_foreign_key "ticket_events", "users", column: "actor_id"
   add_foreign_key "tickets", "organizations"
   add_foreign_key "tickets", "users", column: "assignee_id"
+  add_foreign_key "tickets", "users", column: "edited_by_id"
   add_foreign_key "tickets", "users", column: "requester_id"
 end

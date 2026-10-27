@@ -1,5 +1,6 @@
 class Ticket < ApplicationRecord
   include Attachable
+  include Editable
 
   STATUSES = %w[new open pending resolved closed].freeze
   UNSOLVED = %w[new open pending].freeze
@@ -214,6 +215,15 @@ class Ticket < ApplicationRecord
   end
 
   private
+
+  def revision_text
+    { subject: subject_in_database, body: description_in_database }
+  end
+
+  def refresh_after_edit
+    refresh_pages(internal: false)
+    refresh_shared_page
+  end
 
   def status_after(comment)
     return if comment.internal?

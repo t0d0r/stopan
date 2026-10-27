@@ -64,6 +64,23 @@ module TicketsHelper
   end
 
   # On a shared page (share_token) files go through the share link.
+  # "edited by Maria 5 minutes ago" on an edited request or comment
+  # (specs/timeline.md "Editing").
+  def edited_note(record)
+    return unless record.edited?
+
+    tag.span(class: "edited-tag") do
+      safe_join([ t("ui.edit.edited_by", name: record.edited_by&.display_name), time_ago(record.edited_at) ], " ")
+    end
+  end
+
+  # Opens the edit form in place of the text (a Turbo frame).
+  def edit_link(path, frame:)
+    link_to path, class: "edit-link", data: { turbo_frame: frame } do
+      icon(:pencil, size: 12) + tag.span(t("ui.edit.edit"))
+    end
+  end
+
   # Live count of open shared pages of the ticket's link (specs/sharing.md
   # "Who is viewing now"); application.js swaps the text on each signal.
   # scope: :page (the shared page, counting the reader) or :panel.

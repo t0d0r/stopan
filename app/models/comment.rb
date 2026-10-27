@@ -1,6 +1,7 @@
 # A public reply or an internal note on a ticket (specs/timeline.md).
 class Comment < ApplicationRecord
   include Attachable
+  include Editable
 
   belongs_to :ticket, touch: true
   belongs_to :author, class_name: "User", inverse_of: :comments
@@ -21,9 +22,10 @@ class Comment < ApplicationRecord
     where(internal: false)
   end
 
-  # Comments are part of the audit history and never change.
+  # Comments are part of the audit history: only their text can change, and
+  # only through Editable#edit, which keeps the earlier version.
   def readonly?
-    persisted?
+    persisted? && !@editing
   end
 
   private
@@ -34,6 +36,15 @@ class Comment < ApplicationRecord
 
   def ticket_accepts_replies
     errors.add(:base, :ticket_closed) if !internal? && ticket&.closed?
+  end
+
+  def revision_text
+    { body: body_in_database }
+  end
+
+  def refresh_after_edit
+    ticket.refresh_pages(internal: internal?)
+    ticket.refresh_shared_page unless internal?
   end
 
   def record_event

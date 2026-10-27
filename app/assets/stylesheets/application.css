@@ -2104,6 +2104,89 @@ form.button_to {
   color: var(--ink);
 }
 
+/* ---------- editing (specs/timeline.md "Editing") ---------- */
+
+turbo-frame {
+  display: block;
+}
+
+.edited-tag {
+  font-style: italic;
+}
+
+.edit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.edit-link:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.edit-form .field {
+  margin-bottom: 10px;
+}
+
+.edit-form textarea.field-input {
+  min-height: 7em;
+  resize: vertical;
+}
+
+.edit-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.edit-page {
+  max-width: 760px;
+}
+
+.revisions {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.revisions summary {
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.revisions__list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.revisions__item {
+  padding: 8px 10px;
+  border-left: 3px solid var(--rule);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.revisions__item + .revisions__item {
+  margin-top: 6px;
+}
+
+.revisions__meta {
+  margin: 0 0 4px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.revisions__subject {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
 .ticket-text {
   font-size: 15px;
   overflow-wrap: anywhere;

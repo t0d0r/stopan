@@ -1,0 +1,13 @@
+<% title = @comment.internal? ? t("ui.edit.note_title") : t("ui.edit.reply_title") %>
+<% content_for :title, title %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= title %> <span class="ticket-number"><%= @ticket.reference %></span></h1>
+</div>
+<section class="sticky sticky--<%= @comment.internal? ? "pink" : "blue" %> panel panel--form edit-page" aria-label="<%= title %>">
+  <header class="sticky__bar"><span class="sticky__caption"><%= @comment.author.display_name %></span></header>
+  <div class="panel__body">
+    <%= turbo_frame_tag dom_id(@comment, :text) do %>
+      <%= render "comments/edit_form", ticket: @ticket, comment: @comment %>
+    <% end %>
+  </div>
+</section>

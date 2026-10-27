@@ -32,8 +32,13 @@
           <strong><%= @ticket.requester.display_name %></strong>
           <span class="role-tag"><%= role_label(@ticket.requester) %></span>
           <%= time_ago @ticket.created_at %>
+          <%= edited_note @ticket %>
+          <% if policy.edit_description? %><%= edit_link edit_ticket_description_path(@ticket), frame: "description-text" %><% end %>
         </p>
-        <div class="ticket-text"><%= ticket_text @ticket.description %></div>
+        <%= turbo_frame_tag "description-text" do %>
+          <div class="ticket-text"><%= ticket_text @ticket.description %></div>
+        <% end %>
+        <% if policy.see_revisions? %><%= render "tickets/revisions", record: @ticket %><% end %>
         <% if @ticket.files.attached? %>
           <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
             <% @ticket.files.each do |file| %>

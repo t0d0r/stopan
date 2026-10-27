@@ -16,6 +16,7 @@ class User < ApplicationRecord
            inverse_of: :assignee, dependent: :restrict_with_error
   has_many :comments, foreign_key: :author_id, inverse_of: :author, dependent: :restrict_with_error
   has_many :ticket_events, foreign_key: :actor_id, inverse_of: :actor, dependent: :restrict_with_error
+  has_many :revisions, foreign_key: :editor_id, inverse_of: :editor, dependent: :restrict_with_error
 
   normalizes :username, with: ->(username) { username.strip.presence }
   normalizes :name, with: ->(name) { name.strip.squish.presence }
@@ -92,7 +93,8 @@ class User < ApplicationRecord
 
   # History keeps its people, so only users without any can be deleted.
   def ticket_history?
-    requested_tickets.exists? || assigned_tickets.exists? || comments.exists? || ticket_events.exists?
+    requested_tickets.exists? || assigned_tickets.exists? || comments.exists? || ticket_events.exists? ||
+      revisions.exists?
   end
 
   # The ids among user_ids that have ticket history, in one query per table
@@ -101,6 +103,7 @@ class User < ApplicationRecord
     [ Ticket.where(requester_id: user_ids).distinct.pluck(:requester_id),
       Ticket.where(assignee_id: user_ids).distinct.pluck(:assignee_id),
       Comment.where(author_id: user_ids).distinct.pluck(:author_id),
-      TicketEvent.where(actor_id: user_ids).distinct.pluck(:actor_id) ].flatten.to_set
+      TicketEvent.where(actor_id: user_ids).distinct.pluck(:actor_id),
+      Revision.where(editor_id: user_ids).distinct.pluck(:editor_id) ].flatten.to_set
   end
 end

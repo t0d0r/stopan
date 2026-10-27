@@ -1,0 +1,15 @@
+<%# Locals: ticket, comment. Saving reloads the whole page (_top) with a
+    notice; Cancel loads the text back into the frame. %>
+<%= form_with model: comment, url: ticket_comment_path(ticket, comment), method: :patch, class: "stack-form edit-form",
+              data: { turbo_frame: "_top" } do |f| %>
+  <%= form_errors comment %>
+  <div class="field">
+    <%= f.label :body, t("ui.edit.text"), class: "sr-only" %>
+    <%= f.text_area :body, rows: 5, class: "field-input", required: true, maxlength: 20_000, autofocus: true,
+                    data: { autogrow: true }, aria: { invalid: comment.errors[:body].any? } %>
+  </div>
+  <div class="edit-form__actions">
+    <%= link_to t("ui.cancel"), ticket_path(ticket, anchor: "event-#{comment.event.id}"), class: "btn" %>
+    <button type="submit" class="btn btn--primary"><%= t("ui.edit.save") %></button>
+  </div>
+<% end %>

@@ -1,6 +1,9 @@
-# Public replies and internal notes (specs/timeline.md).
+# Public replies and internal notes (specs/timeline.md), and editing
+# their text ("Editing").
 class CommentsController < ApplicationController
   include TicketTimeline
+
+  before_action :set_editable_comment, only: %i[edit update]
 
   def create
     @ticket = find_visible_ticket(params[:ticket_id])
@@ -20,7 +23,26 @@ class CommentsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @comment.edit(editor: current_user, body: params.expect(comment: [ :body ])[:body])
+      redirect_to ticket_path(@ticket, anchor: "event-#{@comment.event.id}"),
+                  notice: @comment.internal? ? t("flash.note_updated") : t("flash.reply_updated")
+    else
+      render :edit, status: :unprocessable_content
+    end
+  end
+
   private
+
+  # Requesters never reach internal notes: Comment.visible_to hides them.
+  def set_editable_comment
+    @ticket = find_visible_ticket(params[:ticket_id])
+    @comment = Comment.visible_to(current_user).where(ticket: @ticket).find(params[:id])
+    authorize!(policy.edit_comment?(@comment))
+  end
 
   def comment_params
     params.expect(comment: [ :body, :internal, :status, files: [] ])

@@ -1,5 +1,6 @@
 <% if event.comment_event? %>
   <% comment = event.comment %>
+  <% shared = local_assigns[:share_token].present? %>
   <% kind = comment.internal? ? "internal" : (comment.author.staff? ? "staff" : "requester") %>
   <% color = { "internal" => "pink", "staff" => "blue", "requester" => "yellow" }[kind] %>
   <li class="timeline__item timeline__item--message" id="event-<%= event.id %>">
@@ -14,8 +15,13 @@
           <span class="role-tag"><%= role_label(comment.author) %></span>
           <%= time_ago comment.created_at %>
           <% if comment.internal? %><span class="internal-tag"><%= t("ui.timeline.internal_only") %></span><% end %>
+          <%= edited_note comment %>
+          <% if !shared && policy.edit_comment?(comment) %><%= edit_link edit_ticket_comment_path(ticket, comment), frame: dom_id(comment, :text) %><% end %>
         </p>
-        <div class="ticket-text"><%= ticket_text comment.body %></div>
+        <%= turbo_frame_tag dom_id(comment, :text) do %>
+          <div class="ticket-text"><%= ticket_text comment.body %></div>
+        <% end %>
+        <% if !shared && policy.see_revisions? %><%= render "tickets/revisions", record: comment %><% end %>
         <% if comment.files.attached? %>
           <ul class="file-list" aria-label="<%= t("ui.fields.files") %>">
             <% comment.files.each do |file| %>

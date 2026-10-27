@@ -1,0 +1,16 @@
+<%# Earlier versions of an edited request or comment, staff only
+    (specs/timeline.md "Editing"). Locals: record. %>
+<% if record.revisions.any? %>
+  <details class="revisions">
+    <summary><%= t("ui.edit.earlier_versions", count: record.revisions.size) %></summary>
+    <ol class="revisions__list">
+      <% record.revisions.each do |revision| %>
+        <li class="revisions__item">
+          <p class="revisions__meta"><%= t("ui.edit.before_edit_by", name: revision.editor.display_name) %> <%= time_ago revision.created_at %></p>
+          <% if revision.subject.present? %><p class="revisions__subject"><%= revision.subject %></p><% end %>
+          <div class="ticket-text"><%= ticket_text revision.body %></div>
+        </li>
+      <% end %>
+    </ol>
+  </details>
+<% end %>

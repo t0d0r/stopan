@@ -267,6 +267,19 @@ en:
       none: "No preview for this file type. Download it to open it."
       error: "The preview could not be loaded."
 
+    edit:
+      edit: "Edit"
+      save: "Save"
+      text: "Text"
+      edited_by: "edited by %{name}"
+      earlier_versions:
+        one: "1 earlier version"
+        other: "%{count} earlier versions"
+      before_edit_by: "Before the edit by %{name}"
+      request_title: "Edit request"
+      reply_title: "Edit reply"
+      note_title: "Edit internal note"
+
     confirm:
       title: "Are you sure?"
       ok: "Delete"
@@ -407,6 +420,9 @@ en:
     ticket_resolved: "Ticket %{reference} is marked as resolved."
     reply_sent: "Your reply was sent."
     note_added: "Internal note added."
+    reply_updated: "Reply updated."
+    note_updated: "Internal note updated."
+    request_updated: "Request updated."
     admin_only: "Only administrators can open that page."
     user_created: "User %{name} was created."
     user_updated: "User %{name} was updated."

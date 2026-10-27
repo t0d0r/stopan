@@ -24,7 +24,7 @@ class SharedTicketsController < ApplicationController
 
   def show
     @events = TicketEvent.where(ticket: @ticket, internal: false)
-                         .includes(:actor, comment: [ :author, { files_attachments: :blob } ])
+                         .includes(:actor, comment: [ :author, :edited_by, { files_attachments: :blob } ])
                          .order(:created_at, :id).to_a
   end
 

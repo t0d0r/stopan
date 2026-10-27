@@ -1,0 +1,12 @@
+<% content_for :title, t("ui.edit.request_title") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.edit.request_title") %> <span class="ticket-number"><%= @ticket.reference %></span></h1>
+</div>
+<section class="sticky sticky--yellow panel panel--form edit-page" aria-label="<%= t("ui.edit.request_title") %>">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.ticket.description") %></span></header>
+  <div class="panel__body">
+    <%= turbo_frame_tag "description-text" do %>
+      <%= render "ticket_descriptions/form", ticket: @ticket %>
+    <% end %>
+  </div>
+</section>

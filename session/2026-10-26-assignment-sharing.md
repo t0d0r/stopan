@@ -158,6 +158,18 @@ Operator requests, in order:
 - Open: counts are per process (fine with the single Puma process and
   the async adapter); several processes would need a shared store.
 
+- Editing the request and replies (2026-10-27, operator: "an option to
+  edit replies and original requests"): staff edit any text, a requester
+  their own request and own public replies while the ticket is not
+  closed; `Editable#edit` keeps the old text in `revisions` (migration
+  `AddEditing`, also `edited_at`/`edited_by_id` on tickets and comments),
+  no event, email or `updated_at` change; "edited by" marker for
+  everyone, "Earlier versions" for staff only; inline form in a Turbo
+  frame, save reloads the page with a notice. Checked in headless Chrome:
+  requester edited subject and description in place (title, notice,
+  marker), agent cancelled and then edited a reply, earlier versions
+  listed.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
@@ -190,6 +202,14 @@ app/channels/shared_ticket_channel.rb, app/models/ticket.rb
 shared_tickets/show, tickets/_sharing, application.{js,css}, locales,
 test/models/share_viewers_test.rb, test/channels/shared_ticket_channel_test.rb,
 shared tickets controller test.
+Editing: specs/{timeline,tickets,roles,data-model,attachments,sharing}.md,
+db/migrate/20261027100000_add_editing.rb, app/models/{revision.rb,
+concerns/editable.rb,comment.rb,ticket.rb,user.rb},
+app/policies/ticket_policy.rb, app/controllers/{ticket_descriptions,
+comments}_controller.rb, ticket_timeline concern, views
+(ticket_descriptions/, comments/, tickets/_revisions, _event, show,
+shared_tickets/show), helpers, locales, CSS, test/models/revision_test.rb,
+test/controllers/edits_controller_test.rb.
 
 ## Verify
 
