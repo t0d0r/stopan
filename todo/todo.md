@@ -80,7 +80,7 @@
 Organizations: own SMTP, mailbox and public form (operator, 2026-10-27;
 decisions: IMAP, address = identity, magic links, form off by default):
 
-- [ ] encryption keys from SECRET_KEY_BASE and TRUSTED_PROXIES (specs/organization-mail.md, specs/public-form.md)
+- [x] encryption keys from SECRET_KEY_BASE and TRUSTED_PROXIES (specs/organization-mail.md, specs/public-form.md)
 - [ ] organization mail settings in admin with test buttons; outgoing mail through the organization's SMTP (specs/organization-mail.md)
 - [ ] magic sign-in links and "email me a sign-in link"; choosing a first password (specs/public-form.md)
 - [ ] public request page per organization with accounts by email and abuse limits (specs/public-form.md)
