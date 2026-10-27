@@ -175,6 +175,38 @@ Data: `notifications` - `user_id` (FK, deleted with the user), `ticket_id`
 `status_changed` and when a reply changed it, nullable), `read_at`,
 `created_at`. Indexes `[user_id, created_at]` and `[user_id, read_at]`.
 
+### Messages from administrators
+
+Requested by the operator on 2026-10-27 ("an option to send messages to
+users too, shown in Notifications"). Administrators write a short message
+that appears in the recipients' notification panel and page, like ticket
+notifications, live.
+
+- **Compose:** `GET /admin/messages/new`, `POST /admin/messages`
+  (`Admin::MessagesController`, administrators only). Recipients, one of:
+  a single user (the envelope icon on a row of the admin users list opens
+  the form with that user chosen), everyone with a role (requesters,
+  agents, administrators), the members of an organization (a "Send a
+  message" button on the organization page), or all users. Only active
+  users receive it; the sender never receives their own message. The
+  text is plain, 1-2,000 characters, shown with line breaks.
+- The form says how many people will receive it, and a confirm dialog
+  repeats the number when it is more than one. After sending: "Message
+  sent to 12 users." and back to the page it came from.
+- **Stored** as notifications of kind `message` without a ticket:
+  `notifications.ticket_id` becomes nullable and `notifications.message`
+  (text) holds the text; the sender is the actor. They follow the panel's
+  rules: unread dot and count, "Mark all as read", the 200 kept per user,
+  the live signal to the recipient's pages.
+- **Shown** as "<sender> sent you a message" with the first line of the
+  text (cut to 120 characters) instead of the ticket line. Opening one
+  (`GET /notifications/:id`) marks it read and shows the whole message
+  on a small page (sender, time, text) with a link back to the
+  notifications, instead of opening a ticket.
+- No email in this phase, and no replies: the message points people to
+  the service desk; they answer by opening a ticket. Not in this phase:
+  a list of sent messages, scheduled messages, attachments.
+
 ## Content
 
 - **Language:** the recipient's `users.locale`, else English. The app
@@ -232,6 +264,10 @@ connect and 10 s to read. Development writes emails
 to `tmp/mails/` (`delivery_method :file`); tests use `:test`.
 
 ## Data
+
+- `notifications.ticket_id` nullable and `notifications.message` text,
+  for messages from administrators (above); a check keeps either a ticket
+  or a message on every row.
 
 - `users.locale` string, nullable (`en` / `bg`).
 - `users.notify_new_tickets` boolean, not null, default false; only
