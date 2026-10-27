@@ -344,17 +344,26 @@ Fix:
   The other XSS, SQLi and protocol rules stay.
 - `ProxyPass /error/ !`: Apache serves its own error pages, so a blocked
   request shows 403 instead of a misleading 404.
-- Applied as root on the server through the Remote API: read the record
-  (`sites_web_domain_get`, primary_id 25) to
-  `/root/stopan/site-25-before-modsec-fp.json` (mode 600), then
-  `sites_web_domain_update` with the whole record and only
-  `apache_directives` changed (so no field falls back to a default).
-  ISPConfig restarts Apache within a minute (a few seconds for every
-  site).
-- Check (no sign-in needed): a POST with Cyrillic text to `/tickets`
+- Applied (operator: "yes, apply it and deploy") as root on the server
+  through the Remote API: read the record (`sites_web_domain_get`,
+  primary_id 25) to `/root/stopan/site-25-before-modsec-fp.json` (mode
+  600), then `sites_web_domain_update`
+  (`/root/stopan/site-25-modsec-fp-update.json`) with the new
+  `apache_directives` and the current `log_retention` and `pm_*` values,
+  so nothing falls back to a default. `bin/ispconfig-remote` prints the
+  record itself, not the API's `{code, response}`. A script fed to
+  `bash -s` ignores its `#!/bin/bash -e` line, so it needs `set -euo
+  pipefail` itself: the first attempt read `.response`, went on past the
+  failed check and sent an empty update, which the API refused
+  (`invalid_data`); nothing changed.
+- The new vhost was live within about 5 seconds.
+- Checked (no sign-in needed): a POST with Cyrillic text to `/tickets`
   reaches Rails (422, CSRF) instead of 403; `Accept-Charset: utf-8` on
-  `/` -> 302; `PATCH` still 403 (not needed); `<script>` in the query
-  string still 403; `/cable` 101; g0no `/up` 200.
+  `/` -> 302; `PATCH` still 403, now with Apache's "ERROR 403 -
+  Forbidden!" page instead of 404; `<script>` in the query string or a
+  body, and `/.env`, still 403; the session cookie pattern of the
+  earlier fix still passes (302); `/cable` 101; HSTS, CSP,
+  `X-Frame-Options`, `nosniff`; g0no `/up` 200.
 - Rollback: `sites_web_domain_update` with the `apache_directives` of
   `site-25-before-modsec-fp.json`.
 
@@ -386,6 +395,29 @@ Fix:
   `backups/pre-deploy-fa69269.sqlite3` over `~/storage/production.sqlite3`
   (with `podman unshare`), start the service. Changes made after the
   deploy are lost.
+
+## Update 2026-10-27 (revision cbf319b)
+
+Operator: "yes, apply it and deploy". Brings the board filters' follow-ups,
+"Queue" marked on the board, one-line ticket rows, the language switch,
+the wrapping menu bar and the `POST` + `_method` scripts.
+
+- Before: a `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-3e50793.sqlite3` (mode 600; 3 users, 2
+  tickets, schema 20261027220000).
+- `DEPLOY_HOST=<ssh host> make deploy`: built and restarted; `db:prepare`
+  ran `AddLanguageToUsers` (20261027230000, one nullable column).
+- Checked: no pending migrations, `users.language` exists, users and
+  tickets kept; container healthy; only `127.0.0.1:3183` listens;
+  `http://` -> 301; HSTS, CSP, `X-Frame-Options`, `nosniff`, secure
+  HttpOnly SameSite=Lax session cookie; sign-in shows the language
+  switch ("BG", and "EN" for `Accept-Language: bg`); `/tickets/board`
+  and `/users/sign_up` redirect to sign-in; a Cyrillic POST and a
+  `POST` with `_method=patch` reach Rails (422 without a CSRF token);
+  `/cable` 101; g0no `/up` 200. Kept images: `3e50793`, `fa69269`.
+- Rollback: as `stopan`, tag `localhost/stopan:3e50793` as `latest` and
+  restart the service; the new column can stay (the old code ignores
+  it), so the database need not be restored.
 
 ## Rollback
 

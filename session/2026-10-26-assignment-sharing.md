@@ -456,6 +456,9 @@ Operator requests, in order:
   `_method=patch`. Site: SecAction 13183 also drops 941310 and
   accept-charset, plus `ProxyPass /error/ !` (specs/deploy.md
   "ModSecurity false positives"; `deploy/ispconfig-site.json`).
+  Applied on request (Remote API, record saved first; Cyrillic POST now
+  422 from Rails, blocks show a real 403), then deployed cbf319b after a
+  backup (`pre-deploy-3e50793.sqlite3`); checks in specs/deploy.md.
 
 ## Decisions
 
@@ -510,15 +513,14 @@ menu and Take; open /tickets/new and pick a requester.
 
 ## Next
 
-- The next production deploy runs migration `AddLanguageToUsers` (adds a
-  nullable column; nothing to convert).
+- Production runs cbf319b (2026-10-27). If users still see 403/404 on
+  some action, read the site's Apache error log for the ModSecurity rule
+  id first (specs/deploy.md "ModSecurity false positives").
 
 - Refresh the README screenshots (`make screenshots`, specs/ui.md) when
   the queue, board, ticket or admin users page changes visibly.
 
-- Production runs 3e50793 (deployed 2026-10-27 at the operator's request,
-  backup `pre-deploy-fa69269.sqlite3` first; checks in specs/deploy.md).
-  Still to set in `stopan.env` when the operator wants: SMTP,
+- Still to set in `stopan.env` when the operator wants: SMTP,
   `TRUSTED_PROXIES`, `MAILBOX_POLLING`.
 
 - Rebuild the Docker image (`make docker-up`) to see the changes on :3000;
