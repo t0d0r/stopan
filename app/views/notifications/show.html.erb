@@ -1,0 +1,13 @@
+<% content_for :title, t("ui.notifications.message_title") %>
+<section class="sticky sticky--yellow panel panel--form message-page" aria-labelledby="message-page-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.notifications.title") %></span></header>
+  <div class="panel__body">
+    <h1 class="panel__title" id="message-page-title"><%= notification_sentence(@notification) %></h1>
+    <p class="message-page__meta">
+      <% if @notification.actor %><%= user_avatar @notification.actor %> <strong><%= @notification.actor.display_name %></strong><% end %>
+      <%= time_ago @notification.created_at %>
+    </p>
+    <div class="ticket-text"><%= ticket_text @notification.message %></div>
+    <p class="form-actions form-actions--start"><%= link_to t("ui.notifications.back"), notifications_path, class: "btn" %></p>
+  </div>
+</section>

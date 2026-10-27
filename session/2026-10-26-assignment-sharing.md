@@ -316,6 +316,20 @@ Operator requests, in order:
   updated: staff names already show on public replies; assignee changes
   stay internal events). Checked at 1280px and 390px in Bulgarian.
 
+- Admin users list (operator): pencil and "sign in as" icon buttons
+  (confirm kept for impersonation), Sign-ins column from sign_in_count.
+- Notices pass the left window edge (operator): the leave transition never
+  ran (the filled entry animation overrode it), now a flash-out
+  animation, no fade, band as wide as the window. Measured 616 -> 274 ->
+  -486 px while leaving.
+- Messages from administrators (operator: "send messages to users, shown
+  in Notifications"): /admin/messages/new to one user (envelope icon in
+  the users list), a role, an organization's members (button on its
+  page) or everyone active, never the sender; stored as notifications of
+  kind message (ticket_id nullable, message text, check constraint), live
+  signal, own page when opened. Migration AddMessageToNotifications.
+  Checked in headless Chrome: count hint, confirm, bell, message page.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

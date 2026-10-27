@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_180000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -77,7 +77,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_170000) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "ticket_id", null: false
+    t.integer "ticket_id"
     t.integer "actor_id"
     t.integer "event_id"
     t.string "kind", null: false
@@ -85,10 +85,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_170000) do
     t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "message"
     t.index ["actor_id"], name: "index_notifications_on_actor_id"
     t.index ["ticket_id"], name: "index_notifications_on_ticket_id"
     t.index ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at"
     t.index ["user_id", "read_at"], name: "index_notifications_on_user_id_and_read_at"
+    t.check_constraint "ticket_id IS NOT NULL OR message IS NOT NULL", name: "notifications_ticket_or_message"
   end
 
   create_table "organizations", force: :cascade do |t|

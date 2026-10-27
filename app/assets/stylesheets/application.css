@@ -2967,6 +2967,20 @@ turbo-frame {
   white-space: nowrap;
 }
 
+.message-page {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.message-page__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
 .impersonation-panel {
   margin-top: 16px;
 }

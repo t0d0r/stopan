@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       post :mailbox_check, on: :member
     end
     resources :memberships, only: :destroy
+    resources :messages, only: %i[new create]
   end
 
   # Shared tickets, no sign-in (specs/sharing.md).

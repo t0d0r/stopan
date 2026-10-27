@@ -5,7 +5,11 @@
       <% if notification.unread? %><span class="sr-only"><%= t("ui.notifications.unread") %>:</span><% end %>
       <%= notification_sentence(notification) %>
     </span>
-    <span class="notify-item__ticket"><span class="ticket-number"><%= notification.ticket.reference %></span> <%= notification.ticket.subject %></span>
+    <% if notification.message? %>
+      <span class="notify-item__ticket"><%= notification.message.lines.first.to_s.strip.truncate(120) %></span>
+    <% else %>
+      <span class="notify-item__ticket"><span class="ticket-number"><%= notification.ticket.reference %></span> <%= notification.ticket.subject %></span>
+    <% end %>
     <span class="notify-item__time"><%= time_ago notification.created_at %></span>
   </span>
   <% if notification.unread? %><span class="notify-item__dot" aria-hidden="true"></span><% end %>

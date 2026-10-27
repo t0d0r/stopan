@@ -252,6 +252,30 @@ en:
       role_hint: "Agents and administrators work all tickets; administrators also manage users and organizations. Demoting an agent unassigns their unsolved tickets."
       password_keep: "Leave blank to keep the current password."
       notes_hint: "Visible to administrators only."
+      messages:
+        title: "Send a message"
+        caption: "Message"
+        intro: "The message appears in the recipients' notifications, right away. They cannot reply to it; they can open a ticket."
+        recipients: "To"
+        choose: "Choose recipients"
+        all: "All users"
+        role: "Everyone with the role %{role}"
+        members_of: "Members of %{name}"
+        groups:
+          everyone: "Everyone"
+          roles: "Roles"
+          organizations: "Organizations"
+          users: "One user"
+        count:
+          zero: "Nobody receives it: no active users here."
+          one: "1 user receives it."
+          other: "%{count} users receive it."
+        text: "Message"
+        send: "Send message"
+        confirm_title: "Send this message?"
+        confirm_body: "It appears in the notifications of everyone chosen and cannot be taken back."
+        to_label: "Send a message to %{name}"
+        to_members: "Send a message to the members"
       public_form:
         title: "Public request page"
         enabled: "Anyone can send a request without an account at this organization's page"
@@ -407,6 +431,9 @@ en:
         noted: "%{actor} added an internal note"
         assigned: "%{actor} assigned the ticket to you"
         status_changed: "%{actor} changed the status to %{status}"
+        message: "%{actor} sent you a message"
+      message_title: "Message"
+      back: "All notifications"
 
     share:
       title: "Sharing"
@@ -547,6 +574,9 @@ en:
     impersonation_stopped: "You are back in your own account."
     impersonation_ended: "The impersonation ended. Please sign in again."
     impersonation_account_locked: "The account settings cannot be changed while impersonating."
+    message_sent:
+      one: "Message sent to 1 user."
+      other: "Message sent to %{count} users."
     public_request_too_many: "Too many requests from your address. Please try again later."
     magic_link_sent: "If an account exists for this address, we sent a sign-in link to it."
     magic_signed_in: "You are signed in."
@@ -569,6 +599,9 @@ en:
 
   activemodel:
     attributes:
+      admin_message:
+        recipients: "Recipients"
+        text: "Message"
       public_request:
         name: "Name"
         email: "Email"

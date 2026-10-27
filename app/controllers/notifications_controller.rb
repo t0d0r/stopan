@@ -17,11 +17,14 @@ class NotificationsController < ApplicationController
     render partial: "partials/notifications"
   end
 
-  # Marks the notification read and opens the ticket at its event.
+  # Marks the notification read and opens the ticket at its event, or shows
+  # a message from an administrator in full.
   def show
-    notification = Notification.visible_to(current_user).find(params[:id])
-    Notification.mark_read(current_user, Notification.where(id: notification.id))
-    redirect_to ticket_path(notification.ticket, anchor: ("event-#{notification.event_id}" if notification.event_id))
+    @notification = Notification.visible_to(current_user).find(params[:id])
+    Notification.mark_read(current_user, Notification.where(id: @notification.id))
+    return if @notification.message?
+
+    redirect_to ticket_path(@notification.ticket, anchor: ("event-#{@notification.event_id}" if @notification.event_id))
   end
 
   def read_all

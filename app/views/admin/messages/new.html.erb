@@ -1,0 +1,31 @@
+<% content_for :title, t("ui.admin.messages.title") %>
+<section class="sticky sticky--yellow panel panel--form" aria-labelledby="message-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.messages.caption") %></span></header>
+  <div class="panel__body">
+    <h1 class="panel__title" id="message-title"><%= t("ui.admin.messages.title") %></h1>
+    <p class="panel__intro"><%= t("ui.admin.messages.intro") %></p>
+    <%= form_with model: @message, scope: :admin_message, url: admin_messages_path, class: "stack-form",
+                  data: confirm_data(title: t("ui.admin.messages.confirm_title"), body: t("ui.admin.messages.confirm_body"),
+                                     button: t("ui.admin.messages.send")).merge(message_form: true) do |f| %>
+      <%= form_errors @message %>
+      <%= hidden_field_tag :return_to, @return_to %>
+      <div class="field">
+        <%= f.label :recipients, t("ui.admin.messages.recipients") %>
+        <%= f.select :recipients, message_recipient_options(@message.recipients), { include_blank: t("ui.admin.messages.choose") },
+                     class: "select", required: true, data: { message_recipients: true }, aria: { describedby: "recipient-count" } %>
+        <small class="field-hint" id="recipient-count" data-recipient-count
+               data-zero="<%= t("ui.admin.messages.count.zero") %>" data-one="<%= t("ui.admin.messages.count.one") %>"
+               data-other="<%= t("ui.admin.messages.count.other") %>"></small>
+      </div>
+      <div class="field">
+        <%= f.label :text, t("ui.admin.messages.text") %>
+        <%= f.text_area :text, class: "field-input", rows: 6, required: true, maxlength: Notification::MESSAGE_LENGTH,
+                        data: { autogrow: true }, aria: { invalid: invalid?(@message, :text) } %>
+      </div>
+      <div class="form-actions">
+        <%= link_to t("ui.cancel"), @return_to, class: "btn" %>
+        <%= f.submit t("ui.admin.messages.send"), class: "btn btn--primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>

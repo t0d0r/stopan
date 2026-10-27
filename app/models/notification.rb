@@ -1,17 +1,22 @@
 # An in-app notification: the same message as a TicketMailer email, shown
-# in the menu bar panel (specs/notifications.md "Notification panel").
+# in the menu bar panel (specs/notifications.md "Notification panel"), or a
+# message from an administrator without a ticket ("Messages from
+# administrators").
 class Notification < ApplicationRecord
-  KINDS = %w[created replied noted assigned status_changed].freeze
+  KINDS = %w[created replied noted assigned status_changed message].freeze
+  MESSAGE_LENGTH = 2_000
   # Kinds a requester may never see, even after a role change.
   STAFF_KINDS = %w[noted].freeze
   KEEP = 200
 
   belongs_to :user
-  belongs_to :ticket
+  belongs_to :ticket, optional: true
   belongs_to :actor, class_name: "User", optional: true
   belongs_to :event, class_name: "TicketEvent", optional: true
 
   validates :kind, inclusion: { in: KINDS }
+  validates :message, presence: true, length: { maximum: MESSAGE_LENGTH }, if: :message?
+  validates :ticket, presence: true, unless: :message?
 
   scope :unread, -> { where(read_at: nil) }
   scope :newest_first, -> { order(created_at: :desc, id: :desc) }
@@ -19,11 +24,16 @@ class Notification < ApplicationRecord
   after_create_commit :prune
   after_create_commit { self.class.broadcast_changed(user) }
 
-  # What the user may see now: tickets still visible to them, and no
-  # staff-only kinds for requesters.
+  # What the user may see now: their messages, notifications of tickets
+  # still visible to them, and no staff-only kinds for requesters.
   def self.visible_to(user)
-    scope = where(user: user, ticket_id: Ticket.visible_to(user).select(:id))
+    scope = where(user: user, ticket_id: nil, kind: "message")
+            .or(where(user: user, ticket_id: Ticket.visible_to(user).select(:id)))
     user.staff? ? scope : scope.where.not(kind: STAFF_KINDS)
+  end
+
+  def message?
+    kind == "message"
   end
 
   # Tells the user's open pages to fetch the panel again; the signal carries

@@ -57,6 +57,13 @@
                                                         aria: { label: t("ui.admin.edit_user_label", name: user.display_name) } do %>
                   <%= icon :pencil, size: 14 %>
                 <% end %>
+                <% if user != current_user && !user.deactivated? %>
+                  <%= link_to new_admin_message_path(user_id: user.id, return_to: request.fullpath), class: "icon-action",
+                              title: t("ui.admin.messages.to_label", name: user.display_name),
+                              aria: { label: t("ui.admin.messages.to_label", name: user.display_name) } do %>
+                    <%= icon :envelope, size: 14 %>
+                  <% end %>
+                <% end %>
                 <% if Impersonation.allowed?(current_user, user) %>
                   <%= button_to admin_user_impersonation_path(user), class: "icon-action icon-action--impersonate",
                                 title: t("ui.admin.sign_in_as_label", name: user.display_name),

@@ -513,6 +513,22 @@ function setUpDoubleClickEdit() {
   }, { signal: pageSignal });
 }
 
+// Message form (specs/notifications.md "Messages from administrators"):
+// how many people the chosen recipients reach.
+function setUpMessageForm(select) {
+  const hint = document.querySelector("[data-recipient-count]");
+  if (!hint) return;
+  const show = () => {
+    const option = select.selectedOptions[0];
+    if (!option || !option.value) { hint.textContent = ""; return; }
+    const count = Number(option.dataset.count || 0);
+    const key = count === 0 ? "zero" : count === 1 ? "one" : "other";
+    hint.textContent = hint.dataset[key].replace("%{count}", count);
+  };
+  select.addEventListener("change", show, { signal: pageSignal });
+  show();
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -530,6 +546,7 @@ function setUpPage() {
   setUpCopyBoxes();
   setUpDoubleClickEdit();
   setUpTaskLists();
+  document.querySelectorAll("select[data-message-recipients]").forEach(setUpMessageForm);
   setUpDropdowns();
 
   // A sideways-scrolling tab row (queue views on phones) shows the current tab.

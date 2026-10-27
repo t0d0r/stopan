@@ -90,7 +90,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] flash messages slide in from the right to the centre band and sweep out to the left (specs/ui.md)
 - [x] who works on the ticket next to the status in the request note, also for requesters and shared pages (specs/ui.md, specs/sharing.md)
 - [x] admin users list: icon actions, quick impersonation, sign-in count (specs/admin.md)
-- [~] admins send messages to users, a role, an organization or everyone, shown in notifications (specs/notifications.md "Messages from administrators")
+- [x] admins send messages to users, a role, an organization or everyone, shown in notifications (specs/notifications.md "Messages from administrators")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):
