@@ -1,7 +1,28 @@
 # Google and Microsoft accounts for organization mail (plan)
 
-Status: planned, not built. Operator, 2026-10-27: "plan support for
-Google and Microsoft accounts for the mailboxes".
+Status: planned, Google first. Operator, 2026-10-27: "plan support for
+Google and Microsoft accounts for the mailboxes", then "Google Workspace
+first, Internal, outgoing also through the account".
+
+## Decisions taken (2026-10-27)
+
+- **Google Workspace first.** Microsoft follows the same design later;
+  its parts below stay as the plan for it.
+- **Google app type "Internal":** only mailboxes of the operator's own
+  Workspace can connect, so Google's verification and security
+  assessment are not needed. Customers' own Google mailboxes are out of
+  scope until that changes.
+- **Outgoing mail goes through the connected account too** (SMTP with
+  XOAUTH2 at `smtp.gmail.com`), so it is sent from the organization's
+  domain and passes its SPF and DKIM.
+- Library check done locally (no network): `net-smtp` 0.5.2 ships
+  `auth_xoauth2` (`authentication: :xoauth2`), `mail` 2.9.1 passes the
+  `authentication` setting through to it, and `net-imap` 0.6.8 ships
+  `XOAUTH2Authenticator`. The live check against a Workspace mailbox is
+  still to do (phase 1).
+- Still open: who registers the Google Cloud OAuth client (Internal
+  consent screen, redirect URI below) and which Workspace mailbox serves
+  for the live check.
 
 Today an organization's mail (organization-mail.md) signs in to SMTP and
 IMAP with a username and password. Google (Gmail, Google Workspace) and
@@ -109,15 +130,11 @@ appear in logs or pages.
 
 ## Open questions for the operator
 
-- Which accounts first: Google Workspace (own domain), personal Gmail,
-  Microsoft 365, Outlook.com?
-- Who registers the OAuth apps, and in which Google Cloud project and
-  Entra tenant? For Google, is "Internal" (own Workspace only) enough, or
-  must customers' own Google mailboxes connect (then Google verification
-  is needed)?
-- Should outgoing mail of a connected organization also go through its
-  Google or Microsoft account (recommended, so mail is "from" its
-  domain and passes SPF/DKIM), or only the mailbox?
+- Who registers the Google Cloud OAuth client and gives a Workspace
+  mailbox for the live check? (The other questions were answered, see
+  "Decisions taken".)
+- Microsoft: which tenant, and who registers the Entra app, when it is
+  its turn.
 
 ## Security Note
 

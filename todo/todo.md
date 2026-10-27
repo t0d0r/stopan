@@ -128,10 +128,11 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] burndown chart on the reports page, replayed from status events (specs/reports.md "Burndown")
 - [x] separate "Board" pill in the menu bar; the bar wraps under 1180px, the search shrinks first, pills wrap on phones (specs/ui.md "Menu bar")
 - [x] production: deployed d757d14 (reports with burndown, Board pill), after a database backup (specs/deploy.md)
-- [ ] Google / Microsoft mail accounts, phase 1: XOAUTH2 spike with test mailboxes (specs/mail-oauth.md "Phases"; needs the operator's answers to "Open questions")
-- [ ] Google / Microsoft mail accounts, phase 2: OAuth app settings, connect / callback / disconnect, mail_connections (specs/mail-oauth.md)
-- [ ] Google / Microsoft mail accounts, phase 3: token refresh, XOAUTH2 in MailboxCheck and SMTP, failure handling (specs/mail-oauth.md)
-- [ ] Google / Microsoft mail accounts, phase 4: production app registration and first mailbox (specs/mail-oauth.md, specs/deploy.md)
+- [~] Google Workspace mail accounts, phase 1: XOAUTH2 in the libraries confirmed locally; live check waits for an Internal OAuth client and a test mailbox (specs/mail-oauth.md)
+- [ ] Google Workspace mail accounts, phase 2: OAuth client settings, connect / callback / disconnect, mail_connections (specs/mail-oauth.md)
+- [ ] Google Workspace mail accounts, phase 3: token refresh, XOAUTH2 in MailboxCheck and SMTP, failure handling (specs/mail-oauth.md)
+- [ ] Google Workspace mail accounts, phase 4: production OAuth client and first mailbox (specs/mail-oauth.md, specs/deploy.md)
+- [ ] Microsoft 365 mail accounts, the same phases, after Google (specs/mail-oauth.md)
 - [ ] reports later: CSV export, custom date ranges, business hours (specs/reports.md "Later")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,

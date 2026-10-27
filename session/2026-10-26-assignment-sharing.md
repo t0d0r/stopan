@@ -585,9 +585,11 @@ menu and Take; open /tickets/new and pick a requester.
 - Planned Google and Microsoft accounts for organization mail
   (specs/mail-oauth.md): keep IMAP/SMTP with XOAUTH2, delegated OAuth
   code flow with PKCE, one app per provider in /admin/settings, refresh
-  tokens encrypted in `mail_connections`; four phases in todo. Waiting
-  for the operator's answers (which accounts first, who registers the
-  apps, Google Internal vs verified External, outgoing via the account).
+  tokens encrypted in `mail_connections`; four phases in todo.
+  Operator decided: Google Workspace first, Internal app, outgoing mail
+  through the account too. XOAUTH2 confirmed in net-smtp 0.5.2, mail
+  2.9.1 and net-imap 0.6.8 (locally). Open: who registers the Google
+  OAuth client and which mailbox to test with.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.
