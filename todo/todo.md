@@ -89,6 +89,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] admins can impersonate a user, with a clear banner and a way back (specs/admin.md "Impersonation")
 - [x] flash messages slide in from the right to the centre band and sweep out to the left (specs/ui.md)
 - [x] who works on the ticket next to the status in the request note, also for requesters and shared pages (specs/ui.md, specs/sharing.md)
+- [x] admin users list: icon actions, quick impersonation, sign-in count (specs/admin.md)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

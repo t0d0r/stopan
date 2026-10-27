@@ -111,4 +111,16 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_select ".flash", /has ticket history/
   end
+
+  test "the list shows sign-in counts and icon actions, impersonation only where allowed" do
+    users(:anna).update_columns(sign_in_count: 7)
+    get admin_users_url
+    assert_select "th", "Sign-ins"
+    assert_select "#user_#{users(:anna).id} td.num", "7"
+    assert_select "#user_#{users(:anna).id} a.icon-action[href=?][aria-label=?] svg", edit_admin_user_path(users(:anna)),
+                  "Edit #{users(:anna).display_name}"
+    assert_select "#user_#{users(:anna).id} form[action=?][data-confirm] button.icon-action[aria-label=?]",
+                  admin_user_impersonation_path(users(:anna)), "Sign in as #{users(:anna).display_name}"
+    assert_select "#user_#{users(:admin).id} form[action=?]", admin_user_impersonation_path(users(:admin)), 0
+  end
 end

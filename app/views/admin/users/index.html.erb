@@ -34,6 +34,7 @@
             <th scope="col"><%= t("ui.fields.role") %></th>
             <th scope="col"><%= t("ui.admin.organizations") %></th>
             <th scope="col"><%= t("ui.admin.last_sign_in") %></th>
+            <th scope="col" class="num"><%= t("ui.admin.sign_ins") %></th>
             <th scope="col"><span class="sr-only"><%= t("ui.admin.actions") %></span></th>
           </tr>
         </thead>
@@ -49,8 +50,24 @@
               <td><span class="role-pill role-pill--<%= user.role %>"><%= role_label(user) %></span></td>
               <td class="text"><%= user.organizations.map(&:name).join(", ").presence || tag.span("-", class: "muted") %></td>
               <td class="date"><%= user.last_sign_in_at ? time_ago(user.last_sign_in_at) : t("ui.admin.never") %></td>
+              <td class="num"><%= user.sign_in_count %></td>
               <td class="action">
-                <%= link_to t("ui.admin.edit"), edit_admin_user_path(user) %>
+                <%# Icon actions with labels (specs/admin.md "Users"). %>
+                <%= link_to edit_admin_user_path(user), class: "icon-action", title: t("ui.admin.edit_user_label", name: user.display_name),
+                                                        aria: { label: t("ui.admin.edit_user_label", name: user.display_name) } do %>
+                  <%= icon :pencil, size: 14 %>
+                <% end %>
+                <% if Impersonation.allowed?(current_user, user) %>
+                  <%= button_to admin_user_impersonation_path(user), class: "icon-action icon-action--impersonate",
+                                title: t("ui.admin.sign_in_as_label", name: user.display_name),
+                                aria: { label: t("ui.admin.sign_in_as_label", name: user.display_name) },
+                                data: { turbo: false },
+                                form: { data: confirm_data(title: t("ui.impersonation.confirm_title", name: user.display_name),
+                                                           body: t("ui.impersonation.confirm_body"),
+                                                           button: t("ui.impersonation.sign_in_as", name: user.display_name)) } do %>
+                    <%= icon :impersonate, size: 14 %>
+                  <% end %>
+                <% end %>
                 <%# Users with ticket history are deactivated instead (specs/admin.md). %>
                 <% if @deletable_ids.include?(user.id) %>
                   <%= button_to t("ui.delete"), admin_user_path(user), method: :delete, class: "link-button",

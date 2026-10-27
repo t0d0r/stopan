@@ -13,7 +13,7 @@ Links to the user and organization lists.
 
 | route | behaviour |
 |-------|-----------|
-| `GET /admin/users` | table: name, username, email, role, organizations, status (active / deactivated), last sign-in; filter by role, search by name/username/email; the role select applies on change and the search on Enter, with no Apply button (only a `<noscript>` one); a set role filter is highlighted (queues.md) |
+| `GET /admin/users` | table: name, username, email, role, organizations, status (active / deactivated), last sign-in, number of sign-ins (Devise's `sign_in_count`: every sign-in by password, magic link or remember-me cookie; impersonation does not count); actions as icon buttons with labels for screen readers and tooltips: edit (pencil), sign in as (only where impersonation is allowed, with the same confirm dialog as on the edit page) and Delete; filter by role, search by name/username/email; the role select applies on change and the search on Enter, with no Apply button (only a `<noscript>` one); a set role filter is highlighted (queues.md) |
 | `GET /admin/users/new`, `POST /admin/users` | name, username, email, password + confirmation, role, organizations (checkboxes) |
 | `GET /admin/users/:id/edit`, `PATCH /admin/users/:id` | same fields plus "Deactivated"; a blank password keeps the current one |
 | `DELETE /admin/users/:id` | only for users with no tickets (as requester or assignee), no comments and no ticket events; otherwise refused with "has ticket history; deactivate instead". The list shows the Delete button only for other users without history (`User.ids_with_ticket_history`, one query per table); the server check stays for requests made anyway |

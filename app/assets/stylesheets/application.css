@@ -2920,6 +2920,44 @@ turbo-frame {
   font-weight: 600;
 }
 
+/* Icon buttons in table rows (admin users): a quiet square that lights up. */
+.icon-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink-soft);
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.icon-action:hover,
+.icon-action:focus-visible {
+  border-color: var(--rule);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.icon-action--impersonate:hover {
+  color: #b3261e;
+}
+
+.table-users .action form {
+  display: inline-block;
+}
+
+.table-users .action {
+  width: 1%;
+  text-align: left;
+  white-space: nowrap;
+}
+
 .impersonation-panel {
   margin-top: 16px;
 }
