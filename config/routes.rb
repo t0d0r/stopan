@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :organizations do
       resources :memberships, only: :create
       post :mail_test, on: :member
+      post :mailbox_check, on: :member
     end
     resources :memberships, only: :destroy
   end

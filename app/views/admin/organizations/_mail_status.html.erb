@@ -32,6 +32,11 @@
     <% end %>
   <% end %>
 </dl>
-<% if organization.smtp_enabled? %>
-  <%= button_to t("ui.admin.mail.send_test"), mail_test_admin_organization_path(organization), class: "btn" %>
-<% end %>
+<div class="form-actions form-actions--start">
+  <% if organization.smtp_enabled? %>
+    <%= button_to t("ui.admin.mail.send_test"), mail_test_admin_organization_path(organization), class: "btn" %>
+  <% end %>
+  <% if organization.imap_enabled? %>
+    <%= button_to t("ui.admin.mail.check_mailbox"), mailbox_check_admin_organization_path(organization), class: "btn" %>
+  <% end %>
+</div>

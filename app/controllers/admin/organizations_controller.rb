@@ -1,6 +1,6 @@
 module Admin
   class OrganizationsController < BaseController
-    before_action :set_organization, only: %i[show edit update destroy mail_test]
+    before_action :set_organization, only: %i[show edit update destroy mail_test mailbox_check]
 
     def index
       @query = params[:q].to_s.squish.first(100).presence
@@ -54,6 +54,19 @@ module Admin
       redirect_to admin_organization_path(@organization), notice: t("flash.mail_test_sent", email: current_user.email)
     rescue StandardError => error
       redirect_to admin_organization_path(@organization), alert: t("flash.mail_test_failed", error: error.message.truncate(200))
+    end
+
+    # Logs in to the organization's mailbox and reports the unseen count,
+    # without taking any mail in.
+    def mailbox_check
+      unless @organization.imap_enabled?
+        return redirect_to admin_organization_path(@organization), alert: t("flash.mailbox_disabled")
+      end
+
+      count = MailboxCheck.new(@organization).probe
+      redirect_to admin_organization_path(@organization), notice: t("flash.mailbox_ok", count: count)
+    rescue StandardError => error
+      redirect_to admin_organization_path(@organization), alert: t("flash.mailbox_failed", error: error.message.truncate(200))
     end
 
     def destroy

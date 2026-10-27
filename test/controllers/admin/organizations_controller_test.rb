@@ -92,4 +92,14 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     post mail_test_admin_organization_url(organizations(:globex))
     assert_equal "Turn on this organization's SMTP first.", flash[:alert]
   end
+
+  test "the mailbox check needs the mailbox on; the button shows when it is" do
+    post mailbox_check_admin_organization_url(organizations(:globex))
+    assert_equal "Turn on this organization's mailbox first.", flash[:alert]
+
+    organizations(:acme).update!(imap_enabled: true, imap_address: "imap.acme.example", imap_username: "desk",
+                                 mailbox_address: "support@acme.example")
+    get admin_organization_url(organizations(:acme))
+    assert_select "form[action=?] button", mailbox_check_admin_organization_path(organizations(:acme)), "Check the mailbox"
+  end
 end

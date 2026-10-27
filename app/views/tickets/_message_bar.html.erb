@@ -10,6 +10,7 @@
     <span class="role-tag"><%= role_label(author) %></span>
     <%= time_ago record.created_at %>
     <% if local_assigns[:internal] %><span class="internal-tag"><%= t("ui.timeline.internal_only") %></span><% end %>
+    <% if record.is_a?(Comment) && record.source == "email" %><span class="source-tag"><%= t("ui.timeline.by_email") %></span><% end %>
     <%= edited_note record %>
   </span>
   <span class="message__boxes">

@@ -279,6 +279,7 @@ en:
         last_error: "Last error"
         never: "never"
         send_test: "Send a test email"
+        check_mailbox: "Check the mailbox"
       search_users: "Search name, username or email"
       search_organizations: "Search organizations"
       busiest: "Most unsolved tickets"
@@ -452,6 +453,10 @@ en:
       intro: "%{organization} received your request %{reference}:"
       action: "Sign in to follow your request"
       validity: "The sign-in link works once, for 24 hours. Later you can ask for a new one on the sign-in page. Reply to this email to add to your request."
+    mailbox:
+      no_subject: "(no subject)"
+      no_text: "(no text)"
+      rejected_files: "Some attachments were not accepted: %{names}"
     magic_link:
       subject: "Your sign-in link"
       intro: "Use this link to sign in to the service desk. It works once."
@@ -530,6 +535,11 @@ en:
     mail_test_sent: "A test email was sent to %{email}."
     mail_test_failed: "The test email could not be sent: %{error}"
     mail_test_disabled: "Turn on this organization's SMTP first."
+    mailbox_ok:
+      one: "The mailbox works: %{count} unread message waits to be taken in."
+      other: "The mailbox works: %{count} unread messages wait to be taken in."
+    mailbox_failed: "The mailbox could not be checked: %{error}"
+    mailbox_disabled: "Turn on this organization's mailbox first."
     organization_deleted: "Organization %{name} was deleted."
     organization_has_tickets: "%{name} has tickets and cannot be deleted."
     member_added: "%{name} was added."
