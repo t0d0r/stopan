@@ -10,9 +10,11 @@ vhost, which also obtains the Let's Encrypt certificate.
 
 ## Status
 
-**Deployed 2026-10-26, revision e553a58.** https://stopan.linuxfan.org
+**Deployed 2026-10-26, revision e553a58; updated 2026-10-27 to revision
+fa69269** (operator: "deploy to production"). https://stopan.linuxfan.org
 is served by ISPConfig site 25 (`web25`) proxying to the rootless
-container of the `stopan` user. See "Deployed resources" and "Verified".
+container of the `stopan` user. See "Deployed resources", "Verified" and
+"Update 2026-10-27".
 The deployment waited on ISPConfig Remote API access on 2026-10-25/26
 ("Remote API access history").
 
@@ -192,7 +194,8 @@ newest revision images.
 | certificate | Let's Encrypt (ECDSA) for `stopan.linuxfan.org`, `/etc/letsencrypt/live/stopan.linuxfan.org_ecc/`, renewal by `certbot.timer` (`/etc/letsencrypt/renewal/stopan.linuxfan.org_ecc.conf`) |
 | system user | `stopan` uid 994 / gid 991, home `/srv/stopan` (750), subuid/subgid 2100000:65536, linger on |
 | unit | `~stopan/.config/containers/systemd/stopan.container` -> user unit `stopan.service` |
-| image | `localhost/stopan:e553a58` = `:latest` |
+| image | `localhost/stopan:fa69269` = `:latest` (2026-10-27; `:e553a58` kept for rollback) |
+| backups | `/srv/stopan/backups` (700): `pre-deploy-e553a58.sqlite3` (600), taken before the 2026-10-27 update |
 | data / settings | `/srv/stopan/storage` (700), `/srv/stopan/stopan.env` (600) |
 | listener | `127.0.0.1:3183` only |
 | Remote API user | `stopan_deploy`, 127.0.0.1, Sites Domain functions |
@@ -222,6 +225,32 @@ newest revision images.
   done (it would interrupt every other site).
 - g0no `/up` 200 and its listener on 3182 before and after; nothing of
   g0no was changed.
+
+## Update 2026-10-27 (revision fa69269)
+
+- Before: a consistent copy of the database with `VACUUM INTO` run inside
+  the container (`bin/rails runner`), moved to `~stopan/backups/`
+  (`pre-deploy-<old rev>.sqlite3`, mode 600). Do this before every deploy
+  that brings migrations.
+- `DEPLOY_HOST=<ssh host> make deploy`: built and restarted, `/up`
+  answered; the entrypoint's `db:prepare` ran the five new migrations
+  (AddNotificationSettingsToUsers, AddSharingToTickets,
+  CreateNotifications, AddEditing, AddMarkdownToMessages), all additive.
+- Checked: schema version 20261027120000, no pending migrations, the new
+  tables and columns exist, existing tickets and users kept; container
+  healthy; only `127.0.0.1:3183` listens; `http://` -> 301 `https://`;
+  HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure HttpOnly session
+  cookie unchanged; `/users/sign_up` redirects to sign-in; an unknown
+  share link is 404; g0no `/up` 200.
+- Still open (operator): `/cable` WebSocket upgrades through Apache answer
+  404, because the site's `ProxyPass` line has no `upgrade=websocket`;
+  live updates (notifications, ticket pages, queue, admin, shared pages,
+  viewer counts) work only after that change, pages work without it.
+  `SMTP_ADDRESS` is not set, so no email is sent (the log says so).
+- Rollback of this release: as `stopan`, `podman tag localhost/stopan:e553a58
+  localhost/stopan:latest`, restore the backup over
+  `~/storage/production.sqlite3` (with `podman unshare`, service stopped),
+  then `systemctl --user restart stopan`.
 
 ## Rollback
 

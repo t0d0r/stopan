@@ -75,7 +75,7 @@
 - [x] preview dialog for images, PDFs and text files (specs/attachments.md "Preview")
 - [x] shared page and Sharing panel show how many view the link now (specs/sharing.md "Who is viewing now")
 - [x] edit the request and replies, with earlier versions for staff (specs/timeline.md "Editing")
-- [ ] operator: the next deploy runs the AddEditing and AddMarkdownToMessages migrations (specs/deploy.md)
+- [x] deploy revision fa69269 to production with a database backup first; migrations ran (specs/deploy.md "Update 2026-10-27")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

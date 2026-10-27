@@ -259,6 +259,14 @@ Operator requests, in order:
   request note and title strips, requester phone view in Bulgarian, admin
   users in the dark theme); scratch data removed afterwards.
 
+- Production deploy (operator: "deploy to production"): database copied
+  with VACUUM INTO to `~stopan/backups/pre-deploy-e553a58.sqlite3`, then
+  `DEPLOY_HOST=<server> make deploy` shipped fa69269; five additive
+  migrations ran; verified schema, health, headers, sign-up closed,
+  loopback-only listener and g0no. Still open: `upgrade=websocket` on
+  the Apache proxy line (WebSocket 404, so no live updates in
+  production yet) and SMTP.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a
