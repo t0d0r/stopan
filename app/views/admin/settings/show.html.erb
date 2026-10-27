@@ -26,14 +26,27 @@
   <div class="panel__body">
     <h2 class="section-title" id="translation-title"><%= t("ui.admin.settings.translation_title") %></h2>
     <%= form_with model: @setting, url: admin_settings_path, method: :patch, class: "stack-form" do |f| %>
-      <% keyed = DeeplClient.configured? %>
+      <%= form_errors @setting if @setting.errors.include?(:deepl_api_key) %>
+      <%# Write-only key, like the organizations' mail passwords. %>
+      <% stored = @setting.deepl_api_key_in_database.present? %>
       <div class="field">
-        <%= f.check_box :translation_enabled, disabled: !keyed, aria: { describedby: "translation-hint" } %>
-        <%= f.label :translation_enabled, t("ui.admin.settings.translation_enabled") %>
-        <small class="field-hint" id="translation-hint"><%= t("ui.admin.settings.translation_hint") %>
-          <% unless keyed %><strong><%= t("ui.admin.settings.translation_no_key") %></strong><% end %></small>
+        <%= f.label :deepl_api_key, t("ui.admin.settings.deepl_key") %>
+        <%= f.password_field :deepl_api_key, value: nil, class: "field-input", autocomplete: "off",
+                             aria: { describedby: "deepl-key-hint", invalid: invalid?(@setting, :deepl_api_key) } %>
+        <small class="field-hint" id="deepl-key-hint">
+          <%= stored ? t("ui.admin.settings.deepl_key_stored") : t("ui.admin.settings.deepl_key_none") %>
+          <%= t("ui.admin.settings.deepl_key_hint") %>
+        </small>
+        <% if stored %>
+          <label class="check-field"><%= f.check_box :remove_deepl_api_key %> <%= t("ui.admin.settings.deepl_key_remove") %></label>
+        <% end %>
       </div>
-      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary", disabled: !keyed %></div>
+      <div class="field">
+        <label class="check-field"><%= f.check_box :translation_enabled, aria: { describedby: "translation-hint" } %>
+          <%= t("ui.admin.settings.translation_enabled") %></label>
+        <small class="field-hint" id="translation-hint"><%= t("ui.admin.settings.translation_hint") %></small>
+      </div>
+      <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
     <% end %>
   </div>
 </section>

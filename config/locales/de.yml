@@ -299,7 +299,11 @@ de:
         translation_title: "Maschinelle Übersetzung (DeepL)"
         translation_enabled: "Schaltfläche Übersetzen an Nachrichten für Mitarbeiter anbieten"
         translation_hint: "Der Nachrichtentext wird zur Übersetzung an DeepL gesendet. Schalten Sie dies nur ein, wenn Ihre Organisation es erlaubt."
-        translation_no_key: "Setzen Sie DEEPL_API_KEY, um dies zu nutzen."
+        deepl_key: "DeepL-API-Schlüssel"
+        deepl_key_stored: "Ein Schlüssel ist gespeichert. Leer lassen, um ihn zu behalten."
+        deepl_key_none: "Kein Schlüssel gespeichert."
+        deepl_key_hint: "Aus Ihrem DeepL-Konto, API Keys. Schlüssel mit der Endung :fx gehören zum kostenlosen Plan."
+        deepl_key_remove: "Gespeicherten Schlüssel entfernen"
         stages_caption: "Board"
         stages_title: "Phasen"
         stages_hint: "Phasen teilen einen Status auf dem Board in Schritte auf, zum Beispiel Analyse und QA-Bestätigung unter In Bearbeitung. Jede Phase ist eine eigene Spalte neben ihrem Status. Nur Mitarbeiter sehen sie."
@@ -770,12 +774,14 @@ de:
         public_allowed_senders: "Erlaubte E-Mail-Adressen"
       app_setting:
         auto_postpone_days: "Tage ohne Aktivität"
+        deepl_api_key: "DeepL-API-Schlüssel"
       stage:
         name: "Name"
         status: "Status"
         color: "Farbe"
     errors:
       messages:
+        required_for_translation: "wird benötigt, bevor die Übersetzung eingeschaltet werden kann"
         private_host: "muss ein öffentlicher Mailserver sein, keine Adresse im internen Netzwerk"
         invalid_senders: "enthält Einträge, die weder eine Adresse noch eine @Domain sind: %{entries}"
         too_many_senders: "darf höchstens %{count} Einträge enthalten"

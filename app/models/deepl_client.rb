@@ -1,8 +1,8 @@
 require "net/http"
 
-# The DeepL API (specs/translation.md). DEEPL_API_KEY comes from the
-# environment; a key ending in ":fx" is a Free key with its own host.
-# DEEPL_API_URL overrides the base URL.
+# The DeepL API (specs/translation.md). The key is the one stored on
+# /admin/settings, else DEEPL_API_KEY; a key ending in ":fx" is a Free key
+# with its own host. DEEPL_API_URL overrides the base URL.
 class DeeplClient
   class Error < StandardError; end
 
@@ -11,12 +11,12 @@ class DeeplClient
   TIMEOUT = 10
 
   def self.configured?
-    ENV["DEEPL_API_KEY"].present?
+    AppSetting.current.deepl_key.present?
   end
 
   attr_reader :base_url
 
-  def initialize(key: ENV["DEEPL_API_KEY"], base_url: ENV["DEEPL_API_URL"])
+  def initialize(key: AppSetting.current.deepl_key, base_url: ENV["DEEPL_API_URL"])
     @key = key.to_s
     @base_url = base_url.presence || (@key.end_with?(":fx") ? "https://api-free.deepl.com" : "https://api.deepl.com")
   end

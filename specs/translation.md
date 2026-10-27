@@ -19,16 +19,25 @@ the original left as it is.
 
 ## Switching it on
 
-- `DEEPL_API_KEY` in the production settings file (`stopan.env`), never
-  in the repository. A key ending in `:fx` is a DeepL API Free key and
-  uses `https://api-free.deepl.com`; any other key uses
-  `https://api.deepl.com`. `DEEPL_API_URL` overrides the base URL (tests,
-  a proxy).
-- An administrator setting on `/admin/settings`: "Machine translation
-  (DeepL)", off by default, with the note "Message text is sent to DeepL
-  to be translated. Turn this on only if your organization allows it."
-  The checkbox is disabled, with the hint "Set DEEPL_API_KEY to use
-  this.", while there is no key.
+- The DeepL API key is entered by an administrator on `/admin/settings`
+  (operator, 2026-10-27: "key to be added via settings"), in the
+  "Machine translation (DeepL)" panel, never in the repository. It is
+  stored encrypted (`app_settings.deepl_api_key`, Active Record
+  encryption with keys derived from `SECRET_KEY_BASE`, as for the
+  organizations' mail passwords, organization-mail.md) and is
+  write-only: the form never shows it ("A key is stored. Leave empty to
+  keep it." / "No key stored."), a blank field keeps it, and "Remove the
+  stored key" clears it. `DEEPL_API_KEY` in the environment is used only
+  when no key is stored.
+- A key ending in `:fx` is a DeepL API Free key and uses
+  `https://api-free.deepl.com`; any other key uses
+  `https://api.deepl.com`. `DEEPL_API_URL` (environment) overrides the
+  base URL (tests, a proxy).
+- The same panel has the switch "Offer a Translate button on messages
+  for staff", off by default, with the note "Message text is sent to
+  DeepL to be translated. Turn this on only if your organization allows
+  it." Switching it on without a key is refused with "DeepL API key is
+  needed before translation can be switched on".
 - The button shows only when the setting is on and a key is present.
   Requests while it is off answer 403.
 
@@ -72,6 +81,9 @@ the original left as it is.
 
 ## Data model
 
+`app_settings`: `translation_enabled` (boolean, default false),
+`deepl_api_key` (encrypted text, nullable).
+
 `translations`: `translatable_type`, `translatable_id` (Ticket for the
 description, Comment), `target_language` (`en`/`bg`/`de`),
 `source_language` (DeepL's code, lower case, may be any language),
@@ -105,5 +117,6 @@ DeepL, outside this server. That is why it is off by default, switched
 on by an administrator, staff only, and one message per explicit click;
 nothing is translated in the background. Check DeepL's data terms for
 the plan in use (Free and Pro differ) before switching it on. The key
-lives only in the environment, is never logged, and the translated text
+is stored encrypted, never shown again after saving, never logged
+(`filter_parameters` covers `_key`), and the translated text
 is escaped or sanitized like any user text.

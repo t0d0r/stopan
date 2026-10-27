@@ -299,7 +299,11 @@ bg:
         translation_title: "Машинен превод (DeepL)"
         translation_enabled: "Бутон Преведи на съобщенията за служителите"
         translation_hint: "Текстът на съобщението се изпраща на DeepL за превод. Включете го само ако организацията ви го позволява."
-        translation_no_key: "Задайте DEEPL_API_KEY, за да го ползвате."
+        deepl_key: "API ключ за DeepL"
+        deepl_key_stored: "Има запазен ключ. Оставете празно, за да го запазите."
+        deepl_key_none: "Няма запазен ключ."
+        deepl_key_hint: "От профила ви в DeepL, раздел API Keys. Ключовете, завършващи на :fx, са за безплатния план."
+        deepl_key_remove: "Изтрий запазения ключ"
         stages_caption: "Дъска"
         stages_title: "Етапи"
         stages_hint: "Етапите разделят статус на стъпки на дъската, например Разследване и QA под В процес. Всеки е отделна колона до своя статус. Виждат ги само служителите."
@@ -770,12 +774,14 @@ bg:
         public_allowed_senders: "Разрешени имейл адреси"
       app_setting:
         auto_postpone_days: "Дни без активност"
+        deepl_api_key: "API ключ за DeepL"
       stage:
         name: "Име"
         status: "Статус"
         color: "Цвят"
     errors:
       messages:
+        required_for_translation: "е нужен, преди преводът да се включи"
         private_host: "трябва да е публичен пощенски сървър, не адрес във вътрешната мрежа"
         invalid_senders: "съдържа редове, които не са нито адрес, нито @домейн: %{entries}"
         too_many_senders: "може да съдържа най-много %{count} реда"

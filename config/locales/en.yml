@@ -296,7 +296,11 @@ en:
         translation_title: "Machine translation (DeepL)"
         translation_enabled: "Offer a Translate button on messages for staff"
         translation_hint: "Message text is sent to DeepL to be translated. Turn this on only if your organization allows it."
-        translation_no_key: "Set DEEPL_API_KEY to use this."
+        deepl_key: "DeepL API key"
+        deepl_key_stored: "A key is stored. Leave empty to keep it."
+        deepl_key_none: "No key stored."
+        deepl_key_hint: "From your DeepL account, API Keys. Keys ending in :fx are for the free plan."
+        deepl_key_remove: "Remove the stored key"
         stages_caption: "Board"
         stages_title: "Stages"
         stages_hint: "Stages split a status into steps on the board, for example Investigating and QA to confirm under In progress. Each is its own column next to its status. Only staff see them."
@@ -765,12 +769,14 @@ en:
         public_allowed_senders: "Allowed email addresses"
       app_setting:
         auto_postpone_days: "Days without activity"
+        deepl_api_key: "DeepL API key"
       stage:
         name: "Name"
         status: "Status"
         color: "Colour"
     errors:
       messages:
+        required_for_translation: "is needed before translation can be switched on"
         private_host: "must be a public mail server, not an address inside the network"
         invalid_senders: "has entries that are neither an address nor an @domain: %{entries}"
         too_many_senders: "may hold at most %{count} entries"

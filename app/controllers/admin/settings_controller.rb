@@ -8,11 +8,20 @@ module Admin
 
     def update
       @setting = AppSetting.current
-      if @setting.update(params.expect(app_setting: [ :auto_postpone_days, :translation_enabled ]))
+      if @setting.update(setting_params)
         redirect_to admin_settings_path, notice: t("flash.settings_saved")
       else
         render :show, status: :unprocessable_content
       end
+    end
+
+    private
+
+    # The DeepL key is write-only: a blank field keeps the stored one
+    # (specs/translation.md).
+    def setting_params
+      params.expect(app_setting: [ :auto_postpone_days, :translation_enabled, :deepl_api_key, :remove_deepl_api_key ])
+            .tap { |permitted| permitted.delete(:deepl_api_key) if permitted[:deepl_api_key].blank? }
     end
   end
 end

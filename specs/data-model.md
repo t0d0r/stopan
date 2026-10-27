@@ -100,7 +100,8 @@ nullable), `kind`, `event_id` (nullable), `status` (nullable), `read_at`,
 `stages`: `status`, `name`, `color`, `position`, timestamps; board
 sub-columns (board.md). `app_settings`: one row, `auto_postpone_days`
 (integer, default 30, 0 = off), `translation_enabled` (boolean, default
-false; translation.md).
+false) and `deepl_api_key` (encrypted, write-only in the form;
+translation.md).
 
 ## translations
 

@@ -21,9 +21,10 @@ class Translation < ApplicationRecord
     Digest::SHA256.hexdigest(text.to_s)
   end
 
-  # Translation is offered when an administrator switched it on and the key is set.
+  # Translation is offered when an administrator switched it on and a key is set.
   def self.available?
-    DeeplClient.configured? && AppSetting.current.translation_enabled?
+    setting = AppSetting.current
+    setting.translation_enabled? && setting.deepl_key.present?
   end
 
   def self.for(message, language)

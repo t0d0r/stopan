@@ -21,9 +21,8 @@ class TranslationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   setup do
-    @key = ENV["DEEPL_API_KEY"]
-    ENV["DEEPL_API_KEY"] = "test-key"
-    AppSetting.current.update!(translation_enabled: true)
+    @env_key = ENV.delete("DEEPL_API_KEY")
+    AppSetting.current.update!(deepl_api_key: "test-key", translation_enabled: true)
     Translation.client = @client = FakeClient.new
     TranslationsController::RATE_LIMIT_STORE.clear
     @ticket = tickets(:printer)
@@ -31,7 +30,7 @@ class TranslationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   teardown do
-    ENV["DEEPL_API_KEY"] = @key
+    ENV["DEEPL_API_KEY"] = @env_key
     Translation.client = nil
   end
 
@@ -66,11 +65,15 @@ class TranslationsControllerTest < ActionDispatch::IntegrationTest
     translate "description"
     assert_response :forbidden
 
-    AppSetting.current.update!(translation_enabled: true)
-    ENV["DEEPL_API_KEY"] = nil
+    # No stored key and none in the environment (as if removed directly).
+    AppSetting.current.update_columns(translation_enabled: true, deepl_api_key: nil)
     get ticket_url(@ticket)
     assert_select "form.translation__form", 0
     assert_empty @client.calls
+
+    ENV["DEEPL_API_KEY"] = "env-key"
+    get ticket_url(@ticket)
+    assert_select "form.translation__form", 1 + @ticket.comments.count
   end
 
   test "a translation is stored, shown under its message and reused until the text changes" do
@@ -167,17 +170,41 @@ class TranslationsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".flash", /Too many translations/
   end
 
-  test "administrators switch it on in the settings, only with a key" do
+  test "administrators enter the key and switch it on in the settings; the key is write-only and encrypted" do
     sign_in users(:admin)
-    AppSetting.current.update!(translation_enabled: false)
+    AppSetting.current.update!(translation_enabled: false, deepl_api_key: nil)
     get admin_settings_url
-    assert_select "#translation input[type=checkbox][name='app_setting[translation_enabled]']:not([disabled])"
-    patch admin_settings_url, params: { app_setting: { translation_enabled: "1" } }
-    assert AppSetting.current.reload.translation_enabled?
+    assert_select "#translation input[type=password][name='app_setting[deepl_api_key]']"
+    assert_select "#translation", /No key stored/
 
-    ENV["DEEPL_API_KEY"] = nil
+    # Switching on without a key is refused.
+    patch admin_settings_url, params: { app_setting: { translation_enabled: "1", deepl_api_key: "" } }
+    assert_response :unprocessable_content
+    assert_select "#translation .form-errors", /DeepL API key is needed before translation can be switched on/
+    assert_not AppSetting.current.reload.translation_enabled?
+
+    patch admin_settings_url, params: { app_setting: { translation_enabled: "1", deepl_api_key: " new-secret:fx " } }
+    assert_redirected_to admin_settings_url
+    setting = AppSetting.current.reload
+    assert setting.translation_enabled?
+    assert_equal "new-secret:fx", setting.deepl_api_key
+    raw = AppSetting.connection.select_value("SELECT deepl_api_key FROM app_settings WHERE id = #{setting.id}")
+    assert_no_match(/new-secret/, raw, "stored encrypted")
+
     get admin_settings_url
-    assert_select "#translation input[type=checkbox][disabled]"
-    assert_select "#translation", /Set DEEPL_API_KEY to use this/
+    assert_select "#translation", /A key is stored/
+    assert_select "#translation input[name='app_setting[deepl_api_key]']:not([value])"
+    assert_no_match(/new-secret/, response.body)
+
+    # A blank field keeps it; the check box removes it (and translation then needs a new key).
+    patch admin_settings_url, params: { app_setting: { deepl_api_key: "", translation_enabled: "1" } }
+    assert_equal "new-secret:fx", AppSetting.current.reload.deepl_api_key
+    patch admin_settings_url, params: { app_setting: { remove_deepl_api_key: "1", translation_enabled: "0" } }
+    assert_nil AppSetting.current.reload.deepl_api_key
+  end
+
+  test "the client uses the stored key" do
+    AppSetting.current.update!(deepl_api_key: "stored:fx")
+    assert_equal "https://api-free.deepl.com", DeeplClient.new.base_url
   end
 end

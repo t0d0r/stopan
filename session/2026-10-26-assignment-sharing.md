@@ -549,8 +549,14 @@ menu and Take; open /tickets/new and pick a requester.
 
 ## Next
 
-- Production needs `DEEPL_API_KEY` (operator) before the Translate
-  button can be switched on; the next deploy runs `CreateTranslations`.
+- The DeepL key is entered on /admin/settings (operator: "key to be
+  added via settings"): `app_settings.deepl_api_key`, Active Record
+  encryption like the mail passwords, write-only field with a remove
+  check box; switching translation on without a key is a validation
+  error; `DEEPL_API_KEY` is only a fallback. Checked in Chrome: the key
+  never comes back in the page and is filtered from the log.
+- The next deploy runs `CreateTranslations` and
+  `AddDeeplApiKeyToAppSettings`; then an admin enters the key.
 - Production runs cbf319b (2026-10-27). If users still see 403/404 on
   some action, read the site's Apache error log for the ModSecurity rule
   id first (specs/deploy.md "ModSecurity false positives").

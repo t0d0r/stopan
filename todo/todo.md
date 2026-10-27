@@ -121,7 +121,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] production: deployed 0f52988 (language buttons only for visitors and shared pages), after a database backup
 - [x] language buttons as one group like the text sizes: "EN BG DE", current shaded (specs/ui.md "Language")
 - [x] "Translate" button on messages for staff with DeepL, admin switch, stored translations (specs/translation.md)
-- [ ] operator: set DEEPL_API_KEY in production and switch translation on in /admin/settings after checking DeepL's data terms (specs/translation.md)
+- [x] DeepL key entered on /admin/settings, stored encrypted and write-only; DEEPL_API_KEY only a fallback (specs/translation.md)
+- [ ] operator: after the next deploy, enter the DeepL key and switch translation on in /admin/settings, after checking DeepL's data terms (specs/translation.md)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):
