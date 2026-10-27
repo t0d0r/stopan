@@ -379,6 +379,8 @@ bg:
     prefs:
       dark: "Тъмна тема"
       light: "Светла тема"
+      wide: "Широк изглед"
+      narrow: "Нормална ширина"
       text_size: "Размер на текста"
       scales:
         normal: "Нормален"

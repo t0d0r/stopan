@@ -8,6 +8,10 @@ module ApplicationHelper
     cookies[:scale].presence_in(PreferencesController::SCALES) || "normal"
   end
 
+  def width_preference
+    cookies[:width].presence_in(PreferencesController::WIDTHS) || "normal"
+  end
+
   # data-* attributes for a form that asks before submitting; the confirm
   # dialog (partials/_confirm_dialog) shows the title, message and button.
   def confirm_data(title:, body:, button:)

@@ -12,9 +12,18 @@ class PreferencesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "ignores unknown values" do
-    patch preferences_url, params: { theme: "neon", scale: "huge" }
+    patch preferences_url, params: { theme: "neon", scale: "huge", width: "giant" }
     get new_user_session_url
-    assert_select "html[data-theme=''][data-scale=normal]"
+    assert_select "html[data-theme=''][data-scale=normal][data-width=normal]"
+  end
+
+  test "remembers the wide layout" do
+    patch preferences_url, params: { width: "wide" }
+    get new_user_session_url
+    assert_select "html[data-width=wide]"
+    patch preferences_url, params: { width: "normal" }
+    get new_user_session_url
+    assert_select "html[data-width=normal]"
   end
 
   test "the menu bar has the theme switch and text sizes" do
@@ -23,5 +32,7 @@ class PreferencesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".menubar form.prefs button[name=theme][value=dark]"
     assert_select ".menubar form.prefs button[name=theme][value=light]"
     assert_select ".menubar form.prefs button[name=scale]", 3
+    assert_select ".menubar form.prefs button.width-toggle[name=width][value=wide][aria-label='Wide layout']"
+    assert_select ".menubar form.prefs button.width-toggle[name=width][value=normal]"
   end
 end

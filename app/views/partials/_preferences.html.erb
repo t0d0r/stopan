@@ -6,6 +6,11 @@
           title="<%= t("ui.prefs.dark") %>" aria-label="<%= t("ui.prefs.dark") %>"><%= icon :moon, size: 15 %></button>
   <button type="submit" name="theme" value="light" class="tool-button theme-toggle theme-toggle--to-light"
           title="<%= t("ui.prefs.light") %>" aria-label="<%= t("ui.prefs.light") %>"><%= icon :sun, size: 15 %></button>
+  <%# Width switch (ui.md): only the button for the other width shows. %>
+  <button type="submit" name="width" value="wide" class="tool-button width-toggle width-toggle--to-wide"
+          title="<%= t("ui.prefs.wide") %>" aria-label="<%= t("ui.prefs.wide") %>"><%= icon :widen, size: 15 %></button>
+  <button type="submit" name="width" value="normal" class="tool-button width-toggle width-toggle--to-normal"
+          title="<%= t("ui.prefs.narrow") %>" aria-label="<%= t("ui.prefs.narrow") %>"><%= icon :narrow, size: 15 %></button>
   <%# Three A buttons of growing size: Normal, Big, Extra big. %>
   <span class="scale-buttons" role="group" aria-label="<%= t("ui.prefs.text_size") %>">
     <% PreferencesController::SCALES.each do |scale| %>

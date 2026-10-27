@@ -1,15 +1,17 @@
-# Theme (light / dark) and text size, kept in cookies so the layout can render
+# Theme (light / dark), width and text size, kept in cookies so the layout can render
 # them before any script runs. application.js sets the same cookies without a
 # round trip; this action is the fallback without JavaScript.
 class PreferencesController < ApplicationController
   THEMES = %w[light dark].freeze
   SCALES = %w[normal big extra].freeze
+  WIDTHS = %w[normal wide].freeze
 
   skip_before_action :authenticate_user!
 
   def update
     remember :theme, params[:theme].presence_in(THEMES)
     remember :scale, params[:scale].presence_in(SCALES)
+    remember :width, params[:width].presence_in(WIDTHS)
     redirect_back fallback_location: root_path
   end
 

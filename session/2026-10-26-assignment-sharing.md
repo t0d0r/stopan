@@ -219,6 +219,11 @@ Operator requests, in order:
   CRLF as LF. Checked in headless Chrome: diff marks, confirm text,
   restore with notice and a new earlier version.
 
+- Plan item 5 done: width switch next to the theme switch (`width`
+  cookie, `<html data-width>`, desk 1120px -> 1920px, hidden under 760px,
+  generic preference JS). Checked in headless Chrome at 1800px: desk
+  1120 -> 1800, kept after reload, back to normal; hidden at 390px.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

@@ -405,6 +405,33 @@ form.button_to {
   max-width: 1120px;
   margin: 0 auto;
   padding: 24px 16px 56px;
+  transition: max-width 0.25s ease;
+}
+
+/* Width switch (ui.md): the desk grows on wide screens. */
+:root[data-width="wide"] .desk {
+  max-width: 1920px;
+}
+
+.width-toggle--to-normal,
+:root[data-width="wide"] .width-toggle--to-wide {
+  display: none;
+}
+
+:root[data-width="wide"] .width-toggle--to-normal {
+  display: inline-flex;
+}
+
+@media (max-width: 760px) {
+  .width-toggle {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desk {
+    transition: none;
+  }
 }
 
 .desk__header {

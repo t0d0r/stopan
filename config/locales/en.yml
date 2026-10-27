@@ -376,6 +376,8 @@ en:
     prefs:
       dark: "Dark theme"
       light: "Light theme"
+      wide: "Wide layout"
+      narrow: "Normal width"
       text_size: "Text size"
       scales:
         normal: "Normal"
