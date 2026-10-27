@@ -6,7 +6,7 @@
 | [roles.md](roles.md) | requester, agent and administrator; organizations and memberships; permission matrix and how it is enforced |
 | [tickets.md](tickets.md) | ticket fields, numbering, statuses, allowed transitions, creating and updating |
 | [timeline.md](timeline.md) | public replies, internal notes, the append-only event log and the composer |
-| [attachments.md](attachments.md) | file limits, allowed types and authorized download-only serving |
+| [attachments.md](attachments.md) | file limits, allowed types, authorized downloads and the preview dialog |
 | [queues.md](queues.md) | agent queue views, filters, search, sort, pagination and the requester's "My tickets" |
 | [admin.md](admin.md) | admin dashboard, users and roles, organizations and memberships |
 | [data-model.md](data-model.md) | tables, columns, indexes and deletion rules |
