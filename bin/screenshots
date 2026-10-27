@@ -27,7 +27,7 @@ const shots = [
   [ "queue.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/" ],
   [ "board.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/tickets/board" ],
   [ "ticket-agent.png", "maria.agent@example.com", 1280, 820, 1, "en", false, "/tickets/1001" ],
-  [ "ticket-requester-bg-phone.png", "anna@example.com", 390, 844, 2, "bg", false, "/tickets/1001" ],
+  [ "ticket-requester-phone.png", "anna@example.com", 390, 844, 2, "en", false, "/tickets/1001" ],
   [ "admin-users-dark.png", "admin@example.com", 1280, 820, 1, "en", true, "/admin/users" ]
 ];
 
@@ -36,10 +36,11 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function withChrome(lang, run) {
   const profile = mkdtempSync(join(tmpdir(), "stopan-chrome-"));
   const port = 9300 + Math.floor(Math.random() * 500);
+  // An English environment, so nothing of the host's language shows in the shots.
   const chrome = spawn(chromePath, [
     "--headless=new", `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`,
-    "--no-first-run", "--hide-scrollbars", `--lang=${lang}`, "about:blank"
-  ], { stdio: "ignore" });
+    "--no-first-run", "--hide-scrollbars", `--lang=${lang}`, `--accept-lang=${lang}`, "about:blank"
+  ], { stdio: "ignore", env: { ...process.env, LANG: "en_US.UTF-8", LC_ALL: "en_US.UTF-8", LANGUAGE: "en" } });
   try {
     let target;
     for (let i = 0; i < 50 && !target; i++) {

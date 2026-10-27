@@ -284,9 +284,11 @@ profile or the header". The language of a page is the first of:
 
 The README shows five screenshots in `docs/screenshots/` (excluded from the
 Docker image): the agent queue, the kanban board (`specs/board.md`), the
-agent's ticket page, the same ticket for its requester on a 390px phone in
-Bulgarian, and the admin users list in the dark theme. They use only the
-fictional `make demo` data. Refresh them when one of these pages changes
+agent's ticket page, the same ticket for its requester on a 390px phone,
+and the admin users list in the dark theme. They use only the fictional
+`make demo` data, all in English (operator, 2026-10-27: "English
+environment, no Cyrillic in the screenshots"): Chrome runs with
+`--lang=en`, `--accept-lang=en` and an English locale environment. Refresh them when one of these pages changes
 visibly.
 
 `make screenshots` refreshes them: start the development server with the

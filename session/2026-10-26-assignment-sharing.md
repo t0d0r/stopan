@@ -798,6 +798,10 @@ menu and Take; open /tickets/new and pick a requester.
   health and headers fine. An authenticated API smoke test through Apache was
   not allowed from the session (it writes a token on the server); the
   operator tests with a personal token.
+- README screenshots refreshed from a scratch demo database on :3007 (not the dev
+  data); `bin/screenshots` now runs Chrome with --lang/--accept-lang en and an
+  English locale environment, the phone shot is English
+  (`ticket-requester-phone.png`, the Bulgarian one removed).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

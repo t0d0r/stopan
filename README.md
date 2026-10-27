@@ -16,9 +16,9 @@ instant.
 
 ![Kanban board with a column per status and the Not now and Done columns collapsed](docs/screenshots/board.png)
 
-| Ticket page for an agent | Requester on a phone, in Bulgarian |
+| Ticket page for an agent | Requester on a phone |
 |---|---|
-| ![Ticket timeline with a public reply, an internal note and audit entries](docs/screenshots/ticket-agent.png) | ![The same ticket seen by its requester, without the internal note](docs/screenshots/ticket-requester-bg-phone.png) |
+| ![Ticket timeline with a public reply, an internal note and audit entries](docs/screenshots/ticket-agent.png) | ![The same ticket seen by its requester, without the internal note](docs/screenshots/ticket-requester-phone.png) |
 
 ![Admin users list in the dark theme](docs/screenshots/admin-users-dark.png)
 
