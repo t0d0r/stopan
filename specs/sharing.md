@@ -126,6 +126,47 @@ content changes, keeping its scroll position (`turbo-refresh-scroll`
   notification stream additionally only by its signed-in owner
   (notifications.md).
 
+### Who is viewing now
+
+Operator, 2026-10-27: "shared documents should show how many people are
+viewing them right now, like a shared Google document". Visitors are not
+signed in, so the indicator shows a number, never names:
+
+- **Shared page:** next to the read-only note, an eye icon and "Only you
+  are viewing" (1) or "3 people viewing now" (more). It counts open,
+  unlocked shared pages of the current link, the reader's own included.
+- **Ticket page, Sharing panel** (users allowed to share, when the ticket
+  is shared): "Nobody has the link open now" / "1 person has the link
+  open now" / "3 people have the link open now", so staff and the
+  requester see whether the link is in use before stopping or replacing
+  it.
+- **Live:** both update within about a second when a shared page is
+  opened or closed (tab closed, navigated away, connection lost).
+
+How it works:
+
+- The shared page subscribes to its existing share stream through
+  `SharedTicketChannel` (a `Turbo::StreamsChannel` subclass, still no
+  sign-in). Its `subscribed` callback adds one viewer for the link, its
+  `unsubscribed` callback removes it. The count is kept per link (the
+  SHA-256 of the token, as in the stream name) in process memory
+  (`ShareViewers`, a `Concurrent::Map`), so it counts open pages (tabs),
+  not people, and a replaced link starts from zero.
+- After each change the count is broadcast as a custom stream action
+  `<turbo-stream action="share_viewers" count="3">` to the share stream
+  and to the ticket's page streams (`[ticket, :page, :staff]` and
+  `:public`; the requester may share too). The number is the only
+  content; the client picks the text from the page's own translations
+  (`data-zero`, `data-one`, `data-other`). Pages render the current count
+  on load, so a page refresh is also correct.
+- The password form does not subscribe, so a locked visitor is not
+  counted. Text is rendered by the client with `textContent`.
+- **One process.** Action Cable runs in the web process with the `async`
+  adapter (notifications.md), so web requests and channels share the
+  count. A restart starts from zero and open pages count again as they
+  reconnect. Several processes would need a shared store (solid_cable
+  plus a database table, or Redis).
+
 Response headers on `/s/...`:
 
 - `Referrer-Policy: same-origin` - the token is not sent in `Referer` to
@@ -142,8 +183,9 @@ sign-in.
 
 ## Not in this phase
 
-Link expiry dates, view counts, sharing internal content, several links per
-ticket. Recorded in specs/roadmap.md.
+Link expiry dates, total view counts (history), names of viewers,
+sharing internal content, several links per ticket. Recorded in
+specs/roadmap.md.
 
 ## Acceptance
 
@@ -156,6 +198,10 @@ unknown tokens (404), no internal note text, internal events or emails on
 the shared page, files of internal notes and of other tickets not
 reachable, who may share (requester own ticket only, 403 otherwise), the
 admin list and the private headers.
+`test/models/share_viewers_test.rb` and
+`test/channels/shared_ticket_channel_test.rb`: counting per link, join
+and leave broadcasts to the share and page streams, the indicator on both
+pages.
 
 ## Security Note
 
@@ -165,4 +211,6 @@ a password for sensitive tickets, and stop sharing when the link is no
 longer needed. The token appears in the request path, so it is in server
 access logs (Rails filters it only from the parameter log). The rate limit
 is per process and resets on restart. Serve the app over HTTPS so links and
-share passwords are not sent in clear text.
+share passwords are not sent in clear text. The viewer count reveals only
+how many pages of a link are open; anyone holding the link can inflate
+it by opening many pages, so treat it as a hint, not an audit.

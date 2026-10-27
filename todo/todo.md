@@ -62,7 +62,7 @@
 - [x] screenshots: Accept-Language was never sent, so the Bulgarian screenshot was English (specs/ui.md)
 - [x] sharing spec (specs/sharing.md)
 - [x] share a ticket by link with an optional password; public page with only public content; admin list (specs/sharing.md)
-- [ ] sharing later: link expiry dates, view counts (specs/roadmap.md)
+- [ ] sharing later: link expiry dates, total view counts (specs/roadmap.md)
 - [x] in-app notification panel: bell with unread count, dropdown, notifications page (specs/notifications.md "Notification panel")
 - [x] live updates of the notification panel over Action Cable (specs/notifications.md "Live updates of the panel")
 - [x] queue views as a horizontal tab row like the admin tabs (specs/queues.md)
@@ -72,7 +72,7 @@
 - [x] admin pages refresh live (specs/admin.md "Live updates")
 - [x] notifications page refreshes live (specs/notifications.md "Live updates of the notifications page")
 - [x] preview dialog for images, PDFs and text files (specs/attachments.md "Preview")
-- [ ] shared page shows how many people view it now (specs/sharing.md)
+- [~] shared page and Sharing panel show how many view the link now (specs/sharing.md "Who is viewing now")
 - [ ] operator: add `upgrade=websocket` to the production Apache ProxyPass so the panel updates live there (specs/deploy.md)
 
 ## Later (specs/roadmap.md)
