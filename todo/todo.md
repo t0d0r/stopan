@@ -124,6 +124,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] DeepL key entered on /admin/settings, stored encrypted and write-only; DEEPL_API_KEY only a fallback (specs/translation.md)
 - [x] production: deployed ff0f444 (translation, key in settings, language group), after a database backup (specs/deploy.md)
 - [ ] operator: after the next deploy, enter the DeepL key and switch translation on in /admin/settings, after checking DeepL's data terms (specs/translation.md)
+- [x] statistical reports page for staff: tiles, created/done chart, open by status, by organization, by person (specs/reports.md)
+- [ ] reports later: CSV export, custom date ranges, business hours (specs/reports.md "Later")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

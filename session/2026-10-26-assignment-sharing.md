@@ -555,6 +555,19 @@ menu and Take; open /tickets/new and pick a requester.
   check box; switching translation on without a key is a validation
   error; `DEEPL_API_KEY` is only a fallback. Checked in Chrome: the key
   never comes back in the page and is filtered from the log.
+- Reports page (operator: "create a page for statistical reports"),
+  specs/reports.md: `/reports` for staff, "Reports" pill (blue).
+  `TicketReport` computes over `Ticket.visible_to` for 7d/30d/90d/12m
+  and an optional visible organization: tiles (new, done, open now,
+  median first response with waiting count, median resolution; deltas vs
+  the previous period), created/done columns per day/week/month, open by
+  status and stage, by organization, by person. Chart: SVG columns
+  stretched to the panel (CSP forbids style attributes, so no CSS
+  heights), HTML tick and date labels, legend, SVG titles, JS tooltip
+  with textContent, "Show as table". Colours #2a78d6 / #eb6834 checked
+  with the dataviz validator on the #efeeea paper (orange < 3:1, relieved
+  by legend, tooltip and table). Checked in Chrome with fictional volume
+  in en/bg/de, dark theme and 390px.
 - Deployed ff0f444 (2026-10-27) after a backup
   (`pre-deploy-0f52988.sqlite3`); both migrations ran. An admin still has
   to enter the DeepL key in /admin/settings.

@@ -11,6 +11,7 @@ class AutoPostponeTest < ActiveSupport::TestCase
     tickets(:old_question).update_columns(updated_at: 90.days.ago)
 
     moved = nil
+    ActionMailer::Base.deliveries.clear  # earlier tests may leave mail to anna there
     perform_enqueued_jobs { moved = AutoPostpone.run }
     assert_equal 1, moved
     assert_equal "postponed", tickets(:printer).reload.status

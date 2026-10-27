@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   # Tickets are addressed by their number (Ticket#to_param).
   # The kanban board (specs/board.md); before resources so "board" is no number.
   get "tickets/board" => "boards#show", as: :board
+  # Statistics for staff (specs/reports.md).
+  get "reports" => "reports#show", as: :reports
 
   resources :tickets, only: %i[index show new create update] do
     member do

@@ -1,0 +1,148 @@
+<% content_for :title, t("ui.reports.title") %>
+<% report = @report %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.reports.title") %></h1>
+</div>
+
+<%# One row of filters above everything they scope (specs/reports.md). %>
+<%= form_with url: reports_path, method: :get, class: "filters report-filters", data: { filter_form: true, turbo_action: "replace" } do %>
+  <div class="filters__field">
+    <%= label_tag :period, t("ui.reports.period") %>
+    <%= select_tag :period, options_for_select(TicketReport::PERIODS.map { |p| [ t("ui.reports.periods.#{p}"), p ] }, report.period),
+                   class: "select", data: { auto_submit: true } %>
+  </div>
+  <div class="filters__field">
+    <%= label_tag :organization, t("ui.fields.organization") %>
+    <%= select_tag :organization, options_from_collection_for_select(report.organizations, :id, :name, report.organization&.id),
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": report.organization), data: { auto_submit: true } %>
+  </div>
+  <noscript><%= submit_tag t("ui.queue.apply"), name: nil, class: "btn" %></noscript>
+<% end %>
+
+<section class="report-tiles" aria-label="<%= t("ui.reports.summary") %>">
+  <div class="sticky sticky--gray report-tile">
+    <span class="report-tile__label"><%= t("ui.reports.tiles.created") %></span>
+    <span class="report-tile__value"><%= report.created_count %></span>
+    <span class="report-tile__note"><%= report_delta(report.created_count, report.previous_created_count) %></span>
+  </div>
+  <div class="sticky sticky--gray report-tile">
+    <span class="report-tile__label"><%= t("ui.reports.tiles.done") %></span>
+    <span class="report-tile__value"><%= report.done_count %></span>
+    <span class="report-tile__note"><%= report_delta(report.done_count, report.previous_done_count) %></span>
+  </div>
+  <div class="sticky sticky--gray report-tile">
+    <span class="report-tile__label"><%= t("ui.reports.tiles.open") %></span>
+    <span class="report-tile__value"><%= report.open_count %></span>
+    <span class="report-tile__note"><%= t("ui.reports.tiles.open_note") %></span>
+  </div>
+  <div class="sticky sticky--gray report-tile">
+    <span class="report-tile__label"><%= t("ui.reports.tiles.first_response") %></span>
+    <span class="report-tile__value"><%= report_duration(report.first_response_median) %></span>
+    <span class="report-tile__note"><%= t("ui.reports.tiles.waiting", count: report.waiting_count) %></span>
+  </div>
+  <div class="sticky sticky--gray report-tile">
+    <span class="report-tile__label"><%= t("ui.reports.tiles.resolution") %></span>
+    <span class="report-tile__value"><%= report_duration(report.resolution_median) %></span>
+    <span class="report-tile__note"><%= t("ui.reports.tiles.median_note") %></span>
+  </div>
+</section>
+
+<%= render "reports/volume_chart", report: report %>
+
+<div class="report-columns">
+  <section class="sticky sticky--gray panel" aria-labelledby="report-status-title">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.reports.status_caption") %></span></header>
+    <div class="panel__body">
+      <h2 class="section-title" id="report-status-title"><%= t("ui.reports.status_title") %></h2>
+      <% rows = report.status_rows %>
+      <% largest = [ rows.map(&:count).max.to_i, 1 ].max %>
+      <ul class="report-meters">
+        <% rows.each do |row| %>
+          <li class="report-meter<%= " report-meter--stage" if row.stage %>">
+            <span class="report-meter__label"><%= row.stage ? row.stage.name : status_name(row.status) %></span>
+            <svg class="report-meter__track" aria-hidden="true" focusable="false">
+              <% if row.count.positive? %><rect class="report-meter__fill" width="<%= (row.count * 100.0 / largest).round(1) %>%" height="100%" rx="3" /><% end %>
+            </svg>
+            <span class="report-meter__value"><%= row.count %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sticky sticky--gray panel" aria-labelledby="report-org-title">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.reports.org_caption") %></span></header>
+    <div class="panel__body">
+      <h2 class="section-title" id="report-org-title"><%= t("ui.reports.org_title") %></h2>
+      <% org_rows = report.organization_rows %>
+      <% if org_rows.any? %>
+        <div class="table-scroll">
+          <table class="ledger report-table">
+            <thead>
+              <tr>
+                <th scope="col"><%= t("ui.fields.organization") %></th>
+                <th scope="col" class="num"><%= t("ui.reports.columns.created") %></th>
+                <th scope="col" class="num"><%= t("ui.reports.columns.done") %></th>
+                <th scope="col" class="num"><%= t("ui.reports.columns.open") %></th>
+                <th scope="col" class="num"><%= t("ui.reports.columns.first_response") %></th>
+                <th scope="col" class="num"><%= t("ui.reports.columns.resolution") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% org_rows.each do |row| %>
+                <tr>
+                  <td class="text report-table__name"><%= row.organization.name %></td>
+                  <td class="num"><%= row.created %></td>
+                  <td class="num"><%= row.done %></td>
+                  <td class="num"><%= row.open %></td>
+                  <td class="num"><%= report_duration(row.first_response) %></td>
+                  <td class="num"><%= report_duration(row.resolution) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="panel__empty"><%= t("ui.reports.empty") %></p>
+      <% end %>
+    </div>
+  </section>
+</div>
+
+<section class="sticky sticky--gray panel" aria-labelledby="report-people-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.reports.people_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="report-people-title"><%= t("ui.reports.people_title") %></h2>
+    <% people = report.person_rows %>
+    <% if people.any? %>
+      <div class="table-scroll">
+        <table class="ledger report-table">
+          <thead>
+            <tr>
+              <th scope="col"><%= t("ui.reports.columns.person") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.columns.assigned_open") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.columns.done") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.columns.replies") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.columns.notes") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.columns.first_response") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% people.each do |row| %>
+              <tr>
+                <td class="text report-table__name"><%= row.user.display_name %> <span class="muted"><%= role_label(row.user) %></span></td>
+                <td class="num"><%= row.open %></td>
+                <td class="num"><%= row.done %></td>
+                <td class="num"><%= row.replies %></td>
+                <td class="num"><%= row.notes %></td>
+                <td class="num"><%= report_duration(row.first_response) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.reports.empty") %></p>
+    <% end %>
+  </div>
+</section>

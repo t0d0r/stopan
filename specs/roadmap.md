@@ -13,7 +13,7 @@ before it is built. The "foundation" column says what already exists.
 | live updates | later: partial updates (Turbo Stream replace of one row) instead of page refreshes for busy queues | done: notification panel (notifications.md), shared pages (sharing.md), ticket page (timeline.md), ticket lists (queues.md), admin pages (admin.md) |
 | API | JSON API with tokens for integrations | policies and scopes are independent of HTML controllers |
 | integrations | chat, monitoring alerts, CRM | - |
-| reporting | volume, backlog, response and resolution times, agent load | events table |
+| reporting | **specified in reports.md**; later: CSV export, custom date ranges, business hours | events table, `done_at`, comments |
 | agent groups | groups/teams, restrict agents to groups or organizations, group queues | role column; `Ticket.visible_to` is the single place to narrow |
 | organization visibility | let selected requesters see all tickets of their organization | membership row can carry a flag |
 | CC / followers | more people on one ticket | - |

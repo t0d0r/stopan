@@ -431,6 +431,47 @@ function setUpTranslations() {
   });
 }
 
+// Reports chart (specs/reports.md): one tooltip per date group on hover
+// and focus, built with textContent; the table under the chart has the
+// same numbers without it.
+function setUpReportCharts() {
+  document.querySelectorAll("[data-report-chart]").forEach((chart) => {
+    const plot = chart.querySelector(".report-chart__plot");
+    const tooltip = chart.querySelector("[data-chart-tooltip]");
+    const legend = [...chart.querySelectorAll(".report-legend li")].map((item) => item.textContent.trim());
+    const show = (group) => {
+      tooltip.replaceChildren();
+      const title = document.createElement("div");
+      title.textContent = group.dataset.label;
+      tooltip.append(title);
+      [ [ group.dataset.created, "created", legend[0] ], [ group.dataset.done, "done", legend[1] ] ].forEach(([ value, series, name ]) => {
+        const row = document.createElement("div");
+        row.className = "report-chart__tooltip-row";
+        const key = document.createElement("span");
+        key.className = `report-chart__tooltip-key report-legend__key--${series}`;
+        const number = document.createElement("strong");
+        number.textContent = value;
+        const label = document.createElement("span");
+        label.textContent = name;
+        row.append(key, number, label);
+        tooltip.append(row);
+      });
+      tooltip.hidden = false;
+      const box = plot.getBoundingClientRect();
+      const mark = group.getBoundingClientRect();
+      const left = mark.left - box.left + mark.width / 2 - tooltip.offsetWidth / 2;
+      tooltip.style.left = `${Math.max(0, Math.min(left, box.width - tooltip.offsetWidth))}px`;
+    };
+    const hide = () => { tooltip.hidden = true; };
+    chart.querySelectorAll("[data-chart-group]").forEach((group) => {
+      group.addEventListener("pointerenter", () => show(group));
+      group.addEventListener("focus", () => show(group));
+      group.addEventListener("pointerleave", hide);
+      group.addEventListener("blur", hide);
+    });
+  });
+}
+
 function setUpTaskLists() {
   document.querySelectorAll("[data-task-path] input[type=checkbox][data-task-line]").forEach((box) => {
     box.disabled = false;
@@ -574,6 +615,7 @@ function setUpPage() {
   setUpDoubleClickEdit();
   setUpTaskLists();
   setUpTranslations();
+  setUpReportCharts();
   document.querySelectorAll("select[data-message-recipients]").forEach(setUpMessageForm);
   setUpDropdowns();
 

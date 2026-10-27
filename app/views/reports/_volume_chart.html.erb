@@ -1,0 +1,84 @@
+<%# Created and done per day, week or month (specs/reports.md): grouped
+    columns in an SVG stretched to the panel, with the axis text in HTML so
+    it keeps its size; a legend, a tooltip per group and a table view.
+    Locals: report. %>
+<% buckets = report.buckets %>
+<% top, ticks = report_ticks(buckets.flat_map { |b| [ b.created, b.done ] }.max.to_i) %>
+<% every = (buckets.size / ReportsHelper::CHART_LABELS.to_f).ceil %>
+<% height = 200.0 %>
+<%# Columns at most about 24px with a 2px gap, for a plot about 1000px
+    wide (each bucket is 100 units across). %>
+<% px = 1000.0 / (buckets.size * 100) %>
+<% bar = [ 32.0, 24 / px ].min.round(2) %>
+<% gap = (2 / px).round(2) %>
+<section class="sticky sticky--gray panel report-chart" aria-labelledby="report-chart-title" data-report-chart>
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.reports.chart_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="report-chart-title"><%= t("ui.reports.chart_titles.#{report.unit}") %></h2>
+    <ul class="report-legend">
+      <li><span class="report-legend__key report-legend__key--created" aria-hidden="true"></span><%= t("ui.reports.series.created") %></li>
+      <li><span class="report-legend__key report-legend__key--done" aria-hidden="true"></span><%= t("ui.reports.series.done") %></li>
+    </ul>
+    <div class="report-chart__frame">
+      <div class="report-chart__ticks" aria-hidden="true">
+        <% ticks.reverse_each do |tick| %><span><%= tick %></span><% end %>
+      </div>
+      <div class="report-chart__plot">
+        <svg class="report-chart__svg" viewBox="0 0 <%= buckets.size * 100 %> <%= height.to_i %>" preserveAspectRatio="none"
+             role="group" aria-label="<%= t("ui.reports.chart_titles.#{report.unit}") %>">
+          <% ticks.each do |tick| %>
+            <% y = (height - tick * height / top).round(2) %>
+            <line class="report-chart__grid" x1="0" x2="<%= buckets.size * 100 %>" y1="<%= y %>" y2="<%= y %>" vector-effect="non-scaling-stroke" />
+          <% end %>
+          <% buckets.each_with_index do |bucket, index| %>
+            <% label = report_bucket_label(bucket.starts_at, report.unit) %>
+            <% summary = t("ui.reports.tooltip", label: label, created: bucket.created, done: bucket.done) %>
+            <g class="report-chart__group" tabindex="0" role="img" aria-label="<%= summary %>"
+               data-chart-group data-label="<%= label %>" data-created="<%= bucket.created %>" data-done="<%= bucket.done %>">
+              <title><%= summary %></title>
+              <rect class="report-chart__hit" x="<%= index * 100 %>" y="0" width="100" height="<%= height.to_i %>" />
+              <% [ [ bucket.created, "created", 50 - gap / 2 - bar ], [ bucket.done, "done", 50 + gap / 2 ] ].each do |value, series, x| %>
+                <% next if value.zero? %>
+                <% y_top = (height - value * height / top).round(2) %>
+                <path class="report-chart__bar report-chart__bar--<%= series %>"
+                      d="<%= report_column_path((index * 100 + x).round(2), bar, y_top, height) %>" />
+              <% end %>
+            </g>
+          <% end %>
+        </svg>
+        <div class="report-chart__tooltip" data-chart-tooltip hidden></div>
+      </div>
+      <div></div>
+      <div class="report-chart__labels" aria-hidden="true">
+        <%# Every other shown date hides on phones, so they never touch. %>
+        <% buckets.each_with_index do |bucket, index| %>
+          <% shown = (index % every).zero? %>
+          <span class="<%= "is-secondary" if shown && (index / every).odd? %>"><%= report_bucket_label(bucket.starts_at, report.unit) if shown %></span>
+        <% end %>
+      </div>
+    </div>
+    <details class="report-chart__table">
+      <summary><%= t("ui.reports.show_table") %></summary>
+      <div class="table-scroll">
+        <table class="ledger report-table">
+          <thead>
+            <tr>
+              <th scope="col"><%= t("ui.reports.units.#{report.unit}") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.series.created") %></th>
+              <th scope="col" class="num"><%= t("ui.reports.series.done") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% buckets.each do |bucket| %>
+              <tr>
+                <td class="text report-table__name"><%= report_bucket_label(bucket.starts_at, report.unit) %></td>
+                <td class="num"><%= bucket.created %></td>
+                <td class="num"><%= bucket.done %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>

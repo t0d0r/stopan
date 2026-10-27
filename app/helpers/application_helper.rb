@@ -45,6 +45,7 @@ module ApplicationHelper
     if controller_path.start_with?("admin/") then :admin
     elsif controller_name == "tickets" && action_name.in?(%w[new create]) then :new_ticket
     elsif controller_name.in?(%w[tickets comments boards]) then :tickets
+    elsif controller_name == "reports" then :reports
     end
   end
 

@@ -30,6 +30,9 @@
         <%= nav_link current_user.staff? ? t("ui.nav.queue") : t("ui.nav.my_tickets"), tickets_path, dot: "yellow",
                      current: current_section == :tickets %>
         <%= nav_link t("ui.nav.new_ticket"), new_ticket_path, dot: "green", current: current_section == :new_ticket %>
+        <% if current_user.staff? %>
+          <%= nav_link t("ui.nav.reports"), reports_path, dot: "blue", current: current_section == :reports %>
+        <% end %>
         <% if current_user.admin? %>
           <%= nav_link t("ui.nav.admin"), admin_root_path, dot: "gray", current: current_section == :admin %>
         <% end %>
