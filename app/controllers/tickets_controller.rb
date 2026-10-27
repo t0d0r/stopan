@@ -50,7 +50,8 @@ class TicketsController < ApplicationController
   # back to the board for the form.
   def move
     authorize! policy.update?
-    moved = @ticket.apply_changes({ status: params[:status].to_s }, actor: current_user)
+    stage = Stage.find_by(id: params[:stage]) if params[:stage].present?
+    moved = @ticket.apply_changes({ status: params[:status].to_s, stage: stage }, actor: current_user)
     respond_to do |format|
       format.json { moved ? head(:no_content) : render(plain: @ticket.errors.full_messages.to_sentence, status: :unprocessable_content) }
       format.html do
@@ -105,6 +106,6 @@ class TicketsController < ApplicationController
   end
 
   def update_params
-    params.expect(ticket: %i[status priority assignee_id])
+    params.expect(ticket: %i[status priority assignee_id stage_id])
   end
 end

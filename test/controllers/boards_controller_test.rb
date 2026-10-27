@@ -65,4 +65,29 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
     get tickets_url
     assert_select ".view-switch a[href=?]", board_path
   end
+
+  test "stages are columns after their status; cards move into them; requesters never see stages" do
+    stage = Stage.create!(status: "open", name: "Investigating", color: "pink")
+    ticket = tickets(:printer)
+    sign_in users(:agent)
+    get board_url
+    assert_select ".board-column--stage[data-status=open][data-stage=?] .board-column__title", stage.id.to_s, /In progress \/\s*Investigating/
+    keys = css_select("[data-board-column]").map { |column| column["data-key"] }
+    assert_equal keys.index("open") + 1, keys.index("stage-#{stage.id}")
+    assert_select "#card_ticket_#{ticket.id} .board-card__move-option", text: "In progress / Investigating"
+
+    patch move_ticket_url(ticket), params: { status: "open", stage: stage.id }, headers: { "Accept" => "application/json" }
+    assert_response :no_content
+    assert_equal stage, ticket.reload.stage
+    get board_url
+    assert_select "[data-stage='#{stage.id}'] #card_ticket_#{ticket.id}"
+    get tickets_url
+    assert_select ".stage-tag", /Investigating/
+    get ticket_url(ticket)
+    assert_select "select[name='ticket[stage_id]'] option[selected]", "Investigating"
+
+    sign_in users(:anna)
+    get ticket_url(ticket)
+    assert_not_includes response.body, "Investigating"
+  end
 end

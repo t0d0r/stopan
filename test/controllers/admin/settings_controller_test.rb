@@ -27,4 +27,23 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     get ticket_url(tickets(:printer))
     assert_select ".postpone-note", "Moves to Not now in 3 days without activity."
   end
+
+  test "admins add, rename, reorder and delete stages" do
+    sign_in users(:admin)
+    post admin_stages_url, params: { stage: { status: "open", name: "Investigating", color: "pink" } }
+    post admin_stages_url, params: { stage: { status: "open", name: "QA", color: "green" } }
+    first, second = Stage.where(status: "open").ordered.to_a
+    patch admin_stage_url(second), params: { stage: { name: "QA to confirm", color: "blue", status: "closed" } }
+    assert_equal [ "QA to confirm", "blue", "open" ], second.reload.slice(:name, :color, :status).values
+    patch move_admin_stage_url(second, direction: "up")
+    assert_equal [ second, first ], Stage.where(status: "open").ordered.to_a
+    get admin_settings_url
+    assert_select "#stages input[value='QA to confirm']"
+    delete admin_stage_url(first)
+    assert_not Stage.exists?(first.id)
+
+    sign_in users(:agent)
+    post admin_stages_url, params: { stage: { status: "open", name: "Sneaky", color: "pink" } }
+    assert_not Stage.exists?(name: "Sneaky")
+  end
 end

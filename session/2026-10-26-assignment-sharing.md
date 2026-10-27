@@ -381,6 +381,18 @@ Operator requests, in order:
   Found while checking: organization attribute labels (slug, intro) had
   landed under app_setting in the locales; fixed. Stages still to do.
 
+- Stages (operator, third proposal): `stages` table and tickets.stage_id
+  (FK, nullify on delete); admin settings list per status with rename,
+  colour, up/down, delete and a new-stage form; board columns right after
+  their status ("In progress / Investigating", keys kept per browser);
+  drag between status and stage columns (same status allowed both ways)
+  and the Move menu post status + stage; internal stage_changed events
+  with names; a status change clears another status's stage; Stage select
+  in Properties and "· Investigating" in the queue for staff; requesters
+  never see stages. Stamp wording "Not now / today" for due cards.
+  Checked in headless Chrome: stage columns, drag into QA kept after
+  reload, stamps on cards 3 days and today away.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

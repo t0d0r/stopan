@@ -3349,6 +3349,67 @@ turbo-frame {
   background: var(--bar);
 }
 
+.board-column__parent {
+  opacity: 0.6;
+  font-weight: 600;
+}
+
+.stage-tag {
+  color: var(--ink-soft);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.stages-panel {
+  margin-top: 16px;
+}
+
+.stages-panel__status {
+  margin: 14px 0 6px;
+}
+
+.stages-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stages-list__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.stages-list__form {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  min-width: 260px;
+}
+
+.stages-list__swatch {
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  background: var(--bar);
+}
+
+.stages-new {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.icon-action[disabled] {
+  opacity: 0.3;
+  cursor: default;
+}
+
 /* Round stamp: the card moves to Not now soon (like Fizzy's "closes in"). */
 .postpone-stamp {
   position: absolute;
@@ -3372,9 +3433,10 @@ turbo-frame {
 
 .postpone-stamp__top,
 .postpone-stamp__unit {
-  font-size: 7.5px;
+  max-width: 50px;
+  font-size: 6.5px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -3384,7 +3446,12 @@ turbo-frame {
   font-weight: 800;
 }
 
-.board-card:has(.postpone-stamp) .board-card__title {
+.postpone-stamp__number--word {
+  font-size: 13px;
+}
+
+.board-card:has(.postpone-stamp) .board-card__title,
+.board-card:has(.postpone-stamp) .board-card__meta {
   padding-right: 58px;
 }
 

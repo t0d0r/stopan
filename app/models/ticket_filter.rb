@@ -36,7 +36,7 @@ class TicketFilter
   end
 
   def tickets
-    @tickets ||= filtered.includes(:requester, :assignee, :organization)
+    @tickets ||= filtered.includes(:requester, :assignee, :organization, :stage)
                          .order(*order).limit(PER_PAGE).offset((page - 1) * PER_PAGE).to_a
   end
 

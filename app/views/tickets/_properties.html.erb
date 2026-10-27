@@ -11,6 +11,13 @@
           <%= f.select :status, status_options(ticket), {}, class: "select" %>
           <%= postpone_note(ticket) %>
         </div>
+        <% stages = Stage.where(status: ticket.status_was || ticket.status).ordered.to_a %>
+        <% if stages.any? %>
+          <div class="field">
+            <%= f.label :stage_id, t("ui.fields.stage") %>
+            <%= f.select :stage_id, stages.map { |stage| [ stage.name, stage.id ] }, { include_blank: t("ui.board.no_stage") }, class: "select" %>
+          </div>
+        <% end %>
         <div class="field">
           <%= f.label :priority, t("ui.fields.priority") %>
           <%= f.select :priority, priority_options, {}, class: "select" %>

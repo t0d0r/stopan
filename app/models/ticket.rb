@@ -26,11 +26,13 @@ class Ticket < ApplicationRecord
   SHARE_PASSWORD_LENGTH = 6..72
   # Fields whose changes are written to the timeline, and whether the
   # requester may see them (specs/timeline.md).
-  TRACKED = { "status" => false, "priority" => true, "assignee_id" => true }.freeze
+  TRACKED = { "status" => false, "priority" => true, "assignee_id" => true, "stage_id" => true }.freeze
 
   belongs_to :requester, class_name: "User", inverse_of: :requested_tickets
   belongs_to :assignee, class_name: "User", optional: true, inverse_of: :assigned_tickets
   belongs_to :organization
+  # The board stage within the status (specs/board.md "Stages").
+  belongs_to :stage, optional: true
   has_many :comments, -> { order(:created_at, :id) }, inverse_of: :ticket, dependent: :restrict_with_error
   has_many :events, -> { order(:created_at, :id) }, class_name: "TicketEvent", inverse_of: :ticket,
            dependent: :restrict_with_error
@@ -56,8 +58,11 @@ class Ticket < ApplicationRecord
   validate :requester_belongs_to_organization, if: -> { requester_id_changed? || organization_id_changed? }
   validate :assignee_is_active_staff, if: -> { assignee_id_changed? && assignee_id.present? }
   validate :status_transition_allowed, if: -> { persisted? && status_changed? }
+  validate :stage_matches_status, if: -> { stage_id.present? }
 
   before_create { self.number ||= Ticket.next_number }
+  # A status change leaves a stage that belongs to another status.
+  before_validation { self.stage = nil if stage && stage.status != status }
   before_save :stamp_status_times, if: :status_changed?
   after_create :record_created
   after_update :record_changes
@@ -255,6 +260,10 @@ class Ticket < ApplicationRecord
     end
   end
 
+  def stage_matches_status
+    errors.add(:stage, :other_status) if stage && stage.status != status
+  end
+
   def requester_belongs_to_organization
     return unless requester && organization
 
@@ -293,7 +302,9 @@ class Ticket < ApplicationRecord
       next unless saved_change_to_attribute?(field)
 
       from, to = saved_change_to_attribute(field)
-      action = field == "assignee_id" ? "assignee_changed" : "#{field}_changed"
+      # Stage events keep names, so they read the same after a stage is deleted.
+      from, to = [ from, to ].map { |id| id && Stage.find_by(id: id)&.name } if field == "stage_id"
+      action = { "assignee_id" => "assignee_changed", "stage_id" => "stage_changed" }.fetch(field, "#{field}_changed")
       events.create!(action: action, actor: event_actor, from_value: from, to_value: to, internal: internal)
     end
   end

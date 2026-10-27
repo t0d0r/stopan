@@ -1,7 +1,7 @@
 # One entry of a ticket's audit history. Rows are only ever inserted
 # (specs/timeline.md); `internal` rows are hidden from requesters.
 class TicketEvent < ApplicationRecord
-  ACTIONS = %w[created replied noted status_changed priority_changed assignee_changed shared unshared].freeze
+  ACTIONS = %w[created replied noted status_changed priority_changed assignee_changed shared unshared stage_changed].freeze
 
   belongs_to :ticket
   belongs_to :actor, class_name: "User", optional: true, inverse_of: :ticket_events

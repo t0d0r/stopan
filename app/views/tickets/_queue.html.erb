@@ -86,7 +86,7 @@
                     <span class="ticket-row__requester"><%= ticket.requester.display_name %></span>
                   </td>
                   <td class="text col-org"><%= ticket.organization.name %></td>
-                  <td><%= status_pill ticket.status %></td>
+                  <td><%= status_pill ticket.status %><% if ticket.stage %> <span class="stage-tag">&middot; <%= ticket.stage.name %></span><% end %></td>
                   <td class="col-priority"><%= priority_pill ticket.priority %></td>
                   <td class="text col-assignee">
                     <div class="assignee">

@@ -76,6 +76,7 @@ bg:
 
     fields:
       number: "Заявка"
+      stage: "Етап"
       from: "Подател"
       subject: "Тема"
       description: "Описание"
@@ -187,6 +188,8 @@ bg:
         internal: "Вътрешна бележка"
       created: "%{actor} подаде заявката"
       created_web_form: "%{actor} подаде заявката през уеб формата"
+      stage_changed: "%{actor} я премести в етап %{stage}"
+      stage_cleared: "%{actor} я извади от етап %{stage}"
       created_email: "%{actor} подаде заявката по имейл"
       by_email: "по имейл"
       status_changed: "%{actor} промени състоянието от %{from} на %{to}"
@@ -290,6 +293,25 @@ bg:
         postpone_title: "Автоматично отлагане"
         postpone_days: "Отлагай заявките след толкова дни без активност"
         postpone_hint: "Нови, в процес и чакащи заявки, които никой не е пипал толкова време, минават в Отложени веднъж на час. 0 го изключва. Картите, на които остава до седмица, показват печат на дъската."
+        stages_caption: "Дъска"
+        stages_title: "Етапи"
+        stages_hint: "Етапите разделят статус на стъпки на дъската, например Разследване и QA под В процес. Всеки е отделна колона до своя статус. Виждат ги само служителите."
+        no_stages: "Все още няма етапи."
+        new_stage: "Нов етап"
+        add_stage: "Добави етап"
+        stage_placeholder: "Разследване"
+        color: "Цвят"
+        colors:
+          yellow: "Жълт"
+          blue: "Син"
+          green: "Зелен"
+          pink: "Розов"
+          purple: "Лилав"
+          gray: "Сив"
+        up: "Нагоре"
+        down: "Надолу"
+        delete_stage_title: "Да се изтрие ли етапът %{name}?"
+        delete_stage_body: "Заявките му остават в статуса си, без етап."
       public_form:
         title: "Публична страница за заявки"
         enabled: "Всеки може да изпрати заявка без акаунт от страницата на организацията"
@@ -375,7 +397,9 @@ bg:
         one: "и още 1 в списъка"
         other: "и още %{count} в списъка"
       move_failed: "Заявката не можа да бъде преместена: %{error}"
+      no_stage: "Без етап"
       stamp_top: "Отлага се след"
+      stamp_top_today: "Отлага се"
       stamp_now: "днес"
       stamp_unit:
         one: "ден"
@@ -623,6 +647,8 @@ bg:
     impersonation_ended: "Влизането като друг потребител приключи. Моля, влезте отново."
     impersonation_account_locked: "Настройките на акаунта не могат да се променят по време на impersonation."
     settings_saved: "Настройките са запазени."
+    stage_saved: "Етапът %{name} е запазен."
+    stage_deleted: "Етапът %{name} е изтрит."
     ticket_moved: "Заявка %{reference} е преместена в %{status}."
     message_sent:
       one: "Съобщението е изпратено до 1 потребител."
@@ -711,6 +737,10 @@ bg:
         public_allowed_senders: "Разрешени имейл адреси"
       app_setting:
         auto_postpone_days: "Дни без активност"
+      stage:
+        name: "Име"
+        status: "Статус"
+        color: "Цвят"
     errors:
       messages:
         private_host: "трябва да е публичен пощенски сървър, не адрес във вътрешната мрежа"
@@ -728,6 +758,8 @@ bg:
               not_staff: "трябва да е активен агент или администратор"
             status:
               transition: "не може да се смени от %{from} на %{to}"
+            stage:
+              other_status: "принадлежи на друг статус"
             organization:
               no_membership: "липсва: профилът ви все още не е част от организация"
         comment:

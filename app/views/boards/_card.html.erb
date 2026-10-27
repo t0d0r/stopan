@@ -1,8 +1,9 @@
-<%# A ticket on the board (specs/board.md "Card"). Locals: ticket. %>
+<%# A ticket on the board (specs/board.md "Card"). Locals: ticket, stages
+    (by status, for the Move menu). %>
 <% allowed = Ticket::TRANSITIONS.fetch(ticket.status, []) %>
 <article class="board-card<%= " is-golden" if ticket.priority == "urgent" %>" id="<%= dom_id(ticket, :card) %>" draggable="true"
          data-board-card data-ticket="<%= ticket.number %>" data-status="<%= ticket.status %>" data-priority="<%= ticket.priority %>"
-         data-allowed="<%= allowed.join(" ") %>" data-move-url="<%= move_ticket_path(ticket) %>">
+         data-stage="<%= ticket.stage_id %>" data-allowed="<%= allowed.join(" ") %>" data-move-url="<%= move_ticket_path(ticket) %>">
   <%= postpone_stamp(ticket) %>
   <div class="board-card__strip">
     <span class="board-card__number"><%= ticket.reference %></span>
@@ -23,13 +24,17 @@
     <span class="board-card__arrow" aria-label="<%= t("ui.fields.assignee") %>">&rarr;</span>
     <% if ticket.assignee %><%= user_avatar ticket.assignee %> <span><%= ticket.assignee.display_name %></span><% else %><span class="muted"><%= t("ui.unassigned") %></span><% end %>
   </p>
-  <% if allowed.any? %>
+  <% targets = allowed.flat_map { |status| [ [ status, nil ], *stages.fetch(status, []).map { |stage| [ status, stage ] } ] } %>
+  <% targets += stages.fetch(ticket.status, []).reject { |stage| stage.id == ticket.stage_id }.map { |stage| [ ticket.status, stage ] } %>
+  <% targets << [ ticket.status, nil ] if ticket.stage_id %>
+  <% if targets.any? %>
     <details class="board-card__move">
       <summary><%= t("ui.board.move") %></summary>
       <div class="board-card__move-menu">
-        <% allowed.each do |status| %>
-          <%= button_to status_name(status), move_ticket_path(ticket), method: :patch, params: { status: status },
-                        class: "board-card__move-option sticky--#{TicketsHelper::STATUS_COLORS.fetch(status, "gray")}" %>
+        <% targets.each do |status, stage| %>
+          <%= button_to stage ? "#{status_name(status)} / #{stage.name}" : status_name(status), move_ticket_path(ticket),
+                        method: :patch, params: { status: status, stage: stage&.id },
+                        class: "board-card__move-option sticky--#{stage ? stage.color : TicketsHelper::STATUS_COLORS.fetch(status, "gray")}" %>
         <% end %>
       </div>
     </details>

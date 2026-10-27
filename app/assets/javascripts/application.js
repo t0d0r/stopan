@@ -666,7 +666,7 @@ function setUpBoard(board) {
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(key)); } catch {}
   if (Array.isArray(saved)) {
-    columns.forEach((column) => column.classList.toggle("is-collapsed", !saved.includes(column.dataset.status)));
+    columns.forEach((column) => column.classList.toggle("is-collapsed", !saved.includes(column.dataset.key)));
   } else {
     // Without a remembered choice, empty columns start collapsed.
     columns.forEach((column) => { if (!column.querySelector("[data-board-card]")) column.classList.add("is-collapsed"); });
@@ -690,7 +690,7 @@ function setUpBoard(board) {
   }, { signal: pageSignal });
   const save = () => {
     try {
-      localStorage.setItem(key, JSON.stringify(columns.filter((c) => !c.classList.contains("is-collapsed")).map((c) => c.dataset.status)));
+      localStorage.setItem(key, JSON.stringify(columns.filter((c) => !c.classList.contains("is-collapsed")).map((c) => c.dataset.key)));
     } catch {}
   };
   board.addEventListener("click", (event) => {
@@ -699,6 +699,14 @@ function setUpBoard(board) {
     toggle.closest("[data-board-column]").classList.toggle("is-collapsed");
     save();
   }, { signal: pageSignal });
+
+  // A column takes a card whose status may move to it, or another stage
+  // (or the plain column) of the card's own status (specs/board.md).
+  const droppable = (card, column) => {
+    const sameStatus = column.dataset.status === card.dataset.status;
+    if (!sameStatus) return card.dataset.allowed.split(" ").includes(column.dataset.status);
+    return (column.dataset.stage || "") !== (card.dataset.stage || "");
+  };
 
   let dragged = null;
   const clear = () => {
@@ -714,12 +722,12 @@ function setUpBoard(board) {
     card.classList.add("is-dragging");
     event.dataTransfer.effectAllowed = "move";
     event.dataTransfer.setData("text/plain", card.dataset.ticket);
-    const allowed = card.dataset.allowed.split(" ");
     board.classList.add("is-dragging-card");
     columns.forEach((column) => {
-      const status = column.dataset.status;
-      column.classList.toggle("is-droppable", allowed.includes(status));
-      column.classList.toggle("is-refused", !allowed.includes(status) && status !== card.dataset.status);
+      const ok = droppable(card, column);
+      const home = column.dataset.status === card.dataset.status && (column.dataset.stage || "") === (card.dataset.stage || "");
+      column.classList.toggle("is-droppable", ok);
+      column.classList.toggle("is-refused", !ok && !home);
     });
   }, { signal: pageSignal });
   board.addEventListener("dragend", clear, { signal: pageSignal });
@@ -750,6 +758,7 @@ function setUpBoard(board) {
   async function moveCard(card, column) {
     const from = card.closest("[data-board-column]");
     const status = column.dataset.status;
+    const stage = column.dataset.stage || "";
     const token = document.querySelector("meta[name=csrf-token]")?.content;
     let response;
     try {
@@ -758,7 +767,7 @@ function setUpBoard(board) {
         method: "PATCH",
         credentials: "same-origin",
         headers: { "X-CSRF-Token": token, Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ status })
+        body: new URLSearchParams({ status, stage })
       });
     } catch {}
     if (!response?.ok) {
@@ -773,6 +782,7 @@ function setUpBoard(board) {
     const firstPlain = [...list.querySelectorAll("[data-board-card]")].find((other) => !other.classList.contains("is-golden"));
     golden ? list.prepend(card) : list.insertBefore(card, firstPlain || null);
     card.dataset.status = status;
+    card.dataset.stage = stage;
     card.dataset.allowed = (transitions[status] || []).join(" ");
     count(from, -1);
     count(column, 1);

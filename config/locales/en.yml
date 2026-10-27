@@ -73,6 +73,7 @@ en:
 
     fields:
       number: "Ticket"
+      stage: "Stage"
       from: "From"
       subject: "Subject"
       description: "Description"
@@ -184,6 +185,8 @@ en:
         internal: "Internal note"
       created: "%{actor} opened the ticket"
       created_web_form: "%{actor} opened the ticket through the web form"
+      stage_changed: "%{actor} moved it to the stage %{stage}"
+      stage_cleared: "%{actor} took it out of the stage %{stage}"
       created_email: "%{actor} opened the ticket by email"
       by_email: "by email"
       status_changed: "%{actor} changed the status from %{from} to %{to}"
@@ -287,6 +290,25 @@ en:
         postpone_title: "Automatic postponing"
         postpone_days: "Postpone tickets after this many days without activity"
         postpone_hint: "New, in progress and pending tickets nobody touched for this long move to Not now, once an hour. 0 turns it off. Cards due within a week show a stamp on the board."
+        stages_caption: "Board"
+        stages_title: "Stages"
+        stages_hint: "Stages split a status into steps on the board, for example Investigating and QA to confirm under In progress. Each is its own column next to its status. Only staff see them."
+        no_stages: "No stages yet."
+        new_stage: "New stage"
+        add_stage: "Add stage"
+        stage_placeholder: "Investigating"
+        color: "Colour"
+        colors:
+          yellow: "Yellow"
+          blue: "Blue"
+          green: "Green"
+          pink: "Pink"
+          purple: "Purple"
+          gray: "Gray"
+        up: "Move up"
+        down: "Move down"
+        delete_stage_title: "Delete the stage %{name}?"
+        delete_stage_body: "Its tickets stay in their status, without a stage."
       public_form:
         title: "Public request page"
         enabled: "Anyone can send a request without an account at this organization's page"
@@ -372,7 +394,9 @@ en:
         one: "and 1 more in the list"
         other: "and %{count} more in the list"
       move_failed: "The ticket could not be moved: %{error}"
+      no_stage: "No stage"
       stamp_top: "Not now in"
+      stamp_top_today: "Not now"
       stamp_now: "today"
       stamp_unit:
         one: "day"
@@ -620,6 +644,8 @@ en:
     impersonation_ended: "The impersonation ended. Please sign in again."
     impersonation_account_locked: "The account settings cannot be changed while impersonating."
     settings_saved: "Settings saved."
+    stage_saved: "Stage %{name} saved."
+    stage_deleted: "Stage %{name} deleted."
     ticket_moved: "Ticket %{reference} moved to %{status}."
     message_sent:
       one: "Message sent to 1 user."
@@ -706,6 +732,10 @@ en:
         public_allowed_senders: "Allowed email addresses"
       app_setting:
         auto_postpone_days: "Days without activity"
+      stage:
+        name: "Name"
+        status: "Status"
+        color: "Colour"
     errors:
       messages:
         private_host: "must be a public mail server, not an address inside the network"
@@ -723,6 +753,8 @@ en:
               not_staff: "must be an active agent or administrator"
             status:
               transition: "cannot change from %{from} to %{to}"
+            stage:
+              other_status: "belongs to another status"
             organization:
               no_membership: "is missing: your account is not part of an organization yet"
         comment:

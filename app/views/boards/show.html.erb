@@ -30,24 +30,26 @@
 
 <div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>">
   <% @board.columns.each do |column| %>
-    <% color = TicketsHelper::STATUS_COLORS.fetch(column.status, "gray") %>
-    <section class="board-column sticky--<%= color %><%= " is-collapsed" if column.collapsed? %>" data-board-column
-             data-status="<%= column.status %>" aria-label="<%= status_name(column.status) %>">
+    <% color = column.stage ? column.stage.color : TicketsHelper::STATUS_COLORS.fetch(column.status, "gray") %>
+    <% name = column.stage ? "#{status_name(column.status)} / #{column.stage.name}" : status_name(column.status) %>
+    <section class="board-column sticky--<%= color %><%= " is-collapsed" if column.collapsed? %><%= " board-column--stage" if column.stage %>"
+             data-board-column data-status="<%= column.status %>" data-stage="<%= column.stage&.id %>" data-key="<%= column.key %>"
+             aria-label="<%= name %>">
       <button type="button" class="board-pill" data-board-toggle aria-expanded="false"
-              title="<%= t("ui.board.expand", status: status_name(column.status)) %>">
+              title="<%= t("ui.board.expand", status: name) %>">
         <span class="board-pill__count" data-column-count><%= column.count %></span>
-        <span class="board-pill__label"><%= status_name(column.status) %></span>
+        <span class="board-pill__label"><%= column.stage ? column.stage.name : status_name(column.status) %></span>
       </button>
       <div class="board-column__body">
         <header class="board-column__head">
-          <h2 class="board-column__title"><%= status_name(column.status) %></h2>
+          <h2 class="board-column__title"><% if column.stage %><span class="board-column__parent"><%= status_name(column.status) %> /</span> <%= column.stage.name %><% else %><%= status_name(column.status) %><% end %></h2>
           <span class="board-column__count" data-column-count><%= column.count %></span>
           <button type="button" class="sticky__box board-column__collapse" data-board-toggle aria-expanded="true"
-                  title="<%= t("ui.board.collapse", status: status_name(column.status)) %>" aria-label="<%= t("ui.board.collapse", status: status_name(column.status)) %>">&ndash;</button>
+                  title="<%= t("ui.board.collapse", status: name) %>" aria-label="<%= t("ui.board.collapse", status: name) %>">&ndash;</button>
         </header>
         <div class="board-column__cards" data-board-cards>
           <% column.tickets.each do |ticket| %>
-            <%= render "boards/card", ticket: ticket %>
+            <%= render "boards/card", ticket: ticket, stages: @board.stages %>
           <% end %>
           <% if column.tickets.empty? %><p class="board-column__empty"><%= t("ui.board.empty") %></p><% end %>
         </div>
