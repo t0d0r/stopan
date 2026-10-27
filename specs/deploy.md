@@ -500,6 +500,46 @@ Operator: "yes, deploy". Google accounts for organization mail; migration
 - Rollback: tag `localhost/stopan:d757d14` as `latest` and restart; the
   new table and columns can stay.
 
+## Update 2026-10-27 (revision 8730df2)
+
+Operator: "yes, deploy". Omarchy theme and the phone menu bar; no
+migrations. Backup `~stopan/backups/pre-deploy-8961aaa.sqlite3`.
+Recorded here afterwards (the note was missed at the time).
+
+## Update 2026-10-27 (revision 59175fa)
+
+Operator: "yes, deploy". Everything since 8730df2: mobile layout rules,
+site-wide theme, Google setup wizard with the app password path, mail
+fetching as a setting, mail layout, short links, mail headers and the
+sealed HTML view, own-tickets-only for requesters, long request
+collapse, timeline order, JSON API with tokens, bulk actions, account
+page panels, copying the whole request, soft delete and restore,
+person profiles, organization flush, advanced search, the member
+picker. Migrations `AddDefaultLookToAppSettings`,
+`AddMailboxPollingToAppSettings`, `AddTimelineOrderToAppSettings`,
+`AddMailHeadersToTickets`, `AddMailHtmlToTickets`, `CreateApiTokens`,
+`AddDeletedAtToTickets`, `AddLastTicketNumberToAppSettings` (columns and
+one table only).
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-8730df2.sqlite3`
+  (mode 600; 4 users, 2 tickets, schema 20261028110000).
+- Checked: healthy; schema 20261028190000, no pending migrations;
+  `api_tokens` exists; users and tickets kept; `/up` 200; `http://` ->
+  301; `/cable` 101; the four security headers; `/api/v1/me` without a
+  token 401 with the JSON error; `/admin/deleted_tickets` and `/people/1`
+  redirect to sign-in; g0no `/up` 200.
+- Not checked: an API call with a real token through Apache and
+  ModSecurity (making a token on the server was not allowed from the
+  agent's session); the operator tests it with their own token. If
+  ModSecurity answers 403 to `PATCH`/`DELETE` or JSON bodies, read the
+  site's error log for the rule id (see "ModSecurity false positives").
+- Still to do on the site: switch on "Fetch new mail automatically" in
+  /admin/settings when a mailbox is set up.
+- Rollback: tag `localhost/stopan:8730df2` as `latest` and restart; the
+  new columns and table can stay. Tickets deleted or flushed after the
+  deploy are not brought back by a rollback; flushed ones only from the
+  backup.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

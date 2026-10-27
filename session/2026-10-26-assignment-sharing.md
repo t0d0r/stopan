@@ -793,6 +793,11 @@ menu and Take; open /tickets/new and pick a requester.
   visualisation"): `admin/organizations/_member_picker` (search narrows rows,
   check boxes, "Add N selected"), `MembershipsController#create` takes
   `user_ids[]` (API too). Checked on dev without adding anyone.
+- Deployed 59175fa to production (2026-10-27) after backup
+  `pre-deploy-8730df2.sqlite3`; all 8 migrations ran (schema 20261028190000),
+  health and headers fine. An authenticated API smoke test through Apache was
+  not allowed from the session (it writes a token on the server); the
+  operator tests with a personal token.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);
