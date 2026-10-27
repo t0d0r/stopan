@@ -29,17 +29,17 @@ The screenshots use the fictional data from `make demo`.
 - **Organizations and memberships** - requesters open tickets only for
   organizations they belong to and lose access when removed.
 - **Tickets** - number (`#1001`), subject, description, status (new, in progress,
-  pending, resolved, closed), priority (low to urgent), requester, assignee,
+  pending, not now, done), priority (low to urgent), requester, assignee,
   organization, timestamps, attachments (`specs/tickets.md`).
 - **Agent queue** - colour-coded views (all unsolved, assigned to me,
-  unassigned, pending, solved, all) with counts, filters by status,
+  unassigned, pending, not now, done, all) with counts, filters by status,
   priority, assignee and organization that apply at once, sort, pagination
   (`specs/queues.md`).
 - **Board** - a Fizzy-like kanban of tickets by status for staff: colour
-  columns, collapsed pills for solved ones, golden urgent cards, drag and
+  columns, collapsed pills for Not now and Done, golden urgent cards, drag and
   drop or a Move menu (`specs/board.md`).
 - **Search** - by text or ticket number from the menu bar on every page.
-- **My tickets** - the requester's open / solved / all lists.
+- **My tickets** - the requester's open / done / all lists.
 - **Timeline** - public replies, staff-only internal notes, and an
   append-only audit log of status, priority and assignee changes
   (`specs/timeline.md`). The request and replies can be edited in place;

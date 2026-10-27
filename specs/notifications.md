@@ -61,7 +61,7 @@ recipient may see:
 | `replied` | **new reply** - author, reply text, names of attached files, and the new status when the same action changed it | requester, assignee |
 | `noted` | **internal note** - author, note text, file names, new status if changed | assignee (staff only by visibility) |
 | `assignee_changed` to the recipient | **assigned to you** - requester, organization, status, priority, description | the new assignee |
-| `status_changed`, except `new` -> `open` | **status changed** - from, to; for `resolved` the requester is told that replying reopens the ticket; for `pending` that the desk waits for their answer | requester, assignee |
+| `status_changed`, except `new` -> `open` | **status changed** - from, to; for `done` the requester is told that replying reopens the ticket; for `pending` that the desk waits for their answer | requester, assignee |
 
 Nothing else sends email: priority changes alone, unassignment and the
 `new` -> `open` triage step do not.
@@ -75,7 +75,7 @@ Examples:
   another agent, gets the same.
 - An agent adds an internal note -> only the assignee (if another person)
   is told; the requester's visible events are empty, so nothing is sent.
-- The requester marks a ticket resolved -> the assignee gets "status
+- The requester marks a ticket done -> the assignee gets "status
   changed".
 - An administrator demotes an agent, which unassigns their tickets -> no
   email (the events are internal to staff, and nobody is the new

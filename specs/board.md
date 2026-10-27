@@ -15,9 +15,9 @@ statuses.
 - `GET /tickets/board`, staff only (requesters get 403; their lists stay
   My tickets). The queue's header has a "List | Board" switch; the board
   has the same switch, so staff move between the two views.
-- One column per status, in order: New, In progress (open), Pending,
-  Resolved, Closed, each in its status colour (ui.md). New, In progress
-  and Pending start expanded; Resolved and Closed start collapsed.
+- One column per status, in order: Not now, New, In progress (open),
+  Pending, Done, each in its status colour (ui.md). New, In progress and
+  Pending start expanded; Not now and Done start collapsed.
 - A **collapsed column** is a tall rounded pill in its colour: the count
   at the top, the status name written vertically below. Clicking it (or
   Enter / Space) expands the column. Clicking anywhere on an expanded
@@ -40,8 +40,8 @@ statuses.
   the board scrolls that way. The page itself never scrolls sideways.
 - Columns without cards start collapsed, unless the user expanded them
   (the remembered choice wins).
-- Resolved and Closed show the 50 most recently active cards, with "and
-  N more in the list" linking to the queue's Solved view; the other
+- Done shows the 50 most recently active cards, with "and N more in the
+  list" linking to the queue's Done view; the other
   columns show every card. Counts are the full numbers.
 - Filters: the board takes the queue's assignee and organization filters
   (`assignee`, `organization` parameters, the same selects without an
@@ -153,7 +153,7 @@ only way to the top), card background images, per-board settings.
 ## Acceptance
 
 `test/controllers/boards_controller_test.rb` (staff only, columns and
-counts, card content, golden order, the 50-card limit for solved
+counts, card content, golden order, the 50-card limit for the done
 columns, filters, the Not now column, stage columns, stamps),
 `test/models/auto_postpone_test.rb` (who is postponed, events, no email
 to requesters, the setting, off at 0),

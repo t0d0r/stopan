@@ -79,8 +79,8 @@ original requests".
 
 | what | requester | agent / admin |
 |------|-----------|---------------|
-| the request (subject and description) | own ticket (`TicketPolicy#own?`), not closed | any ticket |
-| a public reply | own reply on own ticket, not closed | any reply |
+| the request (subject and description) | own ticket (`TicketPolicy#own?`) | any ticket |
+| a public reply | own reply on own ticket | any reply |
 | an internal note | never visible | any note |
 
 Staff may edit anyone's text, so they can correct or redact (for example a
@@ -170,13 +170,12 @@ cannot hide who wrote what.
 
 At the end of the timeline, for users who may reply:
 
-- Requester: text area, files, "Send reply". On a closed ticket the composer
-  is replaced by "This ticket is closed. Open a new ticket if you need more
-  help."
+- Requester: text area, files, "Send reply". On a done ticket a hint above
+  the text area says that replying opens the ticket again.
 - Staff: a "Public reply" / "Internal note" switch (radio buttons; the form
   turns pink for a note and the button label changes), text area, files,
   "Submit as" status select (keep current, or an allowed transition) and
-  the submit button. On a closed ticket only internal notes are offered.
+  the submit button.
 
 ## Live updates of the ticket page
 
@@ -225,7 +224,7 @@ staff, restore per role, other tickets' revisions 404, "same as current"),
 `test/models/revision_test.rb` (edits keep the previous text,
 unchanged text is a no-op, validation, no event, `updated_at` untouched)
 and `test/controllers/edits_controller_test.rb` (who may edit what per
-role, closed tickets, internal notes hidden from requesters, earlier
+role, internal notes hidden from requesters, earlier
 versions only for staff, the edited marker on the shared page, live
 signals).
 

@@ -40,7 +40,7 @@ the role, and cannot be chosen as assignee.
   internal notes or internal events. Removing a membership removes access
   to that organization's tickets at once.
 - On a colleague's ticket a requester reads only: replying, marking as
-  resolved, editing, Markdown switches and sharing stay with the ticket's
+  done, editing, Markdown switches and sharing stay with the ticket's
   own requester (`TicketPolicy#own?`) and staff. The page says so where
   the composer would be.
 - **Agents work their own organizations only** (operator, 2026-10-27:
@@ -72,14 +72,14 @@ the role, and cannot be chosen as assignee.
 | see internal notes and internal events | no | yes | yes |
 | create a ticket | for self, in own organization | for a member of one of their own organizations, in it | for any requester, in one of the requester's organizations |
 | set priority / assignee on create | no | yes | yes |
-| public reply | own ticket, not closed | any ticket, not closed | same as agent |
-| internal note | no | any ticket (also closed) | same as agent |
-| edit the request's subject and description (timeline.md "Editing") | own ticket, not closed | any ticket | same as agent |
-| edit a reply or note | own public reply on own ticket, not closed | any reply or note | same as agent |
+| public reply | own ticket | any ticket | same as agent |
+| internal note | no | any ticket | same as agent |
+| edit the request's subject and description (timeline.md "Editing") | own ticket | any ticket | same as agent |
+| edit a reply or note | own public reply on own ticket | any reply or note | same as agent |
 | see earlier versions of edited text | no | yes | yes |
 | attach files | to own ticket and own replies | to tickets, replies and notes | same as agent |
 | download an attachment | only files on records they can see | any | any |
-| change status | only "mark as resolved" on own new/open/pending ticket | any allowed transition (tickets.md) | same as agent |
+| change status | only "mark as done" on own new/open/pending/postponed ticket | any allowed transition (tickets.md) | same as agent |
 | change priority, assignee | no | yes | yes |
 | share a ticket by link (sharing.md) | own ticket, in own organization | any ticket | any ticket; also sees and stops every shared link |
 | open `/admin` | no | no | yes |

@@ -8,8 +8,8 @@ before it is built. The "foundation" column says what already exists.
 | email notifications | **specified in notifications.md (phase 2)**; later: per-user preferences, digests, durable queue (Solid Queue) | events table records every change; `visible_to` decides what a requester may be told |
 | email ingestion | **specified in organization-mail.md (IMAP per organization)**; later: OAuth2 for Google / Microsoft 365, POP3, moving processed mail, spam scoring | `Ticket.create` path and comment creation are model methods, not controller code |
 | SMTP | **specified in notifications.md (phase 2)** | Devise mailer sender from `MAILER_SENDER` |
-| SLAs | first-response and resolution targets per priority, breach warnings | `priority`, `created_at`, first staff `replied` event, `resolved_at` |
-| automation | auto-close resolved tickets after N days, triggers, macros (canned replies) | status transitions in one place (`Ticket::TRANSITIONS`, `Ticket#change_status`) |
+| SLAs | first-response and resolution targets per priority, breach warnings | `priority`, `created_at`, first staff `replied` event, `done_at` |
+| automation | triggers, macros (canned replies) | status transitions in one place (`Ticket::TRANSITIONS`, `Ticket#change_status`) |
 | live updates | later: partial updates (Turbo Stream replace of one row) instead of page refreshes for busy queues | done: notification panel (notifications.md), shared pages (sharing.md), ticket page (timeline.md), ticket lists (queues.md), admin pages (admin.md) |
 | API | JSON API with tokens for integrations | policies and scopes are independent of HTML controllers |
 | integrations | chat, monitoring alerts, CRM | - |

@@ -7,13 +7,13 @@
 | `number` | integer, unique, assigned on create, never changes; the first ticket is 1001, each new one is the highest number + 1. Rails 8 opens SQLite write transactions as IMMEDIATE, so reading the maximum and inserting happen under the write lock; the unique index is the backstop. Shown as `#1001`; URLs use it: `/tickets/1001` (`Ticket#to_param`) |
 | `subject` | required, stripped, at most 200 characters |
 | `description` | required, at most 20,000 characters, plain text |
-| `status` | `new`, `open`, `pending`, `resolved`, `closed`; default `new` |
+| `status` | `new`, `open`, `pending`, `postponed`, `done`; default `new` |
 | `priority` | `low`, `normal`, `high`, `urgent`; default `normal` |
 | `requester_id` | required; the user must be a member of the ticket's organization |
 | `assignee_id` | optional; must be an active agent or admin |
 | `organization_id` | required |
 | `created_at`, `updated_at` | Rails timestamps; `updated_at` is touched by every event, so it is the "last activity" time |
-| `resolved_at`, `closed_at` | set when the ticket enters that status, cleared when it is reopened |
+| `done_at` | set when the ticket becomes `done`, cleared when it is reopened |
 | files | up to 5 attachments added on create (attachments.md) |
 
 ## Status meaning
@@ -23,11 +23,10 @@
 | new | not triaged yet | system, on create |
 | open | an agent is working on it | agent, or system on a reply |
 | pending | waiting for the requester | agent |
-| resolved | a solution was given; the requester can still reply, which reopens it | agent or requester |
-| closed | finished; no more public replies | agent |
+| done | finished ("Done", "Готова" in Bulgarian); the requester can still reply, which reopens it | agent or requester |
 | postponed | parked for later, not worked on now ("Not now", "Отложена" in Bulgarian; board.md) | agent, or the system after inactivity |
 
-"Unsolved" means new, open or pending. "Solved" means resolved or closed.
+"Unsolved" means new, open or pending. "Done" means done.
 "Postponed" is neither: it has its own queue view "Not now" and stays out
 of "All unsolved" and the dashboard's unsolved count; a requester sees it
 in their "Open" tab, labelled "Not now" / "Отложена".
@@ -44,12 +43,11 @@ Allowed manual changes by staff (`Ticket::TRANSITIONS`):
 
 | from | to |
 |------|----|
-| new | open, pending, resolved, closed, postponed |
-| open | pending, resolved, closed, postponed |
-| pending | open, resolved, closed, postponed |
-| postponed | open, resolved, closed |
-| resolved | open, closed |
-| closed | open |
+| new | open, pending, done, postponed |
+| open | pending, done, postponed |
+| pending | open, done, postponed |
+| postponed | open, done |
+| done | open |
 
 Nothing goes back to `new`. Setting the same status is a no-op and records
 nothing. An invalid transition is a validation error on `status`.
@@ -57,7 +55,7 @@ nothing. An invalid transition is a validation error on `status`.
 Automatic changes, recorded as status events with the replying user as
 actor:
 
-- A requester's public reply on a `pending`, `resolved` or `postponed`
+- A requester's public reply on a `pending`, `done` or `postponed`
   ticket sets it to `open`.
 - **Automatic postponing** (board.md): a `new`, `open` or `pending`
   ticket without activity (`updated_at`) for the number of days set by
@@ -67,11 +65,37 @@ actor:
   form chose another status ("Submit as ...").
 - A staff reply or note may choose any allowed status in the same request.
 
-Requester action: "Mark as resolved" on their own ticket in `new`, `open`,
-`pending` or `postponed` sets `resolved`.
+Requester action: "Mark as done" on their own ticket in `new`, `open`,
+`pending` or `postponed` sets `done`.
 
-Closed tickets accept no public replies from anyone. Staff can still add
-internal notes and reopen the ticket (`closed` -> `open`).
+There is no final close: a done ticket takes replies from its requester
+(which reopen it) and from staff, by the page and by email, like any
+other ticket.
+
+### One Done status (2026-10-27)
+
+Until 2026-10-27 there were two finished statuses, `resolved` (the
+requester could still reply) and `closed` (no more public replies). The
+operator asked "why we have closed, resolved, can we have only done?" and
+chose one status, "Done", everywhere. Reason: the two differed only in
+whether replies were blocked, which confused users and sent requesters
+with a follow-up to open a new ticket. The migration
+`MergeResolvedAndClosedIntoDone`:
+
+- sets tickets in `resolved` or `closed` to `done`, with `done_at` the
+  later of the old `closed_at` and `resolved_at` (the `resolved_at`
+  column is renamed `done_at`; `closed_at` is dropped);
+- rewrites `resolved` and `closed` to `done` in status events
+  (`ticket_events.from_value`, `to_value`) and in `notifications.status`;
+  a status event that went from one of them to the other (resolved ->
+  closed) would read "from Done to Done", so it is deleted, and
+  notifications pointing at it lose the event link;
+- moves board stages of `resolved` and `closed` to `done` (closed stages
+  after the resolved ones); a closed stage whose name a resolved stage
+  already has is merged into it (its tickets move there).
+
+It cannot be reversed: going back would not know which done tickets
+were closed.
 
 ## Creating
 
@@ -102,13 +126,13 @@ Each changed field writes one event; all changes and events are saved in
 one transaction, or none on a validation error (422 re-renders the ticket
 page with the errors). Requesters get 403.
 
-`PATCH /tickets/:number/resolve` is the requester's "Mark as resolved"
-(also allowed for staff).
+`PATCH /tickets/:number/resolve` is the requester's "Mark as done"
+(also allowed for staff); the route keeps its name.
 
 ## Editing the request
 
 Subject and description can be edited by staff, and by the requester on
-their own ticket while it is not closed; earlier versions are kept for
+their own ticket; earlier versions are kept for
 staff and the message is marked as edited (timeline.md "Editing").
 
 ## Assigning (staff)

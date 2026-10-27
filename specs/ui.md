@@ -33,8 +33,8 @@ Turbo Drive for page changes.
   | status new | yellow |
   | status open | pink |
   | status pending | blue |
-  | status resolved | green |
-  | status closed | gray |
+  | status postponed | purple |
+  | status done | green |
   | priority low / normal / high / urgent | gray / blue / purple / red text with red edge |
   | requester reply | yellow paper |
   | staff public reply | blue paper |
@@ -67,7 +67,7 @@ Turbo Drive for page changes.
   assignee as selects with "Update" for staff, plain values for
   requesters; staff also get a one-click "Take" button above the form
   when the ticket is not theirs), "Requester" panel (name, email, organization; staff only see
-  email) and dates. Requesters see "Mark as resolved" when allowed. Under
+  email) and dates. Requesters see "Mark as done" when allowed. Under
   900px the side panel comes after the request note. Shared pages show
   the same note (status pill only) under the read-only notice.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow

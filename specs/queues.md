@@ -21,7 +21,7 @@ sight. The search field is in the menu bar
 | `mine` | unsolved and assigned to me | |
 | `unassigned` | unsolved and without assignee | |
 | `pending` | pending | |
-| `solved` | resolved, closed | |
+| `done` | done ("Done"; was `solved` before 2026-10-27, which now falls back to the default view) | |
 | `all` | every ticket | |
 
 Each view shows its count. Every view has a paper colour (ui.md), shown
@@ -34,7 +34,7 @@ small sticky in its colour, and the list panel takes the same colour:
 | `mine` | purple |
 | `unassigned` | pink |
 | `pending` | blue (as the pending status) |
-| `solved` | green (as the resolved status) |
+| `done` | green (as the done status) |
 | `all` | gray |
 
 ### Filters (combined with the view, all optional)
@@ -66,7 +66,7 @@ it with the field's own clear button shows the list without search again.
 - On a ticket list it searches within the current list: it carries the
   view, filters and sort as hidden fields (not the page, a new search
   starts at page 1).
-- On any other page it searches `view=all`, so a closed ticket is found
+- On any other page it searches `view=all`, so a done ticket is found
   by its number too.
 - The field shows the current search text on a ticket list.
 
@@ -105,8 +105,8 @@ Assigning from the queue (tickets.md "Assigning"):
 
 ## My tickets (requester)
 
-Tabs: `open` (new, open, pending; default, yellow), `solved` (resolved,
-closed; green), `all` (gray), all three of the requester's own tickets,
+Tabs: `open` (new, open, pending, postponed; default, yellow), `done`
+("Done"; green), `all` (gray), all three of the requester's own tickets,
 and `organization` ("My organizations", purple: every ticket of the
 organizations they belong to, with the requester's name under the
 subject; roles.md), each with a coloured count; the current tab

@@ -98,9 +98,8 @@ in-process job queue as today.
    #<number>]` or `In-Reply-To`/`References` has `<ticket-<number>@host>`,
    the ticket belongs to this organization, and the sender is its
    requester or staff. Then the text becomes a public reply by the sender
-   (with the usual automatic status changes, timeline.md). A reply to a
-   closed ticket starts a new ticket instead, as closed tickets take no
-   public replies (tickets.md). Otherwise a new ticket in the
+   (with the usual automatic status changes, timeline.md: a requester's
+   reply to a done ticket reopens it). Otherwise a new ticket in the
    organization: subject from the mail subject (stripped of `Re:`/`Fwd:`,
    "(no subject)" when empty, cut to 200 characters), description from
    the text, `source` "email".
@@ -137,7 +136,7 @@ private hosts refused, write-only passwords),
 From, Reply-To, fallback to the global settings),
 `test/models/mailbox_message_test.rb` (new ticket, reply by subject and
 by References, quotes cut, auto-replies and loops skipped, unknown and
-known senders, staff replies, closed tickets, attachments, limits) and
+known senders, staff replies, done tickets reopened, attachments, limits) and
 `test/models/mailbox_check_test.rb` (IMAP with a fake server: unseen
 only, marked seen, errors recorded, at most 50).
 
