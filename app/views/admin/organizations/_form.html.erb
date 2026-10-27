@@ -16,8 +16,17 @@
       <%= f.label :slug %>
       <%= f.text_field :slug, class: "field-input", maxlength: 60, pattern: "[a-z0-9][a-z0-9-]*[a-z0-9]",
                        aria: { invalid: invalid?(organization, :slug), describedby: "slug-hint" } %>
-      <small class="field-hint" id="slug-hint"><%= t("ui.admin.public_form.slug_hint", example: "#{request.base_url}/support/#{organization.slug.presence || "acme"}") %></small>
+      <small class="field-hint" id="slug-hint"><%= t("ui.admin.public_form.slug_hint_short") %></small>
     </div>
+    <% if organization.persisted? && organization.slug_in_database.present? %>
+      <div class="field">
+        <span class="field-label"><%= t("ui.public_request.address") %></span>
+        <%= render "admin/organizations/public_link", organization: Organization.new(slug: organization.slug_in_database), id: "public-form-url-edit" %>
+        <% unless organization.public_form_in_database %>
+          <small class="field-hint"><%= t("ui.admin.public_form.off_hint") %></small>
+        <% end %>
+      </div>
+    <% end %>
     <div class="field">
       <%= f.label :public_intro %>
       <%= f.text_area :public_intro, class: "field-input", rows: 3, maxlength: 1_000, data: { autogrow: true } %>

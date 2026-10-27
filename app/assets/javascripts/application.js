@@ -139,6 +139,20 @@ function setUpRequesterOrganizations(requester) {
 // "Copy link" buttons copy the value of the field they name; the field
 // itself is selected on focus, so copying also works by hand.
 function setUpCopyButtons() {
+  // One-click copy of a value (the public page links in the organizations
+  // list, specs/public-form.md); the tooltip says "Copied" for a moment.
+  document.querySelectorAll("[data-copy-value]").forEach((button) => {
+    const label = button.title;
+    button.addEventListener("click", async () => {
+      await copyText(button.dataset.copyValue);
+      button.classList.add("is-copied");
+      button.title = button.dataset.copiedLabel;
+      setTimeout(() => {
+        button.classList.remove("is-copied");
+        button.title = label;
+      }, 2000);
+    }, { signal: pageSignal });
+  });
   document.querySelectorAll("[data-copy]").forEach((button) => {
     const field = document.getElementById(button.dataset.copy);
     const label = button.querySelector("[data-copy-label]");

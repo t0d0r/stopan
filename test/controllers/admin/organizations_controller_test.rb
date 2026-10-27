@@ -102,4 +102,27 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     get admin_organization_url(organizations(:acme))
     assert_select "form[action=?] button", mailbox_check_admin_organization_path(organizations(:acme)), "Check the mailbox"
   end
+
+  test "the public page link is easy to copy from the list, the page and the edit form" do
+    org = organizations(:acme)
+    org.update!(public_form: true)
+    url = public_request_url(org.slug)
+
+    get admin_organizations_url
+    assert_select "#organization_#{org.id} button.icon-action[data-copy-value=?]", url
+    assert_select "#organization_#{organizations(:globex).id} button[data-copy-value]", 0
+
+    get admin_organization_url(org)
+    assert_select "input#public-form-url[readonly][value=?]", url
+    assert_select "button[data-copy=public-form-url]"
+    assert_select "a[href=?][target=_blank]", url
+
+    get edit_admin_organization_url(org)
+    assert_select "#public-form-settings input#public-form-url-edit[value=?]", url
+    assert_select "#public-form-settings button[data-copy=public-form-url-edit]"
+
+    org.update!(public_form: false)
+    get edit_admin_organization_url(org)
+    assert_select "#public-form-settings .field-hint", /The page is off/
+  end
 end

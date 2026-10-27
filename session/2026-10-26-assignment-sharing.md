@@ -330,6 +330,13 @@ Operator requests, in order:
   signal, own page when opened. Migration AddMessageToNotifications.
   Checked in headless Chrome: count hint, confirm, bell, message page.
 
+- Public page link easy to copy (operator): `_public_link` partial
+  (read-only field, Copy link, Open in a new tab) on the organization page
+  and in the edit form's public page part (saved URL name, note when off);
+  one-click copy icon (`data-copy-value`) next to organizations with the
+  page on in the list. Checked in headless Chrome: both copies put the URL
+  on the clipboard and show "Copied".
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

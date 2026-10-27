@@ -2953,6 +2953,28 @@ turbo-frame {
   text-decoration: none;
 }
 
+.icon-action--inline {
+  width: 22px;
+  height: 22px;
+  margin-left: 4px;
+}
+
+.icon-action.is-copied {
+  color: #1f7a33;
+}
+
+.public-link {
+  flex-wrap: wrap;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .icon-action--impersonate:hover {
   color: #b3261e;
 }

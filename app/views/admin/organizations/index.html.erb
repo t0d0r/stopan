@@ -33,7 +33,16 @@
           <tbody>
             <% @organizations.each do |organization| %>
               <tr id="<%= dom_id(organization) %>">
-                <td class="text"><%= link_to organization.name, admin_organization_path(organization) %></td>
+                <td class="text">
+                  <%= link_to organization.name, admin_organization_path(organization) %>
+                  <% if organization.public_form? %>
+                    <% label = t("ui.admin.public_form.copy_label", name: organization.name) %>
+                    <button type="button" class="icon-action icon-action--inline" data-copy-value="<%= public_request_url(organization.slug) %>"
+                            data-copied-label="<%= t("ui.share.copied") %>" title="<%= label %>" aria-label="<%= label %>">
+                      <%= icon :link, size: 13 %>
+                    </button>
+                  <% end %>
+                </td>
                 <td class="num"><%= @member_counts.fetch(organization.id, 0) %></td>
                 <td class="num"><%= link_to @unsolved_counts.fetch(organization.id, 0), tickets_path(view: "unsolved", organization: organization.id) %></td>
                 <td class="num"><%= link_to @ticket_counts.fetch(organization.id, 0), tickets_path(view: "all", organization: organization.id) %></td>

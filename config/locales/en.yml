@@ -280,6 +280,9 @@ en:
         title: "Public request page"
         enabled: "Anyone can send a request without an account at this organization's page"
         slug_hint: "Lower-case letters, digits and dashes. The page: %{example}"
+        slug_hint_short: "Lower-case letters, digits and dashes; it becomes part of the page's address."
+        off_hint: "The page is off: turn it on above and save, then the link works."
+        copy_label: "Copy the public page link of %{name}"
       mail:
         title: "Mail"
         intro: "Mail about this organization's tickets goes out through its own SMTP, and mail to its mailbox becomes tickets and replies. Passwords are stored encrypted and never shown."
@@ -355,6 +358,7 @@ en:
       missing_title: "This page is not available"
       missing_hint: "Check the address, or contact the organization another way."
       address: "Public request page"
+      open: "Open"
     magic:
       request_title: "Email me a sign-in link"
       request_intro: "Requesters can sign in with a one-time link instead of a password. Enter your email address and we send you a link."

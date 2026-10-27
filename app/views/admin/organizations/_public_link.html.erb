@@ -1,0 +1,11 @@
+<%# The public request page's address with Copy and Open
+    (specs/public-form.md). Locals: organization, id. %>
+<% url = public_request_url(organization.slug) %>
+<div class="sharing__link public-link">
+  <%= label_tag id, t("ui.public_request.address"), class: "sr-only" %>
+  <%= text_field_tag id, url, readonly: true, class: "field-input", data: { select_on_focus: true } %>
+  <button type="button" class="btn" data-copy="<%= id %>" data-copied-label="<%= t("ui.share.copied") %>">
+    <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.share.copy") %></span>
+  </button>
+  <%= link_to url, class: "btn", target: "_blank", rel: "noopener" do %><%= t("ui.public_request.open") %><% end %>
+</div>

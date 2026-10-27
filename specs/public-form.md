@@ -27,8 +27,13 @@ gets in with a magic sign-in link.
   "Markdown" check box (markdown.md). No files in this phase (an
   anonymous form must not fill the storage; files can be added to the
   ticket after signing in, or sent by email when the mailbox is on).
-- The admin's organization page shows the page's address with a copy
-  button when it is on.
+- The page's address is easy to copy (operator, 2026-10-27): the
+  organization page and the "Public request page" part of its edit form
+  show it in a read-only field with "Copy link" and "Open" (a new tab);
+  the edit form shows it for the saved URL name, with a note when the
+  page is off; the organizations list has a one-click copy icon next to
+  each organization whose page is on. Copying shows "Copied" for 2
+  seconds.
 
 ## Who the request belongs to
 
