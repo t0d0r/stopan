@@ -104,7 +104,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] board columns centred when they do not fill the width; a click on an expanded column's header collapses it (specs/board.md)
 - [x] one "Done" status instead of resolved and closed, everywhere; replies reopen it, no final close (specs/tickets.md "One Done status")
 - [x] board has the list's filters: status, priority, assignee, organization, sort; one shared partial (specs/board.md)
-- [ ] production: the next deploy runs `MergeResolvedAndClosedIntoDone` (irreversible; back up the database first) (specs/deploy.md)
+- [x] production: deployed 3e50793 with `MergeResolvedAndClosedIntoDone`, after a database backup (specs/deploy.md)
 - [x] organization list of email addresses or domains allowed to use the public request page (operator)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,

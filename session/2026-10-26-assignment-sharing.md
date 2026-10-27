@@ -476,8 +476,10 @@ menu and Take; open /tickets/new and pick a requester.
 
 ## Next
 
-- Production deploy (only when the operator asks): back up the database
-  first; the `MergeResolvedAndClosedIntoDone` migration cannot be undone.
+- Production runs 3e50793 (deployed 2026-10-27 at the operator's request,
+  backup `pre-deploy-fa69269.sqlite3` first; checks in specs/deploy.md).
+  Still to set in `stopan.env` when the operator wants: SMTP,
+  `TRUSTED_PROXIES`, `MAILBOX_POLLING`.
 
 - Rebuild the Docker image (`make docker-up`) to see the changes on :3000;
   production needs a deploy by the operator (migration

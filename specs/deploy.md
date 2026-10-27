@@ -319,6 +319,35 @@ Fix (operator approved): the site's Apache directives end with
   `site-25-before-modsecurity.json`.
 - Rule id 13183 is in the local range and was unused on the server.
 
+## Update 2026-10-27 (revision 3e50793)
+
+- Before: checked the data the release changes (two administrators, no
+  agents or requesters without an organization, one open ticket, no
+  resolved or closed tickets), then a `VACUUM INTO` copy of the database
+  to `~stopan/backups/pre-deploy-fa69269.sqlite3` (mode 600). In the
+  runner the target path must be an SQL string in single quotes
+  (`connection.quote`), not double quotes.
+- `DEPLOY_HOST=<ssh host> make deploy`: built and restarted, `/up`
+  answered; `db:prepare` ran the new migrations up to
+  `MergeResolvedAndClosedIntoDone` (20261027220000), which cannot be
+  undone.
+- Checked: schema version 20261027220000, no pending migrations,
+  `tickets.done_at` exists and `closed_at` is gone, tickets and users
+  kept; container healthy; only `127.0.0.1:3183` listens; `http://` ->
+  301 `https://`; HSTS, CSP, `X-Frame-Options`, `nosniff` and the secure
+  HttpOnly session cookie unchanged; `/users/sign_up` and `/tickets/board`
+  redirect to sign-in; `/cable` answers 101 to a WebSocket upgrade over
+  HTTP/1.1 (curl over HTTP/2 gets 404, as HTTP/2 has no Upgrade); g0no
+  `/up` 200.
+- Still not set in `stopan.env`: SMTP, `TRUSTED_PROXIES`,
+  `MAILBOX_POLLING` (todo).
+- Rollback of this release: the database must go back with the image,
+  because the Done migration rewrote statuses. As `stopan`: stop the
+  service, tag `localhost/stopan:fa69269` as `latest`, restore
+  `backups/pre-deploy-fa69269.sqlite3` over `~/storage/production.sqlite3`
+  (with `podman unshare`), start the service. Changes made after the
+  deploy are lost.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:
