@@ -1,0 +1,59 @@
+<% content_for :title, t("ui.board.title") %>
+<% turbo_refreshes_with scroll: :preserve %>
+<%= turbo_stream_from(:queue, :staff, channel: TicketListsChannel) %>
+<% filter = @board.filter %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.board.title") %></h1>
+  <%= render "tickets/view_switch", current: :board %>
+  <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
+</div>
+
+<%= form_with url: board_path, method: :get, class: "filters board-filters", data: { filter_form: true, turbo_action: "replace" } do %>
+  <div class="filters__field">
+    <%= label_tag :assignee, t("ui.fields.assignee") %>
+    <%= select_tag :assignee,
+                   options_for_select([ [ t("ui.queue.assignee_me"), "me" ], [ t("ui.queue.assignee_none"), "none" ] ] +
+                                      @staff.map { |u| [ u.display_name, u.id.to_s ] }, filter.assignee),
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.assignee), data: { auto_submit: true } %>
+  </div>
+  <div class="filters__field">
+    <%= label_tag :organization, t("ui.fields.organization") %>
+    <%= select_tag :organization, options_from_collection_for_select(Organization.ordered, :id, :name, filter.organization_id),
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true } %>
+  </div>
+  <div class="filters__actions">
+    <noscript><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></noscript>
+    <% if filter.filtered? %><%= link_to t("ui.queue.clear"), board_path, class: "filters__clear" %><% end %>
+  </div>
+<% end %>
+
+<div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>">
+  <% @board.columns.each do |column| %>
+    <% color = TicketsHelper::STATUS_COLORS.fetch(column.status, "gray") %>
+    <section class="board-column sticky--<%= color %><%= " is-collapsed" if column.collapsed? %>" data-board-column
+             data-status="<%= column.status %>" aria-label="<%= status_name(column.status) %>">
+      <button type="button" class="board-pill" data-board-toggle aria-expanded="false"
+              title="<%= t("ui.board.expand", status: status_name(column.status)) %>">
+        <span class="board-pill__count" data-column-count><%= column.count %></span>
+        <span class="board-pill__label"><%= status_name(column.status) %></span>
+      </button>
+      <div class="board-column__body">
+        <header class="board-column__head">
+          <h2 class="board-column__title"><%= status_name(column.status) %></h2>
+          <span class="board-column__count" data-column-count><%= column.count %></span>
+          <button type="button" class="sticky__box board-column__collapse" data-board-toggle aria-expanded="true"
+                  title="<%= t("ui.board.collapse", status: status_name(column.status)) %>" aria-label="<%= t("ui.board.collapse", status: status_name(column.status)) %>">&ndash;</button>
+        </header>
+        <div class="board-column__cards" data-board-cards>
+          <% column.tickets.each do |ticket| %>
+            <%= render "boards/card", ticket: ticket %>
+          <% end %>
+          <% if column.tickets.empty? %><p class="board-column__empty"><%= t("ui.board.empty") %></p><% end %>
+        </div>
+        <% if column.more.positive? %>
+          <p class="board-column__more"><%= link_to t("ui.board.more", count: column.more), tickets_path(view: column.status == "closed" ? "all" : "solved", status: column.status) %></p>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>

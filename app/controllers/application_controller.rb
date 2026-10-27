@@ -55,6 +55,8 @@ class ApplicationController < ActionController::Base
   end
 
   def forbidden
+    return head(:forbidden) if request.format.json?
+
     render "errors/forbidden", status: :forbidden
   end
 

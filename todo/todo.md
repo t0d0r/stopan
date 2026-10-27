@@ -93,7 +93,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] admins send messages to users, a role, an organization or everyone, shown in notifications (specs/notifications.md "Messages from administrators")
 - [x] public page link easy to copy: list icon, organization page, edit form (specs/public-form.md)
 - [x] members see their organizations' tickets and get in-app notifications of new ones (specs/roles.md, specs/notifications.md)
-- [~] kanban board of tickets by status, like Fizzy (specs/board.md)
+- [x] kanban board of tickets by status, like Fizzy (specs/board.md)
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

@@ -350,6 +350,19 @@ bg:
       not_ended: "приключи с изход"
       banner: "Влезли сте като %{name} (%{role}) чрез impersonation."
       back: "Обратно към моя акаунт"
+    board:
+      title: "Дъска"
+      list: "Списък"
+      board: "Дъска"
+      switch_label: "Изглед"
+      expand: "Покажи колоната %{status}"
+      collapse: "Скрий колоната %{status}"
+      move: "Премести"
+      empty: "Няма заявки тук."
+      more:
+        one: "и още 1 в списъка"
+        other: "и още %{count} в списъка"
+      move_failed: "Заявката не можа да бъде преместена: %{error}"
     public_request:
       title: "Свържете се с поддръжката на %{name}"
       intro: "Опишете въпроса или проблема си. Отговаряме по имейл; не ви трябва акаунт."
@@ -584,6 +597,7 @@ bg:
     impersonation_stopped: "Върнахте се в собствения си акаунт."
     impersonation_ended: "Влизането като друг потребител приключи. Моля, влезте отново."
     impersonation_account_locked: "Настройките на акаунта не могат да се променят по време на impersonation."
+    ticket_moved: "Заявка %{reference} е преместена в %{status}."
     message_sent:
       one: "Съобщението е изпратено до 1 потребител."
       other: "Съобщението е изпратено до %{count} потребители."

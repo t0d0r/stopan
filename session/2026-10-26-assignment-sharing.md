@@ -349,6 +349,20 @@ Operator requests, in order:
   raised Boris's bell 1 -> 2 and appeared in his tab live; the colleague
   page has no composer and says who can reply.
 
+- Kanban board like fizzy.do (operator): a web-fetch agent read Fizzy's
+  site and help guide, and I looked at their board screenshot (not kept
+  in the repo). /tickets/board for staff: columns per status in status
+  colours, Resolved/Closed collapsed into tall pills with count and
+  vertical label (expansion remembered in localStorage), white cards with
+  a coloured strip (#number | ORGANIZATION, priority), big title,
+  created/updated, requester -> assignee badges, urgent cards golden and
+  on top, 50-card limit for solved columns; drag and drop to allowed
+  transitions (others dimmed) via PATCH /tickets/:number/move (204/422
+  JSON, redirect for the Move menu form); List | Board switch; live via
+  the queue stream; JSON 403 without a template. Checked in headless
+  Chrome: drag of #1005 New -> In progress kept after reload, counts
+  updated, Move menu, phone scrolls inside the board.
+
 ## Decisions
 
 - Assign menu instead of auto-submitting selects: a keyboard arrow on a

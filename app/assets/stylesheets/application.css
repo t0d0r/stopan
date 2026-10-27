@@ -3020,3 +3020,330 @@ turbo-frame {
   max-width: 760px;
   margin: 0 auto;
 }
+
+/* ---------- board (specs/board.md): Fizzy-like columns and cards ---------- */
+
+.view-switch {
+  display: inline-flex;
+  margin-left: auto;
+  margin-right: 12px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--tool-hover, rgba(0, 0, 0, 0.06));
+}
+
+.view-switch__link {
+  padding: 4px 12px;
+  border-radius: 6px;
+  color: var(--desk-ink);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.view-switch__link:hover {
+  text-decoration: none;
+}
+
+.view-switch__link[aria-current] {
+  background: var(--desk, #fff);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  font-weight: 600;
+}
+
+.board-filters {
+  margin-bottom: 14px;
+}
+
+.board {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 4px 2px 16px;
+  overflow-x: auto;
+}
+
+.board-column {
+  display: flex;
+  flex: 1 1 300px;
+  min-width: 290px;
+  max-width: 440px;
+  background: none;
+}
+
+.board-column.is-collapsed {
+  flex: 0 0 44px;
+  min-width: 44px;
+}
+
+.board-pill {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 44px;
+  min-height: 380px;
+  padding: 12px 0;
+  border: 0;
+  border-radius: 22px;
+  background: linear-gradient(var(--bar), var(--paper) 55%, rgba(255, 255, 255, 0));
+  color: #2c2a26;
+  font: 600 13px/1 var(--font);
+  cursor: pointer;
+}
+
+.board-pill:hover,
+.board-pill:focus-visible {
+  filter: saturate(1.3);
+}
+
+.board-pill__label {
+  writing-mode: vertical-rl;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.board-column.is-collapsed .board-pill {
+  display: flex;
+}
+
+.board-column.is-collapsed .board-column__body {
+  display: none;
+}
+
+.board-column__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.board-column__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--bar);
+  color: #2c2a26;
+}
+
+.board-column__title {
+  flex: 1;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.board-column__count {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.board-column__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 120px;
+  padding: 4px;
+  border: 2px dashed transparent;
+  border-radius: 10px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.board-column__empty,
+.board-column__more {
+  margin: 4px 6px;
+  color: var(--desk-ink-soft);
+  font-size: 13px;
+}
+
+.board-card {
+  position: relative;
+  padding: 0 14px 12px;
+  border: 1px solid color-mix(in srgb, var(--bar) 70%, #fff);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 10px rgba(0, 0, 0, 0.05);
+  color: #1f2a37;
+  cursor: grab;
+}
+
+.board-card:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 8px 18px rgba(0, 0, 0, 0.09);
+}
+
+.board-card__strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  /* Room for the Move menu at the top right. */
+  max-width: calc(100% - 40px);
+  margin: 0 0 8px -14px;
+  padding: 4px 10px;
+  border-radius: 6px 0 6px 0;
+  background: var(--bar);
+  color: #2c2a26;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.board-card__org {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.board-card__sep {
+  opacity: 0.45;
+}
+
+.board-card__priority {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.board-card__title {
+  display: -webkit-box;
+  margin: 0 0 8px;
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow-wrap: anywhere;
+}
+
+.board-card__title a {
+  color: inherit;
+}
+
+.board-card__meta,
+.board-card__people {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0 0 6px;
+  color: #5b6b80;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.board-card__updated {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding-left: 8px;
+  border-left: 1px solid #d6dde6;
+}
+
+.board-card__people .avatar {
+  width: 20px;
+  height: 20px;
+  font-size: 9px;
+}
+
+.board-card__arrow {
+  color: #8a97a8;
+}
+
+.board-card__move {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 11px;
+}
+
+.board-card__move summary {
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #5b6b80;
+  list-style: none;
+  cursor: pointer;
+}
+
+.board-card__move summary::-webkit-details-marker {
+  display: none;
+}
+
+.board-card__move summary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.board-card__move-menu {
+  position: absolute;
+  right: 0;
+  z-index: 20;
+  display: grid;
+  gap: 4px;
+  min-width: 140px;
+  padding: 6px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow-lift);
+}
+
+.board-card__move-option {
+  width: 100%;
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--paper);
+  color: #2c2a26;
+  font: 600 12px var(--font);
+  text-align: left;
+  cursor: pointer;
+}
+
+.board-card__move-option:hover {
+  background: var(--bar);
+}
+
+/* Golden cards: urgent tickets, always on top (like Fizzy's golden tickets). */
+.board-card.is-golden {
+  border-color: #e2b71f;
+  background: #fff7d6;
+  box-shadow: 0 0 0 1px #e2b71f, 0 6px 16px rgba(226, 183, 31, 0.25);
+}
+
+.board-card.is-golden .board-card__strip {
+  background: #f2c94c;
+}
+
+/* Dragging: allowed columns light up, the others step back. */
+.board-card.is-dragging {
+  opacity: 0.45;
+}
+
+.board.is-dragging-card .board-column.is-refused {
+  opacity: 0.4;
+}
+
+.board.is-dragging-card .board-column.is-droppable .board-column__cards {
+  border-color: color-mix(in srgb, var(--bar) 80%, #000 10%);
+}
+
+.board-column.is-over .board-column__cards,
+.board-column.is-over .board-pill {
+  background: var(--paper);
+}
+
+.board-column.is-over.is-collapsed .board-pill {
+  outline: 3px solid var(--bar);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board-column__cards {
+    transition: none;
+  }
+}

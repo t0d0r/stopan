@@ -1,0 +1,36 @@
+<%# A ticket on the board (specs/board.md "Card"). Locals: ticket. %>
+<% allowed = Ticket::TRANSITIONS.fetch(ticket.status, []) %>
+<article class="board-card<%= " is-golden" if ticket.priority == "urgent" %>" id="<%= dom_id(ticket, :card) %>" draggable="true"
+         data-board-card data-ticket="<%= ticket.number %>" data-status="<%= ticket.status %>" data-priority="<%= ticket.priority %>"
+         data-allowed="<%= allowed.join(" ") %>" data-move-url="<%= move_ticket_path(ticket) %>">
+  <div class="board-card__strip">
+    <span class="board-card__number"><%= ticket.reference %></span>
+    <span class="board-card__sep" aria-hidden="true">|</span>
+    <span class="board-card__org"><%= ticket.organization.name %></span>
+    <% if %w[high urgent].include?(ticket.priority) %><span class="board-card__priority"><%= priority_name(ticket.priority) %></span><% end %>
+  </div>
+  <h3 class="board-card__title">
+    <%= link_to ticket.subject, ticket_path(ticket), draggable: "false" %>
+    <% if ticket.shared? %><%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %>
+  </h3>
+  <p class="board-card__meta">
+    <span><%= t("ui.ago", time: time_ago_in_words(ticket.created_at)) %></span>
+    <span class="board-card__updated" title="<%= t("ui.fields.updated") %>"><%= icon :clock, size: 11 %> <%= t("ui.ago", time: time_ago_in_words(ticket.updated_at)) %></span>
+  </p>
+  <p class="board-card__people">
+    <%= user_avatar ticket.requester %> <span><%= ticket.requester.display_name %></span>
+    <span class="board-card__arrow" aria-label="<%= t("ui.fields.assignee") %>">&rarr;</span>
+    <% if ticket.assignee %><%= user_avatar ticket.assignee %> <span><%= ticket.assignee.display_name %></span><% else %><span class="muted"><%= t("ui.unassigned") %></span><% end %>
+  </p>
+  <% if allowed.any? %>
+    <details class="board-card__move">
+      <summary><%= t("ui.board.move") %></summary>
+      <div class="board-card__move-menu">
+        <% allowed.each do |status| %>
+          <%= button_to status_name(status), move_ticket_path(ticket), method: :patch, params: { status: status },
+                        class: "board-card__move-option sticky--#{TicketsHelper::STATUS_COLORS.fetch(status, "gray")}" %>
+        <% end %>
+      </div>
+    </details>
+  <% end %>
+</article>

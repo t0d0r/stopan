@@ -60,6 +60,11 @@ class TicketFilter
     [ status, priority, assignee, organization_id, query ].any?
   end
 
+  # The filtered tickets of the current view, for the board (specs/board.md).
+  def scope
+    filtered
+  end
+
   # Query parameters of the current list, for links that change one thing.
   def params_with(changes = {})
     { view: view, status: status, priority: priority, assignee: assignee, organization: organization_id,

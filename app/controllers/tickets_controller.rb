@@ -1,7 +1,7 @@
 class TicketsController < ApplicationController
   include TicketTimeline
 
-  before_action :set_ticket, only: %i[show update resolve assign]
+  before_action :set_ticket, only: %i[show update resolve assign move]
 
   def index
     @filter = TicketFilter.new(current_user, params)
@@ -42,6 +42,22 @@ class TicketsController < ApplicationController
       @comment = Comment.new
       prepare_timeline
       render :show, status: :unprocessable_content
+    end
+  end
+
+  # A card dragged to another column of the board, or its Move menu
+  # (specs/board.md): an ordinary status change. JSON for fetch, a redirect
+  # back to the board for the form.
+  def move
+    authorize! policy.update?
+    moved = @ticket.apply_changes({ status: params[:status].to_s }, actor: current_user)
+    respond_to do |format|
+      format.json { moved ? head(:no_content) : render(plain: @ticket.errors.full_messages.to_sentence, status: :unprocessable_content) }
+      format.html do
+        flash = moved ? { notice: t("flash.ticket_moved", reference: @ticket.reference, status: helpers.status_name(@ticket.status)) }
+                      : { alert: @ticket.errors.full_messages.to_sentence }
+        redirect_back_or_to board_path, allow_other_host: false, **flash
+      end
     end
   end
 

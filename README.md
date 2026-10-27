@@ -33,6 +33,9 @@ The screenshots use the fictional data from `make demo`.
   unassigned, pending, solved, all) with counts, filters by status,
   priority, assignee and organization that apply at once, sort, pagination
   (`specs/queues.md`).
+- **Board** - a Fizzy-like kanban of tickets by status for staff: colour
+  columns, collapsed pills for solved ones, golden urgent cards, drag and
+  drop or a Move menu (`specs/board.md`).
 - **Search** - by text or ticket number from the menu bar on every page.
 - **My tickets** - the requester's open / solved / all lists.
 - **Timeline** - public replies, staff-only internal notes, and an

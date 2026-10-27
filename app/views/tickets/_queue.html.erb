@@ -1,6 +1,7 @@
 <% staff = User.staff.active.ordered.to_a %>
 <div class="desk__header">
   <h1 class="desk__title"><%= t("ui.queue.title") %></h1>
+  <%= render "tickets/view_switch", current: :list %>
   <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
 </div>
 

@@ -1,0 +1,5 @@
+<%# List | Board switch for staff (specs/board.md). Locals: current. %>
+<nav class="view-switch" aria-label="<%= t("ui.board.switch_label") %>">
+  <%= link_to t("ui.board.list"), tickets_path, class: "view-switch__link", aria: { current: ("page" if current == :list) } %>
+  <%= link_to t("ui.board.board"), board_path, class: "view-switch__link", aria: { current: ("page" if current == :board) } %>
+</nav>

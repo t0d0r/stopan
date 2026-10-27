@@ -347,6 +347,19 @@ en:
       not_ended: "ended by sign-out"
       banner: "You are signed in as %{name} (%{role}) by impersonation."
       back: "Back to my account"
+    board:
+      title: "Board"
+      list: "List"
+      board: "Board"
+      switch_label: "View"
+      expand: "Show the %{status} column"
+      collapse: "Hide the %{status} column"
+      move: "Move"
+      empty: "No tickets here."
+      more:
+        one: "and 1 more in the list"
+        other: "and %{count} more in the list"
+      move_failed: "The ticket could not be moved: %{error}"
     public_request:
       title: "Contact %{name} support"
       intro: "Describe your question or problem. We reply by email; you do not need an account."
@@ -581,6 +594,7 @@ en:
     impersonation_stopped: "You are back in your own account."
     impersonation_ended: "The impersonation ended. Please sign in again."
     impersonation_account_locked: "The account settings cannot be changed while impersonating."
+    ticket_moved: "Ticket %{reference} moved to %{status}."
     message_sent:
       one: "Message sent to 1 user."
       other: "Message sent to %{count} users."

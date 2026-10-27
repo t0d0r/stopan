@@ -301,6 +301,7 @@ registerStreamActions();
 // away work in progress: while the page is busy the refresh waits, a
 // notice says so, and it runs once the page is idle (checked every second).
 function pageIsBusy() {
+  if (document.querySelector(".board-card.is-dragging")) return true;
   const active = document.activeElement;
   if (active && active.matches("input:not([type=hidden]):not([readonly]), textarea, select")) return true;
   if (document.querySelector("details[open], dialog[open]")) return true;
@@ -601,35 +602,159 @@ function setUpPage() {
     });
   });
 
-  // Notices go after a few seconds (not while hovered or focused); alerts
-  // stay until closed. Going: a sweep to the left, then the band closes
-  // (specs/ui.md "Flash messages").
+  document.querySelectorAll("[data-flash]").forEach(setUpFlash);
+  document.querySelectorAll("[data-board]").forEach(setUpBoard);
+}
+
+// Notices go after a few seconds (not while hovered or focused); alerts
+// stay until closed. Going: a sweep to the left, then the band closes
+// (specs/ui.md "Flash messages").
+function setUpFlash(flash) {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  document.querySelectorAll("[data-flash]").forEach((flash) => {
-    let leaving = false;
-    const dismiss = () => {
-      if (leaving) return;
-      leaving = true;
-      if (reducedMotion) return flash.remove();
-      flash.classList.add("is-leaving");
-      setTimeout(() => {
-        flash.style.height = `${flash.offsetHeight}px`;
-        void flash.offsetHeight;
-        flash.classList.add("is-collapsing");
-        setTimeout(() => flash.remove(), 260);
-      }, 500);
-    };
-    const close = flash.querySelector("[data-dismiss]");
-    if (close) close.addEventListener("click", dismiss);
-    if (flash.dataset.flashKind !== "notice") return;
-    let timer = setTimeout(dismiss, 6000);
-    const pause = () => clearTimeout(timer);
-    const resume = () => { timer = setTimeout(dismiss, 3000); };
-    flash.addEventListener("mouseenter", pause);
-    flash.addEventListener("mouseleave", resume);
-    flash.addEventListener("focusin", pause);
-    flash.addEventListener("focusout", resume);
+  let leaving = false;
+  const dismiss = () => {
+    if (leaving) return;
+    leaving = true;
+    if (reducedMotion) return flash.remove();
+    flash.classList.add("is-leaving");
+    setTimeout(() => {
+      flash.style.height = `${flash.offsetHeight}px`;
+      void flash.offsetHeight;
+      flash.classList.add("is-collapsing");
+      setTimeout(() => flash.remove(), 260);
+    }, 500);
+  };
+  const close = flash.querySelector("[data-dismiss]");
+  if (close) close.addEventListener("click", dismiss);
+  if (flash.dataset.flashKind !== "notice") return;
+  let timer = setTimeout(dismiss, 6000);
+  const pause = () => clearTimeout(timer);
+  const resume = () => { timer = setTimeout(dismiss, 3000); };
+  flash.addEventListener("mouseenter", pause);
+  flash.addEventListener("mouseleave", resume);
+  flash.addEventListener("focusin", pause);
+  flash.addEventListener("focusout", resume);
+}
+
+// An alert made by a script, in the same band and look as the server's.
+function showAlert(text) {
+  let stack = document.querySelector(".flash-stack");
+  if (!stack) {
+    stack = document.createElement("div");
+    stack.className = "flash-stack";
+    document.querySelector("main")?.prepend(stack);
+  }
+  const flash = document.createElement("div");
+  flash.className = "sticky sticky--pink flash flash--alert";
+  flash.setAttribute("role", "alert");
+  flash.dataset.flash = "";
+  flash.dataset.flashKind = "alert";
+  flash.innerHTML = '<div class="sticky__bar"><button type="button" class="sticky__box" data-dismiss aria-label="x">&times;</button>' +
+    '<span class="sticky__caption"></span><span class="sticky__box sticky__box--spacer" aria-hidden="true"></span></div><p class="flash__text"></p>';
+  flash.querySelector(".flash__text").textContent = text;
+  stack.append(flash);
+  setUpFlash(flash);
+}
+
+// The kanban board (specs/board.md): columns expand and collapse (kept per
+// browser), cards are dragged onto columns they may move to, and the move
+// is a PATCH through Turbo's fetch, so this tab skips its own refresh.
+function setUpBoard(board) {
+  const key = "stopan-board-expanded";
+  const columns = [...board.querySelectorAll("[data-board-column]")];
+  const transitions = JSON.parse(board.dataset.transitions || "{}");
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(key)); } catch {}
+  if (Array.isArray(saved)) columns.forEach((column) => column.classList.toggle("is-collapsed", !saved.includes(column.dataset.status)));
+  const save = () => {
+    try {
+      localStorage.setItem(key, JSON.stringify(columns.filter((c) => !c.classList.contains("is-collapsed")).map((c) => c.dataset.status)));
+    } catch {}
+  };
+  board.addEventListener("click", (event) => {
+    const toggle = event.target.closest("[data-board-toggle]");
+    if (!toggle) return;
+    toggle.closest("[data-board-column]").classList.toggle("is-collapsed");
+    save();
+  }, { signal: pageSignal });
+
+  let dragged = null;
+  const clear = () => {
+    board.classList.remove("is-dragging-card");
+    columns.forEach((column) => column.classList.remove("is-droppable", "is-refused", "is-over"));
+    dragged?.classList.remove("is-dragging");
+    dragged = null;
+  };
+  board.addEventListener("dragstart", (event) => {
+    const card = event.target.closest?.("[data-board-card]");
+    if (!card) return;
+    dragged = card;
+    card.classList.add("is-dragging");
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", card.dataset.ticket);
+    const allowed = card.dataset.allowed.split(" ");
+    board.classList.add("is-dragging-card");
+    columns.forEach((column) => {
+      const status = column.dataset.status;
+      column.classList.toggle("is-droppable", allowed.includes(status));
+      column.classList.toggle("is-refused", !allowed.includes(status) && status !== card.dataset.status);
+    });
+  }, { signal: pageSignal });
+  board.addEventListener("dragend", clear, { signal: pageSignal });
+  columns.forEach((column) => {
+    column.addEventListener("dragover", (event) => {
+      if (!dragged || !column.classList.contains("is-droppable")) return;
+      event.preventDefault();
+      column.classList.add("is-over");
+    }, { signal: pageSignal });
+    column.addEventListener("dragleave", (event) => {
+      if (!column.contains(event.relatedTarget)) column.classList.remove("is-over");
+    }, { signal: pageSignal });
+    column.addEventListener("drop", (event) => {
+      if (!dragged || !column.classList.contains("is-droppable")) return;
+      event.preventDefault();
+      const card = dragged;
+      clear();
+      moveCard(card, column);
+    }, { signal: pageSignal });
   });
+
+  const count = (column, change) => {
+    column.querySelectorAll("[data-column-count]").forEach((element) => {
+      element.textContent = Number(element.textContent) + change;
+    });
+  };
+
+  async function moveCard(card, column) {
+    const from = card.closest("[data-board-column]");
+    const status = column.dataset.status;
+    const token = document.querySelector("meta[name=csrf-token]")?.content;
+    let response;
+    try {
+      const send = window.Turbo?.fetch || window.fetch;
+      response = await send(card.dataset.moveUrl, {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: { "X-CSRF-Token": token, Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ status })
+      });
+    } catch {}
+    if (!response?.ok) {
+      const reason = response ? await response.text() : "";
+      showAlert(board.dataset.moveFailed.replace("%{error}", reason || response?.status || "-"));
+      return;
+    }
+    // The card goes to its place: golden (urgent) cards on top.
+    const list = column.querySelector("[data-board-cards]");
+    list.querySelector(".board-column__empty")?.remove();
+    const golden = card.classList.contains("is-golden");
+    const firstPlain = [...list.querySelectorAll("[data-board-card]")].find((other) => !other.classList.contains("is-golden"));
+    golden ? list.prepend(card) : list.insertBefore(card, firstPlain || null);
+    card.dataset.status = status;
+    card.dataset.allowed = (transitions[status] || []).join(" ");
+    count(from, -1);
+    count(column, 1);
+  }
 }
 
 // The in-place edit form arrives in a Turbo frame after turbo:load, so its
