@@ -114,12 +114,17 @@ in documentation, not in the app.
   bar's current section, the List | Board switch and the panel strips
   already name them; their `h1` stays for screen readers (`sr-only`).
   The queue and board keep the List | Board switch at the right of the
-  header row; on the board the filters share that row (board.md). Other
+  header row; on the queue the view tabs share that row, on the board
+  the filters (board.md). The switch sits at the top right of that row on
+  both pages, so it does not move when switching (2026-10-28: "so the
+  buttons stay in place"); on phones it is alone on the first row at the
+  right, the tabs or filters under it. Other
   pages keep their titles. No page has its own "New ticket" button any
   more: the green "+" in the menu bar is the one way in (2026-10-28: "not
   needed now that it is in the header"); My tickets keeps its "open a new
   one" link in the empty state.
-- **Queue** (staff): a coloured row of view tabs, then the filter bar and
+- **Queue** (staff): a coloured row of view tabs (next to the List | Board
+  switch), then the filter bar and
   table in a sticky panel in the current view's colour (queues.md). Under
   760px the tab row wraps onto more rows (no sideways scrolling) and
   table columns other than number, subject and status are hidden.

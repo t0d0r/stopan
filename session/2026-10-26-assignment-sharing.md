@@ -967,6 +967,13 @@ menu and Take; open /tickets/new and pick a requester.
   before the name. Field on the account page (with a hint) and in the
   admin user form; not in the API. Migration also run in the development
   container. Production needs the migration on the next deploy.
+- Queue header: `nav.queue__views` moved into `.desk__header.queue-header`
+  next to the switch. `.view-switch` is `flex: none; align-self:
+  flex-start; margin-left: auto` (no right margin now that "New ticket"
+  is gone), so it sits at the same point on /tickets and /tickets/board
+  (measured: 1124,60 at 1440px, same at 1280px and the extra text size).
+  Under 761px it gets `order: -1` and the tabs or filters `flex-basis:
+  100%`, so it is alone on the first row on both pages.
 - Menu bar: "New ticket" left the section pills and is a `.menubar__new`
   link after the brand: a "+" on green paper (`sticky--green`), label and
   tooltip "New ticket", `aria-current` on /tickets/new. The "New ticket"

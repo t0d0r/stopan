@@ -1701,6 +1701,33 @@ body {
 /* ---------- ticket lists ---------- */
 
 /* Views as a row of tabs above the list, like the admin tabs. */
+.queue-header {
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.queue-header .queue__views {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Phones: the switch alone on the first row at the right, the views or
+   the board filters under it, so it stays put there too. */
+@media (max-width: 760px) {
+  :is(.queue-header, .board-header) {
+    flex-wrap: wrap;
+  }
+
+  :is(.queue-header, .board-header) .view-switch {
+    order: -1;
+  }
+
+  .queue-header .queue__views,
+  .board-header .board-filters {
+    flex-basis: 100%;
+  }
+}
+
 .queue {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -4035,10 +4062,13 @@ turbo-frame {
 
 /* ---------- board (specs/board.md): Fizzy-like columns and cards ---------- */
 
+/* Top right of the header row, at the same place on the list and the
+   board, so switching does not move it (ui.md "Pages"). */
 .view-switch {
   display: inline-flex;
+  flex: none;
+  align-self: flex-start;
   margin-left: auto;
-  margin-right: 12px;
   padding: 2px;
   border-radius: 8px;
   background: var(--tool-hover, rgba(0, 0, 0, 0.06));

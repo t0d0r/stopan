@@ -1,11 +1,8 @@
 <% staff = Ticket.assignable_staff_for(current_user).to_a %>
-<div class="desk__header">
+<%# One row: the views, then the List | Board switch at the same place as on the board (ui.md "Pages"). %>
+<div class="desk__header queue-header">
   <%# The menu bar and the views name the page; the h1 is for screen readers (ui.md "Pages"). %>
   <h1 class="sr-only"><%= t("ui.queue.title") %></h1>
-  <%= render "tickets/view_switch", current: :list %>
-</div>
-
-<div class="queue">
   <nav class="queue__views" aria-label="<%= t("ui.queue.views_label") %>">
     <ul>
       <% filter.views.each do |view| %>
@@ -20,7 +17,10 @@
       <% end %>
     </ul>
   </nav>
+  <%= render "tickets/view_switch", current: :list %>
+</div>
 
+<div class="queue">
   <section class="sticky sticky--<%= view_color(filter.view) %> panel queue__list" aria-labelledby="queue-list-title">
     <header class="sticky__bar"><span class="sticky__caption"><%= queue_view_label(filter.view) %></span></header>
     <div class="panel__body">
