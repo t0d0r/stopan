@@ -853,6 +853,9 @@ menu and Take; open /tickets/new and pick a requester.
   local), shared with the queue; bulk actions may return to `/search`.
   Advanced search is gone from the queue; the menu bar search no longer
   carries advanced params and is hidden on the search page.
+- Deployed 9c67bf4 (2026-10-28) after backup `pre-deploy-242b476.sqlite3`;
+  no migrations, all checks fine. Not pushed (the operator asked only for
+  production this time).
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

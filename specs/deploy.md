@@ -584,6 +584,19 @@ longer on the board. No migrations.
   g0no `/up` 200.
 - Rollback: tag `localhost/stopan:bf47c22` as `latest` and restart.
 
+## Update 2026-10-28 (revision 9c67bf4)
+
+Operator: "make a separate menu for search, put it on production". Since
+242b476: the Search page (`/search`, queues.md "Search page") with
+advanced search moved there from the queue. No migrations.
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-242b476.sqlite3`
+  (mode 600; 4 users, 2 tickets).
+- Checked: healthy; no pending migrations; users and tickets kept; `/up`
+  200; `http://` -> 301; `/api/v1/me` 401; `/search` signed out -> 302 to
+  sign-in; `/cable` 101; the four security headers; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:242b476` as `latest` and restart.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:
