@@ -842,6 +842,8 @@ menu and Take; open /tickets/new and pick a requester.
   px x three sizes on six pages: no sideways scroll, menu fits.
 - Advanced search removed from the board (`advanced: false` on
   `tickets/_filters`); it stays in the queue and search.
+- Deployed 242b476 (2026-10-28) after backup `pre-deploy-bf47c22.sqlite3`;
+  no migrations, all checks fine; pushed to origin on request.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

@@ -569,6 +569,21 @@ screenshot and a simple ingress diagram. No migrations.
   panel columns; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:50475d3` as `latest` and restart.
 
+## Update 2026-10-28 (revision 242b476)
+
+Operator: "yes, deploy and push". Since bf47c22: the menu bar wraps at
+the big and extra text sizes, window units and script positions undo the
+text size zoom (ui.md "Text size zoom"), and advanced search is no
+longer on the board. No migrations.
+
+- Before: `VACUUM INTO` copy to `~stopan/backups/pre-deploy-bf47c22.sqlite3`
+  (mode 600; 4 users, 2 tickets).
+- Checked: healthy; no pending migrations; users and tickets kept; `/up`
+  200; `http://` -> 301; `/api/v1/me` 401; `/cable` 101; the four
+  security headers; the served stylesheet has the zoomed menu bar rule;
+  g0no `/up` 200.
+- Rollback: tag `localhost/stopan:bf47c22` as `latest` and restart.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

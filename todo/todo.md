@@ -164,6 +164,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] production: deployed bf47c22 (panel columns, site icon, README) after a database backup (specs/deploy.md)
 - [x] menu bar wraps at the big and extra text sizes (breakpoint times the zoom); window units and script positions undo the zoom, so the board and dialogs fit the window; no sideways scroll at any size from 1024px (operator, 2026-10-28; specs/ui.md "Text size zoom")
 - [x] advanced search only in the queue, not on the board (operator, 2026-10-28; specs/queues.md "Advanced search")
+- [x] production: deployed 242b476 (text size zoom, menu bar, board without advanced search) after a database backup (specs/deploy.md)
 - [x] production: deployed 50475d3 (documentation only) after a database backup (specs/deploy.md)
 - [x] admin: flush all tickets of an organization after typing its name, keeping its settings; numbers never reused (operator, 2026-10-27; specs/admin.md "Flush all tickets of an organization")
 - [x] requester email on the ticket page and the profile copies on click instead of opening the mail program (operator, 2026-10-27; specs/ui.md "Emails copy on click")
