@@ -631,6 +631,26 @@ database copy.
   listens only on `127.0.0.1:3183`; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:7767fc0` as `latest` and restart.
 
+## Update 2026-10-28 (revision 624ccbd)
+
+Since 8e1fe51: emails to the requester of a ticket from email link to
+the shared page, with the recipient's address as password (sharing.md
+"Link in the requester's emails"); with the organization's mailbox on,
+ticket emails say to answer by replying (notifications.md "Where to
+answer"). No migrations.
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-8e1fe51.sqlite3` (mode 600; 10 users, 9
+  tickets).
+- Checked: healthy; no pending migrations; users and tickets kept; the
+  organization with the mailbox answers `replies_by_email?` true; `/up`
+  200; `http://` -> 301; `/api/v1/me` 401; `/search` signed out -> 302;
+  an unknown `/s/<token>` 404; `/cable` 101; pages gzip; the four
+  security headers; g0no `/up` 200.
+- Existing tickets from email get their link with the next email to
+  their requester; nothing is shared ahead of time.
+- Rollback: tag `localhost/stopan:8e1fe51` as `latest` and restart.
+
 ## ModSecurity and compressed pages (2026-10-28)
 
 Signed-in staff got 403 at random on ordinary pages (`/`, `/tickets`,

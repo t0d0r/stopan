@@ -883,6 +883,8 @@ menu and Take; open /tickets/new and pick a requester.
   (mailbox on with an address) drives the Reply-To and, in TicketMailer,
   `reply_hint`/`reply_note`: "reply to this email" for the requester, a
   public-reply warning for staff; without it the old texts.
+- Deployed 624ccbd (2026-10-28) after backup `pre-deploy-8e1fe51.sqlite3`;
+  no migrations, all checks fine (specs/deploy.md). Pushed to origin.
 - Automatic mail fetching is on in production (`app_settings.mailbox_polling`,
   every 120 s). One check right after a burst of manual "Check the
   mailbox" logins got `Net::IMAP::ByeResponseError: System Error` from
