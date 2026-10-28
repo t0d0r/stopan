@@ -669,6 +669,22 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-10-28 (revision bf4036c)
+
+Since fab4c24: quote levels and collapsible earlier messages in read mail
+(organization-mail.md "Display of mail"); the requester's email on one
+line and the share link on its own row in the side column (ui.md,
+sharing.md). No migrations.
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-fab4c24.sqlite3` (mode 600; 10 users, 9
+  tickets).
+- Checked: no pending migrations; users and tickets kept; `/up` 200;
+  `http://` -> 301; `/api/v1/me` 401; `/search` signed out -> 302;
+  `/cable` 101; pages gzip; the four security headers; the served
+  stylesheet has the new quote and copy rules; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:fab4c24` as `latest` and restart.
+
 ## ModSecurity and compressed pages (2026-10-28)
 
 Signed-in staff got 403 at random on ordinary pages (`/`, `/tickets`,

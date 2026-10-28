@@ -888,7 +888,7 @@ menu and Take; open /tickets/new and pick a requester.
   button into a wrapping block; removed. `.copy-value__text` is
   `nowrap` with an ellipsis, and `copy_email` sets `title`. The share
   link row wraps (`.field-input` flex 1 1 16em, button flex 1 0 auto).
-  Not deployed yet.
+  Deployed in bf4036c.
 - Quote levels in mail: `TicketsHelper#mail_text` -> `mail_level` splits
   each level into its own text and the earlier message
   (`mail_quoted_start`: an Outlook-style From/date/subject block or a
@@ -897,7 +897,7 @@ menu and Take; open /tickets/new and pick a requester.
   text, open in mailer views), and nests `>` runs in `mail_blocks`
   (`mail-quote--0..2`, tokens `--quote-0..2`). The copy box opens closed
   sections and hides `[data-copy-skip]` summaries while it reads
-  `innerText`. Not deployed yet.
+  `innerText`. Deployed in bf4036c.
 - Email language per organization: `organizations.mail_locale` (nil =
   each recipient's language), select at the top of the Mail panel
   (`_mail_fields`). `User#mail_locale(organization)` orders the
