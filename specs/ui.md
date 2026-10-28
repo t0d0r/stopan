@@ -131,8 +131,9 @@ in documentation, not in the app.
   opens the form"):
   - No search field in the menu bar (body class `ticket-view`); the
     sections are behind the menu button (Menu bar above).
-  - The Properties, Requester and Sharing panels start closed: only
-    their title strip shows, as a full-width 44px button with the caption
+  - The Properties, Requester and Sharing panels start closed, one per
+    row at any phone width (2026-10-28; side by side from about 500px
+    before): only their title strip shows, as a full-width 44px button with the caption
     and a chevron (`aria-expanded`, `aria-controls` the panel body).
     Tapping opens or closes the panel. A panel starts open when its form
     has errors (Properties after an invalid update) or when the address

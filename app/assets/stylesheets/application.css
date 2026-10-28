@@ -5248,9 +5248,9 @@ turbo-frame {
   }
 
   /* Side panels: closed stickies showing only their title strip, which
-     opens them. */
+     opens them, one per row. */
   .ticket-side {
-    gap: 0 12px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .side-panel {
