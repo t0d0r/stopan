@@ -968,7 +968,9 @@ menu and Take; open /tickets/new and pick a requester.
   admin user form; not in the API. Migration also run in the development
   container. Production needs the migration on the next deploy.
 - Deployed as 3f367da after backup `pre-deploy-dfb32f4.sqlite3`
-  (migration `AddNicknameToUsers` ran); pushed.
+  (migration `AddNicknameToUsers` ran); pushed. The older copy
+  `pre-deploy-989950a` was then removed; `pre-deploy-dfb32f4` is the
+  only copy of 2026-10-28 left.
 - "Admin" left `.menubar__nav`; it is an `.account-menu__item` between
   "Your account" and Logout for administrators (`aria-current` on admin
   pages, shown bold).

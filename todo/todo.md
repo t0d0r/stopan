@@ -270,6 +270,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] queue and board: no visible page title (sr-only h1); reports: period and organization selects on the title's row (specs/ui.md "Pages", specs/reports.md "Filters")
 - [x] menu bar: "New ticket" as a green "+" after the name instead of a section pill (specs/ui.md "Menu bar")
 - [x] no "New ticket" buttons on the queue, the board and My tickets; the menu bar "+" replaces them
+- [x] production: removed the backup `pre-deploy-989950a`; `pre-deploy-dfb32f4` stays as the rollback copy
 - [x] "Admin" moved from the section pills into the account menu, for administrators only (specs/ui.md "Menu bar")
 - [x] queue: the view tabs on the header row with the List | Board switch, which keeps one place on the list and the board (also on phones)
 - [x] board: the filters on one row with the List | Board switch and "New ticket" (specs/board.md)
