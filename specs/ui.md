@@ -162,10 +162,20 @@ in documentation, not in the app.
     composer always shown.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
   sticky. On an organization's page the purple details panel is the
-  narrow right column: each section title after the first has 18px
-  above it, and the public form's address keeps at least 16em (its own
-  full-width row in the narrow panel, Copy and Open wrapping under it)
-  instead of shrinking until only "https:" shows.
+  right column (3 : 2 with the members, at least 300px; one column under
+  900px). Since 2026-10-28 (operator: "too cluttered, hard to read") it
+  reads top to bottom as: two tiles with the unsolved and all ticket
+  counts (links to the filtered queue), "Created <time>" in grey, the
+  internal notes in a lightly shaded box, the public form's address on
+  its own row with Copy and Open sharing the next, then Mail: the sign-in
+  method on one line and two cards, "Outgoing" and "Mailbox", each with
+  an on/off pill (green or grey, with the word) and, when on, its facts
+  with the label above the value (server and sender; address, last
+  check, messages taken in, last error), and its own action ("Send a
+  test email", "Check the mailbox"). The Google button follows the
+  cards; Edit (primary) and Delete close the panel under a rule. "Send a
+  message to the members" sits under the members list. Each section
+  title after the first has 18px above it.
 - **Account pages:** a small yellow sticky centred on the desk (sign in,
   sign up, password reset).
 - **Own account page** (`/users/edit`; operator, 2026-10-27: "the

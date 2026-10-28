@@ -555,6 +555,8 @@ en:
         google_disconnect_body: "Stopan stops reading and sending mail as %{email} and asks Google to revoke its access. Mail for this organization is turned off until you set it up again."
         google_set_up: "Set up Google"
         google_fields: "Signed in with the Google account %{email}: no usernames or passwords are needed. Connect again from the organization page to change the account."
+        server: "Server"
+        address: "Address"
         smtp_status: "Outgoing"
         imap_status: "Mailbox"
         status_on: "on"

@@ -1,58 +1,74 @@
-<%# Mail settings at a glance and the test button (specs/organization-mail.md).
-    Never shows usernames or passwords. Locals: organization. %>
+<%# Mail settings at a glance (specs/organization-mail.md, specs/ui.md "Admin"):
+    outgoing and incoming as two cards, each with its own action. Never
+    shows usernames or passwords. Locals: organization. %>
 <% if organization.public_form? %>
   <h3 class="section-title"><%= t("ui.public_request.address") %></h3>
   <%= render "admin/organizations/public_link", organization: organization, id: "public-form-url" %>
 <% end %>
 <h3 class="section-title"><%= t("ui.admin.mail.panel") %></h3>
 <% connection = organization.mail_connection %>
-<dl class="facts">
-  <dt><%= t("ui.admin.mail.sign_in") %></dt>
-  <dd>
-    <% if organization.google_mail? && connection %>
-      <%= t("ui.admin.mail.google_as", email: connection.email) %>
-      <% unless connection.connected? %><strong class="mail-error"><%= t("ui.admin.mail.google_reconnect") %></strong><% end %>
-    <% else %>
-      <%= t("ui.admin.mail.password_sign_in") %>
-    <% end %>
-  </dd>
-  <dt><%= t("ui.admin.mail.smtp_status") %></dt>
-  <dd><%= organization.smtp_enabled? ? "#{t("ui.admin.mail.status_on")}: #{organization.smtp_address}" : t("ui.admin.mail.status_off") %></dd>
-  <% if organization.smtp_enabled? %>
-    <dt><%= t("ui.fields.from") %></dt>
-    <dd><%= organization.mail_from %></dd>
+<p class="org-mail__sign-in">
+  <span class="org-mail__label"><%= t("ui.admin.mail.sign_in") %></span>
+  <% if organization.google_mail? && connection %>
+    <%= t("ui.admin.mail.google_as", email: connection.email) %>
+    <% unless connection.connected? %><strong class="mail-error"><%= t("ui.admin.mail.google_reconnect") %></strong><% end %>
+  <% else %>
+    <%= t("ui.admin.mail.password_sign_in") %>
   <% end %>
-  <dt><%= t("ui.admin.mail.imap_status") %></dt>
-  <dd><%= organization.imap_enabled? ? "#{t("ui.admin.mail.status_on")}: #{organization.mailbox_address}" : t("ui.admin.mail.status_off") %></dd>
-  <% if organization.imap_enabled? %>
-    <dt><%= t("ui.admin.mail.last_check") %></dt>
-    <dd><%= organization.imap_last_checked_at ? time_ago(organization.imap_last_checked_at) : t("ui.admin.mail.never") %></dd>
-    <dt><%= t("ui.admin.mail.messages_in") %></dt>
-    <dd><%= organization.imap_messages_count %></dd>
-    <% if organization.imap_last_error.present? %>
-      <dt><%= t("ui.admin.mail.last_error") %></dt>
-      <dd class="mail-error"><%= organization.imap_last_error %></dd>
+</p>
+<div class="org-mail">
+  <section class="org-mail__card" aria-label="<%= t("ui.admin.mail.smtp_status") %>">
+    <p class="org-mail__head">
+      <span><%= t("ui.admin.mail.smtp_status") %></span>
+      <%= mail_state_pill organization.smtp_enabled? %>
+    </p>
+    <% if organization.smtp_enabled? %>
+      <dl class="org-mail__facts">
+        <dt><%= t("ui.admin.mail.server") %></dt>
+        <dd><%= organization.smtp_address %></dd>
+        <dt><%= t("ui.fields.from") %></dt>
+        <dd><%= organization.mail_from %></dd>
+      </dl>
     <% end %>
-  <% end %>
-</dl>
-<div class="form-actions form-actions--start">
+    <% if organization.smtp_ready? %>
+      <%= button_to t("ui.admin.mail.send_test"), mail_test_admin_organization_path(organization), class: "btn btn--small" %>
+    <% end %>
+  </section>
+  <section class="org-mail__card" aria-label="<%= t("ui.admin.mail.imap_status") %>">
+    <p class="org-mail__head">
+      <span><%= t("ui.admin.mail.imap_status") %></span>
+      <%= mail_state_pill organization.imap_enabled? %>
+    </p>
+    <% if organization.imap_enabled? %>
+      <dl class="org-mail__facts">
+        <dt><%= t("ui.admin.mail.address") %></dt>
+        <dd><%= organization.mailbox_address %></dd>
+        <dt><%= t("ui.admin.mail.last_check") %></dt>
+        <dd><%= organization.imap_last_checked_at ? time_ago(organization.imap_last_checked_at) : t("ui.admin.mail.never") %></dd>
+        <dt><%= t("ui.admin.mail.messages_in") %></dt>
+        <dd><%= organization.imap_messages_count %></dd>
+        <% if organization.imap_last_error.present? %>
+          <dt><%= t("ui.admin.mail.last_error") %></dt>
+          <dd class="mail-error"><%= organization.imap_last_error %></dd>
+        <% end %>
+      </dl>
+    <% end %>
+    <% if organization.imap_ready? %>
+      <%= button_to t("ui.admin.mail.check_mailbox"), mailbox_check_admin_organization_path(organization), class: "btn btn--small" %>
+    <% end %>
+  </section>
+</div>
+<div class="form-actions form-actions--start org-mail__google">
   <%# Google accounts (specs/mail-oauth.md): a GET link, since a form may not redirect to Google under the CSP. %>
   <% if AppSetting.current.google_ready? %>
     <%= link_to (connection ? t("ui.admin.mail.google_reconnect_button") : t("ui.admin.mail.google_connect")),
-                admin_organization_google_connect_path(organization), class: "btn", data: { turbo: false } %>
+                admin_organization_google_connect_path(organization), class: "btn btn--small", data: { turbo: false } %>
   <% else %>
-    <%= link_to t("ui.admin.mail.google_set_up"), admin_google_setup_path, class: "btn" %>
+    <%= link_to t("ui.admin.mail.google_set_up"), admin_google_setup_path, class: "btn btn--small" %>
   <% end %>
   <% if connection %>
-    <%= button_to t("ui.admin.mail.google_disconnect"), admin_organization_mail_oauth_path(organization), method: :delete, class: "btn",
+    <%= button_to t("ui.admin.mail.google_disconnect"), admin_organization_mail_oauth_path(organization), method: :delete, class: "btn btn--small",
                   data: confirm_data(title: t("ui.admin.mail.google_disconnect"), body: t("ui.admin.mail.google_disconnect_body", email: connection.email),
                                      button: t("ui.admin.mail.google_disconnect")) %>
-  <% end %>
-  <%= link_to t("ui.admin.messages.to_members"), new_admin_message_path(organization_id: organization.id, return_to: admin_organization_path(organization)), class: "btn" %>
-  <% if organization.smtp_ready? %>
-    <%= button_to t("ui.admin.mail.send_test"), mail_test_admin_organization_path(organization), class: "btn" %>
-  <% end %>
-  <% if organization.imap_ready? %>
-    <%= button_to t("ui.admin.mail.check_mailbox"), mailbox_check_admin_organization_path(organization), class: "btn" %>
   <% end %>
 </div>

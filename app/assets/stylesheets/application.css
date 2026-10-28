@@ -1609,10 +1609,6 @@ body {
   gap: 0 24px;
 }
 
-.two-columns--wide-left {
-  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
-}
-
 /* ---------- forms ---------- */
 
 .stack-form .field {
@@ -3635,7 +3631,7 @@ turbo-frame {
     gap: 0 16px;
   }
 
-  .two-columns--wide-left {
+  .two-columns--org {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -3830,6 +3826,136 @@ turbo-frame {
 }
 
 /* Organization details: room above each section after the first. */
+/* Organization details (ui.md "Admin"): counts as tiles, mail as two
+   cards with the label above each value, so long addresses get the
+   card's width. */
+.two-columns--org {
+  grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
+}
+
+.org-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.org-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.org-stat:hover {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.org-stat__value {
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.org-stat__label {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.org-details__since {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.org-details__notes {
+  padding: 8px 10px;
+  border-left: 3px solid var(--bar);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.org-mail__sign-in {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.org-mail__label,
+.org-mail__facts dt {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.org-mail__sign-in .org-mail__label {
+  align-self: center;
+}
+
+.org-mail {
+  display: grid;
+  gap: 10px;
+}
+
+.org-mail__card {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.org-mail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.org-mail__facts {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.org-mail__facts dd {
+  margin: 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.org-mail__card .button_to {
+  margin: 0;
+}
+
+.org-mail__google {
+  margin-top: 10px;
+}
+
+/* The address on its own row, Copy and Open sharing the next one. */
+.org-details .public-link .field-input {
+  flex-basis: 100%;
+}
+
+.org-details .public-link .btn {
+  flex: 1 1 0;
+}
+
+.org-details__actions {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
 .org-details .section-title:not(:first-child) {
   margin-top: 18px;
 }

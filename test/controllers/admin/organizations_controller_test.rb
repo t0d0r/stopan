@@ -138,6 +138,23 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?] button", mailbox_check_admin_organization_path(organizations(:acme)), "Check the mailbox"
   end
 
+  test "the details panel shows count tiles and mail as two cards (specs/ui.md \"Admin\")" do
+    org = organizations(:acme)
+    org.update!(imap_enabled: true, imap_address: "imap.acme.example", imap_username: "desk", mailbox_address: "support@acme.example")
+    get admin_organization_url(org)
+    assert_select ".org-details .org-stats a.org-stat", 2
+    assert_select ".org-details .org-stat[href=?] .org-stat__label", tickets_path(view: "unsolved", organization: org.id), "Unsolved"
+    assert_select ".org-mail__card", 2
+    assert_select ".org-mail__card:first-child .org-mail__head .pill.sticky--gray", "off"
+    assert_select ".org-mail__card:last-child" do
+      assert_select ".org-mail__head .pill.sticky--green", "on"
+      assert_select "dd", "support@acme.example"
+      assert_select "form[action=?]", mailbox_check_admin_organization_path(org)
+    end
+    assert_select ".org-details__actions a.btn--primary[href=?]", edit_admin_organization_path(org)
+    assert_select "section[aria-labelledby=members-title] a[href^=?]", new_admin_message_path
+  end
+
   test "the public page link is easy to copy from the list, the page and the edit form" do
     org = organizations(:acme)
     org.update!(public_form: true)

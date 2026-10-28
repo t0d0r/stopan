@@ -125,6 +125,13 @@ module ApplicationHelper
              class: "menubar__role menubar__role--#{user.role}", title: role_label(user))
   end
 
+  # On or off for an organization's outgoing mail or mailbox: a green or
+  # grey pill with the word, never colour alone (ui.md "Admin").
+  def mail_state_pill(enabled)
+    tag.span(t(enabled ? "ui.admin.mail.status_on" : "ui.admin.mail.status_off"),
+             class: "pill sticky--#{enabled ? "green" : "gray"}")
+  end
+
   # Errors of a form, listed at the top (role=alert, ui.md).
   def form_errors(record)
     return if record.errors.empty?

@@ -558,6 +558,8 @@ de:
         google_disconnect_body: "Stopan liest und sendet keine E-Mails mehr als %{email} und bittet Google, den Zugriff zu widerrufen. Die E-Mail dieser Organisation ist aus, bis Sie sie neu einrichten."
         google_set_up: "Google einrichten"
         google_fields: "Angemeldet mit dem Google-Konto %{email}: Benutzernamen und Passwörter sind nicht nötig. Zum Wechseln des Kontos auf der Seite der Organisation neu verbinden."
+        server: "Server"
+        address: "Adresse"
         smtp_status: "Ausgehend"
         imap_status: "Postfach"
         status_on: "an"

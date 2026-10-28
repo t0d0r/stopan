@@ -44,7 +44,7 @@ class Admin::MailOauthControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ "smtp.gmail.com", "imap.gmail.com", "support@acme.example" ], [ @org.smtp_address, @org.imap_address, @org.mailbox_address ]
 
     follow_redirect!
-    assert_select ".facts", /Google account support@acme\.example/
+    assert_select ".org-mail__sign-in", /Google account support@acme\.example/
     assert_no_match(/refresh-abc|access-abc/, response.body)
     get edit_admin_organization_url(@org)
     assert_select "input[name='organization[smtp_password]']", 0

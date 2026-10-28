@@ -4,7 +4,7 @@
   <%= render "admin/tabs" %>
 </div>
 
-<div class="two-columns two-columns--wide-left">
+<div class="two-columns two-columns--org">
   <section class="sticky sticky--gray panel" aria-labelledby="members-title">
     <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.members") %></span></header>
     <div class="panel__body">
@@ -36,28 +36,34 @@
       <% if @candidates.any? %>
         <%= render "admin/organizations/member_picker", organization: @organization, candidates: @candidates %>
       <% end %>
+      <div class="form-actions form-actions--start">
+        <%= link_to t("ui.admin.messages.to_members"),
+                    new_admin_message_path(organization_id: @organization.id, return_to: admin_organization_path(@organization)), class: "btn" %>
+      </div>
     </div>
   </section>
 
   <section class="sticky sticky--purple panel org-details" aria-labelledby="org-details-title">
     <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.details") %></span></header>
     <div class="panel__body">
-      <h2 class="section-title" id="org-details-title"><%= t("ui.admin.details") %></h2>
-      <dl class="facts">
-        <dt><%= t("ui.admin.unsolved") %></dt>
-        <dd><%= link_to @unsolved_count, tickets_path(view: "unsolved", organization: @organization.id) %></dd>
-        <dt><%= t("ui.admin.all_tickets") %></dt>
-        <dd><%= link_to @ticket_count, tickets_path(view: "all", organization: @organization.id) %></dd>
-        <dt><%= t("ui.fields.created") %></dt>
-        <dd><%= time_ago @organization.created_at %></dd>
-      </dl>
+      <h2 class="sr-only" id="org-details-title"><%= t("ui.admin.details") %></h2>
+      <%# Ticket counts as two tiles, then the date (specs/ui.md "Admin"). %>
+      <div class="org-stats">
+        <%= link_to tickets_path(view: "unsolved", organization: @organization.id), class: "org-stat" do %>
+          <strong class="org-stat__value"><%= @unsolved_count %></strong><span class="org-stat__label"><%= t("ui.admin.unsolved") %></span>
+        <% end %>
+        <%= link_to tickets_path(view: "all", organization: @organization.id), class: "org-stat" do %>
+          <strong class="org-stat__value"><%= @ticket_count %></strong><span class="org-stat__label"><%= t("ui.admin.all_tickets") %></span>
+        <% end %>
+      </div>
+      <p class="org-details__since"><%= t("ui.fields.created") %> <%= time_ago @organization.created_at %></p>
       <% if @organization.notes.present? %>
         <h3 class="section-title"><%= t("ui.fields.notes") %></h3>
-        <div class="ticket-text"><%= ticket_text @organization.notes %></div>
+        <div class="ticket-text org-details__notes"><%= ticket_text @organization.notes %></div>
       <% end %>
       <%= render "admin/organizations/mail_status", organization: @organization %>
-      <div class="form-actions form-actions--start">
-        <%= link_to t("ui.admin.edit"), edit_admin_organization_path(@organization), class: "btn" %>
+      <div class="form-actions form-actions--start org-details__actions">
+        <%= link_to t("ui.admin.edit"), edit_admin_organization_path(@organization), class: "btn btn--primary" %>
         <% if @ticket_count.zero? %>
           <%= button_to t("ui.delete"), admin_organization_path(@organization), method: :delete, class: "btn btn--danger",
                         form: { data: confirm_data(title: t("ui.confirm.delete_organization_title", name: @organization.name),
