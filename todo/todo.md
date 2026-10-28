@@ -219,6 +219,11 @@ approved "go in this order", all done 2026-10-27):
 - [x] the share password form accepts an address in any case or with spaces around it
 - [x] with the organization's mailbox on, the footer and the pending/done hints say to answer by replying to the email; staff are told a reply becomes a public reply (specs/notifications.md "Where to answer")
 
+## Shared mailbox between environments (2026-10-28)
+
+- [x] customer replies on #1009 missing: a development copy polled the same Gmail account and folder, marked the replies \Seen and made its own tickets of them; the replies were marked unseen and fetched by production (session note)
+- [ ] take only messages addressed to the organization's `mailbox_address` (IMAP `UNSEEN TO`), so two installations with different +addresses on one account do not take each other's mail (specs/organization-mail.md "Fetching")
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

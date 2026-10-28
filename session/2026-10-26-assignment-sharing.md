@@ -883,6 +883,16 @@ menu and Take; open /tickets/new and pick a requester.
   (mailbox on with an address) drives the Reply-To and, in TicketMailer,
   `reply_hint`/`reply_note`: "reply to this email" for the requester, a
   public-reply warning for staff; without it the old texts.
+- Missing customer replies on #1009 (2026-10-28): a development
+  installation polled the same Gmail account and `STOPAN` folder with
+  automatic fetching on. It took the two replies first (marked them
+  \Seen and turned them into new tickets in its own database), so
+  production's `UNSEEN` search never saw them and logged nothing. Both
+  messages were marked unseen again and a production check made them
+  public replies on #1009 (staff notified). Development fetching is now
+  off. Open: fetch only mail addressed to the organization's
+  `mailbox_address` (todo), since each installation has its own
+  +address.
 - Deployed 624ccbd (2026-10-28) after backup `pre-deploy-8e1fe51.sqlite3`;
   no migrations, all checks fine (specs/deploy.md). Pushed to origin.
 - Automatic mail fetching is on in production (`app_settings.mailbox_polling`,
