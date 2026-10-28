@@ -912,6 +912,9 @@ menu and Take; open /tickets/new and pick a requester.
 - Side panels on phones are one per row (`.ticket-side` one grid column
   under 761px); the 900px rule's `auto-fit minmax(240px, 1fr)` put two
   side by side on wider phones and at bigger text sizes.
+- Properties panel: `sticky--blue` instead of `sticky--gray` (grey paper
+  was close to the desk); yellow, purple and green were taken by
+  Requester, Sharing and the Done status.
 - Production backups: the seven older copies of 2026-10-28 were removed
   (242b476, 50475d3, 624ccbd, 8e1fe51, 9c67bf4, bf47c22, fab4c24);
   `pre-deploy-bf4036c` stays as the rollback copy, the 2026-10-27

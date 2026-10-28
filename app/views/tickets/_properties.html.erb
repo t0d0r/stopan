@@ -1,5 +1,5 @@
 <%# Closed on phones until opened, unless the form has errors (ui.md "Ticket page on phones"). %>
-<section class="sticky sticky--gray panel side-panel<%= " is-open" if ticket.errors.any? %>" id="properties"
+<section class="sticky sticky--blue panel side-panel<%= " is-open" if ticket.errors.any? %>" id="properties"
          aria-labelledby="properties-title" data-side-panel>
   <%= side_panel_bar t("ui.ticket.properties"), "properties-body" %>
   <div class="panel__body" id="properties-body">

@@ -247,6 +247,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] menu button on phones: sections, preferences and account behind it; no search on a ticket page (specs/ui.md "Menu bar")
 - [x] Properties, Requester and Sharing start closed on phones and open from their title strip
 - [x] the side panels one per row on phones (two columns from about 500px before)
+- [x] Properties panel on blue paper instead of grey, which was close to the desk colour (specs/ui.md "Ticket page")
 - [x] composer behind a sticky Reply bar on phones; close box keeps the text
 - [x] notification panel above the page on phones (menu bar `position: relative`)
 - [x] production: deployed 0d9f426 after a database backup (specs/deploy.md)

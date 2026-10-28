@@ -117,7 +117,8 @@ in documentation, not in the app.
   assignee there too; changes of assignee stay internal events. There is no
   breadcrumb (the menu bar leads back to the queue) and no separate
   "Opened by" line (author and time are in the strip). Then the timeline
-  and the composer. Side: "Properties" panel (status, priority,
+  and the composer. Side: "Properties" panel (blue paper since
+  2026-10-28, as grey was hard to tell from the desk; status, priority,
   assignee as selects with "Update" for staff, plain values for
   requesters; staff also get a one-click "Take" button above the form
   when the ticket is not theirs), "Requester" panel (name, email, organization; staff only see
