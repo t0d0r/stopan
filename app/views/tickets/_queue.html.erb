@@ -3,7 +3,6 @@
   <%# The menu bar and the views name the page; the h1 is for screen readers (ui.md "Pages"). %>
   <h1 class="sr-only"><%= t("ui.queue.title") %></h1>
   <%= render "tickets/view_switch", current: :list %>
-  <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
 </div>
 
 <div class="queue">

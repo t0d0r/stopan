@@ -3,14 +3,13 @@
 <% turbo_refreshes_with scroll: :preserve %>
 <%= turbo_stream_from(:queue, :staff, channel: TicketListsChannel) %>
 <% filter = @board.filter %>
-<%# One row: the filters, then the List | Board switch and "New ticket" (specs/board.md). %>
+<%# One row: the filters, then the List | Board switch (specs/board.md). %>
 <div class="desk__header board-header">
   <%# The menu bar and the List | Board switch name the page; the h1 is for screen readers (ui.md "Pages"). %>
   <h1 class="sr-only"><%= t("ui.board.title") %></h1>
   <%= render "tickets/filters", filter: filter, staff: @staff, url: board_path, view: nil, clear_path: board_path,
                                 form_class: "board-filters" %>
   <%= render "tickets/view_switch", current: :board %>
-  <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
 </div>
 
 <div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>">

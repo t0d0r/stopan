@@ -269,6 +269,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] account menu: role icon before the name; optional nickname (`users.nickname`, account page and admin form) shown there instead of the name (specs/data-model.md, specs/ui.md "Menu bar")
 - [x] queue and board: no visible page title (sr-only h1); reports: period and organization selects on the title's row (specs/ui.md "Pages", specs/reports.md "Filters")
 - [x] menu bar: "New ticket" as a green "+" after the name instead of a section pill (specs/ui.md "Menu bar")
+- [x] no "New ticket" buttons on the queue, the board and My tickets; the menu bar "+" replaces them
 - [x] board: the filters on one row with the List | Board switch and "New ticket" (specs/board.md)
 - [x] search page: one visible title, the pink panel's strip; the `h1` is for screen readers only (specs/queues.md "Search page")
 - [x] organization details panel reworked: count tiles, mail as two cards with on/off pills and their own actions, message to members under the members list (specs/ui.md "Admin")

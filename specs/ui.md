@@ -113,14 +113,17 @@ in documentation, not in the app.
   board and the search page show no visible page title, since the menu
   bar's current section, the List | Board switch and the panel strips
   already name them; their `h1` stays for screen readers (`sr-only`).
-  The queue and board keep the List | Board switch and "New ticket" at
-  the right of the header row; on the board the filters share that row
-  (board.md). Other pages keep their titles.
+  The queue and board keep the List | Board switch at the right of the
+  header row; on the board the filters share that row (board.md). Other
+  pages keep their titles. No page has its own "New ticket" button any
+  more: the green "+" in the menu bar is the one way in (2026-10-28: "not
+  needed now that it is in the header"); My tickets keeps its "open a new
+  one" link in the empty state.
 - **Queue** (staff): a coloured row of view tabs, then the filter bar and
   table in a sticky panel in the current view's colour (queues.md). Under
   760px the tab row wraps onto more rows (no sideways scrolling) and
   table columns other than number, subject and status are hidden.
-- **My tickets** (requester): coloured tabs, "New ticket" button, table in
+- **My tickets** (requester): coloured tabs, table in
   a sticky panel in the current tab's colour (yellow, green, gray).
 - **New ticket:** one yellow sticky form, labels above fields, hints under
   them, required fields marked, file input with the limits stated.

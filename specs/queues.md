@@ -205,7 +205,7 @@ Tabs: `open` (new, open, pending, postponed; default, yellow), `done`
 tab of the same morning was removed on 2026-10-27), each with a coloured
 count; the current tab
 and the list panel take the tab's colour. Search (`q`, same matching as
-above) is the menu bar search. A "New ticket" button. Table columns: number, subject, organization (only if they belong to more than one),
+above) is the menu bar search. New tickets start from the menu bar's "+" (ui.md "Menu bar"). Table columns: number, subject, organization (only if they belong to more than one),
 status, last activity; one line per row as in the queue.
 
 Empty states say what to do next ("You have no open tickets. Need help?

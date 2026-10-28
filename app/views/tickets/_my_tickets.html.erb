@@ -1,7 +1,6 @@
 <% several_orgs = current_user.organizations.size > 1 %>
 <div class="desk__header">
   <h1 class="desk__title"><%= t("ui.my_tickets.title") %></h1>
-  <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
 </div>
 
 <section class="sticky sticky--<%= view_color(filter.view) %> panel" aria-labelledby="my-tickets-title">
