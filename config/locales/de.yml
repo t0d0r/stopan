@@ -991,6 +991,9 @@ de:
       hint:
         pending: "Der Service Desk wartet auf Ihre Antwort. Antworten Sie auf der Ticketseite."
         done: "Falls Ihr Problem damit nicht gelöst ist, antworten Sie auf der Ticketseite, und das Ticket wird wieder geöffnet."
+      hint_by_email:
+        pending: "Der Service Desk wartet auf Ihre Antwort. Antworten Sie auf diese E-Mail."
+        done: "Falls Ihr Problem damit nicht gelöst ist, antworten Sie auf diese E-Mail, und das Ticket wird wieder geöffnet."
       files: "Angehängte Dateien"
       open: "Ticket %{reference} öffnen"
       open_shared: "Ticket %{reference} online lesen, ohne Anmeldung"
@@ -999,6 +1002,8 @@ de:
         requester: "Sie erhalten diese E-Mail, weil Sie dieses Ticket eröffnet haben oder es für Sie eröffnet wurde."
         assignee: "Sie erhalten diese E-Mail, weil Ihnen dieses Ticket zugewiesen ist."
         subscriber: "Sie erhalten diese E-Mail, weil Sie über jedes neue Ticket informiert werden möchten."
+      reply_by_email: "Um zu antworten, antworten Sie auf diese E-Mail; Ihre Antwort wird dem Ticket hinzugefügt."
+      reply_by_email_staff: "Eine Antwort auf diese E-Mail wird dem Ticket als öffentliche Antwort hinzugefügt, die der Anfragende sieht; interne Notizen schreiben Sie auf der Ticketseite."
       no_reply: "Antworten auf diese E-Mail werden nicht gelesen; bitte antworten Sie auf der Ticketseite."
       unsubscribe: "Um diese E-Mails abzubestellen, ändern Sie die Einstellung auf Ihrer Kontoseite:"
 

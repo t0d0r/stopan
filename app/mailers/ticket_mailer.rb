@@ -4,7 +4,7 @@
 # nothing when they may not.
 class TicketMailer < ApplicationMailer
   helper :tickets, :markdown
-  helper_method :notification_intro
+  helper_method :notification_intro, :reply_hint, :reply_note
 
   def created = notify
   def replied = notify
@@ -44,6 +44,22 @@ class TicketMailer < ApplicationMailer
     t("mailer.ticket.intro.#{key}", actor: @actor&.display_name || t("ui.timeline.system"),
                                     reference: @ticket.reference, requester: @ticket.requester.display_name,
                                     from: status_label(@status_event&.from_value), to: status_label(@status_event&.to_value))
+  end
+
+  # Where to answer: the email itself when the organization's mailbox is
+  # its Reply-To, else the ticket page (specs/notifications.md "Footer").
+  def reply_hint(status)
+    t("mailer.ticket.#{replies_by_email? ? "hint_by_email" : "hint"}.#{status}")
+  end
+
+  def reply_note
+    return t("mailer.ticket.no_reply") unless replies_by_email?
+
+    t(@reason == "requester" ? "mailer.ticket.reply_by_email" : "mailer.ticket.reply_by_email_staff")
+  end
+
+  def replies_by_email?
+    @ticket.organization.replies_by_email?
   end
 
   def status_label(status)

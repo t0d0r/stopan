@@ -232,4 +232,25 @@ class TicketNotifierTest < ActiveSupport::TestCase
     assert_not ticket.reload.shared?
     assert_includes body_of("anna@example.com"), "/tickets/1001"
   end
+
+  test "with the organization's mailbox on, the email says to answer by replying to it" do
+    organizations(:acme).update_columns(imap_enabled: true, mailbox_address: "help@acme.example")
+    ticket = tickets(:printer)
+    ticket.update_columns(assignee_id: users(:agent_two).id)
+
+    mails { ticket.add_comment(author: users(:agent), body: "Please try a new roll.", status: "pending") }
+
+    requester = body_of("anna@example.com")
+    assert_includes requester, "The service desk is waiting for your answer. Reply to this email."
+    assert_includes requester, "To answer, reply to this email; your reply is added to the ticket."
+    assert_not_includes requester, "Replies to this email are not read"
+    assert_includes body_of("petar@example.com"), "added to the ticket as a public reply that the requester sees"
+    assert_equal [ "help@acme.example" ], ActionMailer::Base.deliveries.first.reply_to
+
+    organizations(:acme).update_columns(imap_enabled: false)
+    mails { ticket.add_comment(author: users(:agent), body: "Done?", status: "done") }
+    requester = body_of("anna@example.com")
+    assert_includes requester, "reply on the ticket page and the ticket opens again"
+    assert_includes requester, "Replies to this email are not read"
+  end
 end

@@ -988,6 +988,9 @@ en:
       hint:
         pending: "The service desk is waiting for your answer. Reply on the ticket page."
         done: "If this does not solve your problem, reply on the ticket page and the ticket opens again."
+      hint_by_email:
+        pending: "The service desk is waiting for your answer. Reply to this email."
+        done: "If this does not solve your problem, reply to this email and the ticket opens again."
       files: "Attached files"
       open: "Open ticket %{reference}"
       open_shared: "Read ticket %{reference} online, without signing in"
@@ -996,6 +999,8 @@ en:
         requester: "You get this email because you opened this ticket or it was opened for you."
         assignee: "You get this email because this ticket is assigned to you."
         subscriber: "You get this email because you asked to be told about every new ticket."
+      reply_by_email: "To answer, reply to this email; your reply is added to the ticket."
+      reply_by_email_staff: "A reply to this email is added to the ticket as a public reply that the requester sees; write internal notes on the ticket page."
       no_reply: "Replies to this email are not read; please answer on the ticket page."
       unsubscribe: "To stop these emails, change the setting on your account page:"
 

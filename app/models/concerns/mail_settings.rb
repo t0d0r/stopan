@@ -50,6 +50,12 @@ module MailSettings
     imap_enabled? && (!google_mail? || mail_connection&.connected? || false)
   end
 
+  # Ticket mail carries the mailbox as Reply-To, so a reply by email comes
+  # back on the ticket (specs/organization-mail.md "Outgoing mail").
+  def replies_by_email?
+    imap_enabled? && mailbox_address.present?
+  end
+
   # Settings for ActionMailer's SMTP delivery. Every key is set, so nothing
   # of the global settings leaks into an organization's delivery. A Google
   # account signs in with XOAUTH2 and a fresh access token, which may raise

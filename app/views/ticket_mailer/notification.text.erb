@@ -17,7 +17,7 @@
 <% end %>
 <% if @reason == "requester" && @status_event && %w[pending done].include?(@status_event.to_value) %>
 
-<%= t("mailer.ticket.hint.#{@status_event.to_value}") %>
+<%= reply_hint(@status_event.to_value) %>
 <% end %>
 <% if %w[created assigned].include?(@kind) %>
 
@@ -35,7 +35,7 @@
 <% end %>
 
 -- 
-<%= t("mailer.ticket.reason.#{@reason}") %> <%= t("mailer.ticket.no_reply") %>
+<%= t("mailer.ticket.reason.#{@reason}") %> <%= reply_note %>
 <% if @reason == "subscriber" %>
 <%= t("mailer.ticket.unsubscribe") %> <%= edit_user_registration_url %>
 <% end %>

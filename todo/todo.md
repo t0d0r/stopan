@@ -217,7 +217,7 @@ approved "go in this order", all done 2026-10-27):
 
 - [x] the requester's notification emails of a ticket from email link to the shared page; a link with the recipient's address as password is made when none exists
 - [x] the share password form accepts an address in any case or with spaces around it
-- [ ] the email footer and the pending/done hints still say "reply on the ticket page"; for a ticket from email with a mailbox, replying to the email is the way (specs/notifications.md, specs/organization-mail.md)
+- [x] with the organization's mailbox on, the footer and the pending/done hints say to answer by replying to the email; staff are told a reply becomes a public reply (specs/notifications.md "Where to answer")
 
 ## Later (specs/roadmap.md)
 

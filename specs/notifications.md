@@ -238,8 +238,18 @@ notifications, live.
   recipient's email address as password instead (sharing.md "Link in
   the requester's emails").
 - **Footer:** why the recipient gets the email (requester / assignee /
-  subscribed to new tickets) and that replies to the email are not read;
-  subscribers get a link to their account page to turn it off.
+  subscribed to new tickets) and where to answer; subscribers get a link
+  to their account page to turn it off.
+- **Where to answer** (2026-10-28): when the ticket's organization has
+  its mailbox on with a mailbox address, the email's Reply-To is that
+  mailbox (organization-mail.md "Outgoing mail") and a reply by email
+  becomes a public reply on the ticket. Then the requester's footer
+  says to answer by replying to the email, staff are told that a reply
+  becomes a public reply the requester sees and that internal notes go
+  on the ticket page, and the requester's pending/done hints say "reply
+  to this email". Without the mailbox the footer says replies to the
+  email are not read and the hints point to the ticket page.
+  (`Organization#replies_by_email?`, also used for the Reply-To.)
 - **Threading:** every email of a ticket carries `References:
   <ticket-1001@APP_HOST>` so mail clients group them.
 - **From:** `MAILER_SENDER`, the same as Devise.

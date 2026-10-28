@@ -35,7 +35,7 @@ class ApplicationMailer < ActionMailer::Base
       message.from = organization.mail_from
       wrap_delivery_behavior!(delivery_method, settings)
     end
-    message.reply_to = organization.mailbox_address if organization&.imap_enabled? && organization.mailbox_address
+    message.reply_to = organization.mailbox_address if organization&.replies_by_email?
     # Without any SMTP (production without SMTP_ADDRESS) the message is
     # dropped instead of trying a local mail server.
     message.perform_deliveries = false unless settings || Rails.configuration.x.global_smtp != false

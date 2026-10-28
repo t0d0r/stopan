@@ -878,7 +878,11 @@ menu and Take; open /tickets/new and pick a requester.
   its password is the recipient's address, else the ticket page.
   `SharedTicketsController#password_matches?` also tries a password with
   `@` stripped and in lower case. Tests in `ticket_notifier_test.rb` and
-  `shared_tickets_controller_test.rb`. Not deployed yet.
+  `shared_tickets_controller_test.rb`.
+- Where to answer (specs/notifications.md): `Organization#replies_by_email?`
+  (mailbox on with an address) drives the Reply-To and, in TicketMailer,
+  `reply_hint`/`reply_note`: "reply to this email" for the requester, a
+  public-reply warning for staff; without it the old texts.
 - Automatic mail fetching is on in production (`app_settings.mailbox_polling`,
   every 120 s). One check right after a burst of manual "Check the
   mailbox" logins got `Net::IMAP::ByeResponseError: System Error` from
