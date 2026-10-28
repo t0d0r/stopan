@@ -11,11 +11,13 @@ class Organization < ApplicationRecord
 
   normalizes :name, with: ->(name) { name.squish }
   normalizes :slug, with: ->(slug) { slug.strip.downcase.presence }
+  normalizes :mail_locale, with: ->(locale) { locale.strip.presence }
 
   validates :name, presence: true, length: { maximum: 120 }, uniqueness: { case_sensitive: false }
   validates :notes, length: { maximum: 5_000 }
   validates :slug, presence: true, length: { minimum: 2 }, format: { with: SLUG }, uniqueness: true
   validates :public_intro, length: { maximum: 1_000 }
+  validates :mail_locale, inclusion: { in: ->(_) { I18n.available_locales.map(&:to_s) } }, allow_nil: true
   validate :allowed_senders_valid
 
   # One address or @domain per line, lower-case, without blanks or

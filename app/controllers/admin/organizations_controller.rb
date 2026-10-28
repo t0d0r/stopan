@@ -97,7 +97,7 @@ module Admin
 
     MAIL_FIELDS = %i[smtp_enabled smtp_address smtp_port smtp_security smtp_username smtp_password remove_smtp_password
                      mail_from imap_enabled imap_address imap_port imap_ssl imap_username imap_password
-                     remove_imap_password imap_folder mailbox_address].freeze
+                     remove_imap_password imap_folder mailbox_address mail_locale].freeze
 
     # Passwords are write-only: a blank field keeps the stored one
     # (specs/organization-mail.md).

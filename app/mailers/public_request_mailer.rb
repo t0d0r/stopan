@@ -7,7 +7,7 @@ class PublicRequestMailer < ApplicationMailer
     @ticket = params[:ticket]
     @resource = @ticket.requester
     @url = magic_link_url(@resource.generate_token_for(:magic_sign_in), ticket: @ticket.number)
-    I18n.with_locale(@resource.locale.presence || I18n.default_locale) do
+    I18n.with_locale(@resource.mail_locale(@ticket.organization)) do
       headers["References"] = "<ticket-#{@ticket.number}@#{default_url_options[:host]}>"
       mail to: @resource.email,
            subject: t("mailer.public_request.subject", number: @ticket.number, subject: @ticket.subject)

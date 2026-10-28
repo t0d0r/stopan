@@ -3,6 +3,12 @@
 <fieldset class="mail-settings" id="mail-settings">
   <legend class="section-title"><%= t("ui.admin.mail.title") %></legend>
   <p class="field-hint"><%= t("ui.admin.mail.intro") %></p>
+  <div class="field">
+    <%= f.label :mail_locale, t("ui.admin.mail.locale") %>
+    <%= f.select :mail_locale, [ [ t("ui.admin.mail.locale_recipient"), "" ] ] + ApplicationHelper::LANGUAGE_NAMES.invert.to_a,
+                 {}, class: "select", aria: { describedby: "mail-locale-hint" } %>
+    <p class="field-hint" id="mail-locale-hint"><%= t("ui.admin.mail.locale_hint") %></p>
+  </div>
   <% google = organization.google_mail? && organization.mail_connection %>
   <% if google %>
     <p class="callout"><%= t("ui.admin.mail.google_fields", email: organization.mail_connection.email) %></p>

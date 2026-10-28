@@ -15,6 +15,24 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "x@example.com", User.new(email: "x@example.com", username: "").display_name
   end
 
+  test "mail_locale: own choice, then the organization's for requesters, then the browser's, then English" do
+    org = organizations(:acme)
+    anna = users(:anna)
+    anna.update_columns(language: nil, locale: nil)
+    assert_equal :en, anna.mail_locale(org).to_sym
+    anna.update_columns(locale: "bg")
+    assert_equal "bg", anna.mail_locale(org)
+    org.mail_locale = "de"
+    assert_equal "de", anna.mail_locale(org)
+    assert_equal "bg", anna.mail_locale(nil)
+    anna.update_columns(language: "en")
+    assert_equal "en", anna.mail_locale(org)
+
+    agent = users(:agent)
+    agent.update_columns(language: nil, locale: "bg")
+    assert_equal "bg", agent.mail_locale(org)
+  end
+
   test "roles" do
     assert users(:admin).staff?
     assert users(:agent).staff?

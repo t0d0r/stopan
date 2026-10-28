@@ -144,6 +144,22 @@ class TicketNotifierTest < ActiveSupport::TestCase
     assert_equal "<ticket-1001@example.com>", mail["References"].value
   end
 
+  test "the organization's email language reaches its requesters, not staff" do
+    organizations(:acme).update!(mail_locale: "de")
+    users(:anna).update_columns(locale: "bg")
+    ticket = tickets(:printer)
+    ticket.update_columns(assignee_id: users(:agent_two).id)
+
+    sent = mails { ticket.add_comment(author: users(:agent), body: "Try a new roll.") }
+
+    assert_equal "[Stopan #1001] Neue Antwort: Receipt printer prints blank pages", sent["anna@example.com"]
+    assert_equal "[Stopan #1001] New reply: Receipt printer prints blank pages", sent["petar@example.com"]
+
+    users(:anna).choose_language!("bg")
+    sent = mails { ticket.add_comment(author: users(:agent), body: "Any luck?") }
+    assert_equal "[Stopan #1001] Нов отговор: Receipt printer prints blank pages", sent["anna@example.com"]
+  end
+
   test "names are escaped in HTML and plain in text" do
     users(:agent).update_columns(name: "Maria <Ops> & Co")
     mails { tickets(:printer).add_comment(author: users(:agent), body: "Done.") }

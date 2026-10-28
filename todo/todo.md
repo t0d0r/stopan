@@ -224,6 +224,12 @@ approved "go in this order", all done 2026-10-27):
 - [x] customer replies on #1009 missing: a development copy polled the same Gmail account and folder, marked the replies \Seen and made its own tickets of them; the replies were marked unseen and fetched by production (session note)
 - [ ] take only messages addressed to the organization's `mailbox_address` (IMAP `UNSEEN TO`), so two installations with different +addresses on one account do not take each other's mail (specs/organization-mail.md "Fetching")
 
+## Email language per organization (2026-10-28, specs/organization-mail.md "Settings")
+
+- [x] `organizations.mail_locale` (migration `AddMailLocaleToOrganizations`) and the "Language of emails to requesters" select in the Mail panel
+- [x] `User#mail_locale`: the recipient's own choice, then for requesters the organization's language, then the browser's, then English; used by TicketMailer, PublicRequestMailer and AccountMailer (specs/notifications.md "Language")
+- [ ] deploy with a database copy first (one new nullable column)
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

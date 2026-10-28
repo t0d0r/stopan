@@ -89,6 +89,18 @@ class User < ApplicationRecord
     organization && memberships.exists?(organization_id: organization.id)
   end
 
+  # The language of an email to this user (specs/notifications.md
+  # "Language"): their own choice, else for a requester the organization's
+  # email language, else the browser's, else English.
+  def mail_locale(organization = nil)
+    language.presence || (organization&.mail_locale if requester?).presence || locale.presence || I18n.default_locale
+  end
+
+  # The organization a mail not tied to a ticket speaks for: the only one.
+  def only_organization
+    organizations.first if organizations.one?
+  end
+
   # A language chosen in the header or on the account page (specs/ui.md
   # "Language"); blank goes back to the browser's. Emails follow the choice.
   def choose_language!(value)

@@ -4,7 +4,7 @@ class AccountMailer < ApplicationMailer
   def magic_link
     @resource = params[:user]
     @url = magic_link_url(@resource.generate_token_for(:magic_sign_in))
-    I18n.with_locale(@resource.locale.presence || I18n.default_locale) do
+    I18n.with_locale(@resource.mail_locale(@resource.only_organization)) do
       mail to: @resource.email, subject: t("mailer.magic_link.subject")
     end
   end

@@ -29,6 +29,21 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Initech Ltd", org.reload.name
   end
 
+  test "the email language is one of the app's languages or blank" do
+    org = organizations(:acme)
+    get edit_admin_organization_url(org)
+    assert_select "select[name='organization[mail_locale]'] option[value='']"
+    assert_select "select[name='organization[mail_locale]'] option[value=de]"
+
+    patch admin_organization_url(org), params: { organization: { mail_locale: "de" } }
+    assert_equal "de", org.reload.mail_locale
+    patch admin_organization_url(org), params: { organization: { mail_locale: "xx" } }
+    assert_response :unprocessable_content
+    assert_equal "de", org.reload.mail_locale
+    patch admin_organization_url(org), params: { organization: { mail_locale: "" } }
+    assert_nil org.reload.mail_locale
+  end
+
   test "names are unique ignoring case" do
     post admin_organizations_url, params: { organization: { name: "acme bakery" } }
     assert_response :unprocessable_content

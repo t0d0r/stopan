@@ -524,6 +524,9 @@ de:
       mail:
         title: "E-Mail"
         intro: "E-Mails zu den Tickets dieser Organisation werden über ihren eigenen SMTP-Server versendet, und E-Mails an ihr Postfach werden zu Tickets und Antworten. Passwörter werden verschlüsselt gespeichert und nie angezeigt."
+        locale: "Sprache der E-Mails an Anfragende"
+        locale_recipient: "Sprache des jeweiligen Empfängers"
+        locale_hint: "Für die Anfragenden dieser Organisation. Mitarbeitende erhalten E-Mails in ihrer eigenen Sprache, und eine Sprache, die ein Anfragender in seinem Konto gewählt hat, hat Vorrang."
         smtp: "Ausgehende E-Mails (SMTP)"
         smtp_enabled: "E-Mails dieser Organisation über ihren eigenen SMTP-Server senden"
         imap: "Postfach (IMAP)"

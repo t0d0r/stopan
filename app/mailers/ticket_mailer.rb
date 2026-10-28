@@ -30,7 +30,7 @@ class TicketMailer < ApplicationMailer
     @share_link = @ticket.share_link_for(@recipient)
     @ticket_link = @share_link ? shared_ticket_url(@ticket.share_token) : ticket_url(@ticket)
 
-    I18n.with_locale(@recipient.locale.presence || I18n.default_locale) do
+    I18n.with_locale(@recipient.mail_locale(@ticket.organization)) do
       headers["References"] = "<ticket-#{@ticket.number}@#{default_url_options[:host]}>"
       mail to: @recipient.email, template_name: "notification",
            subject: t("mailer.ticket.subject", number: @ticket.number, kind: t("mailer.ticket.kinds.#{@kind}"),

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_190000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_200000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -163,6 +163,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_190000) do
     t.text "public_intro"
     t.text "public_allowed_senders"
     t.string "mail_auth", default: "password", null: false
+    t.string "mail_locale"
     t.index "lower(name)", name: "index_organizations_on_lower_name", unique: true
     t.index ["slug"], name: "index_organizations_on_slug", unique: true
   end

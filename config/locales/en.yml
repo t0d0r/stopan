@@ -521,6 +521,9 @@ en:
       mail:
         title: "Mail"
         intro: "Mail about this organization's tickets goes out through its own SMTP, and mail to its mailbox becomes tickets and replies. Passwords are stored encrypted and never shown."
+        locale: "Language of emails to requesters"
+        locale_recipient: "Each recipient's language"
+        locale_hint: "For this organization's requesters. Staff get emails in their own language, and a language a requester chose on their account page wins."
         smtp: "Outgoing mail (SMTP)"
         smtp_enabled: "Send this organization's mail through its own SMTP"
         imap: "Mailbox (IMAP)"

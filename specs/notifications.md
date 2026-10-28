@@ -223,7 +223,11 @@ notifications, live.
 
 ## Content
 
-- **Language:** the recipient's `users.locale`, else English. The app
+- **Language:** in this order: the language the recipient chose
+  (`users.language`); for a requester, the ticket organization's email
+  language (`organizations.mail_locale`, organization-mail.md
+  "Settings"); the recipient's `users.locale`; else English
+  (`User#mail_locale`). The app
   stores the language of the browser each signed-in user last used (only
   when the browser sent a supported `Accept-Language`), unless the user
   chose a language (ui.md "Language"): then `users.locale` is that

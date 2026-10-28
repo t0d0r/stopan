@@ -18,7 +18,16 @@ its part is enabled.
 |------|--------|
 | Outgoing (SMTP) | `smtp_enabled`, `smtp_address` (host), `smtp_port` (default 587), `smtp_security` (`starttls` default, `tls` for implicit TLS on 465, `none`), `smtp_username`, `smtp_password`, `mail_from` (address and optional name, for example `Acme Support <support@acme.example>`) |
 | Mailbox (IMAP) | `imap_enabled`, `imap_address` (host), `imap_port` (default 993), `imap_ssl` (default on), `imap_username`, `imap_password`, `imap_folder` (default `INBOX`), `mailbox_address` (the address customers write to; also the Reply-To of outgoing mail) |
+| Email language | `mail_locale`: the language of emails to the organization's requesters, `en`, `bg` or `de`; blank (default) = each recipient's own language (notifications.md "Language") |
 
+- **Email language** (2026-10-28, operator: "each org has an option
+  which language to use when sending emails"): a select at the top of
+  the Mail panel, "Language of emails to requesters", with "Each
+  recipient's language" and the three languages. It applies to
+  requesters only (ticket notifications, the confirmation after a public
+  request or a first email, a sign-in link for a requester of exactly
+  one organization); staff keep their own language. A language the
+  requester chose on their account page still wins.
 - Passwords are stored encrypted (Active Record encryption,
   `encrypts :smtp_password, :imap_password`). The keys are derived from
   `SECRET_KEY_BASE` (`config/initializers/encryption.rb`), so no new
