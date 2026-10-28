@@ -113,6 +113,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] menu bar wraps under 960px with the search on its own row, so it never runs off the screen (specs/ui.md "Menu bar")
 - [x] board moves and task boxes send POST with `_method` (the server WAF refuses PATCH) (specs/deploy.md "ModSecurity false positives")
 - [x] production: ModSecurity exclusions for Cyrillic text (941310) and Accept-Charset, `ProxyPass /error/ !` (specs/deploy.md "ModSecurity false positives")
+- [ ] production: random 403 on HTML pages: CRS 953120 "PHP source code leakage" finds `<?` in the zstd/gzip body Thruster compresses; proposed fix: `RequestHeader unset Accept-Encoding` in the vhost, Apache mod_deflate compresses after ModSecurity (specs/deploy.md "ModSecurity false positives")
 - [x] production: deployed cbf319b with `AddLanguageToUsers`, after a database backup (specs/deploy.md)
 - [x] German UI (`de`): app, Devise and Rails texts, header switch with one button per other language, German page and email tests (specs/ui.md "Translations", "Language")
 - [x] menu bar shows the role as an icon (person, headset, shield) with its name as tooltip and label (specs/ui.md "Menu bar")

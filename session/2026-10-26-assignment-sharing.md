@@ -856,6 +856,17 @@ menu and Take; open /tickets/new and pick a requester.
 - Deployed 9c67bf4 (2026-10-28) after backup `pre-deploy-242b476.sqlite3`;
   no migrations, all checks fine. Pushed to origin (main at 56edda7 plus
   this note).
+- 4xx check of the site's Apache logs (2026-10-28): signed-in staff got
+  403 on /, /tickets, /tickets/board, /admin, /tickets/1001. Cause: CRS
+  953120 "PHP source code leakage" (then 959100 outbound score) matches
+  `<?` inside the compressed response body; Thruster answers zstd to
+  Safari 26/27 and gzip to others, and ModSecurity inspects text/html
+  bodies as they come from the backend. Not applied yet: unset
+  Accept-Encoding towards the backend so ModSecurity sees plain HTML and
+  Apache mod_deflate (enabled) compresses after it. Other 4xx are bots
+  (.git, .env, wp-*), apple-touch-icon-precomposed.png lookups, old
+  asset digests after deploys, and the 404s of 2026-10-27 that were
+  ModSecurity 403s before `ProxyPass /error/ !`.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);
