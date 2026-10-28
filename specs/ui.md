@@ -22,7 +22,9 @@ Turbo Drive for page changes.
   "Board" on the board (operator, 2026-10-27: "a separate button for the
   board in the header"; before, the board counted as "Queue"). Then the ticket search field (signed-in users,
   queues.md "Search"; on its own full-width row under 1180px, where the
-  bar wraps instead of running off the screen). Under 560px the bar has
+  bar wraps instead of running off the screen; at the big and extra text
+  sizes under 1180px times the zoom, 1356px and 1533px, see "Text size
+  zoom"). Under 560px the bar has
   three rows: the icon with the tools on the right, the section pills on
   a full-width row (wrapping), the search. Right: the
   notification bell with its unread count and panel (notifications.md
@@ -128,6 +130,16 @@ themes, the SVG tab icon, and the source of `public/icon.png` (512 px),
   replies (green) and Email notifications (pink, staff only) in the
   third. API tokens (gray, api.md) spans the full width under them. The
   organizations the user belongs to are a line under the grid.
+- **Text size zoom** (operator, 2026-10-28: "fix the menu at the largest
+  text"): the three text sizes zoom `body` by `--zoom` (1, 1.15, 1.3).
+  Media queries see the window, not the zoomed page, so a breakpoint that
+  depends on content width is repeated per size (the menu bar wrap).
+  Window units go through `--vw` / `--vh` (1vw and 1vh divided by the
+  zoom), never bare `vw` / `vh`, or a full-width board or dialog is wider
+  and taller than the window. Script positions from the window or
+  `getBoundingClientRect` are divided by `pageZoom()` before they become
+  CSS lengths (the board height, the assignee menu, the long request
+  fold). No page scrolls sideways at any text size from 1024px up.
 - **Panel columns** (account page, admin settings; operator, 2026-10-28:
   "the elements are placed well only at the small text size", and
   "admin settings should fit without scrolling"): the panels sit in three

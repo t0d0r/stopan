@@ -6,6 +6,14 @@
 let pageAbort = null;
 let pageSignal;
 
+// The text size zoom on <body> (specs/ui.md "Text size zoom"): window sizes and
+// getBoundingClientRect are in screen pixels, CSS lengths inside the page
+// are multiplied by the zoom, so screen pixels are divided by it first.
+function pageZoom() {
+  const body = document.body;
+  return body.offsetWidth ? body.getBoundingClientRect().width / body.offsetWidth : 1;
+}
+
 // Text areas grow with their text instead of scrolling. scrollHeight leaves
 // out the border, which with border-box sizing would leave the box a pixel
 // short. Without JavaScript the field keeps its normal scroll bar.
@@ -93,10 +101,12 @@ function setUpAssignMenus(menus) {
     menu.addEventListener("toggle", () => {
       if (!menu.open) return;
       closeAll(menu);
-      const box = menu.querySelector("summary").getBoundingClientRect();
-      const below = box.bottom + 4 + list.offsetHeight <= window.innerHeight;
+      const zoom = pageZoom();
+      const rect = menu.querySelector("summary").getBoundingClientRect();
+      const box = { top: rect.top / zoom, bottom: rect.bottom / zoom, left: rect.left / zoom };
+      const below = box.bottom + 4 + list.offsetHeight <= window.innerHeight / zoom;
       list.style.top = `${below ? box.bottom + 4 : Math.max(8, box.top - 4 - list.offsetHeight)}px`;
-      list.style.left = `${Math.max(8, Math.min(box.left, window.innerWidth - list.offsetWidth - 8))}px`;
+      list.style.left = `${Math.max(8, Math.min(box.left, window.innerWidth / zoom - list.offsetWidth - 8))}px`;
     });
   });
 
@@ -647,7 +657,7 @@ function setUpLongRequest() {
   if (!text) return;
   article.querySelector(".long-request__toggle")?.remove();
   article.querySelectorAll(".is-collapsed").forEach((node) => node.classList.remove("is-collapsed"));
-  const height = Math.round(Math.max(window.innerHeight * 0.35, 200));
+  const height = Math.round(Math.max(window.innerHeight / pageZoom() * 0.35, 200));
   if (text.scrollHeight <= height * 1.3) return;
 
   const key = location.pathname;
@@ -919,8 +929,9 @@ function setUpBoard(board) {
   // The board fits the window from its top to the bottom edge, so its
   // sideways scrollbar stays in view (specs/board.md "Scrolling").
   const fit = () => {
+    const zoom = pageZoom();
     const top = board.getBoundingClientRect().top + window.scrollY;
-    board.style.setProperty("--board-height", `${Math.max(320, window.innerHeight - top - 12)}px`);
+    board.style.setProperty("--board-height", `${Math.max(320, (window.innerHeight - top) / zoom - 12)}px`);
   };
   fit();
   window.addEventListener("resize", fit, { signal: pageSignal });

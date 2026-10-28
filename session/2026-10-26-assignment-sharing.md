@@ -832,6 +832,16 @@ menu and Take; open /tickets/new and pick a requester.
 - Deployed bf47c22 (2026-10-28) after backup `pre-deploy-50475d3.sqlite3`;
   no migrations, all checks fine (specs/deploy.md). Pushed main to origin
   on the operator's request after a gitleaks scan.
+- Text size zoom (specs/ui.md "Text size zoom"): `body { zoom: var(--zoom) }`
+  with `--zoom` 1 / 1.15 / 1.3 per `data-scale`; the menu bar wrap is
+  repeated at 1355px (big) and 1532px (extra); every `vw`/`vh` became
+  `--vw`/`--vh` (divided by the zoom), which fixed the board running
+  216px off the side and 270px below at extra; `pageZoom()` in
+  application.js converts screen pixels for the board height, the
+  assignee menu and the long request fold. Checked in Chrome at 1024-1600
+  px x three sizes on six pages: no sideways scroll, menu fits.
+- Advanced search removed from the board (`advanced: false` on
+  `tickets/_filters`); it stays in the queue and search.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

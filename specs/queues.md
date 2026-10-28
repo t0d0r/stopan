@@ -62,8 +62,10 @@ glance. "Clear filters" keeps only the view.
 ### Advanced search
 
 Operator, 2026-10-27: "search should be able to use advanced search when
-needed". Staff only, on the queue (and so on search results) and the
-board, which share the filter bar.
+needed". Staff only, on the queue (and so on search results). Not on the
+board (operator, 2026-10-28: "advanced search is in the wrong place, it
+has no business on the board"): the board shares the filter bar without
+it (`advanced: false` on `tickets/_filters`).
 
 - Under the filters a disclosure "Advanced search" (`<details>`, open
   when any of its fields is set, with the count of set fields in its

@@ -65,6 +65,7 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
     get board_url
     %w[status priority assignee organization sort].each { |name| assert_select "form.board-filters select[name=?]", name }
     assert_select "form.board-filters input[name=view]", 0
+    assert_select ".advanced-search", 0, "advanced search belongs to the queue (specs/queues.md)"
 
     get board_url(status: "open", q: "printer")
     assert_select ".board-column[data-status]:not(.board-column--stage)", 1
