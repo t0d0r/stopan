@@ -597,6 +597,19 @@ advanced search moved there from the queue. No migrations.
   sign-in; `/cable` 101; the four security headers; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:242b476` as `latest` and restart.
 
+## Update 2026-10-28 (revision 7767fc0)
+
+Since 9c67bf4: the organization details panel keeps the public form's
+address readable and puts space above its section titles (ui.md
+"Admin"). b263492 is in the release too; its site directive
+(`SecDisableBackendCompression`) was already applied through the Remote
+API. No migrations, so no database copy.
+
+- Checked: healthy; `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  `/cable` 101; the four security headers; the served stylesheet has the
+  two new rules; the app listens only on `127.0.0.1:3183`; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:9c67bf4` as `latest` and restart.
+
 ## ModSecurity and compressed pages (2026-10-28)
 
 Signed-in staff got 403 at random on ordinary pages (`/`, `/tickets`,

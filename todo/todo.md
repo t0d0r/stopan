@@ -209,6 +209,7 @@ approved "go in this order", all done 2026-10-27):
 ## Organization page (2026-10-28, specs/ui.md "Admin")
 
 - [x] details panel: public form address no longer shrinks to "https:"; space above section titles
+- [x] deployed 7767fc0 to production (specs/deploy.md "Update 2026-10-28 (revision 7767fc0)")
 
 ## Later (specs/roadmap.md)
 

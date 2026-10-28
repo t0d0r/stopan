@@ -15,6 +15,11 @@
     the class `org-details`, and `.org-details .section-title:not(:first-child)`
     adds 18px above them.
 - specs/ui.md "Admin" describes both.
+- Deployed 7767fc0 to production with `make deploy` (no migrations, so
+  no database copy). Checked: healthy container, `/up` 200, `http://` ->
+  301, `/api/v1/me` 401, `/cable` 101, the four security headers, both
+  new rules in the served stylesheet, listener only on loopback, g0no
+  `/up` 200 (specs/deploy.md "Update 2026-10-28 (revision 7767fc0)").
 
 ## Decisions
 
@@ -32,12 +37,13 @@ session/2026-10-28-org-details.md.
 
 `make check`. Open an organization with the public form switched on in
 `/admin/organizations`; the development container (`make docker-dev`)
-mounts the source, so a reload shows the change. Production gets it with
-the next deploy.
+mounts the source, so a reload shows the change. In production it is
+live since 7767fc0.
 
 ## Next
 
-Deploy with the next production update (specs/deploy.md).
+Look at the organization page in production while signed in as an
+administrator; rollback is `localhost/stopan:9c67bf4` (specs/deploy.md).
 
 ## Security Note
 
