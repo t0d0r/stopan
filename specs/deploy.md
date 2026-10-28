@@ -669,6 +669,25 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-10-28 (revision 989950a)
+
+Since 0d9f426: who is online now for staff (presence.md: menu bar button
+and panel, "Also viewing now" on a ticket, `PresenceChannel`, `GET
+/presence`), the side panels one per row on phones, the Properties panel
+on blue paper. No migrations.
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-0d9f426.sqlite3` (mode 600; 10 users, 9
+  tickets). An incoming mail during the update added one requester and
+  one ticket (11 and 10 afterwards).
+- Checked: no pending migrations; `/up` 200; `http://` -> 301;
+  `/api/v1/me` 401; `/search` and `/presence` signed out -> 302;
+  `/cable` 101; pages gzip; the four security headers; the served
+  stylesheet and script have the presence rules and the
+  `presence_refresh` action; presence signalling on (`Presence::SCHEDULE`);
+  g0no `/up` 200.
+- Rollback: tag `localhost/stopan:0d9f426` as `latest` and restart.
+
 ## Update 2026-10-28 (revision 0d9f426)
 
 Since bf4036c: the phone layout of the menu bar and the ticket page (menu

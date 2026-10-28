@@ -933,7 +933,9 @@ menu and Take; open /tickets/new and pick a requester.
   refresh on new tickets was already in place and works (checked by
   creating a ticket from a second session). Tests:
   `presence_test.rb`, `presence_channel_test.rb`,
-  `presence_controller_test.rb`.
+  `presence_controller_test.rb`. Deployed as 989950a (with the one-per-row
+  side panels and the blue Properties panel) after backup
+  `pre-deploy-0d9f426.sqlite3`; pushed.
 - Production backups: the seven older copies of 2026-10-28 were removed
   (242b476, 50475d3, 624ccbd, 8e1fe51, 9c67bf4, bf47c22, fab4c24);
   `pre-deploy-bf4036c` stays as the rollback copy, the 2026-10-27
