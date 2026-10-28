@@ -956,7 +956,9 @@ menu and Take; open /tickets/new and pick a requester.
   `.org-mail__card`s with `mail_state_pill` (ApplicationHelper) and
   stacked `dt`/`dd`; test and check buttons moved into their cards;
   "Send a message to the members" moved under the members list. New
-  labels `ui.admin.mail.server` and `.address`.
+  labels `ui.admin.mail.server` and `.address`. Deployed as dfb32f4 (with
+  the account menu, full-width Stages and the bulk Delete fix) after
+  backup `pre-deploy-989950a.sqlite3`; pushed.
 - Production backups: the seven older copies of 2026-10-28 were removed
   (242b476, 50475d3, 624ccbd, 8e1fe51, 9c67bf4, bf47c22, fab4c24);
   `pre-deploy-bf4036c` stays as the rollback copy, the 2026-10-27

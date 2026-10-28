@@ -669,6 +669,23 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-10-28 (revision dfb32f4)
+
+Since 989950a: the account menu in the menu bar, Stages as a full-width
+panel on the admin settings page, the bulk bar's Delete aligned, and the
+reworked organization details panel (ui.md "Menu bar", "Admin", "Panel
+columns"). No migrations.
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-989950a.sqlite3` (mode 600; 11 users, 10
+  tickets).
+- Checked: no pending migrations; users and tickets kept; `/up` 200;
+  `http://` -> 301; `/api/v1/me` 401; `/search` and `/presence` signed
+  out -> 302; `/cable` 101; pages gzip; the four security headers; the
+  served stylesheet has the account menu, stage row and mail card rules;
+  g0no `/up` 200.
+- Rollback: tag `localhost/stopan:989950a` as `latest` and restart.
+
 ## Update 2026-10-28 (revision 989950a)
 
 Since 0d9f426: who is online now for staff (presence.md: menu bar button
