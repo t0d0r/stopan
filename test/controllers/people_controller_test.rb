@@ -7,6 +7,7 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     get ticket_url(tickets(:printer))
     assert_select "#requester-title ~ dl a[href=?]", person_path(users(:anna)), users(:anna).display_name
     assert_select "#requester-title ~ dl button.copy-value[type=button][data-copy-value=?] .copy-value__text", users(:anna).email, users(:anna).email
+    assert_select "#requester-title ~ dl button.copy-value[title=?]", users(:anna).email
     assert_select "#requester-title ~ dl a[href^=mailto]", 0
 
     get person_url(users(:anna))

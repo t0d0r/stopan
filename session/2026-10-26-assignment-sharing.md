@@ -883,6 +883,12 @@ menu and Take; open /tickets/new and pick a requester.
   (mailbox on with an address) drives the Reply-To and, in TicketMailer,
   `reply_hint`/`reply_note`: "reply to this email" for the requester, a
   public-reply warning for staff; without it the old texts.
+- Side column: a second, unused `.copy-value` rule near the end of
+  application.css (Google redirect URI style) overrode the email copy
+  button into a wrapping block; removed. `.copy-value__text` is
+  `nowrap` with an ellipsis, and `copy_email` sets `title`. The share
+  link row wraps (`.field-input` flex 1 1 16em, button flex 1 0 auto).
+  Not deployed yet.
 - Quote levels in mail: `TicketsHelper#mail_text` -> `mail_level` splits
   each level into its own text and the earlier message
   (`mail_quoted_start`: an Outlook-style From/date/subject block or a

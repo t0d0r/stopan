@@ -70,7 +70,9 @@ A "Sharing" panel in the side column, for users allowed to share:
   "Create share link" (`POST /tickets/:number/share`, param
   `share_password`);
 - shared: since when, open link or link with password, the URL in a
-  read-only field with a "Copy link" button (clipboard; without JavaScript
+  read-only field with a "Copy link" button (the field takes a row of
+  its own in the narrow side column, the button under it, so the
+  address stays readable; 2026-10-28) (clipboard; without JavaScript
   the field can be selected), "Stop sharing" (`DELETE
   /tickets/:number/share`, confirm dialog) and a collapsed "New link" form
   (same as create) to replace the link or change the password.

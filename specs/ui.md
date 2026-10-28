@@ -231,7 +231,11 @@ in documentation, not in the app.
   the requester's email in the ticket page's Requester panel and on a
   person's profile is a button that puts the address on the clipboard
   and shows "Copied" next to it for two seconds (also announced to
-  screen readers); no `mailto:` link.
+  screen readers); no `mailto:` link. The address stays on one line
+  (operator, 2026-10-28: "I do not want the email wrapped"), in link
+  colour with the copy icon after it; when the column is too narrow it
+  ends in an ellipsis, and the tooltip and the copy hold the whole
+  address.
 
 ## Accessibility
 

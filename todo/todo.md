@@ -237,6 +237,11 @@ approved "go in this order", all done 2026-10-27):
 - [ ] the HTML view of the mail of a deleted ticket fails for administrators (`TicketMailsController#show` uses `find_visible_ticket`, which skips deleted tickets) (specs/tickets.md "Deleting")
 - [ ] replies from Outlook still keep the quoted earlier message in the stored text (`MailboxMessage#without_quotes` knows only "On ... wrote:", "Original Message" and `>`); it is now shown collapsed
 
+## Side column fixes (2026-10-28)
+
+- [x] the requester's email stays on one line (ellipsis when too long, whole address in the tooltip and the copy); a stale `.copy-value` block rule from the Google page made it a wrapping box (specs/ui.md "Emails copy on click")
+- [x] the share link field takes its own row in the side column, the copy button under it (specs/sharing.md "Managing the link")
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

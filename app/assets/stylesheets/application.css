@@ -2144,20 +2144,24 @@ body {
   font-size: 13px;
 }
 
+/* The address takes a row of its own when the column is narrow, the
+   button under it (sharing.md "Managing the link"). */
 .sharing__link {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 10px;
 }
 
 .sharing__link .field-input {
-  flex: 1;
+  flex: 1 1 16em;
   min-width: 0;
   font-size: 12px;
 }
 
 .sharing__link .btn {
-  flex: none;
+  flex: 1 0 auto;
+  justify-content: center;
 }
 
 .sharing .button_to {
@@ -4446,7 +4450,6 @@ turbo-frame {
 /* An email that copies itself on click (specs/ui.md "Emails copy on click"). */
 .copy-value {
   display: inline-flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 4px 6px;
   max-width: 100%;
@@ -4462,6 +4465,15 @@ turbo-frame {
 
 .copy-value:hover .copy-value__text {
   text-decoration: underline;
+}
+
+/* An address stays on one line; a long one ends in an ellipsis, with the
+   whole address in the tooltip and the copy (ui.md "Copy a value"). */
+.copy-value__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .copy-value .icon {
@@ -4796,18 +4808,6 @@ turbo-frame {
   .report-tile__value {
     font-size: 22px;
   }
-}
-
-/* A value to copy as it is, such as the Google redirect URI (mail-oauth.md). */
-.copy-value {
-  display: block;
-  padding: 6px 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--ink);
-  font-size: 12px;
-  overflow-wrap: anywhere;
-  user-select: all;
 }
 
 /* ---------- theme: omarchy (ui.md "Themes") ----------
