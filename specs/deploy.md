@@ -651,6 +651,24 @@ answer"). No migrations.
   their requester; nothing is shared ahead of time.
 - Rollback: tag `localhost/stopan:8e1fe51` as `latest` and restart.
 
+## Update 2026-10-28 (revision fab4c24)
+
+Since 624ccbd: each organization may set the language of its emails to
+requesters (organization-mail.md "Settings", notifications.md
+"Language"). One migration, `AddMailLocaleToOrganizations`
+(20261028200000, one nullable column).
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-624ccbd.sqlite3` (mode 600; 10 users, 9
+  tickets).
+- Checked: no pending migrations; `organizations.mail_locale` exists and
+  is blank everywhere (each recipient's language, as before); users and
+  tickets kept; `/up` 200; `http://` -> 301; `/api/v1/me` 401; `/search`
+  signed out -> 302; `/cable` 101; pages gzip; the four security
+  headers; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
+  extra column is harmless to the older code.
+
 ## ModSecurity and compressed pages (2026-10-28)
 
 Signed-in staff got 403 at random on ordinary pages (`/`, `/tickets`,

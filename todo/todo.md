@@ -228,7 +228,7 @@ approved "go in this order", all done 2026-10-27):
 
 - [x] `organizations.mail_locale` (migration `AddMailLocaleToOrganizations`) and the "Language of emails to requesters" select in the Mail panel
 - [x] `User#mail_locale`: the recipient's own choice, then for requesters the organization's language, then the browser's, then English; used by TicketMailer, PublicRequestMailer and AccountMailer (specs/notifications.md "Language")
-- [ ] deploy with a database copy first (one new nullable column)
+- [x] deployed fab4c24 with a database copy first (specs/deploy.md)
 
 ## Later (specs/roadmap.md)
 

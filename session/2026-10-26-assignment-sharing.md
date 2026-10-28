@@ -890,7 +890,8 @@ menu and Take; open /tickets/new and pick a requester.
   requesters only, `locale`, then English; TicketMailer and
   PublicRequestMailer pass the ticket's organization, AccountMailer the
   user's only organization. Migration also run in the development
-  container. Not deployed yet.
+  container. Deployed as fab4c24 after backup `pre-deploy-624ccbd.sqlite3`;
+  pushed.
 - Missing customer replies on #1009 (2026-10-28): a development
   installation polled the same Gmail account and `STOPAN` folder with
   automatic fetching on. It took the two replies first (marked them
