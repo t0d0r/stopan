@@ -669,6 +669,25 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-10-28 (revision 3f367da)
+
+Since dfb32f4: the nickname (migration `AddNicknameToUsers`), "New
+ticket" as a green "+" after the name, "Admin" in the account menu, no
+visible titles on the queue, board and search pages, the board filters
+and the queue tabs on the header row with the List | Board switch in one
+place, the reports filters on the title row (ui.md "Menu bar", "Pages").
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-dfb32f4.sqlite3` (mode 600; 11 users, 10
+  tickets).
+- Checked: the migration ran (`users.nickname` present, none pending);
+  users and tickets kept; `/up` 200; `http://` -> 301; `/api/v1/me`
+  401; `/search` and `/presence` signed out -> 302; `/cable` 101; pages
+  gzip; the four security headers; the served stylesheet has the new
+  header and "+" rules; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:dfb32f4` as `latest` and restart; the
+  extra `nickname` column does not disturb the older code.
+
 ## Update 2026-10-28 (revision dfb32f4)
 
 Since 989950a: the account menu in the menu bar, Stages as a full-width
