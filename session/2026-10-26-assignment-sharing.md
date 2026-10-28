@@ -865,11 +865,12 @@ menu and Take; open /tickets/new and pick a requester.
   deploys, and the 404s of 2026-10-27 that were ModSecurity 403s before
   `ProxyPass /error/ !`. `public/apple-touch-icon-precomposed.png` (copy
   of the touch icon, test `touch_icon_test.rb`) ends the iOS/macOS 404s.
-- Mail fetching cannot work in production yet: the host's FireHOL
-  allows outgoing 993 only for one admin user, and the container's
-  connections leave as `stopan` through pasta (specs/deploy.md
-  "Outbound IMAP blocked by the host firewall"). Firewall change
-  proposed, not applied.
+- Mail fetching was blocked in production: the host's FireHOL allowed
+  outgoing 993 only for one admin user, and the container's connections
+  leave as `stopan` through pasta. `stopan` is now in the imaps rule;
+  Gmail and Microsoft 365 IMAPS answer from the container (specs/deploy.md
+  "Outbound IMAP blocked by the host firewall"). Mail fetching still
+  has to be switched on in /admin/settings.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

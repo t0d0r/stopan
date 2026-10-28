@@ -603,11 +603,19 @@ Since 9c67bf4: the organization details panel keeps the public form's
 address readable and puts space above its section titles (ui.md
 "Admin"). b263492 is in the release too; its site directive
 (`SecDisableBackendCompression`) was already applied through the Remote
-API. No migrations, so no database copy.
+API. No migrations; a `VACUUM INTO` copy was still made, to
+`~stopan/backups/pre-deploy-9c67bf4.sqlite3` (mode 600; 4 users, 2
+tickets). The release was deployed twice within a minute from two
+working copies of the same HEAD; the second restart answered 503 for a
+few seconds while Puma booted.
 
 - Checked: healthy; `/up` 200; `http://` -> 301; `/api/v1/me` 401;
   `/cable` 101; the four security headers; the served stylesheet has the
   two new rules; the app listens only on `127.0.0.1:3183`; g0no `/up` 200.
+- Also checked: no pending migrations, users and tickets kept;
+  `/apple-touch-icon-precomposed.png` 200 with the same bytes as the
+  touch icon; pages gzip-compressed; the new container reaches
+  `imap.gmail.com:993`.
 - Rollback: tag `localhost/stopan:9c67bf4` as `latest` and restart.
 
 ## ModSecurity and compressed pages (2026-10-28)
@@ -665,10 +673,19 @@ those `client` rules:
   one allowed user; 443 and 465 to Google connect from the container.
 - So the mailbox poller (organization-mail.md) cannot fetch mail from an
   IMAP server on 993 in production.
-- Fix (host firewall, not applied yet): add `stopan` to the imaps rule,
-  `client imaps accept user "todor stopan"`, then `firehol try` (it
-  rolls back unless confirmed). Port 143 (plain IMAP) stays closed; the
-  app uses TLS on 993.
+- Fix (host firewall, applied 2026-10-28): `stopan` added to the imaps
+  rule, `client imaps accept user "todor stopan"`; the old file is kept
+  next to it as `firehol.conf.before-stopan-imaps-<timestamp>`.
+  `firehol try` cannot be confirmed over a non-interactive ssh (it
+  rolled back by itself), so it was applied with `firehol restart`,
+  which restores the old rules if the new ones fail. Only port 993 and
+  only the `stopan` user; port 143 (plain IMAP) stays closed, the app
+  uses TLS on 993.
+- Checked: from the container TLS 1.3 to `imap.gmail.com:993` and
+  `outlook.office365.com:993` with the IMAP greeting; 143 still times
+  out; `www-data` still cannot reach 993.
+- Rollback: copy the kept file back over `firehol.conf` and
+  `firehol restart`.
 
 ## Rollback
 

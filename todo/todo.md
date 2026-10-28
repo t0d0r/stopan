@@ -115,7 +115,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] production: ModSecurity exclusions for Cyrillic text (941310) and Accept-Charset, `ProxyPass /error/ !` (specs/deploy.md "ModSecurity false positives")
 - [x] production: random 403 on HTML pages: CRS 953120 matched `<?` in the zstd/gzip body Thruster compressed; `SecDisableBackendCompression On` in the site directives, Apache mod_deflate compresses after ModSecurity (specs/deploy.md "ModSecurity and compressed pages")
 - [x] `public/apple-touch-icon-precomposed.png`, a copy of the touch icon (iOS and macOS asked for it, 404) (specs/ui.md)
-- [ ] host firewall: FireHOL allows outgoing 993 (IMAPS) only for one admin user, so the container (pasta, user `stopan`) cannot fetch mail; add `stopan` to the imaps client rule and `firehol try` (specs/deploy.md "Outbound IMAP blocked by the host firewall")
+- [x] host firewall: FireHOL allowed outgoing 993 (IMAPS) only for one admin user, so the container (pasta, user `stopan`) could not fetch mail; `stopan` added to the imaps client rule (specs/deploy.md "Outbound IMAP blocked by the host firewall")
 - [x] production: deployed cbf319b with `AddLanguageToUsers`, after a database backup (specs/deploy.md)
 - [x] German UI (`de`): app, Devise and Rails texts, header switch with one button per other language, German page and email tests (specs/ui.md "Translations", "Language")
 - [x] menu bar shows the role as an icon (person, headset, shield) with its name as tooltip and label (specs/ui.md "Menu bar")
