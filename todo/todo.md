@@ -248,6 +248,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] Properties, Requester and Sharing start closed on phones and open from their title strip
 - [x] composer behind a sticky Reply bar on phones; close box keeps the text
 - [x] notification panel above the page on phones (menu bar `position: relative`)
+- [x] production: deployed 0d9f426 after a database backup (specs/deploy.md)
+- [x] production: removed the seven older database copies of 2026-10-28; kept `pre-deploy-bf4036c` (the last one) and the copies of 2026-10-27
 
 ## Later (specs/roadmap.md)
 

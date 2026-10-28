@@ -909,6 +909,12 @@ menu and Take; open /tickets/new and pick a requester.
   no-JS mode) and 1440px (unchanged). Test:
   `test/integration/ticket_phone_layout_test.rb`. Deployed as 0d9f426
   after backup `pre-deploy-bf4036c.sqlite3`; pushed.
+- Production backups: the seven older copies of 2026-10-28 were removed
+  (242b476, 50475d3, 624ccbd, 8e1fe51, 9c67bf4, bf47c22, fab4c24);
+  `pre-deploy-bf4036c` stays as the rollback copy, the 2026-10-27
+  copies are untouched (12 files, 3.1 MB). Rolling back to before the
+  `mail_locale` migration (fab4c24) now uses the bf4036c copy plus a
+  down migration, as its pre-migration copy is gone.
 - Quote levels in mail: `TicketsHelper#mail_text` -> `mail_level` splits
   each level into its own text and the earlier message
   (`mail_quoted_start`: an Outlook-style From/date/subject block or a
