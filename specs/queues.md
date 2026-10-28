@@ -94,7 +94,9 @@ queue and the board show the filters without it.
 menu bar section "Search" for staff (pink, after "Board"; 403 for
 requesters, who search from the menu bar).
 
-- One pink panel: a wide text field (`q`, "Subject, text or #number",
+- One pink panel, whose strip ("Search") is the page's only visible
+  title (2026-10-28: "no need for two titles"; the `h1` stays for screen
+  readers only): a wide text field (`q`, "Subject, text or #number",
   focused when empty), the queue's filters (status, priority, assignee,
   organization, sort) and "Advanced search" (above). It searches every
   ticket the user may see (`view=all`).

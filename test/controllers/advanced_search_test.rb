@@ -14,6 +14,8 @@ class AdvancedSearchTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".menubar__nav a.nav-link[aria-current=page][href=?]", search_path
     assert_select "form.filters[action=?] input[type=search][name=q]", search_path
+    assert_select "h1.sr-only", "Search"
+    assert_select ".desk__title", count: 0
     assert_select "section.advanced-search input[name=words]"
     assert_select "details.advanced-search", 0
     assert_select ".panel__empty", I18n.t("ui.search.prompt", locale: :en)

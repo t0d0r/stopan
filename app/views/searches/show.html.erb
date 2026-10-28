@@ -2,9 +2,8 @@
     filters and advanced search; results only once something is asked. %>
 <% content_for :title, t("ui.search.title") %>
 <% staff = Ticket.assignable_staff_for(current_user).to_a %>
-<div class="desk__header">
-  <h1 class="desk__title"><%= t("ui.search.title") %></h1>
-</div>
+<%# The pink panel's strip is the only visible title; the h1 stays for screen readers. %>
+<h1 class="sr-only"><%= t("ui.search.title") %></h1>
 
 <section class="sticky sticky--pink panel search-page" aria-labelledby="search-results-title">
   <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.search.caption") %></span></header>

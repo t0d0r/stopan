@@ -967,6 +967,8 @@ menu and Take; open /tickets/new and pick a requester.
   before the name. Field on the account page (with a hint) and in the
   admin user form; not in the API. Migration also run in the development
   container. Production needs the migration on the next deploy.
+- Search page: the desk header with the visible `h1` "Search" is gone;
+  the `h1` stays as `sr-only`, the pink panel's strip is the visible title.
 - Production backups: the seven older copies of 2026-10-28 were removed
   (242b476, 50475d3, 624ccbd, 8e1fe51, 9c67bf4, bf47c22, fab4c24);
   `pre-deploy-bf4036c` stays as the rollback copy, the 2026-10-27
