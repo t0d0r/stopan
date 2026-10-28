@@ -618,6 +618,19 @@ few seconds while Puma booted.
   `imap.gmail.com:993`.
 - Rollback: tag `localhost/stopan:9c67bf4` as `latest` and restart.
 
+## Update 2026-10-28 (revision 8e1fe51)
+
+Since 7767fc0: the app icon is the check-mark sticky again (ui.md
+"Logo"); the rest are documentation commits. No migrations, so no
+database copy.
+
+- Checked: healthy; `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  `/cable` 101; the four security headers; `icon.svg`, `icon.png`,
+  `apple-touch-icon.png`, `apple-touch-icon-precomposed.png` and
+  `favicon.ico` served byte for byte as in the repository; the app
+  listens only on `127.0.0.1:3183`; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:7767fc0` as `latest` and restart.
+
 ## ModSecurity and compressed pages (2026-10-28)
 
 Signed-in staff got 403 at random on ordinary pages (`/`, `/tickets`,

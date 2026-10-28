@@ -33,6 +33,9 @@
   applies the page's CSP to fonts that extensions inject, so it is most
   likely an extension. `font-src 'self'` stays; adding `data:` would only
   hide the message.
+- Deployed 8e1fe51 (the restored icon) with `make deploy`; the five icon
+  files are served byte for byte as in the repository, the other checks
+  as for 7767fc0 (specs/deploy.md "Update 2026-10-28 (revision 8e1fe51)").
 
 ## Decisions
 
@@ -56,9 +59,8 @@ live since 7767fc0.
 
 ## Next
 
-Deploy the restored app icon (`make deploy`); look at the organization
-page in production while signed in as an administrator; rollback is
-`localhost/stopan:9c67bf4` (specs/deploy.md).
+Look at the organization page in production while signed in as an
+administrator; rollback is `localhost/stopan:7767fc0` (specs/deploy.md).
 
 ## Security Note
 

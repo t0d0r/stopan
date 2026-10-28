@@ -206,7 +206,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] candidate 1 in black instead of teal (operator)
 - [ ] decide: own icon for the Omarchy theme (candidate 6) and a logo header in emails (specs/ui.md "Logo")
 - [x] app icon back to the check-mark sticky (better at 16 and 18 px); candidate 3 heads the README only (specs/ui.md "Logo")
-- [ ] deploy the restored app icon to production (specs/deploy.md)
+- [x] deploy the restored app icon to production (specs/deploy.md "Update 2026-10-28 (revision 8e1fe51)")
 
 ## Organization page (2026-10-28, specs/ui.md "Admin")
 
