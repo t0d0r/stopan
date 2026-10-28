@@ -597,6 +597,66 @@ advanced search moved there from the queue. No migrations.
   sign-in; `/cable` 101; the four security headers; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:242b476` as `latest` and restart.
 
+## ModSecurity and compressed pages (2026-10-28)
+
+Signed-in staff got 403 at random on ordinary pages (`/`, `/tickets`,
+`/tickets/board`, `/admin`, `/tickets/1001`). The error log named CRS
+953120 "PHP source code leakage" (then 959100, outbound anomaly score):
+it found `<?` inside the response body. Thruster compresses responses
+(zstd for Safari 26 and later, gzip for others), and ModSecurity, which
+inspects `text/html` bodies (`SecResponseBodyAccess On`), saw the
+compressed bytes. Any two random bytes can be `<?`, so the bigger the
+page, the more often it was blocked; a reload with a new CSRF token
+usually passed.
+
+Fix (site directives, `deploy/ispconfig-site.json`):
+`SecDisableBackendCompression On` inside the `security2_module` block.
+ModSecurity removes `Accept-Encoding` from the request to the backend
+only, so Thruster answers plain HTML, ModSecurity inspects the real
+page, and Apache `mod_deflate` (enabled server-wide for text/html,
+CSS, JavaScript) compresses with gzip after it. The outbound rules stay
+on; 953120 does not match `<?xml ` and the app escapes ticket text.
+
+- A first try, `RequestHeader unset Accept-Encoding`, also hid the
+  header from `mod_deflate`, so pages went out uncompressed; replaced
+  within minutes.
+- Applied as root through the Remote API, like the earlier site
+  changes: record saved to
+  `/root/stopan/site-25-before-accept-encoding.json` (before both
+  steps; mode 600), then `sites_web_domain_update` with the current
+  `log_retention` and `pm_*` values. ISPConfig rewrites the vhost on its
+  next cron run, within about a minute.
+- Checked: `Accept-Encoding: zstd, gzip` -> `Content-Encoding: gzip` for
+  pages and CSS; identity -> plain; 40 page loads all 200; `<script>` in
+  the query string still 403; `/cable` 101; `/api/v1/me` 401; `http://`
+  -> 301; the four security headers; g0no `/up` 200.
+- Rollback: `sites_web_domain_update` with the `apache_directives` of
+  `site-25-before-accept-encoding.json`.
+
+## Outbound IMAP blocked by the host firewall (2026-10-28)
+
+The server's FireHOL (`/etc/firehol/firehol.conf`, `interface eth0
+world`, `policy drop`) allows outgoing connections per port and per
+user. The rootless container reaches the internet through pasta, so its
+connections leave the host as the system user `stopan` and go through
+those `client` rules:
+
+| port | rule | from the container |
+|---|---|---|
+| 80, 443 (Google OAuth, Gmail API, DeepL) | `client "http https" accept` (any user) | works |
+| 25, 465, 587 (SMTP) | `client "smtp smtps submission" accept` | works |
+| 993 (IMAP over TLS, Gmail and Microsoft 365 mailboxes) | `client imaps accept user "todor"` only | **dropped**: connect times out |
+
+- Checked: TCP to `imap.gmail.com:993` times out from the container
+  and as `stopan`, `root` or `www-data` on the host, and connects as the
+  one allowed user; 443 and 465 to Google connect from the container.
+- So the mailbox poller (organization-mail.md) cannot fetch mail from an
+  IMAP server on 993 in production.
+- Fix (host firewall, not applied yet): add `stopan` to the imaps rule,
+  `client imaps accept user "todor stopan"`, then `firehol try` (it
+  rolls back unless confirmed). Port 143 (plain IMAP) stays closed; the
+  app uses TLS on 993.
+
 ## Rollback
 
 Resources the deployment creates, and how to remove them in order:

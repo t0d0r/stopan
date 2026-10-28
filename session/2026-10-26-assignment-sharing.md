@@ -857,16 +857,19 @@ menu and Take; open /tickets/new and pick a requester.
   no migrations, all checks fine. Pushed to origin (main at 56edda7 plus
   this note).
 - 4xx check of the site's Apache logs (2026-10-28): signed-in staff got
-  403 on /, /tickets, /tickets/board, /admin, /tickets/1001. Cause: CRS
-  953120 "PHP source code leakage" (then 959100 outbound score) matches
-  `<?` inside the compressed response body; Thruster answers zstd to
-  Safari 26/27 and gzip to others, and ModSecurity inspects text/html
-  bodies as they come from the backend. Not applied yet: unset
-  Accept-Encoding towards the backend so ModSecurity sees plain HTML and
-  Apache mod_deflate (enabled) compresses after it. Other 4xx are bots
-  (.git, .env, wp-*), apple-touch-icon-precomposed.png lookups, old
-  asset digests after deploys, and the 404s of 2026-10-27 that were
-  ModSecurity 403s before `ProxyPass /error/ !`.
+  random 403 on ordinary pages: CRS 953120 matched `<?` inside response
+  bodies Thruster had compressed (zstd/gzip). Fixed in the site
+  directives with `SecDisableBackendCompression On` (specs/deploy.md
+  "ModSecurity and compressed pages"); pages now leave Apache as gzip.
+  Other 4xx are bots (.git, .env, wp-*), old asset digests after
+  deploys, and the 404s of 2026-10-27 that were ModSecurity 403s before
+  `ProxyPass /error/ !`. `public/apple-touch-icon-precomposed.png` (copy
+  of the touch icon, test `touch_icon_test.rb`) ends the iOS/macOS 404s.
+- Mail fetching cannot work in production yet: the host's FireHOL
+  allows outgoing 993 only for one admin user, and the container's
+  connections leave as `stopan` through pasta (specs/deploy.md
+  "Outbound IMAP blocked by the host firewall"). Firewall change
+  proposed, not applied.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

@@ -70,6 +70,10 @@ themes, the SVG tab icon, and the source of `public/icon.png` (512 px),
 `public/apple-touch-icon.png` (180 px on white, no transparency) and
 `public/favicon.ico` (16, 32 and 48 px PNGs), rendered with
 `rsvg-convert`. Change those four files together.
+`public/apple-touch-icon-precomposed.png` is a byte copy of
+`public/apple-touch-icon.png`: iOS and macOS ask for that name first,
+whatever the page links, and got 404 without it (2026-10-28). Copy it
+again whenever the touch icon changes.
 
 - The mark is redrawn as vector on a 64-unit grid: circle `cx 32, cy
   17.7, r 8.6`; house `M32 27 56 43.5V55H39.35V43.2L32 38l-7.35
