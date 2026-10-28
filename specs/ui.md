@@ -58,41 +58,37 @@ Turbo Drive for page changes.
 
 ## Logo
 
-Operator, 2026-10-27: "adopt stopan.png to visual app style, generate
-several logos, I will review them". `stopan.png` (repository root) is the
-new brand: a teal (`#024146`) circle over a house with a door, and the
-word STOPAN under it.
+`stopan.png` (repository root) is the brand logo: a teal (`#024146`)
+circle over a house with a door, and the word STOPAN under it.
 
-**Chosen** (operator, 2026-10-27: "i liked 3"): candidate 3, the teal
-mark on the yellow sticky note, is the site icon. `public/icon.svg` is
-that drawing; it is the menu bar icon (18 px, next to "Stopan") in both
-themes, the SVG tab icon, and the source of `public/icon.png` (512 px),
-`public/apple-touch-icon.png` (180 px on white, no transparency) and
-`public/favicon.ico` (16, 32 and 48 px PNGs), rendered with
-`rsvg-convert`. Change those four files together.
+**App icon:** the yellow sticky note with its darker title strip, grey
+text lines and a green check mark for a resolved request
+(`public/icon.svg`). It stays the app's icon; the new mark on the sticky
+(candidate 3) was tried in the app on 2026-10-27 and taken back on
+2026-10-28, because the check-mark sticky reads better at 16 and 18 px.
+`public/icon.svg` is the menu bar icon (18 px, next to "Stopan") in both
+themes and the SVG tab icon, and the source of `public/icon.png` (512 px),
+`public/apple-touch-icon.png` (180 px) and `public/favicon.ico` (16, 32
+and 48 px PNGs). Change those four files together.
 `public/apple-touch-icon-precomposed.png` is a byte copy of
 `public/apple-touch-icon.png`: iOS and macOS ask for that name first,
 whatever the page links, and got 404 without it (2026-10-28). Copy it
 again whenever the touch icon changes.
 
+**Documentation logo:** candidate 3, the teal mark on the yellow sticky
+note (`docs/logos/3-sticky-icon.svg`), heads the README. It is used only
+in documentation, not in the app.
+
 - The mark is redrawn as vector on a 64-unit grid: circle `cx 32, cy
   17.7, r 8.6`; house `M32 27 56 43.5V55H39.35V43.2L32 38l-7.35
   5.2V55H8V43.5z`.
-- Candidates in `docs/logos/`: 1 original (black, with wordmark;
-  operator, 2026-10-27: "make it black, not a shade of green"), 2 yellow
-  sun (head in the yellow strip colour), 3 sticky icon (mark on today's
-  yellow sticky), 4 paper house (the house as a yellow sticky, roof as
-  title strip), 5 teal tile (mark in paper yellow on a teal tile), 6
+- Candidates in `docs/logos/`: 1 original (black, with wordmark), 2
+  yellow sun (head in the yellow strip colour), 3 sticky icon (mark on
+  the yellow sticky), 4 paper house (the house as a yellow sticky, roof
+  as title strip), 5 teal tile (mark in paper yellow on a teal tile), 6
   Omarchy (outline mark on a Tokyo Night tile), 7 menu bar lockup (mark
   and STOPAN side by side, ink follows `currentColor`).
-- Rules for the chosen logo: it reads at 16 px (tab icon) and 18 px
-  (menu bar) on the light and the dark desk; teal ink alone is too dark
-  on the dark desk, so a teal mark needs a light ink there (`#d6e9e6`).
-  Logos stay static SVG (no scripts, links or external references) and
-  are served from the app, as the CSP requires. Wordmark text becomes
-  paths before use so it does not depend on the system's fonts.
-- Open: whether the Omarchy theme gets its own icon (candidate 6) and
-  whether emails get a logo header; neither has one now.
+- Logos stay static SVG (no scripts, links or external references).
 
 ## Pages
 

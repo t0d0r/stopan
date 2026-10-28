@@ -21,6 +21,19 @@
   new rules in the served stylesheet, listener only on loopback, g0no
   `/up` 200 (specs/deploy.md "Update 2026-10-28 (revision 7767fc0)").
 
+- App icon: back to the yellow sticky with grey lines and the green check
+  mark (`public/icon.svg`, `icon.png`, `apple-touch-icon.png`,
+  `favicon.ico` restored from 4cc28fe; `apple-touch-icon-precomposed.png`
+  copied from the touch icon again). It reads better at 16 and 18 px than
+  the teal mark on the sticky. That logo (`docs/logos/3-sticky-icon.svg`)
+  now heads the README only. specs/ui.md "Logo" rewritten.
+- A Safari console error "Refused to load data:font/woff2;base64,...
+  because it does not appear in the font-src directive" is not from the
+  app: no `@font-face`, no `woff2` in the served HTML, CSS or JS. Safari
+  applies the page's CSP to fonts that extensions inject, so it is most
+  likely an extension. `font-src 'self'` stays; adding `data:` would only
+  hide the message.
+
 ## Decisions
 
 - Scoped the spacing to the organization panel instead of all
@@ -31,7 +44,8 @@
 
 app/assets/stylesheets/application.css,
 app/views/admin/organizations/show.html.erb, specs/ui.md, todo/todo.md,
-session/2026-10-28-org-details.md.
+session/2026-10-28-org-details.md, README.md, public/{icon.svg,icon.png,
+apple-touch-icon.png,apple-touch-icon-precomposed.png,favicon.ico}.
 
 ## Verify
 
@@ -42,8 +56,9 @@ live since 7767fc0.
 
 ## Next
 
-Look at the organization page in production while signed in as an
-administrator; rollback is `localhost/stopan:9c67bf4` (specs/deploy.md).
+Deploy the restored app icon (`make deploy`); look at the organization
+page in production while signed in as an administrator; rollback is
+`localhost/stopan:9c67bf4` (specs/deploy.md).
 
 ## Security Note
 

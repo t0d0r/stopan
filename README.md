@@ -1,3 +1,5 @@
+<img src="docs/logos/3-sticky-icon.svg" alt="Stopan logo: a teal head over a house on a yellow sticky note" width="96">
+
 # Stopan
 
 A service desk. Customers ("requesters") belong to organizations and open

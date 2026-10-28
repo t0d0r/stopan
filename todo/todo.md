@@ -205,7 +205,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] use the chosen logo: public/icon.svg, icon.png, apple-touch-icon.png, favicon.ico (the menu bar already shows icon.svg)
 - [x] candidate 1 in black instead of teal (operator)
 - [ ] decide: own icon for the Omarchy theme (candidate 6) and a logo header in emails (specs/ui.md "Logo")
-- [ ] refresh the README screenshot (the queue) after the logo changes (specs/ui.md "Screenshots")
+- [x] app icon back to the check-mark sticky (better at 16 and 18 px); candidate 3 heads the README only (specs/ui.md "Logo")
+- [ ] deploy the restored app icon to production (specs/deploy.md)
 
 ## Organization page (2026-10-28, specs/ui.md "Admin")
 
