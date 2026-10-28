@@ -970,7 +970,10 @@ menu and Take; open /tickets/new and pick a requester.
 - Queue (`tickets/_queue`) and board: `h1` now `sr-only`; the header
   row keeps the List | Board switch and "New ticket". Reports: the filter
   form moved into `.desk__header.report-header` (flex-end, wraps), its
-  border and margins reset there. My tickets keeps its title.
+  border and margins reset there. My tickets keeps its title. The board's
+  filters moved into its header (`.desk__header.board-header`, flex-end,
+  wraps, the rule under the whole row); `.board-filters` has no margin,
+  padding or border there.
 - Search page: the desk header with the visible `h1` "Search" is gone;
   the `h1` stays as `sr-only`, the pink panel's strip is the visible title.
 - Production backups: the seven older copies of 2026-10-28 were removed

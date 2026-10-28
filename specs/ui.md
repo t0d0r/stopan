@@ -110,7 +110,8 @@ in documentation, not in the app.
   bar's current section, the List | Board switch and the panel strips
   already name them; their `h1` stays for screen readers (`sr-only`).
   The queue and board keep the List | Board switch and "New ticket" at
-  the right of the header row. Other pages keep their titles.
+  the right of the header row; on the board the filters share that row
+  (board.md). Other pages keep their titles.
 - **Queue** (staff): a coloured row of view tabs, then the filter bar and
   table in a sticky panel in the current view's colour (queues.md). Under
   760px the tab row wraps onto more rows (no sideways scrolling) and

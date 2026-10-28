@@ -268,6 +268,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: removed the backups `pre-deploy-bf4036c` and `pre-deploy-0d9f426`; `pre-deploy-989950a` stays as the rollback copy
 - [x] account menu: role icon before the name; optional nickname (`users.nickname`, account page and admin form) shown there instead of the name (specs/data-model.md, specs/ui.md "Menu bar")
 - [x] queue and board: no visible page title (sr-only h1); reports: period and organization selects on the title's row (specs/ui.md "Pages", specs/reports.md "Filters")
+- [x] board: the filters on one row with the List | Board switch and "New ticket" (specs/board.md)
 - [x] search page: one visible title, the pink panel's strip; the `h1` is for screen readers only (specs/queues.md "Search page")
 - [x] organization details panel reworked: count tiles, mail as two cards with on/off pills and their own actions, message to members under the members list (specs/ui.md "Admin")
 

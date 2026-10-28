@@ -51,7 +51,9 @@ statuses.
   search (`q`) kept while filtering. A set filter is highlighted; "Clear
   filters" goes back to the plain board. The board has no views, so
   every ticket the user may see is on it. Advanced search is only on the
-  search page (queues.md "Search page").
+  search page (queues.md "Search page"). The filters sit on one row with
+  the List | Board switch and "New ticket" at its right end, a rule under
+  the whole row (2026-10-28: "on one row"); on narrow screens they wrap.
   - Status shows only that status's column and its stage columns.
   - Sort orders the cards within each column: golden (urgent) cards stay
     on top, then high, then the chosen order: last activity (default),

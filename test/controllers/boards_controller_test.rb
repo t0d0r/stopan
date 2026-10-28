@@ -7,6 +7,7 @@ class BoardsControllerTest < ActionDispatch::IntegrationTest
     get board_url
     assert_response :success
     assert_select "h1.sr-only", "Board"
+    assert_select ".desk__header.board-header > form.board-filters + nav.view-switch"
     assert_select ".board-column[data-status]", Ticket::STATUSES.size
     assert_select ".board-column[data-status=done].is-collapsed"
     assert_select ".board-column[data-status=done] .board-pill__label", "Done"

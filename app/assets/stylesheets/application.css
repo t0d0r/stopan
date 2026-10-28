@@ -4043,8 +4043,20 @@ turbo-frame {
   font-weight: 600;
 }
 
-.board-filters {
+/* The filters share the header row with the switch and "New ticket";
+   the rule under the filters now runs under the whole row. */
+.board-header {
+  flex-wrap: wrap;
+  align-items: flex-end;
   margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.board-header .board-filters {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 /* The board fills the window to its bottom edge; no desk padding below. */
