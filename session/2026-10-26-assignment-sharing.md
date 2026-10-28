@@ -907,7 +907,8 @@ menu and Take; open /tickets/new and pick a requester.
   panel hangs from it and stays above the timeline. Checked in headless
   Chrome at 390px (menu, panels, Reply bar, composer, no sideways scroll,
   no-JS mode) and 1440px (unchanged). Test:
-  `test/integration/ticket_phone_layout_test.rb`.
+  `test/integration/ticket_phone_layout_test.rb`. Deployed as 0d9f426
+  after backup `pre-deploy-bf4036c.sqlite3`; pushed.
 - Quote levels in mail: `TicketsHelper#mail_text` -> `mail_level` splits
   each level into its own text and the earlier message
   (`mail_quoted_start`: an Outlook-style From/date/subject block or a

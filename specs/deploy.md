@@ -669,6 +669,22 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-10-28 (revision 0d9f426)
+
+Since bf4036c: the phone layout of the menu bar and the ticket page (menu
+button, closed side panels, sticky Reply bar; ui.md "Ticket page on
+phones") and `noscript.css`. No migrations.
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-bf4036c.sqlite3` (mode 600; 10 users, 9
+  tickets).
+- Checked: no pending migrations; users and tickets kept; `/up` 200;
+  `http://` -> 301; `/api/v1/me` 401; `/search` signed out -> 302;
+  `/cable` 101; pages gzip; the four security headers; the served
+  stylesheet has the phone rules, `noscript.css` is served (200) and the
+  page has the menu button; g0no `/up` 200.
+- Rollback: tag `localhost/stopan:bf4036c` as `latest` and restart.
+
 ## Update 2026-10-28 (revision bf4036c)
 
 Since fab4c24: quote levels and collapsible earlier messages in read mail
