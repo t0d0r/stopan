@@ -3590,6 +3590,17 @@ turbo-frame {
   flex-wrap: wrap;
 }
 
+/* The address keeps a readable width; in a narrow panel it takes its own
+   row and the buttons wrap under it. */
+.public-link .field-input {
+  flex: 1 1 16em;
+}
+
+/* Organization details: room above each section after the first. */
+.org-details .section-title:not(:first-child) {
+  margin-top: 18px;
+}
+
 .field-label {
   display: block;
   margin-bottom: 4px;

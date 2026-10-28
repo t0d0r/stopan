@@ -206,6 +206,10 @@ approved "go in this order", all done 2026-10-27):
 - [ ] decide: own icon for the Omarchy theme (candidate 6) and a logo header in emails (specs/ui.md "Logo")
 - [ ] refresh the README screenshot (the queue) after the logo changes (specs/ui.md "Screenshots")
 
+## Organization page (2026-10-28, specs/ui.md "Admin")
+
+- [x] details panel: public form address no longer shrinks to "https:"; space above section titles
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

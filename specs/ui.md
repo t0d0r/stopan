@@ -123,7 +123,11 @@ again whenever the touch icon changes.
   900px the side panel comes after the request note. Shared pages show
   the same note (status pill only) under the read-only notice.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
-  sticky.
+  sticky. On an organization's page the purple details panel is the
+  narrow right column: each section title after the first has 18px
+  above it, and the public form's address keeps at least 16em (its own
+  full-width row in the narrow panel, Copy and Open wrapping under it)
+  instead of shrinking until only "https:" shows.
 - **Account pages:** a small yellow sticky centred on the desk (sign in,
   sign up, password reset).
 - **Own account page** (`/users/edit`; operator, 2026-10-27: "the
