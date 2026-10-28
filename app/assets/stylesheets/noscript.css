@@ -21,8 +21,12 @@
     display: flex;
   }
 
-  .menubar:not(.is-open) .menubar__logout {
+  .menubar:not(.is-open) .account-menu {
     display: block;
+  }
+
+  .menubar:not(.is-open) .menubar__user {
+    display: flex;
   }
 
   .side-panel__caption,
@@ -41,9 +45,3 @@
   }
 }
 
-/* Above 560px the bar shows the account name, as before the phone menu. */
-@media (min-width: 561px) and (max-width: 760px) {
-  .menubar:not(.is-open) .menubar__user {
-    display: inline-flex;
-  }
-}

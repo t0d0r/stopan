@@ -57,12 +57,22 @@
               data-menu-toggle><%= icon :menu, size: 18 %></button>
       <%= render "partials/preferences" %>
       <% if user_signed_in? %>
-        <%= link_to edit_user_registration_path, class: "menubar__user", title: t("ui.account") do %>
-          <span class="menubar__user-name"><%= current_user.display_name %></span>
-          <%= role_icon(current_user) %>
-        <% end %>
-        <%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "menubar__button",
-                      form_class: "button_to menubar__logout" %>
+        <%# The name opens a menu with the account page and Logout (ui.md "Menu bar"). %>
+        <details class="account-menu" data-dropdown>
+          <summary class="menubar__user">
+            <span class="menubar__user-name"><%= current_user.display_name %></span>
+            <%= role_icon(current_user) %>
+            <%= icon :down, size: 11 %>
+          </summary>
+          <div class="account-menu__panel sticky sticky--yellow">
+            <header class="sticky__bar"><span class="sticky__caption"><%= current_user.email %></span></header>
+            <ul class="account-menu__list">
+              <li><%= link_to t("ui.account"), edit_user_registration_path, class: "account-menu__item" %></li>
+              <li><%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "account-menu__item",
+                                form_class: "button_to menubar__logout" %></li>
+            </ul>
+          </div>
+        </details>
       <% end %>
     </div>
   </header>

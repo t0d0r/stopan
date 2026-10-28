@@ -8,8 +8,9 @@ class AccountPagesBulgarianTest < ActionDispatch::IntegrationTest
 
   # Names that stay in Latin script: the brand, fixture data, and the
   # language switch's codes and names (specs/ui.md "Language").
-  ALLOWED_LATIN = [ "Stopan", "Anna Requester", "Acme Bakery", "English", "Deutsch", "EN", "BG", "DE", "Notes", "Omarchy",
-                    "/api/v1", "JSON", "API" ].freeze
+  # Names and addresses are data, not text to translate (the account menu shows the email).
+  ALLOWED_LATIN = [ "Stopan", "Anna Requester", "anna@example.com", "Acme Bakery", "English", "Deutsch", "EN", "BG", "DE",
+                    "Notes", "Omarchy", "/api/v1", "JSON", "API" ].freeze
 
   setup { ActionMailer::Base.deliveries.clear }
 

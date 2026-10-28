@@ -7,7 +7,11 @@ class TicketPhoneLayoutTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     get tickets_url
     assert_select ".menubar__right button.menubar__burger[aria-label=Menu][aria-expanded=false][data-menu-toggle]"
-    assert_select ".menubar__right form.menubar__logout button.menubar__button", "Logout"
+    assert_select ".menubar__right details.account-menu[data-dropdown]" do
+      assert_select "summary.menubar__user .menubar__user-name", users(:agent).display_name
+      assert_select ".account-menu__panel a.account-menu__item[href=?]", edit_user_registration_path, "Your account"
+      assert_select ".account-menu__panel form.menubar__logout button.account-menu__item", "Logout"
+    end
     assert_match %r{<noscript><link rel="stylesheet" href="/assets/noscript-\h+\.css"}, response.body
     assert_select "body.ticket-view", count: 0
   end

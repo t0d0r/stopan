@@ -30,19 +30,23 @@ Turbo Drive for page changes.
   see "Ticket page on phones"), the bell and a menu button (three lines,
   label "Menu", `aria-expanded`). The button opens the section pills one
   per row, then the theme, text size and language buttons, then the
-  user's name with the role icon and "Logout", as further rows of the
-  bar; a click outside or Escape closes it, and the next page starts
+  account menu (below), as further rows of the bar; there the account
+  menu's panel opens in the flow under the name; a click outside or Escape closes it, and the next page starts
   with it closed. Without JavaScript all of them show, as rows under the
   first (`noscript.css`). Right: for staff the presence button (who is
   online now, presence.md), the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
-  the language switch (only where it applies, see "Language"), the
-  user's name with a role icon (operator,
+  the language switch (only where it applies, see "Language"), and the
+  account menu: the user's name with a role icon (operator,
   2026-10-27: "replace the word administrator / the role with an icon":
   a person for requesters, a headset for agents, a shield for
   administrators; the role's name is its tooltip and its label for screen
-  readers), "Logout".
+  readers) and a small arrow. Since 2026-10-28 (operator: "put the name
+  and Logout in a menu") the name is a `details` dropdown like the
+  notification panel (closes on a click outside or Escape): a yellow
+  sticky headed by the user's email with "Your account" (the account
+  page) and "Logout".
 - **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
   #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink
   `#fcd4e6 / #f4b0cf`, purple `#e3d8fc / #c9b9f5`, gray `#efeeea / #d8d6cf`.
@@ -191,8 +195,13 @@ in documentation, not in the app.
   keeps its panels together. Not CSS multi-column (`column-width`):
   Safari splits panels across its columns under the text size `zoom`.
   Admin settings: Look, Auto-postpone, Ticket page | Mailboxes,
-  Translation | Google, Stages, so the page fits 1440x900 at the normal
-  text size without scrolling. No panel content may stick out of its
+  Translation | Google, so the page fits 1440x900 at the normal text
+  size without scrolling. Stages (board.md) is a panel of its own under
+  the columns, as wide as the desk (2026-10-28: "horizontal, the whole
+  width, without others"): each stage on one row (name, at most 28em,
+  colour, swatch, Save, up, down, Delete at the right end), the new stage
+  form on one row; on phones the name takes a row and the rest wraps
+  under it. No panel content may stick out of its
   panel or make the page scroll sideways at any text size.
 - **Flash messages:** stickies (yellow "Notice", pink "Attention") in a
   band at the top of the desk, under the menu bar and any banner, centred

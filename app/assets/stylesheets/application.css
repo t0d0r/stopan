@@ -263,6 +263,67 @@ form.button_to {
   text-overflow: ellipsis;
   white-space: nowrap;
   opacity: 0.75;
+  list-style: none;
+  cursor: pointer;
+}
+
+.menubar__user::-webkit-details-marker {
+  display: none;
+}
+
+/* The account menu (ui.md "Menu bar"): the name opens a small sticky with
+   the account page and Logout, like the notification panel. */
+.account-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.account-menu[open] > .menubar__user {
+  opacity: 1;
+}
+
+.account-menu__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: -8px;
+  z-index: 60;
+  width: 240px;
+  box-shadow: var(--shadow-lift);
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.account-menu__list {
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+}
+
+.account-menu__list .button_to {
+  margin: 0;
+}
+
+.menubar .account-menu__item,
+.account-menu__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.account-menu__item:hover,
+.account-menu__item:focus-visible {
+  background: var(--bar);
+  outline: none;
+  text-decoration: none;
 }
 
 .menubar__button {
@@ -1382,7 +1443,7 @@ body {
 
 .menubar__user {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 6px;
   min-width: 0;
   opacity: 0.85;
@@ -4187,6 +4248,24 @@ turbo-frame {
   margin-top: 16px;
 }
 
+/* Under the columns it takes the desk's whole width (ui.md "Panel columns"). */
+.panel--form.stages-panel {
+  max-width: none;
+}
+
+@media (max-width: 760px) {
+  /* Phones: the name takes a row, the rest wraps under it. */
+  .stages-list__form .field-input {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .stages-list__item {
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
 .stages-panel__status {
   margin: 14px 0 6px;
 }
@@ -4200,24 +4279,31 @@ turbo-frame {
   list-style: none;
 }
 
+/* One stage per row across the full-width panel: name, colour, swatch,
+   Save, up, down, Delete. The form's fields join the row's flex line. */
 .stages-list__item {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .stages-list__form {
-  display: flex;
-  flex: 1 1 220px;
-  flex-wrap: wrap;
-  gap: 6px;
-  min-width: 0;
+  display: contents;
 }
 
 .stages-list__form .field-input {
-  flex: 1 1 8em;
+  flex: 1 1 16em;
   min-width: 0;
+  max-width: 28em;
+}
+
+.stages-list__item .button_to {
+  margin: 0;
+}
+
+.stages-list__delete {
+  margin-left: auto;
 }
 
 .stages-list__swatch {
@@ -4242,6 +4328,20 @@ turbo-frame {
 
 .stages-new .field-input {
   width: 100%;
+}
+
+.stages-new__name {
+  flex: 1 1 16em;
+  max-width: 28em;
+}
+
+.stages-panel .section-title:not(:first-child) {
+  margin-top: 18px;
+}
+
+/* The quiet delete keeps the row's line, unlike under the properties. */
+.bulk-bar .btn--destructive-quiet {
+  margin-top: 0;
 }
 
 .icon-action[disabled] {
@@ -5345,7 +5445,7 @@ turbo-frame {
     margin-left: 0;
   }
 
-  .menubar:not(.is-open) :is(.menubar__nav, .prefs, .menubar__user, .menubar__logout) {
+  .menubar:not(.is-open) :is(.menubar__nav, .prefs, .account-menu) {
     display: none;
   }
 
@@ -5354,7 +5454,7 @@ turbo-frame {
   }
 
   /* Open: the sections one per row, then the preferences, then the
-     account and Logout. */
+     account menu, whose panel opens in the flow of the bar. */
   .menubar.is-open .menubar__nav {
     order: 5;
     flex: 1 0 100%;
@@ -5375,18 +5475,27 @@ turbo-frame {
     border-top: 1px solid var(--menubar-border);
   }
 
-  .menubar.is-open .menubar__user {
-    display: inline-flex;
+  .menubar.is-open .account-menu {
     order: 7;
-    flex: 1 1 auto;
-    align-items: center;
+    flex: 1 0 100%;
+    border-top: 1px solid var(--menubar-border);
+  }
+
+  .menubar.is-open .menubar__user {
+    display: flex;
     gap: 6px;
     min-height: 44px;
     padding: 0 10px;
   }
 
-  .menubar__logout {
-    order: 8;
+  .account-menu__panel {
+    position: static;
+    width: auto;
+    margin: 0 0 8px;
+  }
+
+  .account-menu__item {
+    min-height: 44px;
   }
 
   /* Side panels: closed stickies showing only their title strip, which

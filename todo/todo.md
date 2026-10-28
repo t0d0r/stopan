@@ -260,6 +260,12 @@ approved "go in this order", all done 2026-10-27):
 - [x] menu bar button for staff: dot, staff avatars, number online; panel with staff names and the requester count
 - [x] ticket page: "Also viewing now" with the others who have the ticket open
 
+## Alignment and menus (2026-10-28, specs/ui.md)
+
+- [x] bulk bar: "Delete" on the line of the other buttons (the quiet destructive button's top margin is for the properties panel only)
+- [x] admin settings: Stages as a full-width panel under the columns, one stage per row, new stage form on one row
+- [x] menu bar: the name and Logout in an account menu (dropdown with "Your account" and "Logout")
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

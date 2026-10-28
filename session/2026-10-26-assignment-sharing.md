@@ -936,6 +936,19 @@ menu and Take; open /tickets/new and pick a requester.
   `presence_controller_test.rb`. Deployed as 989950a (with the one-per-row
   side panels and the blue Properties panel) after backup
   `pre-deploy-0d9f426.sqlite3`; pushed.
+- Bulk bar "Delete" sat 6-8px low: `.btn--destructive-quiet` has
+  `margin-top: 12px` for the properties panel; `.bulk-bar
+  .btn--destructive-quiet` resets it.
+- Admin settings: the Stages panel left the third column and sits under
+  `.panel-columns` at full width (`.panel--form.stages-panel` without the
+  720px limit). The row's form is `display: contents`, so name, colour,
+  swatch, Save, up, down and Delete share one flex line; Delete at the
+  right end; phones wrap under the name.
+- Menu bar account menu: `details.account-menu[data-dropdown]` with
+  `summary.menubar__user` (name, role icon, arrow) and a yellow panel
+  (email, "Your account", Logout as `form.menubar__logout`). Phone menu
+  and `noscript.css` now show `.account-menu` instead of the user link
+  and the Logout button; on phones the panel is static in the bar.
 - Production backups: the seven older copies of 2026-10-28 were removed
   (242b476, 50475d3, 624ccbd, 8e1fe51, 9c67bf4, bf47c22, fab4c24);
   `pre-deploy-bf4036c` stays as the rollback copy, the 2026-10-27

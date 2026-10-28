@@ -123,58 +123,59 @@
         </div>
       </div>
     </section>
-
-    <section class="sticky sticky--gray panel panel--form stages-panel" aria-labelledby="stages-title" id="stages">
-      <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.stages_caption") %></span></header>
-      <div class="panel__body">
-        <h2 class="section-title" id="stages-title"><%= t("ui.admin.settings.stages_title") %></h2>
-        <p class="field-hint"><%= t("ui.admin.settings.stages_hint") %></p>
-        <% stages = Stage.ordered.group_by(&:status) %>
-        <% TicketBoard::ORDER_OF_COLUMNS.each do |status| %>
-          <% next if stages[status].blank? %>
-          <h3 class="stages-panel__status"><%= status_pill status %></h3>
-          <ul class="stages-list">
-            <% stages[status].each_with_index do |stage, index| %>
-              <li class="stages-list__item" id="<%= dom_id(stage) %>">
-                <%= form_with model: [ :admin, stage ], class: "inline-form stages-list__form" do |f| %>
-                  <%= f.label :name, t("ui.fields.name"), class: "sr-only", for: "stage_name_#{stage.id}" %>
-                  <%= f.text_field :name, id: "stage_name_#{stage.id}", class: "field-input", maxlength: 40, required: true %>
-                  <%= f.label :color, t("ui.admin.settings.color"), class: "sr-only", for: "stage_color_#{stage.id}" %>
-                  <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, id: "stage_color_#{stage.id}", class: "select" %>
-                  <%= f.submit t("ui.save"), class: "btn btn--small" %>
-                <% end %>
-                <span class="stages-list__swatch sticky--<%= stage.color %>" aria-hidden="true"></span>
-                <%= button_to move_admin_stage_path(stage, direction: "up"), method: :patch, class: "icon-action", disabled: index.zero?,
-                              title: t("ui.admin.settings.up"), aria: { label: t("ui.admin.settings.up") } do %><%= icon :up, size: 14 %><% end %>
-                <%= button_to move_admin_stage_path(stage, direction: "down"), method: :patch, class: "icon-action",
-                              disabled: index == stages[status].size - 1, title: t("ui.admin.settings.down"),
-                              aria: { label: t("ui.admin.settings.down") } do %><%= icon :down, size: 14 %><% end %>
-                <%= button_to t("ui.delete"), admin_stage_path(stage), method: :delete, class: "link-button",
-                              form: { data: confirm_data(title: t("ui.admin.settings.delete_stage_title", name: stage.name),
-                                                         body: t("ui.admin.settings.delete_stage_body"), button: t("ui.delete")) } %>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-        <% if stages.empty? %><p class="panel__empty"><%= t("ui.admin.settings.no_stages") %></p><% end %>
-
-        <h3 class="section-title"><%= t("ui.admin.settings.new_stage") %></h3>
-        <%= form_with model: [ :admin, Stage.new(status: "open") ], class: "inline-form stages-new" do |f| %>
-          <div class="filters__field">
-            <%= f.label :status, t("ui.fields.status") %>
-            <%= f.select :status, TicketBoard::ORDER_OF_COLUMNS.map { |s| [ status_name(s), s ] }, {}, class: "select" %>
-          </div>
-          <div class="filters__field">
-            <%= f.label :name, t("ui.fields.name") %>
-            <%= f.text_field :name, class: "field-input", maxlength: 40, required: true, placeholder: t("ui.admin.settings.stage_placeholder") %>
-          </div>
-          <div class="filters__field">
-            <%= f.label :color, t("ui.admin.settings.color") %>
-            <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, class: "select" %>
-          </div>
-          <%= f.submit t("ui.admin.settings.add_stage"), class: "btn btn--primary" %>
-        <% end %>
-      </div>
-    </section>
   </div>
 </div>
+
+<%# Stages take the whole width under the columns, one stage per row (specs/ui.md "Panel columns"). %>
+<section class="sticky sticky--gray panel panel--form stages-panel" aria-labelledby="stages-title" id="stages">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.admin.settings.stages_caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="stages-title"><%= t("ui.admin.settings.stages_title") %></h2>
+    <p class="field-hint"><%= t("ui.admin.settings.stages_hint") %></p>
+    <% stages = Stage.ordered.group_by(&:status) %>
+    <% TicketBoard::ORDER_OF_COLUMNS.each do |status| %>
+      <% next if stages[status].blank? %>
+      <h3 class="stages-panel__status"><%= status_pill status %></h3>
+      <ul class="stages-list">
+        <% stages[status].each_with_index do |stage, index| %>
+          <li class="stages-list__item" id="<%= dom_id(stage) %>">
+            <%= form_with model: [ :admin, stage ], class: "inline-form stages-list__form" do |f| %>
+              <%= f.label :name, t("ui.fields.name"), class: "sr-only", for: "stage_name_#{stage.id}" %>
+              <%= f.text_field :name, id: "stage_name_#{stage.id}", class: "field-input", maxlength: 40, required: true %>
+              <%= f.label :color, t("ui.admin.settings.color"), class: "sr-only", for: "stage_color_#{stage.id}" %>
+              <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, id: "stage_color_#{stage.id}", class: "select" %>
+              <span class="stages-list__swatch sticky--<%= stage.color %>" aria-hidden="true"></span>
+              <%= f.submit t("ui.save"), class: "btn btn--small" %>
+            <% end %>
+            <%= button_to move_admin_stage_path(stage, direction: "up"), method: :patch, class: "icon-action", disabled: index.zero?,
+                          title: t("ui.admin.settings.up"), aria: { label: t("ui.admin.settings.up") } do %><%= icon :up, size: 14 %><% end %>
+            <%= button_to move_admin_stage_path(stage, direction: "down"), method: :patch, class: "icon-action",
+                          disabled: index == stages[status].size - 1, title: t("ui.admin.settings.down"),
+                          aria: { label: t("ui.admin.settings.down") } do %><%= icon :down, size: 14 %><% end %>
+            <%= button_to t("ui.delete"), admin_stage_path(stage), method: :delete, class: "link-button", form_class: "button_to stages-list__delete",
+                          form: { data: confirm_data(title: t("ui.admin.settings.delete_stage_title", name: stage.name),
+                                                     body: t("ui.admin.settings.delete_stage_body"), button: t("ui.delete")) } %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if stages.empty? %><p class="panel__empty"><%= t("ui.admin.settings.no_stages") %></p><% end %>
+
+    <h3 class="section-title"><%= t("ui.admin.settings.new_stage") %></h3>
+    <%= form_with model: [ :admin, Stage.new(status: "open") ], class: "inline-form stages-new" do |f| %>
+      <div class="filters__field">
+        <%= f.label :status, t("ui.fields.status") %>
+        <%= f.select :status, TicketBoard::ORDER_OF_COLUMNS.map { |s| [ status_name(s), s ] }, {}, class: "select" %>
+      </div>
+      <div class="filters__field stages-new__name">
+        <%= f.label :name, t("ui.fields.name") %>
+        <%= f.text_field :name, class: "field-input", maxlength: 40, required: true, placeholder: t("ui.admin.settings.stage_placeholder") %>
+      </div>
+      <div class="filters__field">
+        <%= f.label :color, t("ui.admin.settings.color") %>
+        <%= f.select :color, Stage::COLORS.map { |c| [ t("ui.admin.settings.colors.#{c}"), c ] }, {}, class: "select" %>
+      </div>
+      <%= f.submit t("ui.admin.settings.add_stage"), class: "btn btn--primary" %>
+    <% end %>
+  </div>
+</section>
