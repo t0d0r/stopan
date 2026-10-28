@@ -274,6 +274,9 @@ de:
       files: "Mit Anhängen"
       go: "Suchen"
     mail_view:
+      quoted: "Frühere Nachricht"
+      quoted_from: "Frühere Nachricht von %{from}"
+      quoted_from_date: "Frühere Nachricht von %{from}, %{date}"
       frame_title: "Die E-Mail, wie sie gesendet wurde"
       tabs_label: "E-Mail anzeigen als"
       html: "HTML"

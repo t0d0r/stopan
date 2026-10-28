@@ -271,6 +271,9 @@ en:
       files: "With attachments"
       go: "Search"
     mail_view:
+      quoted: "Earlier message"
+      quoted_from: "Earlier message from %{from}"
+      quoted_from_date: "Earlier message from %{from}, %{date}"
       frame_title: "The mail as it was sent"
       tabs_label: "Show the mail as"
       html: "HTML"

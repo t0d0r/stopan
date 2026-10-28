@@ -20,6 +20,10 @@
   --ink: #2b2a26;
   --ink-soft: rgba(43, 42, 38, 0.62);
   --rule: rgba(43, 42, 38, 0.14);
+  /* Quote levels in mail (organization-mail.md "Display of mail"); on paper, so one set. */
+  --quote-0: #6b93d6;
+  --quote-1: #5ea97a;
+  --quote-2: #d0924a;
   --field-bg: rgba(255, 255, 255, 0.55);
   --field-border: rgba(43, 42, 38, 0.18);
 
@@ -2831,7 +2835,63 @@ turbo-frame {
 .mail-quote {
   margin: 0 0 8px;
   padding-left: 10px;
-  border-left: 3px solid var(--rule);
+  border-left: 3px solid var(--quote-0);
+  color: var(--ink-soft);
+}
+
+.mail-quote .mail-quote {
+  margin-top: 4px;
+}
+
+/* One colour per quote level, then again (organization-mail.md "Display of mail"). */
+.mail-quote--1,
+.mail-quoted--1 {
+  border-left-color: var(--quote-1);
+}
+
+.mail-quote--2,
+.mail-quoted--2 {
+  border-left-color: var(--quote-2);
+}
+
+/* An earlier message quoted without ">" (Outlook, forwards). */
+.mail-quoted {
+  margin: 12px 0 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--quote-0);
+}
+
+.mail-quoted__summary {
+  width: fit-content;
+  max-width: 100%;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--tool-hover);
+  color: var(--ink-soft);
+  font-size: 13px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.mail-quoted__summary:hover {
+  color: var(--ink);
+}
+
+.mail-quoted[open] > .mail-quoted__summary {
+  margin-bottom: 8px;
+}
+
+.mail-quoted__headers {
+  margin-bottom: 8px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.mail-quoted__headers p {
+  margin: 0;
+}
+
+.mail-quoted__body {
   color: var(--ink-soft);
 }
 
@@ -4788,6 +4848,9 @@ turbo-frame {
   --ink: var(--om-text);
   --ink-soft: var(--om-muted);
   --rule: var(--om-border);
+  --quote-0: var(--om-blue);
+  --quote-1: var(--om-green);
+  --quote-2: var(--om-yellow);
   --field-bg: var(--om-surface);
   --field-border: var(--om-border-strong);
   --accent: var(--om-accent);

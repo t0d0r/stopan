@@ -60,6 +60,54 @@ class TicketsHelperTest < ActionView::TestCase
     assert_equal "https://example.com/x?trk=1", html.css("a").first["href"]
   end
 
+  OUTLOOK = <<~TEXT
+    Ich kann die Seite nicht öffnen.
+
+    ________________________________
+    From: desk@example.com <desk@example.com>
+    Sent: Wednesday, October 28, 2026 12:17
+    To: Ann <ann@example.com>
+    Subject: [Stopan #1009] New reply: Printer
+
+    Hello Ann,
+    We are working on it.
+
+    -----Original Message-----
+    Von: Ann <ann@example.com>
+    Gesendet: Mittwoch, 28. Oktober 2026 11:00
+    Betreff: Printer
+
+    The printer is broken.
+  TEXT
+
+  test "earlier messages quoted without > are nested, collapsible sections" do
+    html = Nokogiri::HTML5.fragment(mail_text(OUTLOOK))
+    outer = html.at_css("details.mail-quoted")
+    assert_not outer.key?("open"), "closed below the reply's own text"
+    assert_equal "Earlier message from desk@example.com, Wednesday, October 28, 2026 12:17", outer.at_css("> summary").text
+    assert_match(/Subject: \[Stopan #1009\]/, outer.at_css("> .mail-quoted__headers").text)
+    inner = outer.at_css(".mail-quoted__body details.mail-quoted")
+    assert_equal "Earlier message from Ann, Mittwoch, 28. Oktober 2026 11:00", inner.at_css("> summary").text
+    assert_includes inner.at_css(".mail-quoted__body").text, "The printer is broken."
+    assert_includes inner["class"], "mail-quoted--1"
+    assert_equal 0, html.css("hr.mail-rule").size, "the rule before the header belongs to the earlier message"
+    assert_includes html.children.first.text, "Ich kann die Seite nicht öffnen."
+  end
+
+  test "a forward that starts with the earlier message is open; > quotes nest by level" do
+    html = Nokogiri::HTML5.fragment(mail_text("---------- Forwarded message ---------\nFrom: Bob <bob@example.com>\nDate: Mon\nSubject: Hi\n\nBody"))
+    assert html.at_css("details.mail-quoted[open]")
+    assert_equal "Earlier message from Bob, Mon", html.at_css("summary").text
+
+    html = Nokogiri::HTML5.fragment(mail_text("Reply\n> first\n>> second\n> again"))
+    outer = html.at_css("blockquote.mail-quote--0")
+    assert_equal "second", outer.at_css("blockquote.mail-quote--1").text.strip
+    assert_includes outer.text, "again"
+
+    html = Nokogiri::HTML5.fragment(mail_text("From: someone in the text\nno header block here"))
+    assert_nil html.at_css("details"), "a From line alone is not an earlier message"
+  end
+
   test "the request's copy header has the ticket's facts; staff also see emails and mail headers" do
     ticket = tickets(:printer)
     ticket.update_columns(mail_headers: { "from" => [ "Anna <anna@example.com>" ], "to" => [ "desk@example.com" ] })

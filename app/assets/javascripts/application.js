@@ -231,7 +231,15 @@ function setUpCopyBoxes() {
         const links = [...text.querySelectorAll("a[data-address]")];
         const labels = links.map((link) => link.textContent);
         links.forEach((link) => { link.textContent = link.getAttribute("href"); });
+        // Closed earlier messages are copied too, without their summary lines
+        // (organization-mail.md "Display of mail").
+        const closed = [...text.querySelectorAll("details:not([open])")];
+        const skipped = [...text.querySelectorAll("[data-copy-skip]")];
+        closed.forEach((details) => { details.open = true; });
+        skipped.forEach((element) => { element.hidden = true; });
         copied = text.innerText.trim();
+        skipped.forEach((element) => { element.hidden = false; });
+        closed.forEach((details) => { details.open = false; });
         links.forEach((link, index) => { link.textContent = labels[index]; });
       }
       // The request copies the ticket's facts before its text (specs/ui.md "Copy box").

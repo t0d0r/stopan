@@ -165,9 +165,32 @@ short links, markdown.md "Plain text links"):
 - **Footer:** the text after the last rule line, when that rule is in
   the second half of the message (newsletters put their "This email was
   intended for ... / Unsubscribe" there): smaller, softer text.
-- Nothing is hidden or removed; the copy box copies all of it, with full
-  addresses. Messages from the app and the web form keep the plain text
-  layout.
+- **Quote levels** (2026-10-28, operator: "a better view of the quote
+  levels in the mails read"): `>` quotes nest, each `>` one level
+  deeper, with a coloured left rule per level (three colours, then
+  again).
+- **Earlier messages:** mail programs that quote without `>` (Outlook,
+  forwards) put the earlier message under a header block. The earlier
+  message starts at a line "From:" (also "Von:", "От:", "De:")
+  whose block, up to the next empty line, also has a date line ("Sent:",
+  "Date:", "Gesendet:", "Изпратено:" ...) and a subject line
+  ("Subject:", "Betreff:", "Тема:" ...); or at a separator line
+  "-----Original Message-----", "---------- Forwarded message
+  ---------" or "Begin forwarded message:". A rule line right before it
+  belongs to it. Everything from there to the end is that earlier
+  message: a collapsible section (`<details>`) with a one-line summary
+  ("Earlier message from <sender>, <date>"), its header lines small
+  and soft, and its text laid out by the same rules, so an earlier
+  message inside it is the next level.
+- A section is closed when the message has its own text above it, and
+  open when the message starts with it (a plain forward, whose text is
+  the earlier message). Notification emails always show it open, since
+  mail programs do not all support `<details>`.
+- Signature and footer are looked for in each level's own text only,
+  above its earlier message.
+- Nothing is removed; the copy box copies all of it, closed sections
+  included and without the summary lines, with full addresses. Messages
+  from the app and the web form keep the plain text layout.
 
 ### Mail details
 

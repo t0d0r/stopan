@@ -883,6 +883,15 @@ menu and Take; open /tickets/new and pick a requester.
   (mailbox on with an address) drives the Reply-To and, in TicketMailer,
   `reply_hint`/`reply_note`: "reply to this email" for the requester, a
   public-reply warning for staff; without it the old texts.
+- Quote levels in mail: `TicketsHelper#mail_text` -> `mail_level` splits
+  each level into its own text and the earlier message
+  (`mail_quoted_start`: an Outlook-style From/date/subject block or a
+  forward separator, with a rule line just before it), renders the
+  earlier message as `<details class="mail-quoted">` (closed below own
+  text, open in mailer views), and nests `>` runs in `mail_blocks`
+  (`mail-quote--0..2`, tokens `--quote-0..2`). The copy box opens closed
+  sections and hides `[data-copy-skip]` summaries while it reads
+  `innerText`. Not deployed yet.
 - Email language per organization: `organizations.mail_locale` (nil =
   each recipient's language), select at the top of the Mail panel
   (`_mail_fields`). `User#mail_locale(organization)` orders the

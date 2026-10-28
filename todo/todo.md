@@ -230,6 +230,13 @@ approved "go in this order", all done 2026-10-27):
 - [x] `User#mail_locale`: the recipient's own choice, then for requesters the organization's language, then the browser's, then English; used by TicketMailer, PublicRequestMailer and AccountMailer (specs/notifications.md "Language")
 - [x] deployed fab4c24 with a database copy first (specs/deploy.md)
 
+## Quote levels in mail (2026-10-28, specs/organization-mail.md "Display of mail")
+
+- [x] `>` quotes nest by level with a colour per level; earlier messages quoted without `>` (Outlook header blocks, forward separators) become collapsible sections, closed below the message's own text
+- [x] the copy box copies closed sections too, without their summary lines
+- [ ] the HTML view of the mail of a deleted ticket fails for administrators (`TicketMailsController#show` uses `find_visible_ticket`, which skips deleted tickets) (specs/tickets.md "Deleting")
+- [ ] replies from Outlook still keep the quoted earlier message in the stored text (`MailboxMessage#without_quotes` knows only "On ... wrote:", "Original Message" and `>`); it is now shown collapsed
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

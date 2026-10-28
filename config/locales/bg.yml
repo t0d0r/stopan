@@ -274,6 +274,9 @@ bg:
       files: "С прикачени файлове"
       go: "Търси"
     mail_view:
+      quoted: "Предишно писмо"
+      quoted_from: "Предишно писмо от %{from}"
+      quoted_from_date: "Предишно писмо от %{from}, %{date}"
       frame_title: "Писмото, както е изпратено"
       tabs_label: "Покажи писмото като"
       html: "HTML"

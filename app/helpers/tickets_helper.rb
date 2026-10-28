@@ -38,32 +38,102 @@ module TicketsHelper
 
   MAIL_RULE = /\A\s*([-_=*])\1{2,}\s*\z/
   MAIL_SIGNATURE = /\A--\s?\z/
+  # The header block of an earlier message quoted without ">" (Outlook,
+  # forwards): a From line with a date and a subject line before the next
+  # empty line (specs/organization-mail.md "Display of mail").
+  MAIL_QUOTED_FROM = /\A\s*\*?(from|von|от|de|van|da)\s*:\*?\s*\S/i
+  MAIL_QUOTED_DATE = /\A\s*\*?(sent|date|gesendet|datum|изпратено|дата|envoyé|verzonden|inviato)\s*:/i
+  MAIL_QUOTED_SUBJECT = /\A\s*\*?(subject|betreff|тема|objet|onderwerp|oggetto)\s*:/i
+  MAIL_QUOTED_SEPARATOR = /\A\s*(-{2,}\s*(original message|forwarded message|ursprüngliche nachricht|weitergeleitete nachricht|оригинално съобщение|препратено съобщение)\s*-{2,}|begin forwarded message:)\s*\z/i
+  MAIL_QUOTE_COLORS = 3
 
-  # A message that came in by mail, laid out as mail: rules, quote blocks,
-  # and a softer signature and newsletter footer (specs/organization-mail.md
-  # "Display of mail"). Nothing is left out.
+  # A message that came in by mail, laid out as mail: rules, nested quote
+  # blocks, earlier messages as collapsible sections, and a softer
+  # signature and newsletter footer (specs/organization-mail.md "Display
+  # of mail"). Nothing is left out.
   def mail_text(text)
-    lines = text.to_s.split("\n")
-    signature_at = lines.index { |line| line.match?(MAIL_SIGNATURE) }
-    signature = signature_at ? lines[(signature_at + 1)..] : []
-    lines = lines.first(signature_at) if signature_at
-    footer_at = lines.rindex { |line| line.match?(MAIL_RULE) }
-    footer = footer_at && footer_at >= lines.size / 2 ? lines[(footer_at + 1)..] : []
-    lines = lines.first(footer_at) if footer.any?
+    mail_level(text.to_s.split("\n"), 0)
+  end
 
-    parts = [ mail_blocks(lines) ]
-    parts << tag.div(mail_blocks(footer), class: "mail-footer") if footer.join.strip.present?
+  # One level: its own text, then the earlier message it quotes, if any.
+  def mail_level(lines, level)
+    quoted_at = mail_quoted_start(lines)
+    quoted = quoted_at ? lines[quoted_at..] : []
+    own = quoted_at ? lines.first(quoted_at) : lines
+
+    signature_at = own.index { |line| line.match?(MAIL_SIGNATURE) }
+    signature = signature_at ? own[(signature_at + 1)..] : []
+    own = own.first(signature_at) if signature_at
+    footer_at = own.rindex { |line| line.match?(MAIL_RULE) }
+    footer = footer_at && footer_at >= own.size / 2 ? own[(footer_at + 1)..] : []
+    own = own.first(footer_at) if footer.any?
+
+    parts = [ mail_blocks(own, level) ]
+    parts << tag.div(mail_blocks(footer, level), class: "mail-footer") if footer.join.strip.present?
     parts << tag.div(ticket_text(signature.join("\n")), class: "mail-signature") if signature.join.strip.present?
+    parts << mail_quoted(quoted, level + 1, open: own.join.strip.empty?) if quoted.any?
     safe_join(parts)
   end
 
-  # Runs of text, rule and quote lines, each as its own block.
-  def mail_blocks(lines)
+  # Where the earlier message starts: its separator or header block, with
+  # a rule line right before it.
+  def mail_quoted_start(lines)
+    at = lines.each_index.find do |index|
+      lines[index].match?(MAIL_QUOTED_SEPARATOR) || mail_quoted_header_size(lines, index).positive?
+    end
+    return unless at
+
+    before = lines.first(at).rindex { |line| line.strip.present? }
+    before && lines[before].match?(MAIL_RULE) ? before : at
+  end
+
+  # The number of header lines at index, or 0 when no header block starts there.
+  def mail_quoted_header_size(lines, index)
+    return 0 unless lines[index].match?(MAIL_QUOTED_FROM)
+
+    block = lines[index..].take_while(&:present?).first(10)
+    block.any? { |line| line.match?(MAIL_QUOTED_DATE) } && block.any? { |line| line.match?(MAIL_QUOTED_SUBJECT) } ? block.size : 0
+  end
+
+  # The earlier message: a summary line, its headers and its own levels.
+  # Emails show it open (not every mail program has <details>).
+  def mail_quoted(lines, level, open:)
+    lines = lines.drop_while { |line| line.strip.empty? || line.match?(MAIL_RULE) || line.match?(MAIL_QUOTED_SEPARATOR) }
+    lines = lines.drop_while { |line| line.strip.empty? }
+    size = mail_quoted_header_size(lines, 0)
+    headers = lines.first(size)
+    body = lines.drop(size)
+    open ||= respond_to?(:controller) && controller.is_a?(ActionMailer::Base)
+
+    tag.details(class: "mail-quoted mail-quoted--#{(level - 1) % MAIL_QUOTE_COLORS}", open: open) do
+      safe_join([
+        tag.summary(mail_quoted_summary(headers), class: "mail-quoted__summary", data: { copy_skip: true }),
+        (tag.div(ticket_text(headers.join("\n")), class: "mail-quoted__headers") if headers.any?),
+        tag.div(mail_level(body, level), class: "mail-quoted__body")
+      ].compact)
+    end
+  end
+
+  def mail_quoted_summary(headers)
+    value = ->(pattern) { headers.find { |line| line.match?(pattern) }&.split(":", 2)&.last.to_s.delete("*").strip.presence }
+    from = value.(MAIL_QUOTED_FROM)
+    from = from[/\A([^<]+?)\s*</, 1] || from if from
+    date = value.(MAIL_QUOTED_DATE)
+    return t("ui.mail_view.quoted") unless from
+
+    date ? t("ui.mail_view.quoted_from_date", from: from, date: date) : t("ui.mail_view.quoted_from", from: from)
+  end
+
+  # Runs of text, rule and quote lines, each as its own block; a quote
+  # holds its own runs one ">" level down.
+  def mail_blocks(lines, level = 0)
     kind = ->(line) { line.match?(MAIL_RULE) ? :rule : (line.start_with?(">") ? :quote : :text) }
     blocks = lines.slice_when { |a, b| kind.(a) != kind.(b) }.filter_map do |run|
       case kind.(run.first)
       when :rule then tag.hr(class: "mail-rule")
-      when :quote then tag.blockquote(ticket_text(run.map { |line| line.sub(/\A>\s?/, "") }.join("\n")), class: "mail-quote")
+      when :quote
+        tag.blockquote(mail_blocks(run.map { |line| line.sub(/\A>\s?/, "") }, level + 1),
+                       class: "mail-quote mail-quote--#{level % MAIL_QUOTE_COLORS}")
       else ticket_text(run.join("\n")) if run.join.strip.present?
       end
     end
