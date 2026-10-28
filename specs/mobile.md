@@ -46,10 +46,17 @@ is the checklist they follow on phones.
    accessible names.
 5. **One column** for forms and side panels; primary actions full width
    where a form ends.
-6. **The menu bar does not stay fixed on phones**: it takes several rows
-   there, so it scrolls away with the page instead of covering a third
-   of the screen; on wide screens it stays sticky.
-7. **Lists as stacked rows where a table would not fit** (everywhere for
+6. **The menu bar does not stay fixed on phones**: with the menu open it
+   takes several rows, so it scrolls away with the page instead of
+   covering a third of the screen; on wide screens it stays sticky.
+7. **The menu behind a button**: the section pills, preferences and
+   account sit behind a menu button, so the bar is one row (ui.md "Menu
+   bar"). The bar is `position: relative` so the notification panel
+   hangs from it above the page.
+8. **The ticket page reads first**: side panels closed, the composer
+   behind a Reply bar at the bottom of the screen (ui.md "Ticket page on
+   phones").
+9. **Lists as stacked rows where a table would not fit** (everywhere for
    short admin lists such as the shared links): the title on its own
    line, the details and the action on a second line.
 

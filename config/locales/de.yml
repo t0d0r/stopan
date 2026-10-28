@@ -68,6 +68,7 @@ de:
 
     nav:
       label: "Bereiche"
+      menu: "Menü"
       queue: "Warteschlange"
       my_tickets: "Meine Tickets"
       board: "Board"
@@ -342,6 +343,8 @@ de:
 
     composer:
       title: "Zu diesem Ticket hinzufügen"
+      open: "Antworten"
+      close: "Schließen"
       mode: "Art der Nachricht"
       public: "Öffentliche Antwort"
       internal: "Interne Notiz"

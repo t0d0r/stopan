@@ -889,6 +889,25 @@ menu and Take; open /tickets/new and pick a requester.
   `nowrap` with an ellipsis, and `copy_email` sets `title`. The share
   link row wraps (`.field-input` flex 1 1 16em, button flex 1 0 auto).
   Deployed in bf4036c.
+- Ticket page on phones (specs/ui.md "Ticket page on phones", "Menu
+  bar"; mobile.md rules 7 and 8): under 761px the menu bar is one row
+  (icon, search except on a ticket, bell, menu button `data-menu-toggle`);
+  `.menubar__right` is `display: contents` there so its items become rows
+  of the bar when `.menubar.is-open`. Side panels render their strip with
+  `TicketsHelper#side_panel_bar` (static caption for wide screens plus a
+  `.side-panel__toggle` button for phones); closed unless `.is-open`
+  (server sets it for Properties with errors). The composer has
+  `id="composer"`, a close box and `.is-open` with errors; the
+  `.reply-bar` after `.ticket-main` is sticky at the bottom. JS:
+  `setUpMenu`, `setUpTicketOnPhones` (open state per path in a Map, so a
+  live refresh keeps it; `#sharing` opens that panel). `autoGrow` now
+  measures a textarea when it first shows. `noscript.css` inside
+  `<noscript>` undoes the phone collapse without JavaScript. The phone
+  menu bar is `position: relative` (was static), so the notification
+  panel hangs from it and stays above the timeline. Checked in headless
+  Chrome at 390px (menu, panels, Reply bar, composer, no sideways scroll,
+  no-JS mode) and 1440px (unchanged). Test:
+  `test/integration/ticket_phone_layout_test.rb`.
 - Quote levels in mail: `TicketsHelper#mail_text` -> `mail_level` splits
   each level into its own text and the earlier message
   (`mail_quoted_start`: an Outlook-style From/date/subject block or a

@@ -1,6 +1,8 @@
-<section class="sticky sticky--gray panel side-panel" aria-labelledby="properties-title">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.ticket.properties") %></span></header>
-  <div class="panel__body">
+<%# Closed on phones until opened, unless the form has errors (ui.md "Ticket page on phones"). %>
+<section class="sticky sticky--gray panel side-panel<%= " is-open" if ticket.errors.any? %>" id="properties"
+         aria-labelledby="properties-title" data-side-panel>
+  <%= side_panel_bar t("ui.ticket.properties"), "properties-body" %>
+  <div class="panel__body" id="properties-body">
     <h2 class="sr-only" id="properties-title"><%= t("ui.ticket.properties") %></h2>
     <% if policy.update? %>
       <%= render "take_button", ticket: ticket, block: true %>

@@ -16,10 +16,14 @@ function pageZoom() {
 
 // Text areas grow with their text instead of scrolling. scrollHeight leaves
 // out the border, which with border-box sizing would leave the box a pixel
-// short. Without JavaScript the field keeps its normal scroll bar.
+// short. Without JavaScript the field keeps its normal scroll bar. A field
+// that is not shown yet (the closed composer on phones) is measured when it
+// first shows.
 function autoGrow(textarea) {
-  const minimum = textarea.offsetHeight;
+  let minimum = textarea.offsetHeight;
   const grow = () => {
+    if (textarea.getClientRects().length === 0) return;
+    minimum ||= textarea.offsetHeight;
     const scrollY = window.scrollY;
     textarea.style.height = "auto";
     const border = textarea.offsetHeight - textarea.clientHeight;
@@ -86,6 +90,75 @@ function setUpComposer(composer) {
     if (button) button.textContent = internal ? button.dataset.internalLabel : button.dataset.publicLabel;
   };
   composer.querySelectorAll("[data-composer-mode]").forEach((radio) => radio.addEventListener("change", update));
+}
+
+// Phone menu (ui.md "Menu bar"): the button shows the sections, preferences
+// and account under the bar; a click outside or Escape closes it. Turbo
+// swaps the whole bar on the next page, so it starts closed there.
+function setUpMenu(menubar) {
+  const button = menubar?.querySelector("[data-menu-toggle]");
+  if (!button) return;
+  const show = (open) => {
+    menubar.classList.toggle("is-open", open);
+    button.setAttribute("aria-expanded", open);
+  };
+  button.addEventListener("click", () => show(!menubar.classList.contains("is-open")));
+  document.addEventListener("click", (event) => {
+    if (menubar.classList.contains("is-open") && !menubar.contains(event.target)) show(false);
+  }, { signal: pageSignal });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !menubar.classList.contains("is-open")) return;
+    show(false);
+    button.focus();
+  }, { signal: pageSignal });
+}
+
+// Ticket page on phones (ui.md "Ticket page on phones"): the side panels
+// start closed and open from their title strip, and the composer opens from
+// the Reply bar at the bottom of the screen. What is open is kept per page
+// in this tab, so a live refresh (a new body) does not close it. On wide
+// screens the classes change nothing.
+const openOnPage = new Map();
+
+function setUpTicketOnPhones(page) {
+  if (!page) return;
+  if (!openOnPage.has(location.pathname)) openOnPage.set(location.pathname, new Set());
+  const remembered = openOnPage.get(location.pathname);
+
+  page.querySelectorAll("[data-side-panel]").forEach((panel) => {
+    const toggle = panel.querySelector("[data-panel-toggle]");
+    const show = (open) => {
+      panel.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", open);
+      if (open) remembered.add(panel.id);
+      else remembered.delete(panel.id);
+    };
+    // A link to #sharing (after changing the link) opens that panel.
+    show(panel.classList.contains("is-open") || remembered.has(panel.id) || location.hash === `#${panel.id}`);
+    toggle.addEventListener("click", () => show(!panel.classList.contains("is-open")));
+  });
+
+  const composer = page.querySelector("#composer");
+  const open = page.querySelector("[data-reply-open]");
+  if (!composer || !open) return;
+  const showComposer = (shown) => {
+    composer.classList.toggle("is-open", shown);
+    open.setAttribute("aria-expanded", shown);
+    if (shown) remembered.add(composer.id);
+    else remembered.delete(composer.id);
+  };
+  showComposer(composer.classList.contains("is-open") || remembered.has(composer.id));
+  open.addEventListener("click", () => {
+    showComposer(true);
+    composer.scrollIntoView({ block: "start" });
+    const field = composer.querySelector("textarea");
+    field?.dispatchEvent(new Event("input"));
+    field?.focus({ preventScroll: true });
+  });
+  composer.querySelector("[data-reply-close]")?.addEventListener("click", () => {
+    showComposer(false);
+    open.focus();
+  });
 }
 
 // Assign menus in the queue float under their button, so the table's scroll
@@ -829,6 +902,8 @@ function setUpPage() {
   setUpReportCharts();
   document.querySelectorAll("select[data-message-recipients]").forEach(setUpMessageForm);
   setUpDropdowns();
+  setUpMenu(document.querySelector(".menubar"));
+  setUpTicketOnPhones(document.querySelector("[data-ticket-page]"));
 
   document.querySelectorAll("select[data-requester-organizations]").forEach(setUpRequesterOrganizations);
 

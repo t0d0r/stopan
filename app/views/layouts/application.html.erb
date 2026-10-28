@@ -14,6 +14,9 @@
   <%= yield :head %>
   <% if live_admin_page? %><%= turbo_refresh_scroll_tag :preserve %><% end %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%# Without JavaScript the phone menu and the ticket page's closed panels
+      stay open (ui.md "Ticket page on phones"). %>
+  <noscript><%= stylesheet_link_tag "noscript" %></noscript>
   <%= javascript_include_tag "turbo.min", type: "module", "data-turbo-track": "reload" %>
   <%# data-turbo-eval=false: Turbo shows an error page by swapping the whole
       document, which would run this script a second time. %>
@@ -46,13 +49,17 @@
     <% end %>
     <div class="menubar__right">
       <% if user_signed_in? && !without_organization? %><%= render "partials/notifications" %><% end %>
+      <%# Phones: the sections, preferences and account sit behind this button (ui.md "Menu bar"). %>
+      <button type="button" class="tool-button menubar__burger" aria-label="<%= t("ui.nav.menu") %>" aria-expanded="false"
+              data-menu-toggle><%= icon :menu, size: 18 %></button>
       <%= render "partials/preferences" %>
       <% if user_signed_in? %>
         <%= link_to edit_user_registration_path, class: "menubar__user", title: t("ui.account") do %>
           <span class="menubar__user-name"><%= current_user.display_name %></span>
           <%= role_icon(current_user) %>
         <% end %>
-        <%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "menubar__button" %>
+        <%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "menubar__button",
+                      form_class: "button_to menubar__logout" %>
       <% end %>
     </div>
   </header>

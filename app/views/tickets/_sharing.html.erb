@@ -1,7 +1,7 @@
 <%# Share link of the ticket (specs/sharing.md). %>
-<section class="sticky sticky--purple panel side-panel sharing" id="sharing" aria-labelledby="sharing-title">
-  <header class="sticky__bar"><%= icon :link, size: 11 %><span class="sticky__caption"><%= t("ui.share.title") %></span></header>
-  <div class="panel__body">
+<section class="sticky sticky--purple panel side-panel sharing" id="sharing" aria-labelledby="sharing-title" data-side-panel>
+  <%= side_panel_bar t("ui.share.title"), "sharing-body", icon_name: :link %>
+  <div class="panel__body" id="sharing-body">
     <h2 class="sr-only" id="sharing-title"><%= t("ui.share.title") %></h2>
     <% if ticket.shared? %>
       <p class="sharing__status">

@@ -1,6 +1,8 @@
 <% content_for :title, "#{@ticket.reference} #{@ticket.subject_was || @ticket.subject}" %>
 <% staff = current_user.staff? %>
 <% turbo_refreshes_with scroll: :preserve %>
+<%# Phones show no menu bar search on a ticket (ui.md "Ticket page on phones"). %>
+<% content_for :body_class, "ticket-view" %>
 <%= turbo_stream_from(*@ticket.page_stream(current_user), channel: TicketsChannel, data: { ticket: @ticket.number }) %>
 <%# A deleted ticket, open for an administrator to review and restore (specs/tickets.md "Deleting"). %>
 <% if @ticket.deleted? %>
@@ -11,7 +13,7 @@
     <% end %>
   </div>
 <% end %>
-<div class="ticket-page">
+<div class="ticket-page" data-ticket-page>
   <%# The request as one note: strip, "#1001 Subject", pills, text (ui.md). %>
   <article class="sticky sticky--yellow message message--description ticket-head" id="description"
          data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>"
@@ -61,4 +63,13 @@
 
     <% unless newest_first? %><%= render "tickets/composer", ticket: @ticket, comment: @comment %><% end %>
   </div>
+
+  <%# Phones: the composer opens from this bar, which stays at the bottom of the screen. %>
+  <% if policy.comment? %>
+    <div class="reply-bar">
+      <button type="button" class="btn btn--primary reply-bar__button" aria-controls="composer" aria-expanded="false" data-reply-open>
+        <%= icon :reply %> <%= t("ui.composer.open") %>
+      </button>
+    </div>
+  <% end %>
 </div>

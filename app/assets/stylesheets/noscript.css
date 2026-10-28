@@ -1,0 +1,49 @@
+/* Loaded inside <noscript> (layouts/application.html.erb). Without
+   JavaScript the phone menu and the ticket page's closed panels could not
+   open, so they stay open and their buttons are hidden (ui.md "Ticket page
+   on phones"). */
+@media (max-width: 760px) {
+  .menubar__burger,
+  .side-panel__toggle,
+  .reply-bar,
+  .composer__close {
+    display: none !important;
+  }
+
+  .menubar:not(.is-open) .menubar__nav {
+    display: flex;
+    order: 5;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+  }
+
+  .menubar:not(.is-open) .prefs {
+    display: flex;
+  }
+
+  .menubar:not(.is-open) .menubar__logout {
+    display: block;
+  }
+
+  .side-panel__caption,
+  .side-panel > .sticky__bar > .icon {
+    display: inline;
+  }
+
+  .side-panel > .sticky__bar {
+    min-height: 22px;
+    padding: 0 8px;
+  }
+
+  .side-panel:not(.is-open) > .panel__body,
+  .ticket-page .composer:not(.is-open) {
+    display: block;
+  }
+}
+
+/* Above 560px the bar shows the account name, as before the phone menu. */
+@media (min-width: 561px) and (max-width: 760px) {
+  .menubar:not(.is-open) .menubar__user {
+    display: inline-flex;
+  }
+}

@@ -1,9 +1,13 @@
 <% staff = current_user.staff? %>
 <% if policy.comment? %>
   <% internal = comment.internal? %>
-  <section class="sticky sticky--<%= internal ? "pink" : (staff ? "blue" : "yellow") %> composer<%= " is-internal" if internal %>"
-           aria-labelledby="composer-title" data-composer data-staff-color="blue">
-    <header class="sticky__bar"><span class="sticky__caption" id="composer-title"><%= t("ui.composer.title") %></span></header>
+  <%# On phones it opens from the Reply bar, or open with errors (ui.md "Ticket page on phones"). %>
+  <section class="sticky sticky--<%= internal ? "pink" : (staff ? "blue" : "yellow") %> composer<%= " is-internal" if internal %><%= " is-open" if comment.errors.any? %>"
+           id="composer" aria-labelledby="composer-title" data-composer data-staff-color="blue">
+    <header class="sticky__bar">
+      <button type="button" class="sticky__box composer__close" aria-label="<%= t("ui.composer.close") %>" data-reply-close>&times;</button>
+      <span class="sticky__caption" id="composer-title"><%= t("ui.composer.title") %></span>
+    </header>
     <%= form_with model: comment, url: ticket_comments_path(ticket), class: "composer__form", data: { turbo: false } do |f| %>
       <%= form_errors comment %>
       <% if staff %>

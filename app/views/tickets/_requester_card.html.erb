@@ -1,6 +1,6 @@
-<section class="sticky sticky--yellow panel side-panel" aria-labelledby="requester-title">
-  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.fields.requester") %></span></header>
-  <div class="panel__body">
+<section class="sticky sticky--yellow panel side-panel" id="requester" aria-labelledby="requester-title" data-side-panel>
+  <%= side_panel_bar t("ui.fields.requester"), "requester-body" %>
+  <div class="panel__body" id="requester-body">
     <h2 class="sr-only" id="requester-title"><%= t("ui.fields.requester") %></h2>
     <dl class="facts">
       <dt><%= t("ui.fields.name") %></dt>

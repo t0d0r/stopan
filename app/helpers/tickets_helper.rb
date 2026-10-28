@@ -10,6 +10,19 @@ module TicketsHelper
                   "postponed" => "purple" }.freeze
   AVATAR_COLORS = %w[yellow blue green pink purple gray].freeze
 
+  # Title strip of a side panel on the ticket page. On phones the panels
+  # start closed and the strip is a button that opens them (ui.md "Ticket
+  # page on phones"); on wide screens it is the plain caption.
+  def side_panel_bar(title, body_id, icon_name: nil)
+    toggle = tag.button(type: "button", class: "side-panel__toggle", data: { panel_toggle: true },
+                        aria: { expanded: false, controls: body_id }) do
+      safe_join([ (icon(icon_name, size: 11) if icon_name), tag.span(title, class: "sticky__caption"), icon(:down, size: 12) ])
+    end
+    tag.header(class: "sticky__bar") do
+      safe_join([ (icon(icon_name, size: 11) if icon_name), tag.span(title, class: "sticky__caption side-panel__caption"), toggle ])
+    end
+  end
+
   def status_name(status)
     t("ui.statuses.#{status}")
   end

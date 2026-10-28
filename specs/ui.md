@@ -25,9 +25,15 @@ Turbo Drive for page changes.
   queues.md "Search"; on its own full-width row under 1180px, where the
   bar wraps instead of running off the screen; at the big and extra text
   sizes under 1180px times the zoom, 1356px and 1533px, see "Text size
-  zoom"). Under 560px the bar has
-  three rows: the icon with the tools on the right, the section pills on
-  a full-width row (wrapping), the search. Right: the
+  zoom"). On phones (760px and less; 2026-10-28, "the rest in a burger
+  menu") the bar is one row: the icon, the search (not on a ticket page,
+  see "Ticket page on phones"), the bell and a menu button (three lines,
+  label "Menu", `aria-expanded`). The button opens the section pills one
+  per row, then the theme, text size and language buttons, then the
+  user's name with the role icon and "Logout", as further rows of the
+  bar; a click outside or Escape closes it, and the next page starts
+  with it closed. Without JavaScript all of them show, as rows under the
+  first (`noscript.css`). Right: the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
   the language switch (only where it applies, see "Language"), the
@@ -118,6 +124,35 @@ in documentation, not in the app.
   email) and dates. Requesters see "Mark as done" when allowed. Under
   900px the side panel comes after the request note. Shared pages show
   the same note (status pill only) under the read-only notice.
+- **Ticket page on phones** (760px and less; operator, 2026-10-28: "no
+  search when viewing a ticket on mobile; Properties, Requester and
+  Sharing as closed stickies that open when tapped; the composer as a
+  Reply button at the end of the page that moves with the scroll and
+  opens the form"):
+  - No search field in the menu bar (body class `ticket-view`); the
+    sections are behind the menu button (Menu bar above).
+  - The Properties, Requester and Sharing panels start closed: only
+    their title strip shows, as a full-width 44px button with the caption
+    and a chevron (`aria-expanded`, `aria-controls` the panel body).
+    Tapping opens or closes the panel. A panel starts open when its form
+    has errors (Properties after an invalid update) or when the address
+    names it (`#sharing` after changing the link).
+  - The composer is hidden. A blue "Reply" button, full width, sits in a
+    bar after the timeline that sticks to the bottom of the screen while
+    the page scrolls (`position: sticky`) and comes to rest at the end of
+    the page. Tapping it shows the composer in its place (above the
+    timeline when replies are newest first), scrolls to it and focuses
+    the text; the bar hides while the composer is open. A close box
+    (x, "Close") at the left of the composer's strip hides it again and
+    keeps the text. The composer starts open when a reply came back with
+    errors. Users who cannot write on the ticket (a deleted ticket) get
+    no Reply bar.
+  - What is open is kept per ticket in the tab, so a live refresh of the
+    page does not close a panel or the composer.
+  - Without JavaScript the panels and the composer are open and the
+    buttons are hidden (`noscript.css`, loaded inside `<noscript>`).
+  - Wide screens do not change: no toggles, no Reply bar, panels and
+    composer always shown.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
   sticky. On an organization's page the purple details panel is the
   narrow right column: each section title after the first has 18px

@@ -3542,19 +3542,7 @@ turbo-frame {
     display: none;
   }
 
-  /* Phones: the icon and the tools on the first row, the sections on a
-     full-width row of their own (wrapping, never hidden), then the search. */
-  .menubar__nav {
-    order: 1;
-    flex: 1 0 100%;
-    flex-wrap: wrap;
-    row-gap: 2px;
-  }
-
-  .menubar__search {
-    order: 2;
-  }
-
+  /* The phone menu (ui.md "Menu bar") is set up in the phones section. */
   .nav-link {
     padding: 0 7px;
   }
@@ -5096,9 +5084,11 @@ turbo-frame {
 /* ---------- phones (mobile.md) ---------- */
 
 @media (max-width: 760px) {
-  /* Rule 6: several rows of menu bar would cover a third of the screen. */
+  /* Rule 6: several rows of menu bar would cover a third of the screen.
+     Relative, not static: the notification panel hangs from the bar and
+     stays above the page and the Reply bar. */
   .menubar {
-    position: static;
+    position: relative;
     column-gap: 6px;
     padding-inline: 12px;
   }
@@ -5162,6 +5152,200 @@ turbo-frame {
   :is(input, select, textarea, .select, .field-input, .search-field, .search-field__input),
   .filters .search-field__input {
     font-size: 16px;
+  }
+}
+
+/* ---------- phone menu and ticket page (ui.md "Menu bar", "Ticket page on phones") ---------- */
+
+/* Only phones have the menu button, the panel toggles, the Reply bar and the
+   composer's close box; noscript.css undoes the phone rules without
+   JavaScript. */
+.menubar__burger,
+.side-panel__toggle,
+.reply-bar,
+.composer__close {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  /* The bar keeps one row: icon, search (not on a ticket), bell, menu
+     button. The rest of .menubar__right joins the bar's own rows. */
+  .menubar {
+    flex-wrap: wrap;
+  }
+
+  .menubar__right {
+    display: contents;
+  }
+
+  /* :root outweighs the text size rules that give the search a row. */
+  :root .menubar .menubar__search {
+    order: 0;
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .ticket-view .menubar__search {
+    display: none;
+  }
+
+  .menubar .notify {
+    margin-left: auto;
+  }
+
+  .menubar__burger {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .notify + .menubar__burger {
+    margin-left: 0;
+  }
+
+  .menubar:not(.is-open) :is(.menubar__nav, .prefs, .menubar__user, .menubar__logout) {
+    display: none;
+  }
+
+  .menubar.is-open .menubar__burger {
+    background: var(--tool-hover);
+  }
+
+  /* Open: the sections one per row, then the preferences, then the
+     account and Logout. */
+  .menubar.is-open .menubar__nav {
+    order: 5;
+    flex: 1 0 100%;
+    flex-direction: column;
+    padding-top: 4px;
+    border-top: 1px solid var(--menubar-border);
+  }
+
+  .menubar.is-open .nav-link {
+    padding: 0 10px;
+  }
+
+  .menubar.is-open .prefs {
+    order: 6;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+    padding-top: 4px;
+    border-top: 1px solid var(--menubar-border);
+  }
+
+  .menubar.is-open .menubar__user {
+    display: inline-flex;
+    order: 7;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 10px;
+  }
+
+  .menubar__logout {
+    order: 8;
+  }
+
+  /* Side panels: closed stickies showing only their title strip, which
+     opens them. */
+  .ticket-side {
+    gap: 0 12px;
+  }
+
+  .side-panel {
+    margin-bottom: 10px;
+  }
+
+  .side-panel__caption,
+  .side-panel > .sticky__bar > .icon {
+    display: none;
+  }
+
+  .side-panel > .sticky__bar {
+    padding: 0;
+  }
+
+  .side-panel__toggle {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .side-panel__toggle .sticky__caption {
+    text-align: left;
+  }
+
+  .side-panel__toggle > .icon:last-child {
+    transition: transform 0.15s ease;
+  }
+
+  .side-panel__toggle[aria-expanded="true"] > .icon:last-child {
+    transform: rotate(180deg);
+  }
+
+  .side-panel__toggle:focus-visible {
+    outline: 3px solid var(--accent-ring);
+    outline-offset: -3px;
+  }
+
+  .side-panel:not(.is-open) > .sticky__bar {
+    border-bottom: 0;
+    border-radius: 3px;
+  }
+
+  .side-panel:not(.is-open) > .panel__body {
+    display: none;
+  }
+
+  /* Composer: hidden until the Reply bar opens it; its close box hides it
+     again and keeps the text. */
+  .ticket-page .composer:not(.is-open) {
+    display: none;
+  }
+
+  .composer__close {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    margin: -11px 0 -11px -8px;
+    border: 0;
+    background: none;
+    font-size: 18px;
+  }
+
+  .composer__close:hover {
+    background: none;
+  }
+
+  /* The Reply bar stays at the bottom of the screen while the page
+     scrolls and comes to rest after the timeline. */
+  .reply-bar {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    padding: 10px 0 12px;
+    background: linear-gradient(to bottom, transparent, var(--desk) 35%);
+  }
+
+  .ticket-page:has(.composer.is-open) .reply-bar {
+    display: none;
+  }
+
+  .reply-bar__button {
+    width: 100%;
+    gap: 8px;
+    box-shadow: var(--shadow);
   }
 }
 

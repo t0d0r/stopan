@@ -242,6 +242,13 @@ approved "go in this order", all done 2026-10-27):
 - [x] the requester's email stays on one line (ellipsis when too long, whole address in the tooltip and the copy); a stale `.copy-value` block rule from the Google page made it a wrapping box (specs/ui.md "Emails copy on click")
 - [x] the share link field takes its own row in the side column, the copy button under it (specs/sharing.md "Managing the link")
 
+## Ticket page on phones (2026-10-28, specs/ui.md "Ticket page on phones")
+
+- [x] menu button on phones: sections, preferences and account behind it; no search on a ticket page (specs/ui.md "Menu bar")
+- [x] Properties, Requester and Sharing start closed on phones and open from their title strip
+- [x] composer behind a sticky Reply bar on phones; close box keeps the text
+- [x] notification panel above the page on phones (menu bar `position: relative`)
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)
