@@ -184,6 +184,25 @@ form.button_to {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
 }
 
+/* New ticket: a "+" on green paper next to the name (ui.md "Menu bar"). */
+.menubar .menubar__new {
+  width: 24px;
+  margin-left: -8px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: var(--paper);
+  box-shadow: inset 0 -2px 0 var(--bar);
+  color: #2b2a26;
+}
+
+.menubar .menubar__new:hover,
+.menubar .menubar__new[aria-current] {
+  background: var(--bar);
+}
+
+.menubar__new .icon {
+  stroke-width: 2;
+}
+
 .menubar__brand:hover img {
   transform: rotate(-6deg);
   transition: transform 0.15s ease;

@@ -28,6 +28,13 @@
     <%= link_to root_path, class: "menubar__brand", aria: { label: "Stopan" } do %>
       <%= image_tag "/icon.svg", alt: "", width: 18, height: 18 %><span class="menubar__name">Stopan</span>
     <% end %>
+    <%# New ticket as a green "+" right after the name (ui.md "Menu bar"). %>
+    <% if user_signed_in? && !without_organization? %>
+      <%= link_to new_ticket_path, class: "tool-button menubar__new sticky--green", title: t("ui.nav.new_ticket"),
+                                   aria: { label: t("ui.nav.new_ticket"), current: ("page" if current_section == :new_ticket) } do %>
+        <%= icon :plus, size: 14 %>
+      <% end %>
+    <% end %>
     <% if user_signed_in? && !without_organization? %>
       <nav class="menubar__nav" aria-label="<%= t("ui.nav.label") %>">
         <%= nav_link current_user.staff? ? t("ui.nav.queue") : t("ui.nav.my_tickets"), tickets_path, dot: "yellow",
@@ -36,7 +43,6 @@
           <%= nav_link t("ui.nav.board"), board_path, dot: "purple", current: current_section == :board %>
           <%= nav_link t("ui.nav.search"), search_path, dot: "pink", current: current_section == :search %>
         <% end %>
-        <%= nav_link t("ui.nav.new_ticket"), new_ticket_path, dot: "green", current: current_section == :new_ticket %>
         <% if current_user.staff? %>
           <%= nav_link t("ui.nav.reports"), reports_path, dot: "blue", current: current_section == :reports %>
         <% end %>

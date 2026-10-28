@@ -18,6 +18,8 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select "#ticket_#{tickets(:printer).id} td.text:not(.col-requester):not(.col-org):not(.col-assignee)", text: /#{tickets(:printer).requester.display_name}/, count: 0
     assert_select ".menubar a.nav-link[aria-current=page]", /Queue/
     assert_select ".menubar__nav a.nav-link[href=?]", board_path, /Board/
+    assert_select ".menubar__brand + a.menubar__new[href=?][aria-label=?]", new_ticket_path, "New ticket"
+    assert_select ".menubar__nav a[href=?]", new_ticket_path, count: 0
     assert_select ".menubar__user .menubar__role--agent[title=Agent] svg[role=img][aria-label=Agent]"
     assert_equal "", css_select(".menubar__user .menubar__role").sole.text.strip, "the role is an icon, not a word"
 

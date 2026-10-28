@@ -967,6 +967,10 @@ menu and Take; open /tickets/new and pick a requester.
   before the name. Field on the account page (with a hint) and in the
   admin user form; not in the API. Migration also run in the development
   container. Production needs the migration on the next deploy.
+- Menu bar: "New ticket" left the section pills and is a `.menubar__new`
+  link after the brand: a "+" on green paper (`sticky--green`), label and
+  tooltip "New ticket", `aria-current` on /tickets/new. The queue's and
+  board's own "New ticket" buttons stay.
 - Queue (`tickets/_queue`) and board: `h1` now `sr-only`; the header
   row keeps the List | Board switch and "New ticket". Reports: the filter
   form moved into `.desk__header.report-header` (flex-end, wraps), its

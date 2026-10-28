@@ -14,10 +14,13 @@ Turbo Drive for page changes.
 
 - **Desk:** warm grey background (`--desk`), darker in dark mode.
 - **Menu bar:** translucent bar at the top. Left: the sticky icon and
-  "Stopan" (icon only under 560px), then section pills with a paper-colour
-  square: "Queue" (staff, yellow) or "My tickets" (requesters, yellow),
-  "Board" (staff, purple; board.md), "Search" (staff, pink; queues.md
-  "Search page"), "New ticket" (green), "Reports"
+  "Stopan" (icon only under 560px), then "New ticket" as a "+" on green
+  paper (a link with the label "New ticket" for screen readers and as
+  its tooltip, `aria-current` on the new ticket page; 2026-10-28: "after
+  Stopan, as a + icon"; it stays in the phone bar's one row), then
+  section pills with a paper-colour square: "Queue" (staff, yellow) or
+  "My tickets" (requesters, yellow), "Board" (staff, purple; board.md),
+  "Search" (staff, pink; queues.md "Search page"), "Reports"
   (staff, blue; reports.md), "Admin" (admins, grey). The current section
   has `aria-current="page"`: "Queue" on the list and the ticket pages,
   "Search" on the search page, "Board" on the board (operator, 2026-10-27: "a separate button for the
@@ -28,7 +31,8 @@ Turbo Drive for page changes.
   zoom"). On phones (760px and less; 2026-10-28, "the rest in a burger
   menu") the bar is one row: the icon, the search (not on a ticket page,
   see "Ticket page on phones"), the bell and a menu button (three lines,
-  label "Menu", `aria-expanded`). The button opens the section pills one
+  label "Menu", `aria-expanded`), with the "+" for a new ticket after the
+  icon. The button opens the section pills one
   per row, then the theme, text size and language buttons, then the
   account menu (below), as further rows of the bar; there the account
   menu's panel opens in the flow under the name; a click outside or Escape closes it, and the next page starts
