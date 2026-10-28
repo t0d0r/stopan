@@ -47,6 +47,7 @@ class TicketNotifier
       store(recipient, kind)
       next if postponing_only?(recipient, kind)
 
+      @ticket.share_with_requester! if recipient == @ticket.requester
       TicketMailer.with(recipient: recipient, ticket: @ticket, event_ids: @events.map(&:id)).public_send(kind).deliver_later
     end
     members_to_tell(recipients.keys).each { |member| store(member, :created) }

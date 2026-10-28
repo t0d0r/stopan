@@ -67,6 +67,17 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form#unlock_form"
   end
 
+  test "an email address as password may be typed in another case; other passwords are exact" do
+    token = share(password: "anna@example.com")
+    post unlock_shared_ticket_url(token), params: { password: " Anna@Example.COM " }
+    assert_redirected_to shared_ticket_url(token)
+
+    reset!
+    token = share(password: "s3cret!")
+    post unlock_shared_ticket_url(token), params: { password: "S3CRET!" }
+    assert_response :unprocessable_content
+  end
+
   test "password attempts are rate limited per token" do
     token = share(password: "s3cret!")
     10.times { post unlock_shared_ticket_url(token), params: { password: "wrong-one" } }

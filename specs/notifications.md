@@ -233,7 +233,10 @@ notifications, live.
   reply and note bodies, file and user names) is escaped in HTML and
   shown as-is in the text part. Attachments are listed by name only, never
   attached; downloading still needs a signed-in, authorized user.
-- **Link** to the ticket page (`APP_HOST`, https in production).
+- **Link** to the ticket page (`APP_HOST`, https in production). For
+  the requester of a ticket from email, the shared page with the
+  recipient's email address as password instead (sharing.md "Link in
+  the requester's emails").
 - **Footer:** why the recipient gets the email (requester / assignee /
   subscribed to new tickets) and that replies to the email are not read;
   subscribers get a link to their account page to turn it off.

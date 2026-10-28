@@ -993,6 +993,8 @@ de:
         done: "Falls Ihr Problem damit nicht gelöst ist, antworten Sie auf der Ticketseite, und das Ticket wird wieder geöffnet."
       files: "Angehängte Dateien"
       open: "Ticket %{reference} öffnen"
+      open_shared: "Ticket %{reference} online lesen, ohne Anmeldung"
+      share_password: "Das Passwort ist Ihre E-Mail-Adresse, an die diese E-Mail gesendet wurde."
       reason:
         requester: "Sie erhalten diese E-Mail, weil Sie dieses Ticket eröffnet haben oder es für Sie eröffnet wurde."
         assignee: "Sie erhalten diese E-Mail, weil Ihnen dieses Ticket zugewiesen ist."

@@ -213,6 +213,12 @@ approved "go in this order", all done 2026-10-27):
 - [x] details panel: public form address no longer shrinks to "https:"; space above section titles
 - [x] deployed 7767fc0 to production (specs/deploy.md "Update 2026-10-28 (revision 7767fc0)")
 
+## Requester emails for tickets from email (2026-10-28, specs/sharing.md "Link in the requester's emails")
+
+- [x] the requester's notification emails of a ticket from email link to the shared page; a link with the recipient's address as password is made when none exists
+- [x] the share password form accepts an address in any case or with spaces around it
+- [ ] the email footer and the pending/done hints still say "reply on the ticket page"; for a ticket from email with a mailbox, replying to the email is the way (specs/notifications.md, specs/organization-mail.md)
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

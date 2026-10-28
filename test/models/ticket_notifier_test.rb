@@ -179,4 +179,57 @@ class TicketNotifierTest < ActiveSupport::TestCase
     mails { ticket.add_comment(author: users(:anna), body: "Any news?") }
     assert_equal "open", ticket.reload.status
   end
+
+  # specs/sharing.md "Link in the requester's emails".
+  test "the requester of a ticket from email gets the shared page with their address as password" do
+    ticket = tickets(:printer)
+    ticket.update_columns(source: "email", assignee_id: users(:agent_two).id)
+
+    mails { ticket.add_comment(author: users(:agent), body: "Please try a new roll.") }
+
+    ticket.reload
+    assert ticket.shared?
+    assert ticket.authenticate_share_password("anna@example.com")
+    event = ticket.events.find_by!(action: "shared")
+    assert_nil event.actor
+    assert event.internal?
+    requester = body_of("anna@example.com")
+    assert_includes requester, "/s/#{ticket.share_token}"
+    assert_not_includes requester, "/tickets/1001"
+    assert_includes requester, "Read ticket #1001 online, without signing in"
+    assert_includes requester, "The password is your email address"
+    staff = body_of("petar@example.com")
+    assert_includes staff, "/tickets/1001"
+    assert_not_includes staff, "/s/"
+
+    token = ticket.share_token
+    mails { ticket.add_comment(author: users(:agent), body: "Any luck?") }
+    assert_equal token, ticket.reload.share_token, "the link is made once"
+    assert_includes body_of("anna@example.com"), "/s/#{token}"
+  end
+
+  test "an existing link is kept: an open one is given, one with another password is not" do
+    ticket = tickets(:printer)
+    ticket.update_columns(source: "email")
+    ticket.share!(actor: users(:agent))
+    token = ticket.share_token
+
+    mails { ticket.add_comment(author: users(:agent), body: "Open link") }
+    assert_includes body_of("anna@example.com"), "/s/#{token}"
+    assert_not_includes body_of("anna@example.com"), "The password is your email address"
+
+    ticket.share!(actor: users(:agent), password: "staff-secret")
+    token = ticket.share_token
+    mails { ticket.add_comment(author: users(:agent), body: "Staff password") }
+    assert_equal token, ticket.reload.share_token
+    assert_includes body_of("anna@example.com"), "/tickets/1001"
+    assert_not_includes body_of("anna@example.com"), "/s/"
+  end
+
+  test "requesters of tickets from the app keep the ticket page and nothing is shared" do
+    ticket = tickets(:printer)
+    mails { ticket.add_comment(author: users(:agent), body: "Please try a new roll.") }
+    assert_not ticket.reload.shared?
+    assert_includes body_of("anna@example.com"), "/tickets/1001"
+  end
 end

@@ -990,6 +990,8 @@ en:
         done: "If this does not solve your problem, reply on the ticket page and the ticket opens again."
       files: "Attached files"
       open: "Open ticket %{reference}"
+      open_shared: "Read ticket %{reference} online, without signing in"
+      share_password: "The password is your email address, the one this email was sent to."
       reason:
         requester: "You get this email because you opened this ticket or it was opened for you."
         assignee: "You get this email because this ticket is assigned to you."

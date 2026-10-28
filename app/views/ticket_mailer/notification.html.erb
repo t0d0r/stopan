@@ -31,7 +31,10 @@
   <%= formatted_text(@ticket) %>
 <% end %>
 
-<p><%= link_to t("mailer.ticket.open", reference: @ticket.reference), ticket_url(@ticket) %></p>
+<p><%= link_to t(@share_link ? "mailer.ticket.open_shared" : "mailer.ticket.open", reference: @ticket.reference), @ticket_link %></p>
+<% if @share_link == :email_password %>
+  <p><%= t("mailer.ticket.share_password") %></p>
+<% end %>
 
 <p style="color: #666; font-size: 0.9em;">
   <%= t("mailer.ticket.reason.#{@reason}") %>

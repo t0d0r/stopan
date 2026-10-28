@@ -177,6 +177,25 @@ class Ticket < ApplicationRecord
     end
   end
 
+  # A ticket from email is read through its share link, with the
+  # requester's address as password (specs/sharing.md "Link in the
+  # requester's emails"). Keeps an existing link.
+  def share_with_requester!
+    return if shared? || source != "email"
+
+    share!(actor: nil, password: requester.email)
+  end
+
+  # The link to give in an email to this recipient, or nil for the ticket
+  # page: the requester of a ticket from email, when the link is open or
+  # its password is their address.
+  def share_link_for(recipient)
+    return unless shared? && source == "email" && recipient == requester
+    return :open unless share_password?
+
+    :email_password if authenticate_share_password(recipient.email)
+  end
+
   def unshare!(actor:)
     return unless shared?
 

@@ -27,6 +27,8 @@ class TicketMailer < ApplicationMailer
     @comment = @events.find(&:comment_event?)&.comment
     @status_event = @events.find { |event| event.action == "status_changed" }
     @reason = notification_reason
+    @share_link = @ticket.share_link_for(@recipient)
+    @ticket_link = @share_link ? shared_ticket_url(@ticket.share_token) : ticket_url(@ticket)
 
     I18n.with_locale(@recipient.locale.presence || I18n.default_locale) do
       headers["References"] = "<ticket-#{@ticket.number}@#{default_url_options[:host]}>"

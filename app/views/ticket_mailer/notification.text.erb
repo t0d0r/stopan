@@ -29,7 +29,10 @@
 <%= raw @ticket.description %>
 <% end %>
 
-<%= t("mailer.ticket.open", reference: @ticket.reference) %>: <%= ticket_url(@ticket) %>
+<%= t(@share_link ? "mailer.ticket.open_shared" : "mailer.ticket.open", reference: @ticket.reference) %>: <%= @ticket_link %>
+<% if @share_link == :email_password %>
+<%= t("mailer.ticket.share_password") %>
+<% end %>
 
 -- 
 <%= t("mailer.ticket.reason.#{@reason}") %> <%= t("mailer.ticket.no_reply") %>

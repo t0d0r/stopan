@@ -82,6 +82,47 @@ an alert.
 Ticket lists (queue and My tickets) show a link icon with the label
 "Shared by link" next to the subject of shared tickets.
 
+## Link in the requester's emails (tickets from email)
+
+Operator, 2026-10-28: a public reply emails the requester a link to
+`/tickets/<number>`, which needs a sign-in that a customer who wrote by
+email does not have. For a ticket with source `email`, the notification
+emails to its requester (notifications.md) point to the shared page
+instead, protected by the recipient's email address as password.
+
+- **When the ticket has no link** as the email is queued
+  (`TicketNotifier`, before the requester's email), the app shares it:
+  `Ticket#share_with_requester!` calls `share!` with no actor (shown as
+  the system in the timeline, internal `shared` event "with a password",
+  like any share) and the requester's email address as password. Staff
+  see the link in the Sharing panel and may stop or replace it; the next
+  email to the requester then makes a new one only if no link exists.
+- **Which link the email gives:** the shared page when the link is open
+  or its password is the recipient's email address (checked with
+  `authenticate_share_password` at sending time); then the email says
+  that the password is the recipient's email address. A link with
+  another password (set by staff) is not given: the email keeps the
+  ticket page link, since the requester could not open it.
+- Only the requester, only tickets with source `email`. Staff
+  (assignee, subscribers) and requesters of tickets from the app or the
+  public form keep the ticket page link.
+- An address shorter than 6 or longer than 72 characters cannot be a
+  share password (Model); then nothing is shared and the email keeps the
+  ticket page link.
+- **Typing the address:** the password form also accepts the address in
+  other letter case or with spaces around it: when the given password
+  contains `@`, `POST /s/:token` tries it as typed and then stripped and
+  in lower case (Devise stores addresses in lower case). Other
+  passwords are compared exactly.
+- The shared page itself does not hint that the password is an email
+  address; only the email says so.
+
+Why the address as password: the 32-character token already is the
+secret; the address only keeps a forwarded or leaked link from opening
+the ticket for someone who does not know whose ticket it is. It is not a
+strong secret, and the page shows nothing the requester's own emails did
+not already carry.
+
 ## Visitor side (`/s/:token`, no sign-in)
 
 | route | behaviour |

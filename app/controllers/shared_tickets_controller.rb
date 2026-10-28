@@ -31,7 +31,7 @@ class SharedTicketsController < ApplicationController
   end
 
   def unlock
-    if !@ticket.share_password? || @ticket.authenticate_share_password(params[:password].to_s)
+    if !@ticket.share_password? || password_matches?(params[:password].to_s)
       remember_unlocked
       redirect_to shared_ticket_path(@ticket.share_token)
     else
@@ -49,6 +49,14 @@ class SharedTicketsController < ApplicationController
   end
 
   private
+
+  # An email address as password may be typed in any case or with spaces
+  # around it (specs/sharing.md "Link in the requester's emails").
+  def password_matches?(password)
+    candidates = [ password ]
+    candidates << password.strip.downcase if password.include?("@")
+    candidates.uniq.any? { |candidate| @ticket.authenticate_share_password(candidate) }
+  end
 
   # Files of the ticket and of its public replies only.
   def find_public_attachment

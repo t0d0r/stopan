@@ -870,6 +870,15 @@ menu and Take; open /tickets/new and pick a requester.
   leave as `stopan` through pasta. `stopan` is now in the imaps rule;
   Gmail and Microsoft 365 IMAPS answer from the container (specs/deploy.md
   "Outbound IMAP blocked by the host firewall").
+- Requester emails of tickets from email (specs/sharing.md "Link in the
+  requester's emails"): `TicketNotifier` calls
+  `Ticket#share_with_requester!` before the requester's email (no actor,
+  password = the requester's address, only when no link exists);
+  `Ticket#share_link_for` picks the shared page when the link is open or
+  its password is the recipient's address, else the ticket page.
+  `SharedTicketsController#password_matches?` also tries a password with
+  `@` stripped and in lower case. Tests in `ticket_notifier_test.rb` and
+  `shared_tickets_controller_test.rb`. Not deployed yet.
 - Automatic mail fetching is on in production (`app_settings.mailbox_polling`,
   every 120 s). One check right after a burst of manual "Check the
   mailbox" logins got `Net::IMAP::ByeResponseError: System Error` from
