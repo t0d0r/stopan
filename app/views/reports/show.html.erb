@@ -1,23 +1,22 @@
 <% content_for :title, t("ui.reports.title") %>
 <% report = @report %>
-<div class="desk__header">
+<%# The title and the filters on one row, above everything they scope (specs/reports.md). %>
+<div class="desk__header report-header">
   <h1 class="desk__title"><%= t("ui.reports.title") %></h1>
+  <%= form_with url: reports_path, method: :get, class: "filters report-filters", data: { filter_form: true, turbo_action: "replace" } do %>
+    <div class="filters__field">
+      <%= label_tag :period, t("ui.reports.period") %>
+      <%= select_tag :period, options_for_select(TicketReport::PERIODS.map { |p| [ t("ui.reports.periods.#{p}"), p ] }, report.period),
+                     class: "select", data: { auto_submit: true } %>
+    </div>
+    <div class="filters__field">
+      <%= label_tag :organization, t("ui.fields.organization") %>
+      <%= select_tag :organization, options_from_collection_for_select(report.organizations, :id, :name, report.organization&.id),
+                     include_blank: t("ui.queue.any"), class: class_names("select", "is-set": report.organization), data: { auto_submit: true } %>
+    </div>
+    <noscript><%= submit_tag t("ui.queue.apply"), name: nil, class: "btn" %></noscript>
+  <% end %>
 </div>
-
-<%# One row of filters above everything they scope (specs/reports.md). %>
-<%= form_with url: reports_path, method: :get, class: "filters report-filters", data: { filter_form: true, turbo_action: "replace" } do %>
-  <div class="filters__field">
-    <%= label_tag :period, t("ui.reports.period") %>
-    <%= select_tag :period, options_for_select(TicketReport::PERIODS.map { |p| [ t("ui.reports.periods.#{p}"), p ] }, report.period),
-                   class: "select", data: { auto_submit: true } %>
-  </div>
-  <div class="filters__field">
-    <%= label_tag :organization, t("ui.fields.organization") %>
-    <%= select_tag :organization, options_from_collection_for_select(report.organizations, :id, :name, report.organization&.id),
-                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": report.organization), data: { auto_submit: true } %>
-  </div>
-  <noscript><%= submit_tag t("ui.queue.apply"), name: nil, class: "btn" %></noscript>
-<% end %>
 
 <section class="report-tiles" aria-label="<%= t("ui.reports.summary") %>">
   <div class="sticky sticky--gray report-tile">

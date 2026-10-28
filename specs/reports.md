@@ -15,7 +15,10 @@ organization and per person. It is the "reporting" item of roadmap.md.
 
 ## Filters
 
-One row above everything, GET parameters, applied to the whole page:
+One row above everything, GET parameters, applied to the whole page. The
+selects sit on the row of the page title "Reports", at its right end,
+their bottoms in line with it (2026-10-28: "reports on one level with
+the selects"); on phones they wrap under the title.
 
 | param | values | default |
 |---|---|---|

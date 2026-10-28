@@ -10,7 +10,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     get root_url
     assert_response :success
-    assert_select "h1", "Queue"
+    assert_select "h1.sr-only", "Queue"
     assert_select ".queue__views .view-link[aria-current=page]", /All unsolved/
     assert_select ".tickets-table tbody tr", 3
     assert_select ".tickets-table th.col-requester", "Requester"

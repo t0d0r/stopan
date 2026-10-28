@@ -4,7 +4,8 @@
 <%= turbo_stream_from(:queue, :staff, channel: TicketListsChannel) %>
 <% filter = @board.filter %>
 <div class="desk__header">
-  <h1 class="desk__title"><%= t("ui.board.title") %></h1>
+  <%# The menu bar and the List | Board switch name the page; the h1 is for screen readers (ui.md "Pages"). %>
+  <h1 class="sr-only"><%= t("ui.board.title") %></h1>
   <%= render "tickets/view_switch", current: :board %>
   <%= link_to new_ticket_path, class: "btn btn--primary" do %><%= icon :plus %> <%= t("ui.nav.new_ticket") %><% end %>
 </div>

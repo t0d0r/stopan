@@ -55,6 +55,7 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     get reports_url, headers: { "Accept-Language" => "bg" }
     assert_select "h1", "Отчети"
+    assert_select ".desk__header.report-header > h1 + form.report-filters select[name=period]"
     users(:agent).update!(language: "de")
     get reports_url
     assert_select "h1", "Berichte"

@@ -4581,6 +4581,19 @@ turbo-frame {
   margin-bottom: 16px;
 }
 
+/* The title and the period and organization selects share one row
+   (specs/reports.md); the selects' bottoms line up with the title. */
+.report-header {
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.report-header .report-filters {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 /* The filters sit on the desk, not on paper, so they take the desk ink. */
 .report-filters .filters__field label {
   color: var(--desk-ink-soft);

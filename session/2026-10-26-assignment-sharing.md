@@ -967,6 +967,10 @@ menu and Take; open /tickets/new and pick a requester.
   before the name. Field on the account page (with a hint) and in the
   admin user form; not in the API. Migration also run in the development
   container. Production needs the migration on the next deploy.
+- Queue (`tickets/_queue`) and board: `h1` now `sr-only`; the header
+  row keeps the List | Board switch and "New ticket". Reports: the filter
+  form moved into `.desk__header.report-header` (flex-end, wraps), its
+  border and margins reset there. My tickets keeps its title.
 - Search page: the desk header with the visible `h1` "Search" is gone;
   the `h1` stays as `sr-only`, the pink panel's strip is the visible title.
 - Production backups: the seven older copies of 2026-10-28 were removed
