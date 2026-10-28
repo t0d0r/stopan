@@ -23,7 +23,8 @@ class Admin::AccessTest < ActionDispatch::IntegrationTest
 
     sign_in users(:admin)
     get admin_root_url
-    assert_select ".menubar a.nav-link[href=?][aria-current=page]", admin_root_path
+    assert_select ".menubar__nav a[href=?]", admin_root_path, 0
+    assert_select ".account-menu .account-menu__item[href=?][aria-current=page]", admin_root_path, "Admin"
   end
 
   test "dashboard stats" do

@@ -967,6 +967,9 @@ menu and Take; open /tickets/new and pick a requester.
   before the name. Field on the account page (with a hint) and in the
   admin user form; not in the API. Migration also run in the development
   container. Production needs the migration on the next deploy.
+- "Admin" left `.menubar__nav`; it is an `.account-menu__item` between
+  "Your account" and Logout for administrators (`aria-current` on admin
+  pages, shown bold).
 - Queue header: `nav.queue__views` moved into `.desk__header.queue-header`
   next to the switch. `.view-switch` is `flex: none; align-self:
   flex-start; margin-left: auto` (no right margin now that "New ticket"

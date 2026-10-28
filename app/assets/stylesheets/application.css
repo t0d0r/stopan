@@ -338,6 +338,10 @@ form.button_to {
   cursor: pointer;
 }
 
+.account-menu__item[aria-current] {
+  font-weight: 600;
+}
+
 .account-menu__item:hover,
 .account-menu__item:focus-visible {
   background: var(--bar);

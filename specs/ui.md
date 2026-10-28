@@ -21,7 +21,9 @@ Turbo Drive for page changes.
   section pills with a paper-colour square: "Queue" (staff, yellow) or
   "My tickets" (requesters, yellow), "Board" (staff, purple; board.md),
   "Search" (staff, pink; queues.md "Search page"), "Reports"
-  (staff, blue; reports.md), "Admin" (admins, grey). The current section
+  (staff, blue; reports.md). "Admin" is no section pill since 2026-10-28
+  ("move administration into the profile, for those who may use it"):
+  administrators find it in the account menu (below). The current section
   has `aria-current="page"`: "Queue" on the list and the ticket pages,
   "Search" on the search page, "Board" on the board (operator, 2026-10-27: "a separate button for the
   board in the header"; before, the board counted as "Queue"). Then the ticket search field (signed-in users,
@@ -52,7 +54,8 @@ Turbo Drive for page changes.
   and Logout in a menu") the name is a `details` dropdown like the
   notification panel (closes on a click outside or Escape): a yellow
   sticky headed by the user's email with "Your account" (the account
-  page) and "Logout".
+  page), for administrators "Admin" (`aria-current` and bold on the
+  admin pages), and "Logout".
 - **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
   #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink
   `#fcd4e6 / #f4b0cf`, purple `#e3d8fc / #c9b9f5`, gray `#efeeea / #d8d6cf`.

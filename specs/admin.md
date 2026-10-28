@@ -1,7 +1,7 @@
 # Administration
 
 All under `/admin`, controllers in `app/controllers/admin/`, admins only
-(roles.md). The menu bar shows "Admin" to admins only.
+(roles.md). The account menu in the menu bar shows "Admin" to admins only (ui.md "Menu bar").
 
 ## Dashboard - `GET /admin`
 
