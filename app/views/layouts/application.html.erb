@@ -48,7 +48,10 @@
       <%= render "partials/search" unless current_section == :search %>
     <% end %>
     <div class="menubar__right">
-      <% if user_signed_in? && !without_organization? %><%= render "partials/notifications" %><% end %>
+      <% if user_signed_in? && !without_organization? %>
+        <% if current_user.staff? %><%= render "presence/menu" %><% end %>
+        <%= render "partials/notifications" %>
+      <% end %>
       <%# Phones: the sections, preferences and account sit behind this button (ui.md "Menu bar"). %>
       <button type="button" class="tool-button menubar__burger" aria-label="<%= t("ui.nav.menu") %>" aria-expanded="false"
               data-menu-toggle><%= icon :menu, size: 18 %></button>
@@ -90,7 +93,11 @@
     <% end %>
   </main>
   <% if user_signed_in? %>
-    <% unless without_organization? %><%= turbo_stream_from current_user, :notifications, channel: NotificationsChannel %><% end %>
+    <% unless without_organization? %>
+      <%= turbo_stream_from current_user, :notifications, channel: NotificationsChannel %>
+      <%# Every signed-in page counts as online (specs/presence.md). %>
+      <%= turbo_stream_from(*Presence.stream(current_user), channel: PresenceChannel, data: { ticket: content_for(:presence_ticket).presence }) %>
+    <% end %>
     <% if live_admin_page? %><%= turbo_stream_from :admin, channel: AdminChannel %><% end %>
     <%= render "partials/confirm_dialog" %>
   <% end %>

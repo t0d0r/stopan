@@ -727,6 +727,17 @@ de:
       message_title: "Nachricht"
       back: "Alle Benachrichtigungen"
 
+    presence:
+      title: "Gerade online"
+      button:
+        one: "1 Person ist gerade online"
+        other: "%{count} Personen sind gerade online"
+      you: "Sie"
+      requesters:
+        one: "und 1 Anfragesteller"
+        other: "und %{count} Anfragesteller"
+      viewers: "Ebenfalls geöffnet von:"
+
     share:
       title: "Teilen"
       hint: "Jeder mit dem Link kann die Beschreibung und die öffentlichen Antworten lesen, ohne sich anzumelden. Interne Notizen werden nie angezeigt."

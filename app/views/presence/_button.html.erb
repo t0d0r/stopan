@@ -1,0 +1,9 @@
+<% view = presence_view %>
+<summary class="tool-button presence__button" id="presence-button" title="<%= t("ui.presence.button", count: view.count) %>"
+         aria-label="<%= t("ui.presence.button", count: view.count) %>">
+  <span class="presence__dot" aria-hidden="true"></span>
+  <span class="presence__avatars" aria-hidden="true">
+    <% view.staff.first(3).each do |user| %><%= user_avatar(user) %><% end %>
+  </span>
+  <span class="presence__count" aria-hidden="true"><%= view.count %></span>
+</summary>

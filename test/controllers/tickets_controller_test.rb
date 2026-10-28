@@ -19,7 +19,7 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".menubar a.nav-link[aria-current=page]", /Queue/
     assert_select ".menubar__nav a.nav-link[href=?]", board_path, /Board/
     assert_select ".menubar__user .menubar__role--agent[title=Agent] svg[role=img][aria-label=Agent]"
-    assert_equal "", css_select(".menubar__role").sole.text.strip, "the role is an icon, not a word"
+    assert_equal "", css_select(".menubar__user .menubar__role").sole.text.strip, "the role is an icon, not a word"
 
     get tickets_url(view: "all", q: "vpn")
     assert_select ".tickets-table tbody tr", 1

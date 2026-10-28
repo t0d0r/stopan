@@ -1,0 +1,8 @@
+<%# Who is online now, for staff (specs/presence.md); the button and the list are fetched again after a signal. %>
+<details class="presence" id="presence" data-dropdown data-presence data-presence-url="<%= presence_path %>">
+  <%= render "presence/button" %>
+  <div class="presence__panel sticky sticky--green">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.presence.title") %></span></header>
+    <%= render "presence/list" %>
+  </div>
+</details>

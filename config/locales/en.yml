@@ -724,6 +724,17 @@ en:
       message_title: "Message"
       back: "All notifications"
 
+    presence:
+      title: "Online now"
+      button:
+        one: "1 person online now"
+        other: "%{count} people online now"
+      you: "you"
+      requesters:
+        one: "and 1 requester"
+        other: "and %{count} requesters"
+      viewers: "Also viewing now:"
+
     share:
       title: "Sharing"
       hint: "Anyone with the link can read the description and the public replies, without signing in. Internal notes are never shown."

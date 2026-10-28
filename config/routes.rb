@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   patch "users/language", to: "users/languages#update", as: :user_language
   # Personal API tokens on the account page (specs/api.md "Tokens").
   resources :api_tokens, only: %i[create destroy], path: "users/api_tokens", controller: "users/api_tokens"
+  # Who is online now, fetched by staff pages after a signal (specs/presence.md).
+  get "presence" => "presence#show", as: :presence
   resources :notifications, only: %i[index show] do
     patch :read_all, on: :collection
     get :panel, on: :collection

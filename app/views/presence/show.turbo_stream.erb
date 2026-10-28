@@ -1,0 +1,3 @@
+<%= turbo_stream.replace "presence-button", partial: "presence/button" %>
+<%= turbo_stream.replace "presence-list", partial: "presence/list" %>
+<% if @ticket %><%= turbo_stream.replace "ticket-viewers", partial: "presence/viewers", locals: { ticket: @ticket } %><% end %>

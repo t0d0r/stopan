@@ -253,6 +253,13 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed 0d9f426 after a database backup (specs/deploy.md)
 - [x] production: removed the seven older database copies of 2026-10-28; kept `pre-deploy-bf4036c` (the last one) and the copies of 2026-10-27
 
+## Who is online now (2026-10-28, specs/presence.md)
+
+- [x] live refresh of lists and tickets on new tickets and mail checked again in development (a ticket made in another session appears in an open queue within 3 seconds); nothing to change
+- [x] presence: `Presence` (process memory), `PresenceChannel` on every signed-in page, signal `presence_refresh` to staff, `GET /presence` as Turbo Stream
+- [x] menu bar button for staff: dot, staff avatars, number online; panel with staff names and the requester count
+- [x] ticket page: "Also viewing now" with the others who have the ticket open
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

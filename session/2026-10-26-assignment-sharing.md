@@ -915,6 +915,25 @@ menu and Take; open /tickets/new and pick a requester.
 - Properties panel: `sticky--blue` instead of `sticky--gray` (grey paper
   was close to the desk); yellow, purple and green were taken by
   Requester, Sharing and the Done status.
+- Who is online now (specs/presence.md): `Presence` keeps open signed-in
+  pages (user, ticket) in a `Concurrent::Map`; `PresenceChannel`
+  subscribes from the layout (staff on `[:presence, :staff]`, requesters
+  on `[user, :presence]`, `data-ticket` on a ticket page, checked with
+  `visible_to`). A change schedules `Presence.announce` after 1 s, which
+  broadcasts `presence_refresh` only when the (user, ticket) set
+  changed, so Turbo visits and refreshes cause no signal. Staff pages
+  fetch `GET /presence(?ticket=N)` (`PresenceController`, staff only) and
+  render its Turbo Stream: `#presence-button`, `#presence-list`,
+  `#ticket-viewers` (`PresenceHelper#presence_view`, `#ticket_viewers`:
+  reader excluded from viewers, requesters counted within the agent's
+  organizations). Viewers line sits at the top of `.ticket-main`, outside
+  the description frame that the edit form replaces. Checked with two
+  browsers in development (admin and an agent: count 2, "Also viewing
+  now: Maria Ivanova", back to 1 after leaving) and at 390px. Live
+  refresh on new tickets was already in place and works (checked by
+  creating a ticket from a second session). Tests:
+  `presence_test.rb`, `presence_channel_test.rb`,
+  `presence_controller_test.rb`.
 - Production backups: the seven older copies of 2026-10-28 were removed
   (242b476, 50475d3, 624ccbd, 8e1fe51, 9c67bf4, bf47c22, fab4c24);
   `pre-deploy-bf4036c` stays as the rollback copy, the 2026-10-27

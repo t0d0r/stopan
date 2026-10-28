@@ -3,6 +3,7 @@
 <% turbo_refreshes_with scroll: :preserve %>
 <%# Phones show no menu bar search on a ticket (ui.md "Ticket page on phones"). %>
 <% content_for :body_class, "ticket-view" %>
+<% content_for :presence_ticket, @ticket.number.to_s %>
 <%= turbo_stream_from(*@ticket.page_stream(current_user), channel: TicketsChannel, data: { ticket: @ticket.number }) %>
 <%# A deleted ticket, open for an administrator to review and restore (specs/tickets.md "Deleting"). %>
 <% if @ticket.deleted? %>
@@ -13,7 +14,7 @@
     <% end %>
   </div>
 <% end %>
-<div class="ticket-page" data-ticket-page>
+<div class="ticket-page" data-ticket-page data-ticket="<%= @ticket.number %>">
   <%# The request as one note: strip, "#1001 Subject", pills, text (ui.md). %>
   <article class="sticky sticky--yellow message message--description ticket-head" id="description"
          data-long-request data-more="<%= t("ui.ticket.show_whole") %>" data-less="<%= t("ui.ticket.collapse") %>"
@@ -51,6 +52,7 @@
   </aside>
 
   <div class="ticket-main">
+    <% if staff && !@ticket.deleted? %><%= render "presence/viewers", ticket: @ticket %><% end %>
     <p class="callout live-notice" data-live-notice hidden role="status"><%= t("ui.ticket.changed_elsewhere") %></p>
     <h2 class="section-heading" id="timeline-title"><%= t("ui.timeline.title") %></h2>
     <%# Newest first puts the composer above the timeline (timeline.md "Order of the timeline"). %>

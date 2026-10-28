@@ -25,6 +25,7 @@
 | [translation.md](translation.md) | "Translate" button on messages for staff: DeepL, admin switch, stored translations, privacy |
 | [sharing.md](sharing.md) | share a ticket by secret link, optionally with a password: who may share, what the public page shows, headers, rate limit |
 | [api.md](api.md) | JSON API under /api/v1 with personal tokens (read-only or read-write), same rights as the pages |
+| [presence.md](presence.md) | who is online now for staff: menu bar count, avatars and panel, other viewers of a ticket, live over Action Cable |
 | [people.md](people.md) | person profile with statistics for staff, and the queue's requester filter |
 | [roadmap.md](roadmap.md) | later phases: notifications, ingestion, SLAs, automation, API, reporting, groups, ... |
 

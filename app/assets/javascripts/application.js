@@ -404,10 +404,38 @@ function updateShareViewers() {
   });
 }
 
+// Who is online now (specs/presence.md): the signal only says that something
+// changed; each staff page fetches its own view (its language, its scope,
+// without the reader) and lets Turbo replace the button, the list and a
+// ticket's viewers line. Pages wait a moment, not all at once.
+let presenceTimer = null;
+
+function schedulePresenceRefresh() {
+  clearTimeout(presenceTimer);
+  presenceTimer = setTimeout(refreshPresence, 200 + Math.random() * 400);
+}
+
+async function refreshPresence() {
+  presenceTimer = null;
+  const menu = document.querySelector("[data-presence]");
+  if (!menu) return;
+  const url = new URL(menu.dataset.presenceUrl, location.href);
+  const ticket = document.querySelector("[data-ticket-page]")?.dataset.ticket;
+  if (ticket) url.searchParams.set("ticket", ticket);
+  let response;
+  try {
+    response = await fetch(url, { headers: { Accept: "text/vnd.turbo-stream.html" }, credentials: "same-origin" });
+  } catch {
+    return;
+  }
+  if (response.ok) window.Turbo?.renderStreamMessage(await response.text());
+}
+
 function registerStreamActions() {
   if (!window.Turbo?.StreamActions) return;
   window.Turbo.StreamActions.notifications_refresh = scheduleNotificationsRefresh;
   window.Turbo.StreamActions.share_viewers = updateShareViewers;
+  window.Turbo.StreamActions.presence_refresh = schedulePresenceRefresh;
 }
 
 registerStreamActions();

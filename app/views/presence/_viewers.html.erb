@@ -1,0 +1,12 @@
+<%# Others who have this ticket open now, for staff (specs/presence.md "Ticket page"). Locals: ticket. %>
+<% viewers = ticket_viewers(ticket) %>
+<p class="ticket-viewers" id="ticket-viewers"<%= " hidden" if viewers.empty? %>>
+  <%= icon :eye, size: 13 %>
+  <span><%= t("ui.presence.viewers") %></span>
+  <% viewers.each do |user| %>
+    <span class="ticket-viewers__person">
+      <%= user_avatar(user) %>
+      <strong><%= user.display_name %></strong><% if user.requester? %> <span class="ticket-viewers__role">(<%= role_label(user) %>)</span><% end %>
+    </span>
+  <% end %>
+</p>

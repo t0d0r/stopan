@@ -1,0 +1,16 @@
+<% view = presence_view %>
+<div class="presence__list" id="presence-list">
+  <ul>
+    <% view.staff.each do |user| %>
+      <li>
+        <%= user_avatar(user) %>
+        <span class="presence__name"><%= user.display_name %></span>
+        <% if user == current_user %><span class="presence__you"><%= t("ui.presence.you") %></span><% end %>
+        <%= role_icon(user) %>
+      </li>
+    <% end %>
+  </ul>
+  <% if view.requester_count.positive? %>
+    <p class="presence__requesters"><%= t("ui.presence.requesters", count: view.requester_count) %></p>
+  <% end %>
+</div>

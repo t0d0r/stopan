@@ -33,7 +33,8 @@ Turbo Drive for page changes.
   user's name with the role icon and "Logout", as further rows of the
   bar; a click outside or Escape closes it, and the next page starts
   with it closed. Without JavaScript all of them show, as rows under the
-  first (`noscript.css`). Right: the
+  first (`noscript.css`). Right: for staff the presence button (who is
+  online now, presence.md), the
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
   the language switch (only where it applies, see "Language"), the

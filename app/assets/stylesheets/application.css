@@ -2131,6 +2131,126 @@ body {
   white-space: nowrap;
 }
 
+/* Who is online now (presence.md): a dot, staff avatars and the number;
+   the panel hangs under it like the notification panel. */
+.presence {
+  position: relative;
+}
+
+.presence__button {
+  gap: 6px;
+  padding: 0 6px;
+}
+
+.presence__button::-webkit-details-marker {
+  display: none;
+}
+
+.presence__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34a853;
+  box-shadow: 0 0 0 2px rgba(52, 168, 83, 0.25);
+}
+
+.presence__avatars {
+  display: inline-flex;
+}
+
+.presence__avatars .avatar {
+  width: 20px;
+  height: 20px;
+  font-size: 9px;
+}
+
+.presence__avatars .avatar + .avatar {
+  margin-left: -6px;
+}
+
+.presence__count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.presence[open] > .presence__button {
+  background: var(--tool-hover);
+}
+
+.presence__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: -20px;
+  z-index: 60;
+  width: 280px;
+  max-width: calc(100 * var(--vw) - 32px);
+  box-shadow: var(--shadow-lift);
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.presence__list ul {
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+.presence__list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+}
+
+.presence__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.presence__you {
+  color: var(--ink-soft);
+}
+
+.presence__list .menubar__role {
+  margin-left: auto;
+  color: var(--ink-soft);
+}
+
+.presence__requesters {
+  margin: 0;
+  padding: 8px 12px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-soft);
+}
+
+/* Others who have the ticket open (presence.md "Ticket page"). */
+.ticket-viewers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 0 0 12px;
+  color: var(--desk-ink-soft);
+  font-size: 13px;
+}
+
+.ticket-viewers__person {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--desk-ink);
+}
+
+.ticket-viewers__person strong {
+  font-weight: 600;
+}
+
+.ticket-viewers__role {
+  color: var(--desk-ink-soft);
+  font-weight: 400;
+}
+
 /* Shown while a live refresh waits for the user (timeline.md). */
 .live-notice {
   margin: 0 0 12px;
@@ -5190,8 +5310,30 @@ turbo-frame {
     display: none;
   }
 
-  .menubar .notify {
+  .menubar .notify,
+  .menubar .presence {
     margin-left: auto;
+  }
+
+  .menubar .presence + .notify {
+    margin-left: 0;
+  }
+
+  /* The dot and the number only; the panel spans the screen. */
+  .presence__avatars {
+    display: none;
+  }
+
+  .presence {
+    position: static;
+  }
+
+  .presence__panel {
+    top: calc(100% + 4px);
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
   }
 
   .menubar__burger {
