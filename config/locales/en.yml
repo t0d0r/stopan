@@ -20,6 +20,7 @@ en:
       other: "Up to %{count} files, %{size} MB each. Images, PDF, text, CSV, ZIP and office documents."
 
     account_page:
+      nickname_hint: "Shown in the menu bar instead of your name. Optional."
       profile: "Profile"
       title: "Your account"
       password_keep: "Leave blank to keep your current password."
@@ -107,6 +108,7 @@ en:
       updated: "Last activity"
       done: "Done"
       name: "Name"
+      nickname: "Nickname"
       username: "Username"
       email: "Email"
       password: "Password"

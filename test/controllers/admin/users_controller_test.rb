@@ -33,13 +33,14 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "creates an agent with memberships" do
     assert_difference("User.count") do
-      post admin_users_url, params: { user: { name: "Nina New", email: "nina@example.com", password: "s3cret-pass",
+      post admin_users_url, params: { user: { name: "Nina New", nickname: "Nina", email: "nina@example.com", password: "s3cret-pass",
                                               password_confirmation: "s3cret-pass", role: "agent",
                                               organization_ids: [ "", organizations(:acme).id ] } }
     end
     assert_redirected_to admin_users_url
     nina = User.find_by!(email: "nina@example.com")
     assert nina.agent?
+    assert_equal "Nina", nina.nickname
     assert_equal [ organizations(:acme) ], nina.organizations.to_a
   end
 

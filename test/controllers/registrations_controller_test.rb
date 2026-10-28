@@ -65,4 +65,18 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to edit_user_registration_url
   end
+
+  test "a nickname replaces the name in the account menu, after the role icon (specs/ui.md \"Menu bar\")" do
+    anna = users(:anna)
+    sign_in anna
+    get edit_user_registration_url
+    assert_select "input[name='user[nickname]'][maxlength='40']"
+    assert_select "summary.menubar__user > :first-child.menubar__role"
+    assert_select ".menubar__user-name", anna.display_name
+
+    put user_registration_url, params: { user: { nickname: "Ani", email: anna.email, current_password: "password" } }
+    assert_equal "Ani", anna.reload.nickname
+    get edit_user_registration_url
+    assert_select ".menubar__user-name", "Ani"
+  end
 end

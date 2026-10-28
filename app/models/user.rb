@@ -31,9 +31,11 @@ class User < ApplicationRecord
 
   normalizes :username, with: ->(username) { username.strip.presence }
   normalizes :name, with: ->(name) { name.strip.squish.presence }
+  normalizes :nickname, with: ->(nickname) { nickname.strip.squish.presence }
 
   validates :username, uniqueness: { case_sensitive: false }, length: { maximum: 60 }, allow_nil: true
   validates :name, length: { maximum: 120 }
+  validates :nickname, length: { maximum: 40 }
   validates :role, inclusion: { in: ROLES }
   validates :locale, :language, inclusion: { in: ->(_) { I18n.available_locales.map(&:to_s) } }, allow_nil: true
 
@@ -57,6 +59,12 @@ class User < ApplicationRecord
 
   def display_name
     name.presence || username.presence || email
+  end
+
+  # The menu bar's account menu uses the nickname when there is one
+  # (specs/ui.md "Menu bar"); everywhere else people see display_name.
+  def menu_name
+    nickname.presence || display_name
   end
 
   def requester?

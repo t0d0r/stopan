@@ -15,6 +15,18 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "x@example.com", User.new(email: "x@example.com", username: "").display_name
   end
 
+  test "the menu uses the nickname when there is one, else the display name" do
+    user = User.new(email: "x@example.com", name: "Todor Dragnev", nickname: "  t0d0r ")
+    assert_equal "t0d0r", user.nickname
+    assert_equal "t0d0r", user.menu_name
+    user.nickname = " "
+    assert_nil user.nickname
+    assert_equal "Todor Dragnev", user.menu_name
+    user.nickname = "x" * 41
+    assert_not user.valid?
+    assert user.errors[:nickname].any?
+  end
+
   test "mail_locale: own choice, then the organization's for requesters, then the browser's, then English" do
     org = organizations(:acme)
     anna = users(:anna)

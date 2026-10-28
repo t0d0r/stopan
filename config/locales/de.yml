@@ -23,6 +23,7 @@ de:
       other: "Bis zu %{count} Dateien mit je höchstens %{size} MB. Bilder, PDF, Text, CSV, ZIP und Office-Dokumente."
 
     account_page:
+      nickname_hint: "Wird in der Menüleiste statt Ihres Namens angezeigt. Optional."
       profile: "Profil"
       title: "Ihr Konto"
       password_keep: "Leer lassen, um Ihr aktuelles Passwort zu behalten."
@@ -110,6 +111,7 @@ de:
       updated: "Letzte Aktivität"
       done: "Erledigt"
       name: "Name"
+      nickname: "Spitzname"
       username: "Benutzername"
       email: "E-Mail"
       password: "Passwort"

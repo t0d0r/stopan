@@ -60,8 +60,8 @@
         <%# The name opens a menu with the account page and Logout (ui.md "Menu bar"). %>
         <details class="account-menu" data-dropdown>
           <summary class="menubar__user">
-            <span class="menubar__user-name"><%= current_user.display_name %></span>
             <%= role_icon(current_user) %>
+            <span class="menubar__user-name"><%= current_user.menu_name %></span>
             <%= icon :down, size: 11 %>
           </summary>
           <div class="account-menu__panel sticky sticky--yellow">

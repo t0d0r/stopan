@@ -11,6 +11,7 @@ declared in the database.
 | encrypted_password | bcrypt |
 | username | optional, unique case-insensitively; sign-in accepts email or username |
 | name | optional display name |
+| nickname | optional, at most 40 characters, spaces squeezed; shown in the menu bar's account menu instead of the name (2026-10-28) |
 | role | `requester` (default), `agent`, `admin`; indexed |
 | deactivated_at | set = cannot sign in, not assignable |
 | locale | nullable, `en`/`bg`/`de`: language of the browser last used; emails use it (notifications.md) |
@@ -21,6 +22,9 @@ declared in the database.
 | reset_password_*, remember_created_at, trackable columns | Devise |
 
 `User#display_name` = name, else username, else email.
+`User#menu_name` = nickname, else `display_name`; used only by the
+account menu in the menu bar. Everywhere else (timeline, assignee, lists,
+emails) people keep their `display_name`.
 
 ## organizations
 

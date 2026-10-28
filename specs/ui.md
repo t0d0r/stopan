@@ -38,7 +38,9 @@ Turbo Drive for page changes.
   notification bell with its unread count and panel (notifications.md
   "Notification panel"), theme switch, width switch, three text sizes,
   the language switch (only where it applies, see "Language"), and the
-  account menu: the user's name with a role icon (operator,
+  account menu: the role icon, then the user's nickname or, without one,
+  their name (`User#menu_name`; 2026-10-28: "the icon before the name",
+  "if there is a nick, the menu uses it") (operator,
   2026-10-27: "replace the word administrator / the role with an icon":
   a person for requesters, a headset for agents, a shield for
   administrators; the role's name is its tooltip and its label for screen
@@ -182,7 +184,7 @@ in documentation, not in the app.
   personal settings are vertical, make them fit the screen like the
   administration"): a page title "My account" and sticky panels in
   three panel columns ("Panel columns" below), each with its caption
-  strip and its own Save: Profile (name, email, password; yellow) in the
+  strip and its own Save: Profile (name, nickname, email, password; yellow) in the
   first, Language (blue) and Theme (purple) in the second, Order of
   replies (green) and Email notifications (pink, staff only) in the
   third. API tokens (gray, api.md) spans the full width under them. The

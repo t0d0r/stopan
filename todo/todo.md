@@ -266,6 +266,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] admin settings: Stages as a full-width panel under the columns, one stage per row, new stage form on one row
 - [x] menu bar: the name and Logout in an account menu (dropdown with "Your account" and "Logout")
 - [x] production: removed the backups `pre-deploy-bf4036c` and `pre-deploy-0d9f426`; `pre-deploy-989950a` stays as the rollback copy
+- [x] account menu: role icon before the name; optional nickname (`users.nickname`, account page and admin form) shown there instead of the name (specs/data-model.md, specs/ui.md "Menu bar")
 - [x] organization details panel reworked: count tiles, mail as two cards with on/off pills and their own actions, message to members under the members list (specs/ui.md "Admin")
 
 ## Later (specs/roadmap.md)
