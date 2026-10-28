@@ -10,7 +10,7 @@
 </div>
 
 <%= render "tickets/filters", filter: filter, staff: @staff, url: board_path, view: nil, clear_path: board_path,
-                              form_class: "board-filters", advanced: false %>
+                              form_class: "board-filters" %>
 
 <div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>">
   <% @board.columns.each do |column| %>

@@ -62,15 +62,15 @@ glance. "Clear filters" keeps only the view.
 ### Advanced search
 
 Operator, 2026-10-27: "search should be able to use advanced search when
-needed". Staff only, on the queue (and so on search results). Not on the
-board (operator, 2026-10-28: "advanced search is in the wrong place, it
-has no business on the board"): the board shares the filter bar without
-it (`advanced: false` on `tickets/_filters`).
+needed". Staff only, and only on the search page ("Search page" below;
+operator, 2026-10-28: "advanced search is in the wrong place, it has no
+business on the board", then "make a separate menu for search"). The
+queue and the board show the filters without it.
 
-- Under the filters a disclosure "Advanced search" (`<details>`, open
-  when any of its fields is set, with the count of set fields in its
-  summary). Its fields join the same GET form and apply on "Search"
-  (they do not submit on change, as some are typed):
+- Under the filters a section "Advanced search" (always shown, with the
+  count of set fields next to its title). Its fields join the same GET
+  form and apply on "Search" (they do not submit on change, as some are
+  typed):
   - **Words** (`words`): every word must appear in the subject or text,
     in any order (the menu bar `q` stays a single phrase);
   - **Also in replies and notes** (`in_comments=1`): the text search
@@ -82,9 +82,27 @@ it (`advanced: false` on `tickets/_filters`).
   - **Came in by** (`source`: app, web form, email);
   - **With attachments** (`files=1`): the request or a comment has a file.
 - Unknown or broken values are ignored, as for the other filters. The
-  fields are kept by the other filters, the menu bar search, the bulk
-  bar's "whole list" and pagination; "Clear filters" clears them too.
+  fields are kept by the other filters, the bulk bar's "whole list" and
+  pagination; "Clear filters" clears them too. The queue still applies
+  them when a link carries them, but the menu bar search does not carry
+  them there.
 - The API's ticket list takes the same parameters (api.md).
+
+### Search page
+
+`/search` (operator, 2026-10-28: "make a separate menu for search"), a
+menu bar section "Search" for staff (pink, after "Board"; 403 for
+requesters, who search from the menu bar).
+
+- One pink panel: a wide text field (`q`, "Subject, text or #number",
+  focused when empty), the queue's filters (status, priority, assignee,
+  organization, sort) and "Advanced search" (above). It searches every
+  ticket the user may see (`view=all`).
+- Until something is asked (text, a filter or an advanced field) it
+  shows a short prompt instead of a list. Results use the queue's table,
+  bulk bar (which returns to the search page) and pagination
+  (`tickets/_ticket_table`).
+- The menu bar search field is not shown on this page.
 
 ### Search
 

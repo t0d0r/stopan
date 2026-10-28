@@ -54,7 +54,9 @@ flowchart LR
 - **Board** - a Fizzy-like kanban of tickets by status for staff: colour
   columns, collapsed pills for Not now and Done, golden urgent cards, drag and
   drop or a Move menu (`specs/board.md`).
-- **Search** - by text or ticket number from the menu bar on every page.
+- **Search** - by text or ticket number from the menu bar on every page,
+  and for staff a Search page with filters and advanced search (words,
+  replies, requester, dates, source, attachments) (`specs/queues.md`).
 - **My tickets** - the requester's open / done / all lists.
 - **Timeline** - public replies, staff-only internal notes, and an
   append-only audit log of status, priority and assignee changes

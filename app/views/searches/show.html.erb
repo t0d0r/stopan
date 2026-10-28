@@ -1,0 +1,22 @@
+<%# The search page (specs/queues.md "Search page"): every ticket the user may see, by text,
+    filters and advanced search; results only once something is asked. %>
+<% content_for :title, t("ui.search.title") %>
+<% staff = Ticket.assignable_staff_for(current_user).to_a %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.search.title") %></h1>
+</div>
+
+<section class="sticky sticky--pink panel search-page" aria-labelledby="search-results-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.search.caption") %></span></header>
+  <div class="panel__body">
+    <%= render "tickets/filters", filter: @filter, staff: staff, url: search_path, view: nil, clear_path: search_path,
+                                  search_page: true %>
+
+    <h2 class="sr-only" id="search-results-title"><%= t("ui.search.results") %></h2>
+    <% if @filter.filtered? %>
+      <%= render "tickets/ticket_table", filter: @filter, staff: staff, list_path: :search_path, empty: t("ui.queue.no_match") %>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.search.prompt") %></p>
+    <% end %>
+  </div>
+</section>

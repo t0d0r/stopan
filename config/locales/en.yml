@@ -70,6 +70,7 @@ en:
       board: "Board"
       new_ticket: "New ticket"
       reports: "Reports"
+      search: "Search"
       admin: "Admin"
 
     roles:
@@ -252,6 +253,11 @@ en:
       requester_chip: "Requester: %{name}"
       remove_requester: "Remove the requester filter"
     search:
+      title: "Search"
+      caption: "Search"
+      query: "Subject, text or #number"
+      results: "Results"
+      prompt: "Type what you are looking for, or choose filters or advanced search."
       advanced: "Advanced search"
       words: "All of these words"
       words_hint: "in any order"

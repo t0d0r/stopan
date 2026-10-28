@@ -1,0 +1,55 @@
+<%# The ticket table of the queue and the search page: bulk bar, rows and pagination
+    (specs/queues.md "Table", "Bulk actions"). Locals: filter, staff, list_path, empty. %>
+<%# Who each row's assign menu may offer: admins and the ticket organization's agents (roles.md). %>
+<% agent_orgs = Membership.where(user_id: staff.reject(&:admin?).map(&:id)).pluck(:user_id, :organization_id).group_by(&:last).transform_values { |pairs| pairs.map(&:first) } %>
+<% if filter.tickets.any? %>
+  <%= render "tickets/bulk_bar", filter: filter, staff: staff %>
+  <div class="table-scroll">
+    <table class="ledger tickets-table">
+      <thead>
+        <tr>
+          <th scope="col" class="col-select">
+            <label class="select-box"><input type="checkbox" data-bulk-page aria-label="<%= t("ui.bulk.select_page") %>"></label>
+          </th>
+          <th scope="col" class="num"><%= t("ui.fields.number") %></th>
+          <th scope="col"><%= t("ui.fields.subject") %></th>
+          <th scope="col" class="col-requester"><%= t("ui.fields.requester") %></th>
+          <th scope="col" class="col-org"><%= t("ui.fields.organization") %></th>
+          <th scope="col"><%= t("ui.fields.status") %></th>
+          <th scope="col" class="col-priority"><%= t("ui.fields.priority") %></th>
+          <th scope="col" class="col-assignee"><%= t("ui.fields.assignee") %></th>
+          <th scope="col" class="col-updated"><%= t("ui.fields.updated") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% filter.tickets.each do |ticket| %>
+          <tr id="<%= dom_id(ticket) %>" class="ticket-row ticket-row--<%= ticket.priority %>">
+            <td class="col-select">
+              <label class="select-box"><input type="checkbox" name="numbers[]" value="<%= ticket.number %>" form="bulk-form" data-bulk-row
+                     aria-label="<%= t("ui.bulk.select_row", reference: ticket.reference) %>"></label>
+            </td>
+            <td class="num ticket-number"><%= ticket.reference %></td>
+            <td class="text col-subject">
+              <%= link_to ticket_path(ticket), class: "ticket-link" do %><%= ticket.subject %><% if ticket.shared? %> <%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %><% end %>
+            </td>
+            <td class="text col-requester"><%= ticket.requester.display_name %></td>
+            <td class="text col-org"><%= ticket.organization.name %></td>
+            <td><%= status_pill ticket.status %><% if ticket.stage %> <span class="stage-tag">&middot; <%= ticket.stage.name %></span><% end %></td>
+            <td class="col-priority"><%= priority_pill ticket.priority %></td>
+            <td class="text col-assignee">
+              <div class="assignee">
+                <%= render "tickets/assign_menu", ticket: ticket,
+                           staff: staff.select { |user| user.admin? || agent_orgs.fetch(ticket.organization_id, []).include?(user.id) } %>
+                <%= render "tickets/take_button", ticket: ticket if ticket.assignee_id.nil? %>
+              </div>
+            </td>
+            <td class="date col-updated"><%= time_ago ticket.updated_at %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= render "tickets/pagination", filter: filter, list_path: list_path %>
+<% else %>
+  <p class="panel__empty"><%= empty %></p>
+<% end %>

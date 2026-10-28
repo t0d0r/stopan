@@ -73,6 +73,7 @@ de:
       board: "Board"
       new_ticket: "Neues Ticket"
       reports: "Berichte"
+      search: "Suche"
       admin: "Verwaltung"
 
     roles:
@@ -255,6 +256,11 @@ de:
       requester_chip: "Anfragende Person: %{name}"
       remove_requester: "Filter nach anfragender Person entfernen"
     search:
+      title: "Suche"
+      caption: "Suche"
+      query: "Betreff, Text oder #Nummer"
+      results: "Ergebnisse"
+      prompt: "Geben Sie ein, was Sie suchen, oder wählen Sie Filter oder die erweiterte Suche."
       advanced: "Erweiterte Suche"
       words: "Alle diese Wörter"
       words_hint: "in beliebiger Reihenfolge"

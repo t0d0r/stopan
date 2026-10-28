@@ -50,8 +50,8 @@ statuses.
   button (one shared partial, `tickets/_filters`), and the menu bar
   search (`q`) kept while filtering. A set filter is highlighted; "Clear
   filters" goes back to the plain board. The board has no views, so
-  every ticket the user may see is on it. The queue's "Advanced search"
-  is not on the board (queues.md "Advanced search").
+  every ticket the user may see is on it. Advanced search is only on the
+  search page (queues.md "Search page").
   - Status shows only that status's column and its stage columns.
   - Sort orders the cards within each column: golden (urgent) cards stay
     on top, then high, then the chosen order: last activity (default),

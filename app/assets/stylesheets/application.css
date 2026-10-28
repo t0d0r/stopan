@@ -4292,19 +4292,27 @@ turbo-frame {
   }
 }
 
-/* Advanced search under the queue filters (specs/queues.md "Advanced search"). */
+/* The search page: a wide text field first, advanced search under the
+   filters (specs/queues.md "Search page"). */
+.search-page__query {
+  flex: 1 1 100%;
+}
+
+.search-page__query .field-input {
+  width: 100%;
+  font-size: 16px;
+}
+
 .advanced-search {
   flex-basis: 100%;
 }
 
-.advanced-search__summary {
-  display: inline-flex;
+.advanced-search .section-title {
+  display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 6px;
-  min-height: 28px;
-  color: var(--accent);
-  font-size: 13px;
-  cursor: pointer;
+  margin: 6px 0 0;
 }
 
 .advanced-search__fields {
@@ -4355,7 +4363,6 @@ turbo-frame {
 }
 
 @media (max-width: 760px) {
-  .advanced-search__summary,
   .advanced-search__check label {
     min-height: 44px;
   }

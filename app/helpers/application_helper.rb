@@ -67,6 +67,7 @@ module ApplicationHelper
     if controller_path.start_with?("admin/") then :admin
     elsif controller_name == "tickets" && action_name.in?(%w[new create]) then :new_ticket
     elsif controller_name == "boards" then :board
+    elsif controller_name == "searches" then :search
     elsif controller_name.in?(%w[tickets comments]) then :tickets
     elsif controller_name == "reports" then :reports
     end
@@ -87,7 +88,10 @@ module ApplicationHelper
   # Hidden fields of the menu bar search (queues.md): on a ticket list it
   # searches within the list's view, filters and sort; elsewhere all tickets.
   def search_scope_params
-    @filter ? @filter.params_with(q: nil, page: nil) : { view: "all" }
+    return { view: "all" } unless @filter
+
+    # Advanced search lives on the search page only (queues.md "Search page").
+    @filter.params_with(q: nil, page: nil).except(*TicketFilter::ADVANCED)
   end
 
   # Unread count and newest notifications for the menu bar panel.

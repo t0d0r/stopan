@@ -1,8 +1,17 @@
-<%# The staff filters of the queue and the board (specs/queues.md "Filters", specs/board.md). %>
+<%# The staff filters of the queue, the board and the search page (specs/queues.md "Filters",
+    "Search page", specs/board.md). search_page: true adds the text field and advanced search. %>
+<% search_page = local_assigns[:search_page] %>
 <%= form_with url: url, method: :get, class: class_names("filters", local_assigns[:form_class]), data: { filter_form: true, turbo_action: "replace" } do %>
   <%= hidden_field_tag :view, view, id: nil if view %>
-  <%= hidden_field_tag :q, filter.query, id: nil if filter.query %>
+  <%= hidden_field_tag :q, filter.query, id: nil if filter.query && !search_page %>
   <%= hidden_field_tag :requester, filter.requester_id, id: nil if filter.requester_id %>
+  <% if search_page %>
+    <div class="filters__field search-page__query">
+      <%= label_tag :q, t("ui.search.query") %>
+      <%= search_field_tag :q, filter.query, class: "field-input", autocomplete: "off", autofocus: filter.query.nil?,
+                           placeholder: t("ui.queue.search_placeholder") %>
+    </div>
+  <% end %>
   <div class="filters__field">
     <%= label_tag :status, t("ui.fields.status") %>
     <%= select_tag :status, options_for_select(Ticket::STATUSES.map { |s| [ status_name(s), s ] }, filter.status),
@@ -44,13 +53,13 @@
       <%= link_to t("ui.queue.clear"), clear_path, class: "filters__clear" %>
     <% end %>
   </div>
-  <% if local_assigns.fetch(:advanced, true) %>
-    <%# Advanced search (specs/queues.md "Advanced search"): applied with its own button; not on the board. %>
+  <% if search_page %>
+    <%# Advanced search, only on the search page (specs/queues.md "Search page"): applied with its own button. %>
     <% advanced = filter.advanced %>
-    <details class="advanced-search"<%= " open" if advanced.any? %>>
-      <summary class="advanced-search__summary">
+    <section class="advanced-search" aria-labelledby="advanced-search-title">
+      <h2 class="section-title" id="advanced-search-title">
         <%= t("ui.search.advanced") %><% if advanced.any? %> <span class="tab__count"><%= advanced.size %></span><% end %>
-      </summary>
+      </h2>
       <div class="advanced-search__fields">
         <div class="filters__field advanced-search__wide">
           <%= label_tag :words, t("ui.search.words") %>
@@ -87,6 +96,6 @@
           <%= submit_tag t("ui.search.go"), name: nil, class: "btn btn--primary" %>
         </div>
       </div>
-    </details>
+    </section>
   <% end %>
 <% end %>

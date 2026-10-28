@@ -23,10 +23,10 @@ class TicketBulkController < ApplicationController
     params.permit(list: TicketBulkUpdate::LIST_FILTERS)[:list] || {}
   end
 
-  # Only back to a ticket list.
+  # Only back to a ticket list or the search page.
   def back_path
     path = params[:return_to].to_s
-    path.match?(%r{\A/tickets(\?|\z)}) ? path : tickets_path
+    path.match?(%r{\A/(tickets|search)(\?|\z)}) ? path : tickets_path
   end
 
   def flash_result(bulk)

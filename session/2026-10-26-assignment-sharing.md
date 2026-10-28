@@ -844,6 +844,15 @@ menu and Take; open /tickets/new and pick a requester.
   `tickets/_filters`); it stays in the queue and search.
 - Deployed 242b476 (2026-10-28) after backup `pre-deploy-bf47c22.sqlite3`;
   no migrations, all checks fine; pushed to origin on request.
+- Search page (specs/queues.md "Search page"): `GET /search`
+  (`SearchesController`, staff only, 403 for requesters), menu bar
+  section "Search" (pink, after Board). One panel: wide `q` field, the
+  queue filters and advanced search always shown (`search_page: true` on
+  `tickets/_filters`); results only once something is asked. The table,
+  bulk bar and pagination moved into `tickets/_ticket_table` (list_path
+  local), shared with the queue; bulk actions may return to `/search`.
+  Advanced search is gone from the queue; the menu bar search no longer
+  carries advanced params and is hidden on the search page.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);

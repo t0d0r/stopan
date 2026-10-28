@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   patch "tickets/bulk" => "ticket_bulk#update", as: :bulk_tickets
   # The kanban board (specs/board.md); before resources so "board" is no number.
   get "tickets/board" => "boards#show", as: :board
+  # The search page with advanced search, for staff (specs/queues.md "Search page").
+  get "search" => "searches#show", as: :search
   # A person's profile with statistics, for staff (specs/people.md).
   resources :people, only: :show
   # Statistics for staff (specs/reports.md).
