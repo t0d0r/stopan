@@ -158,7 +158,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] advanced search in the queue: all words, also in replies, requester, created and activity dates, source, attachments (operator, 2026-10-27; specs/queues.md "Advanced search")
 - [x] organization page: member picker with live search and check boxes, several at once (operator, 2026-10-27; specs/admin.md "Adding members")
 - [x] production: deployed 59175fa (everything since 8730df2, 8 migrations) after a database backup (specs/deploy.md)
-- [ ] operator: try the API through Apache with a personal token (PATCH/DELETE and JSON bodies vs ModSecurity); switch on mail fetching in /admin/settings
+- [ ] operator: try the API through Apache with a personal token (PATCH/DELETE and JSON bodies vs ModSecurity)
+- [x] production: mail fetching switched on in /admin/settings (every 2 minutes); the first check after the firewall change fetched mail (specs/organization-mail.md "Fetching")
 - [x] README screenshots refreshed, all in English (Chrome with an English environment); the phone shot is now ticket-requester-phone.png (operator, 2026-10-27; specs/ui.md "Screenshots")
 - [x] README: Mermaid diagram of how tickets come in (ingress workflow) (operator, 2026-10-27; specs/overview.md "Ingress diagram")
 - [x] README ingress diagram made simple: six boxes left to right, details in a list (operator, 2026-10-27)

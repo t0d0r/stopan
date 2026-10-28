@@ -869,8 +869,13 @@ menu and Take; open /tickets/new and pick a requester.
   outgoing 993 only for one admin user, and the container's connections
   leave as `stopan` through pasta. `stopan` is now in the imaps rule;
   Gmail and Microsoft 365 IMAPS answer from the container (specs/deploy.md
-  "Outbound IMAP blocked by the host firewall"). Mail fetching still
-  has to be switched on in /admin/settings.
+  "Outbound IMAP blocked by the host firewall").
+- Automatic mail fetching is on in production (`app_settings.mailbox_polling`,
+  every 120 s). One check right after a burst of manual "Check the
+  mailbox" logins got `Net::IMAP::ByeResponseError: System Error` from
+  Gmail; the next check passed with no error and made a ticket from the
+  unseen message. If that error keeps coming back, look at Gmail's
+  per-account connection limits first.
 - Timeline order: `app_settings.timeline_order` (migration
   `AddTimelineOrderToAppSettings`), panel "Ticket page" on settings;
   cookie `timeline_order` from the account page (default clears it);
