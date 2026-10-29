@@ -285,6 +285,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] organization pages, members, users, messages, danger zone, deleted tickets and mail sign-in limited to administered organizations
 - [x] "Administrator" shown as "Super administrator"; shield toggle for the mark on member rows; organization admin pill
 - [x] production: deployed 5fd80c0 (migration `AddAdminToMemberships`; backup `pre-deploy-3f367da`) (specs/deploy.md)
+- [x] production: removed the backup `pre-deploy-dfb32f4`; `pre-deploy-3f367da` stays as the rollback copy
 - [ ] production: mark the first organization administrators on the organization pages
 
 ## Later (specs/roadmap.md)

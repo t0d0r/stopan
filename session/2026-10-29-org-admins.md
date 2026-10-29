@@ -78,6 +78,9 @@
   migration ran and every check passed (specs/deploy.md "Update
   2026-10-29 (revision 5fd80c0)").
 
+- Removed the production backup `pre-deploy-dfb32f4.sqlite3`;
+  `pre-deploy-3f367da.sqlite3` is the rollback copy for 5fd80c0.
+
 ## Open
 
 - Production has no organization administrators yet; a super
