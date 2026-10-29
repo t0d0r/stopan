@@ -284,7 +284,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] super administrator only: overview, settings, stages, Google wizard, impersonation, creating and deleting organizations, setting the mark
 - [x] organization pages, members, users, messages, danger zone, deleted tickets and mail sign-in limited to administered organizations
 - [x] "Administrator" shown as "Super administrator"; shield toggle for the mark on member rows; organization admin pill
-- [ ] production: deploy (migration `AddAdminToMemberships`), then mark the first organization administrators
+- [x] production: deployed 5fd80c0 (migration `AddAdminToMemberships`; backup `pre-deploy-3f367da`) (specs/deploy.md)
+- [ ] production: mark the first organization administrators on the organization pages
 
 ## Later (specs/roadmap.md)
 

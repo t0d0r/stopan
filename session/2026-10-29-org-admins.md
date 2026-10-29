@@ -74,10 +74,14 @@
   - creating and deleting organizations;
   - impersonation.
 
+- Deployed 5fd80c0 after a backup (`pre-deploy-3f367da.sqlite3`); the
+  migration ran and every check passed (specs/deploy.md "Update
+  2026-10-29 (revision 5fd80c0)").
+
 ## Open
 
-- Deploy to production; the migration `AddAdminToMemberships` runs. Then
-  mark the first organization administrators on the organization pages.
+- Production has no organization administrators yet; a super
+  administrator marks them on the organization pages.
 
 ## Verify
 
@@ -87,7 +91,7 @@ menu's "Admin".
 
 ## Next step
 
-Deploy to production when requested.
+Mark the first organization administrators in production.
 
 ## Security Note
 

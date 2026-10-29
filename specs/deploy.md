@@ -669,6 +669,27 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-10-29 (revision 5fd80c0)
+
+Since 3f367da: super administrators and organization administrators
+(org-admins.md): the `memberships.admin` mark (migration
+`AddAdminToMemberships`), the admin area limited to administered
+organizations through `AdminScope`, "Administrator" shown as "Super
+administrator".
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-3f367da.sqlite3` (mode 600; 11 users, 10
+  tickets).
+- Checked: the migration ran (`memberships.admin` present, none
+  pending); users and tickets kept; `/up` 200; `http://` -> 301;
+  `/api/v1/me` 401; `/search`, `/presence` and `/admin` signed out ->
+  302; `/cable` 101; assets gzip; the security headers; the served
+  stylesheet has the organization admin rules; g0no `/up` 200.
+- No organization administrators exist yet; super administrators mark
+  them on the organization pages.
+- Rollback: tag `localhost/stopan:3f367da` as `latest` and restart; the
+  extra `admin` column does not disturb the older code.
+
 ## Update 2026-10-28 (revision 3f367da)
 
 Since dfb32f4: the nickname (migration `AddNicknameToUsers`), "New
