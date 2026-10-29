@@ -81,7 +81,7 @@ de:
     roles:
       requester: "Anfragesteller"
       agent: "Agent"
-      admin: "Administrator"
+      admin: "Super-Administrator"
     statuses:
       new: "Neu"
       open: "In Bearbeitung"
@@ -362,6 +362,10 @@ de:
       done: "Dieses Ticket ist erledigt. Wenn Sie antworten, wird es wieder geöffnet."
 
     admin:
+      org_admin: "Organisationsadministrator"
+      make_org_admin: "Zum Organisationsadministrator machen"
+      remove_org_admin: "Organisationsadministrator entfernen"
+      own_organizations_hint: "Nur die Organisationen, die du verwaltest, sind aufgeführt; wähle mindestens eine."
       picker:
         title: "Mitglieder hinzufügen"
         search: "Nach Name, E-Mail oder Rolle suchen"
@@ -1051,6 +1055,10 @@ de:
     request_updated: "Anfrage aktualisiert."
     revision_restored: "Frühere Version wiederhergestellt."
     admin_only: "Nur Administratoren können diese Seite öffnen."
+    super_admin_only: "Nur Super-Administratoren können diese Seite öffnen."
+    org_admin_granted: "%{name} ist jetzt Administrator von %{organization}."
+    org_admin_removed: "%{name} ist nicht mehr Administrator von %{organization}."
+    member_not_removable: "Nur ein Super-Administrator kann dieses Mitglied entfernen."
     user_created: "Benutzer %{name} wurde erstellt."
     user_updated: "Benutzer %{name} wurde aktualisiert."
     user_deleted: "Benutzer %{name} wurde gelöscht."
@@ -1160,9 +1168,12 @@ de:
       comment: "Kommentar"
       organization: "Organisation"
     attributes:
+      membership:
+        admin: "Organisationsadministrator"
       api_token:
         name: "Name"
       user:
+        organization_ids: "Organisationen"
         name: "Name"
         username: "Benutzername"
         email: "E-Mail"
@@ -1224,6 +1235,14 @@ de:
         too_big: "%{filename} ist größer als %{limit} MB"
         type_not_allowed: "%{filename} ist kein erlaubter Dateityp"
       models:
+        membership:
+          attributes:
+            admin:
+              agents_only: "kann nur für Agenten gesetzt werden"
+        user:
+          attributes:
+            organization_ids:
+              choose_own: "muss mindestens eine deiner Organisationen enthalten"
         ticket:
           attributes:
             requester:

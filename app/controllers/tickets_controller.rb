@@ -112,11 +112,13 @@ class TicketsController < ApplicationController
   end
 
   # Administrators may also open a deleted ticket, read-only, to review
-  # and restore it (specs/tickets.md "Deleting").
+  # and restore it (specs/tickets.md "Deleting"); organization
+  # administrators those of their organizations (specs/org-admins.md).
   def find_ticket_for_page(number)
-    return find_visible_ticket(number) unless current_user.admin?
+    return Ticket.find_by!(number: number.to_s) if current_user.admin?
+    return find_visible_ticket(number) unless current_user.org_admin?
 
-    Ticket.find_by!(number: number.to_s)
+    Ticket.visible_to(current_user).or(AdminScope.new(current_user).deleted_tickets).find_by!(number: number.to_s)
   end
 
   # Requesters choose only the text, the organization and files; the server

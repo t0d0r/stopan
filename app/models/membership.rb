@@ -7,4 +7,14 @@ class Membership < ApplicationRecord
   belongs_to :organization
 
   validates :user_id, uniqueness: { scope: :organization_id }
+  # Only agents can be organization administrators (specs/org-admins.md).
+  validate :admin_only_for_agents
+
+  scope :administering, -> { where(admin: true) }
+
+  private
+
+  def admin_only_for_agents
+    errors.add(:admin, :agents_only) if admin? && !user&.agent?
+  end
 end

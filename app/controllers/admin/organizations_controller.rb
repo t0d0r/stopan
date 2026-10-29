@@ -1,10 +1,13 @@
 module Admin
+  # Organization administrators see and change only theirs; creating and
+  # deleting organizations is for super administrators (specs/org-admins.md).
   class OrganizationsController < BaseController
+    before_action :require_super_admin, only: %i[new create destroy]
     before_action :set_organization, only: %i[show edit update destroy mail_test mailbox_check flush]
 
     def index
       @query = params[:q].to_s.squish.first(100).presence
-      organizations = Organization.ordered
+      organizations = admin_scope.organizations.ordered
       organizations = organizations.search(@query) if @query
       @organizations = organizations
       @member_counts = Membership.group(:organization_id).count
@@ -14,7 +17,8 @@ module Admin
 
     def show
       @memberships = @organization.memberships.includes(:user).sort_by { |m| m.user.display_name.downcase }
-      @candidates = User.active.where.not(id: @organization.memberships.select(:user_id)).ordered
+      @candidates = admin_scope.addable_users.where.not(id: @organization.memberships.select(:user_id)).ordered
+      @manageable_ids = admin_scope.manageable_users.where(id: @memberships.map(&:user_id)).pluck(:id).to_set
       @ticket_count = @organization.tickets.count
       @unsolved_count = @organization.tickets.unsolved.count
     end
@@ -92,7 +96,7 @@ module Admin
     private
 
     def set_organization
-      @organization = Organization.find(params[:id])
+      @organization = admin_scope.organizations.find(params[:id])
     end
 
     MAIL_FIELDS = %i[smtp_enabled smtp_address smtp_port smtp_security smtp_username smtp_password remove_smtp_password

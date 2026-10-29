@@ -41,7 +41,9 @@ emails) people keep their `display_name`.
 
 ## memberships
 
-`user_id`, `organization_id`, timestamps. Unique index on the pair.
+`user_id`, `organization_id`, `admin` (boolean, not null, default false:
+the organization admin mark, agents only, org-admins.md), timestamps.
+Unique index on the pair.
 
 ## tickets
 

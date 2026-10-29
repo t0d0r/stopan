@@ -41,9 +41,10 @@ class TicketPolicy
     update?
   end
 
-  # Bringing a deleted ticket back: administrators only.
+  # Bringing a deleted ticket back: super administrators, and organization
+  # administrators of its organization (specs/org-admins.md).
   def restore?
-    user.admin? && ticket.deleted?
+    ticket.deleted? && user.administers?(ticket.organization)
   end
 
   def resolve?

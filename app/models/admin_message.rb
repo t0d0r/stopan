@@ -1,6 +1,7 @@
 # A message from an administrator to one user, a role, an organization's
 # members or everyone, delivered as notifications (specs/notifications.md
-# "Messages from administrators").
+# "Messages from administrators"). Organization administrators write only
+# to the members of their organizations (specs/org-admins.md).
 class AdminMessage
   include ActiveModel::Model
   include ActiveModel::Attributes
@@ -32,12 +33,24 @@ class AdminMessage
   private
 
   def audience
+    return User.none unless sender_may_address?
+
     case recipients.to_s
     when "all" then User.all
     when /\Arole:(\w+)\z/ then User::ROLES.include?($1) ? User.where(role: $1) : User.none
     when /\Aorganization:(\d+)\z/ then User.joins(:memberships).where(memberships: { organization_id: $1 })
     when /\Auser:(\d+)\z/ then User.where(id: $1)
     else User.none
+    end
+  end
+
+  def sender_may_address?
+    return true if sender.nil? || sender.admin?
+
+    case recipients.to_s
+    when /\Aorganization:(\d+)\z/ then sender.administered_organizations.exists?(id: $1)
+    when /\Auser:(\d+)\z/ then AdminScope.new(sender).users.exists?(id: $1)
+    else false
     end
   end
 

@@ -78,7 +78,7 @@ en:
     roles:
       requester: "Requester"
       agent: "Agent"
-      admin: "Administrator"
+      admin: "Super administrator"
     statuses:
       new: "New"
       open: "In progress"
@@ -359,6 +359,10 @@ en:
       done: "This ticket is done. If you reply, it opens again."
 
     admin:
+      org_admin: "Organization admin"
+      make_org_admin: "Make organization admin"
+      remove_org_admin: "Remove organization admin"
+      own_organizations_hint: "Only the organizations you administer are listed; choose at least one."
       picker:
         title: "Add members"
         search: "Search by name, email or role"
@@ -1048,6 +1052,10 @@ en:
     request_updated: "Request updated."
     revision_restored: "Earlier version restored."
     admin_only: "Only administrators can open that page."
+    super_admin_only: "Only super administrators can open that page."
+    org_admin_granted: "%{name} is now an administrator of %{organization}."
+    org_admin_removed: "%{name} is no longer an administrator of %{organization}."
+    member_not_removable: "Only a super administrator can remove this member."
     user_created: "User %{name} was created."
     user_updated: "User %{name} was updated."
     user_deleted: "User %{name} was deleted."
@@ -1157,9 +1165,12 @@ en:
       comment: "Comment"
       organization: "Organization"
     attributes:
+      membership:
+        admin: "Organization admin"
       api_token:
         name: "Name"
       user:
+        organization_ids: "Organizations"
         name: "Name"
         username: "Username"
         email: "Email"
@@ -1219,6 +1230,14 @@ en:
         too_big: "%{filename} is larger than %{limit} MB"
         type_not_allowed: "%{filename} is not an allowed file type"
       models:
+        membership:
+          attributes:
+            admin:
+              agents_only: "can only be set for agents"
+        user:
+          attributes:
+            organization_ids:
+              choose_own: "must include at least one of your organizations"
         ticket:
           attributes:
             requester:

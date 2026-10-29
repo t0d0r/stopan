@@ -38,14 +38,15 @@
       <%= f.select :role, User::ROLES.map { |r| [ t("ui.roles.#{r}"), r ] }, {}, class: "select", disabled: true %>
       <small class="field-hint"><%= t("ui.admin.self_role") %></small>
     <% else %>
-      <%= f.select :role, User::ROLES.map { |r| [ t("ui.roles.#{r}"), r ] }, {}, class: "select", aria: { describedby: "role-hint" } %>
+      <%= f.select :role, admin_scope.roles.map { |r| [ t("ui.roles.#{r}"), r ] }, {}, class: "select", aria: { describedby: "role-hint" } %>
       <small class="field-hint" id="role-hint"><%= t("ui.admin.role_hint") %></small>
     <% end %>
   </div>
   <fieldset class="field checklist">
     <legend><%= t("ui.admin.organizations") %></legend>
-    <% organizations = Organization.ordered.to_a %>
+    <% organizations = admin_scope.organizations.ordered.to_a %>
     <% if organizations.any? %>
+      <% unless current_user.admin? %><small class="field-hint"><%= t("ui.admin.own_organizations_hint") %></small><% end %>
       <%= f.collection_check_boxes :organization_ids, organizations, :id, :name do |b| %>
         <label class="check"><%= b.check_box %> <%= b.text %></label>
       <% end %>

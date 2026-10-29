@@ -277,6 +277,15 @@ approved "go in this order", all done 2026-10-27):
 - [x] search page: one visible title, the pink panel's strip; the `h1` is for screen readers only (specs/queues.md "Search page")
 - [x] organization details panel reworked: count tiles, mail as two cards with on/off pills and their own actions, message to members under the members list (specs/ui.md "Admin")
 
+## Super and organization administrators (2026-10-29, specs/org-admins.md)
+
+- [x] `memberships.admin` mark for agents, cleared when the role changes; `administered_organizations`, `administers?`, `org_admin?`, `admin_area?`
+- [x] `AdminScope`: organizations, users, manageable and addable users, removable memberships, deleted tickets; every admin controller finds records through it
+- [x] super administrator only: overview, settings, stages, Google wizard, impersonation, creating and deleting organizations, setting the mark
+- [x] organization pages, members, users, messages, danger zone, deleted tickets and mail sign-in limited to administered organizations
+- [x] "Administrator" shown as "Super administrator"; shield toggle for the mark on member rows; organization admin pill
+- [ ] production: deploy (migration `AddAdminToMemberships`), then mark the first organization administrators
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

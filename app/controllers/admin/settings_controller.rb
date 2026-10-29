@@ -2,6 +2,8 @@ module Admin
   # Settings of the whole service desk (specs/board.md): automatic
   # postponing, fetching from the mailboxes, and the board's stages.
   class SettingsController < BaseController
+    before_action :require_super_admin
+
     def show
       @setting = AppSetting.current
     end

@@ -54,8 +54,9 @@ Turbo Drive for page changes.
   and Logout in a menu") the name is a `details` dropdown like the
   notification panel (closes on a click outside or Escape): a yellow
   sticky headed by the user's email with "Your account" (the account
-  page), for administrators "Admin" (`aria-current` and bold on the
-  admin pages), and "Logout".
+  page), for super and organization administrators "Admin"
+  (`aria-current` and bold on the admin pages; org-admins.md), and
+  "Logout".
 - **Paper colours** (paper / strip), the Stickies set: yellow `#fff6a8 /
   #f5e270`, blue `#cfe7fc / #a9d1f5`, green `#d4f4c6 / #ade5a0`, pink
   `#fcd4e6 / #f4b0cf`, purple `#e3d8fc / #c9b9f5`, gray `#efeeea / #d8d6cf`.

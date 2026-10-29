@@ -39,6 +39,10 @@ class User < ApplicationRecord
   validates :role, inclusion: { in: ROLES }
   validates :locale, :language, inclusion: { in: ->(_) { I18n.available_locales.map(&:to_s) } }, allow_nil: true
 
+  # A role other than agent carries no organization admin mark
+  # (specs/org-admins.md).
+  after_save :drop_organization_admin_marks, if: -> { saved_change_to_role? && !agent? }
+
   scope :active, -> { where(deactivated_at: nil) }
   scope :new_ticket_subscribers, -> { active.staff.where(notify_new_tickets: true) }
   scope :staff, -> { where(role: STAFF_ROLES) }
@@ -91,6 +95,31 @@ class User < ApplicationRecord
   # their own for everyone else (specs/roles.md).
   def visible_organizations
     admin? ? Organization.all : organizations
+  end
+
+  # Organizations the user manages in the admin area: all for super
+  # administrators, the marked memberships for agents (specs/org-admins.md).
+  def administered_organizations
+    return Organization.all if admin?
+    return Organization.none unless agent?
+
+    Organization.where(id: memberships.administering.select(:organization_id))
+  end
+
+  def administers?(organization)
+    return false unless organization
+    return true if admin?
+
+    agent? && memberships.administering.exists?(organization_id: organization.id)
+  end
+
+  def org_admin?
+    agent? && memberships.administering.exists?
+  end
+
+  # Super administrators and organization administrators open /admin.
+  def admin_area?
+    admin? || org_admin?
   end
 
   def member_of?(organization)
@@ -155,5 +184,11 @@ class User < ApplicationRecord
       Revision.where(editor_id: user_ids).distinct.pluck(:editor_id),
       Impersonation.where(user_id: user_ids).distinct.pluck(:user_id),
       Impersonation.where(admin_id: user_ids).distinct.pluck(:admin_id) ].flatten.to_set
+  end
+
+  private
+
+  def drop_organization_admin_marks
+    memberships.administering.update_all(admin: false)
   end
 end

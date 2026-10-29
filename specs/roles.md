@@ -9,9 +9,14 @@ default) are requesters.
 |------|-----|----------|
 | `requester` | a customer contact | opens tickets for an organization they belong to; sees and works only on their own tickets (only public timeline entries) |
 | `agent` | support staff | sees and works every ticket of the organizations they belong to |
-| `admin` | service desk administrator | every ticket of every organization, plus users, organizations and memberships |
+| `admin` | super administrator ("Super administrator" in the interface) | every ticket of every organization, plus users, organizations, memberships and the settings of the whole service desk |
 
 "Staff" means agent or admin (`User#staff?`).
+
+An agent can also be an **organization administrator** of some of their
+organizations (a mark on the membership): they manage those
+organizations, their members and accounts, but no settings of the whole
+service desk. Rules in org-admins.md.
 
 A deactivated user (`users.deactivated_at` set) cannot sign in, whatever
 the role, and cannot be chosen as assignee.
@@ -82,9 +87,9 @@ the role, and cannot be chosen as assignee.
 | change status | only "mark as done" on own new/open/pending/postponed ticket | any allowed transition (tickets.md) | same as agent |
 | change priority, assignee | no | yes | yes |
 | share a ticket by link (sharing.md) | own ticket, in own organization | any ticket | any ticket; also sees and stops every shared link |
-| open `/admin` | no | no | yes |
+| open `/admin` | no | only an organization administrator, for their organizations (org-admins.md) | yes |
 | impersonate another user (admin.md "Impersonation") | no | no | agents and requesters, not admins |
-| manage users, roles, memberships, organizations | no | no | yes |
+| manage users, roles, memberships, organizations | no | an organization administrator: their organizations, their members and accounts up to agent (org-admins.md) | yes |
 
 ## Enforcement
 
@@ -104,8 +109,10 @@ the role, and cannot be chosen as assignee.
   requester is a member of the ticket's organization, assignee is active
   staff, status and priority are in their lists, the status transition is
   allowed.
-- **Admin area.** `Admin::BaseController` redirects non-admins to the start
-  page with "Only administrators can open that page".
+- **Admin area.** `Admin::BaseController` redirects users who are neither
+  super nor organization administrators to the start page with "Only
+  administrators can open that page"; pages for super administrators only
+  redirect organization administrators to the admin start (org-admins.md).
 - **Self-protection.** An admin cannot change their own role, deactivate or
   delete themselves, so at least one admin remains.
 

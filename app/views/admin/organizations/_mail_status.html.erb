@@ -63,7 +63,8 @@
   <% if AppSetting.current.google_ready? %>
     <%= link_to (connection ? t("ui.admin.mail.google_reconnect_button") : t("ui.admin.mail.google_connect")),
                 admin_organization_google_connect_path(organization), class: "btn btn--small", data: { turbo: false } %>
-  <% else %>
+  <% elsif current_user.admin? %>
+    <%# The wizard is a setting of the whole service desk (specs/org-admins.md). %>
     <%= link_to t("ui.admin.mail.google_set_up"), admin_google_setup_path, class: "btn btn--small" %>
   <% end %>
   <% if connection %>

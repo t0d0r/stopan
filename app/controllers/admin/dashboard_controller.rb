@@ -1,6 +1,8 @@
 module Admin
   class DashboardController < BaseController
     def show
+      return redirect_to(org_admin_home_path) unless current_user.admin?
+
       @stats = {
         unsolved: Ticket.unsolved.count,
         unassigned: Ticket.unsolved.where(assignee_id: nil).count,

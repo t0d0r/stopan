@@ -6,4 +6,5 @@
     <%= render "form", user: @user %>
   </div>
 </section>
-<%= render "admin/users/impersonation", user: @user %>
+<%# Impersonation and its record are for super administrators (specs/org-admins.md). %>
+<%= render "admin/users/impersonation", user: @user if current_user.admin? %>

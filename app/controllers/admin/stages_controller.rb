@@ -1,6 +1,8 @@
 module Admin
   # Board stages per status (specs/board.md "Stages").
   class StagesController < BaseController
+    before_action :require_super_admin
+
     before_action :set_stage, only: %i[update destroy move]
 
     def create

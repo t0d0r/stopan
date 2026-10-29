@@ -3,6 +3,8 @@ module Admin
   # stays in the session and the user is signed in without touching their
   # own sign-in times.
   class ImpersonationsController < BaseController
+    before_action :require_super_admin
+
     def create
       user = User.find(params[:user_id])
       raise NotAuthorized unless Impersonation.allowed?(current_user, user)

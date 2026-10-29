@@ -7,13 +7,17 @@ module Admin
     STATE_TTL = 10.minutes
 
     def start
-      organization = Organization.find(params[:organization_id])
-      return redirect_to admin_google_setup_path(step: "client"), alert: t("flash.google_not_configured") unless google_configured?
+      organization = admin_scope.organizations.find(params[:organization_id])
+      unless google_configured?
+        # The OAuth client is set in the wizard, by super administrators.
+        back = current_user.admin? ? admin_google_setup_path(step: "client") : admin_organization_path(organization)
+        return redirect_to back, alert: t("flash.google_not_configured")
+      end
 
       state = SecureRandom.urlsafe_base64(32)
       verifier = GoogleOauth.verifier
       session[:mail_oauth] = { "state" => state, "verifier" => verifier, "organization_id" => organization.id,
-                               "expires_at" => STATE_TTL.from_now.to_i, "wizard" => params[:return_to] == "wizard" }
+                               "expires_at" => STATE_TTL.from_now.to_i, "wizard" => params[:return_to] == "wizard" && current_user.admin? }
       redirect_to MailConnection.client.authorize_url(redirect_uri: admin_mail_oauth_callback_url, state: state, verifier: verifier),
                   allow_other_host: true
     end
@@ -25,7 +29,7 @@ module Admin
         return redirect_to admin_organizations_path, alert: t("flash.google_state_invalid")
       end
 
-      organization = Organization.find(pending["organization_id"])
+      organization = admin_scope.organizations.find(pending["organization_id"])
       # From the setup wizard, back to it (specs/mail-oauth.md "Setup wizard").
       wizard = pending["wizard"]
       back = wizard ? admin_google_setup_path(step: "connect") : admin_organization_path(organization)
@@ -42,7 +46,7 @@ module Admin
     end
 
     def destroy
-      organization = Organization.find(params[:organization_id])
+      organization = admin_scope.organizations.find(params[:organization_id])
       organization.mail_connection&.disconnect!
       organization.update!(mail_auth: "password", smtp_enabled: false, imap_enabled: false)
       redirect_to admin_organization_path(organization), notice: t("flash.google_disconnected")

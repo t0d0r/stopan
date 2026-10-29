@@ -81,7 +81,7 @@ bg:
     roles:
       requester: "Заявител"
       agent: "Агент"
-      admin: "Администратор"
+      admin: "Супер администратор"
     statuses:
       new: "Нова"
       open: "В процес"
@@ -362,6 +362,10 @@ bg:
       done: "Заявката е готова. Ако отговорите, тя ще се отвори отново."
 
     admin:
+      org_admin: "Администратор на организация"
+      make_org_admin: "Направи администратор на организацията"
+      remove_org_admin: "Махни администратор на организацията"
+      own_organizations_hint: "Показани са само организациите, които администрираш; избери поне една."
       picker:
         title: "Добави членове"
         search: "Търсене по име, имейл или роля"
@@ -1051,6 +1055,10 @@ bg:
     request_updated: "Заявката е редактирана."
     revision_restored: "Предишната версия е възстановена."
     admin_only: "Само администраторите имат достъп до тази страница."
+    super_admin_only: "Само супер администраторите имат достъп до тази страница."
+    org_admin_granted: "%{name} вече е администратор на %{organization}."
+    org_admin_removed: "%{name} вече не е администратор на %{organization}."
+    member_not_removable: "Само супер администратор може да премахне този член."
     user_created: "Потребител %{name} е създаден."
     user_updated: "Потребител %{name} е обновен."
     user_deleted: "Потребител %{name} е изтрит."
@@ -1160,9 +1168,12 @@ bg:
       comment: "Коментар"
       organization: "Организация"
     attributes:
+      membership:
+        admin: "Администратор на организация"
       api_token:
         name: "Име"
       user:
+        organization_ids: "Организации"
         name: "Име"
         username: "Потребителско име"
         email: "Имейл"
@@ -1224,6 +1235,14 @@ bg:
         too_big: "%{filename} е по-голям от %{limit} MB"
         type_not_allowed: "%{filename} не е от разрешен вид"
       models:
+        membership:
+          attributes:
+            admin:
+              agents_only: "може да се зададе само на агенти"
+        user:
+          attributes:
+            organization_ids:
+              choose_own: "трябва да включва поне една от твоите организации"
         ticket:
           attributes:
             requester:

@@ -9,7 +9,9 @@
   <div class="panel__body">
     <div class="panel__head">
       <h2 class="section-title" id="organizations-title"><%= t("ui.admin.organizations_count", count: @organizations.size) %></h2>
-      <%= link_to t("ui.admin.new_organization"), new_admin_organization_path, class: "btn btn--primary" %>
+      <% if current_user.admin? %>
+        <%= link_to t("ui.admin.new_organization"), new_admin_organization_path, class: "btn btn--primary" %>
+      <% end %>
     </div>
     <%= form_with url: admin_organizations_path, method: :get, class: "filters filters--compact",
                                                       data: { filter_form: true, turbo_action: "replace" } do %>

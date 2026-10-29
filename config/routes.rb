@@ -61,7 +61,7 @@ Rails.application.routes.draw do
       # Remove all its tickets for good (specs/admin.md).
       post :flush, on: :member
     end
-    resources :memberships, only: :destroy
+    resources :memberships, only: %i[update destroy]
     # Deleted tickets to review and restore (specs/tickets.md "Deleting").
     resources :deleted_tickets, only: :index, param: :number do
       patch :restore, on: :member
@@ -139,7 +139,7 @@ Rails.application.routes.draw do
         post :flush, on: :member
         resources :memberships, only: :create
       end
-      resources :memberships, only: :destroy
+      resources :memberships, only: %i[update destroy]
       resource :settings, only: %i[show update]
       resources :messages, only: :create
       resources :deleted_tickets, only: :index, param: :number do

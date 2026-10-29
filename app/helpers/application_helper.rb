@@ -82,7 +82,7 @@ module ApplicationHelper
 
   # Admin pages refresh live for administrators (specs/admin.md).
   def live_admin_page?
-    user_signed_in? && current_user.admin? && current_section == :admin
+    user_signed_in? && current_user.admin_area? && current_section == :admin
   end
 
   # Hidden fields of the menu bar search (queues.md): on a ticket list it

@@ -15,15 +15,35 @@
             <tbody>
               <% @memberships.each do |membership| %>
                 <tr id="<%= dom_id(membership) %>">
-                  <td class="text"><%= link_to membership.user.display_name, edit_admin_user_path(membership.user) %></td>
+                  <td class="text">
+                    <% if @manageable_ids.include?(membership.user_id) %>
+                      <%= link_to membership.user.display_name, edit_admin_user_path(membership.user) %>
+                    <% else %>
+                      <%= membership.user.display_name %>
+                    <% end %>
+                  </td>
                   <td class="text"><%= membership.user.email %></td>
-                  <td><span class="role-pill role-pill--<%= membership.user.role %>"><%= role_label(membership.user) %></span></td>
+                  <td>
+                    <span class="role-pill role-pill--<%= membership.user.role %>"><%= role_label(membership.user) %></span>
+                    <% if membership.admin? %><span class="role-pill role-pill--org-admin"><%= t("ui.admin.org_admin") %></span><% end %>
+                  </td>
                   <td class="action">
-                    <%= button_to t("ui.admin.remove"), admin_membership_path(membership), method: :delete, class: "link-button",
-                                  form: { data: confirm_data(
-                                    title: t("ui.confirm.remove_member_title", name: membership.user.display_name),
-                                    body: t("ui.confirm.remove_member", name: membership.user.display_name, organization: @organization.name),
-                                    button: t("ui.admin.remove")) } %>
+                    <%# Only super administrators set the organization admin mark, a pressed shield (specs/org-admins.md). %>
+                    <% if current_user.admin? && membership.user.agent? %>
+                      <% label = t(membership.admin? ? "ui.admin.remove_org_admin" : "ui.admin.make_org_admin") %>
+                      <%= button_to admin_membership_path(membership), method: :patch, class: "icon-action icon-action--org-admin",
+                                    params: { "membership[admin]" => (membership.admin? ? "0" : "1") },
+                                    title: label, aria: { label: "#{label}: #{membership.user.display_name}", pressed: membership.admin? } do %>
+                        <%= icon :shield, size: 14 %>
+                      <% end %>
+                    <% end %>
+                    <% if admin_scope.removable?(membership) %>
+                      <%= button_to t("ui.admin.remove"), admin_membership_path(membership), method: :delete, class: "link-button",
+                                    form: { data: confirm_data(
+                                      title: t("ui.confirm.remove_member_title", name: membership.user.display_name),
+                                      body: t("ui.confirm.remove_member", name: membership.user.display_name, organization: @organization.name),
+                                      button: t("ui.admin.remove")) } %>
+                    <% end %>
                   </td>
                 </tr>
               <% end %>
@@ -64,7 +84,7 @@
       <%= render "admin/organizations/mail_status", organization: @organization %>
       <div class="form-actions form-actions--start org-details__actions">
         <%= link_to t("ui.admin.edit"), edit_admin_organization_path(@organization), class: "btn btn--primary" %>
-        <% if @ticket_count.zero? %>
+        <% if @ticket_count.zero? && current_user.admin? %>
           <%= button_to t("ui.delete"), admin_organization_path(@organization), method: :delete, class: "btn btn--danger",
                         form: { data: confirm_data(title: t("ui.confirm.delete_organization_title", name: @organization.name),
                                                    body: t("ui.confirm.delete_organization", count: @memberships.size),

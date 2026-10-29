@@ -20,7 +20,7 @@
       </div>
       <div class="filters__field">
         <%= label_tag :role, t("ui.fields.role") %>
-        <%= select_tag :role, options_for_select(User::ROLES.map { |r| [ t("ui.roles.#{r}"), r ] }, @role),
+        <%= select_tag :role, options_for_select(admin_scope.roles.map { |r| [ t("ui.roles.#{r}"), r ] }, @role),
                        include_blank: t("ui.queue.any"), class: class_names("select", "is-set": @role), data: { auto_submit: true } %>
       </div>
       <noscript><div class="filters__actions"><%= submit_tag t("ui.queue.apply"), class: "btn", name: nil %></div></noscript>
@@ -51,14 +51,17 @@
               </td>
               <td class="text hide-narrow"><%= user.email %></td>
               <td class="hide-narrow"><span class="role-pill role-pill--<%= user.role %>"><%= role_label(user) %></span></td>
-              <td class="text hide-narrow"><%= user.organizations.map(&:name).join(", ").presence || tag.span("-", class: "muted") %></td>
+              <td class="text hide-narrow"><%= user.organizations.select { |org| @shown_organization_ids.nil? || @shown_organization_ids.include?(org.id) }.map(&:name).join(", ").presence || tag.span("-", class: "muted") %></td>
               <td class="date hide-narrow"><%= user.last_sign_in_at ? time_ago(user.last_sign_in_at) : t("ui.admin.never") %></td>
               <td class="num hide-narrow"><%= user.sign_in_count %></td>
               <td class="action">
                 <%# Icon actions with labels (specs/admin.md "Users"). %>
-                <%= link_to edit_admin_user_path(user), class: "icon-action", title: t("ui.admin.edit_user_label", name: user.display_name),
-                                                        aria: { label: t("ui.admin.edit_user_label", name: user.display_name) } do %>
-                  <%= icon :pencil, size: 14 %>
+                <%# Organization administrators edit only the users they manage (specs/org-admins.md). %>
+                <% if @manageable_ids.include?(user.id) %>
+                  <%= link_to edit_admin_user_path(user), class: "icon-action", title: t("ui.admin.edit_user_label", name: user.display_name),
+                                                          aria: { label: t("ui.admin.edit_user_label", name: user.display_name) } do %>
+                    <%= icon :pencil, size: 14 %>
+                  <% end %>
                 <% end %>
                 <% if user != current_user && !user.deactivated? %>
                   <%= link_to new_admin_message_path(user_id: user.id, return_to: request.fullpath), class: "icon-action",

@@ -1573,7 +1573,8 @@ body {
 }
 
 .role-pill--agent,
-.role-pill--admin {
+.role-pill--admin,
+.role-pill--org-admin {
   background: rgba(10, 100, 214, 0.12);
   color: var(--accent);
 }
@@ -4022,8 +4023,20 @@ turbo-frame {
   color: #b3261e;
 }
 
-.table-users .action form {
+.table-users .action form,
+.table-members .action form {
   display: inline-block;
+}
+
+/* The organization admin mark on a member row (specs/org-admins.md). */
+.table-members .action {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.icon-action--org-admin[aria-pressed="true"] {
+  background: rgba(10, 100, 214, 0.12);
+  color: var(--accent);
 }
 
 .table-users .action {

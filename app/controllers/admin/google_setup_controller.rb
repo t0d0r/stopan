@@ -11,6 +11,7 @@ module Admin
     # One partial per step, chosen from this list, never from a parameter.
     STEP_PARTIALS = (OAUTH_STEPS | APP_PASSWORD_STEPS).index_with { |step| "admin/google_setup/step_#{step}" }.freeze
 
+    before_action :require_super_admin
     before_action :set_wizard
 
     def show
