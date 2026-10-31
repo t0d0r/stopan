@@ -112,18 +112,16 @@ No production deployment, no external calls, no commits.
 
 ## State
 
-- All changes are committed in one commit on branch
-  `attachments-request-limit` in the worktree
-  `.claude/worktrees/attachments-request-limit`, made from local main
-  (30d516d, one commit ahead of origin). Not merged into main, not
-  pushed. The main checkout is unchanged apart from the untracked
-  `.claude/` directory that holds the worktree (not in .gitignore).
+- All changes are in commit 0bc597e, made on branch
+  `attachments-request-limit` from local main (30d516d) and merged into
+  main as a fast-forward; `make check` on main passed afterwards (520
+  runs, 0 failures). The branch and its worktree are removed after the
+  merge.
 - No production change: the server, Apache, ModSecurity and the database
   were not touched.
 
 ## Open
 
-- Merge branch `attachments-request-limit` into main (todo).
 - Production: check Apache's `LimitRequestBody` and ModSecurity's
   `SecRequestBodyLimit` let a 52 MiB upload through (deploy.md "Request
   size"), with the open todo "check file uploads through Apache and
@@ -147,6 +145,6 @@ http://127.0.0.1:3000/` answers 413.
 
 ## Next step
 
-Merge the branch into main; then, on the next deploy, check
+On the next deploy, check
 an upload of 5 files near 10 MB through Apache (deploy.md "Request
 size").

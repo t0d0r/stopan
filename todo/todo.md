@@ -293,8 +293,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] gap analysis of attachments against the specs (session/2026-10-31-attachments.md)
 - [x] refuse request bodies over `MAX_REQUEST_BODY` (default 52 MiB) in Puma and Thruster, before the body is stored (specs/attachments.md "Request size", specs/docker.md)
 - [x] tests: the limit stays above the attachment limits; reply files and refused types through the API (specs/attachments.md "Acceptance")
-- [x] commit the change on branch `attachments-request-limit` (not merged into main, not pushed)
-- [ ] merge `attachments-request-limit` into main
+- [x] commit the change on branch `attachments-request-limit` (0bc597e)
+- [x] merge `attachments-request-limit` into main (fast-forward to 0bc597e)
 - [ ] production: check that Apache and ModSecurity let a 52 MiB upload through, together with the open upload check below (specs/deploy.md)
 
 ## Later (specs/roadmap.md)
