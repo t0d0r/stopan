@@ -193,6 +193,9 @@ newest revision images.
 - After restarting the service, and after a server reboot, the app comes
   back without anyone logging in.
 - The running image tag equals the deployed git revision.
+- A ticket with 5 files of almost 10 MB each is accepted through
+  Apache; a request body over 52 MiB is refused with 413 (attachments.md
+  "Request size").
 - g0no (`g0no.linuxfan.org`, `g0no.service`, `127.0.0.1:3182`) is unchanged
   and still answers.
 
@@ -284,6 +287,20 @@ Operator: "add upgrade=websocket through the ISPConfig API".
   check).
 - Rollback: `sudo /root/stopan/bin/ispconfig-remote sites_web_domain_update`
   with the old line (built from the saved record the same way).
+
+## Request size (2026-10-31)
+
+The image refuses request bodies over `MAX_REQUEST_BODY`, 52 MiB by
+default (attachments.md "Request size"), in Thruster and Puma. Apache in
+front must let at least that size through, or the largest allowed upload
+(5 files of 10 MB) fails there first: Apache's `LimitRequestBody` and
+ModSecurity's `SecRequestBodyLimit` (the request body including files)
+apply before the container. ModSecurity's recommended configuration
+sets `SecRequestBodyLimit 13107200` (12.5 MiB), which would refuse
+uploads above that. The values on the server have not been checked yet
+(todo "check file uploads through Apache and mod_security"); if they
+need changing, change them in the ISPConfig site's directives like the
+other ModSecurity settings below, not in Apache's files by hand.
 
 ## ModSecurity and the session cookie (2026-10-27)
 

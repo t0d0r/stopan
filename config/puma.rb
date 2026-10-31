@@ -37,3 +37,12 @@ plugin :tmp_restart
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
+
+# Refuse a request body over MAX_REQUEST_BODY bytes with 413 before it is
+# read, so an upload larger than the attachment limits is never stored
+# (specs/attachments.md "Request size"). The default leaves room for 5
+# files of 10 MB and the form's text. 0 turns the limit off, as in
+# Thruster, which reads the same variable in the Docker image.
+max_request_body = Integer(ENV.fetch("MAX_REQUEST_BODY", 52 * 1024 * 1024))
+raise ArgumentError, "MAX_REQUEST_BODY must be 0 (no limit) or a number of bytes" if max_request_body.negative?
+http_content_length_limit max_request_body if max_request_body.positive?

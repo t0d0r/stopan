@@ -14,7 +14,40 @@ reply or internal note (to the comment). Storage is Active Storage
   spreadsheet and presentation formats. HTML, SVG, scripts and executables
   are refused.
 - A refused file makes the whole ticket or comment invalid (422 with a
-  message naming the file); nothing is saved.
+  message naming the file); nothing is saved, no comment and no blob.
+
+## Request size
+
+The limits above are checked only after the whole request has arrived,
+and Puma stores a request body (Rack writes multipart files to
+temporary files) before Rails sees it. So the web server refuses a body
+that is larger than any allowed upload before reading it:
+
+- `MAX_REQUEST_BODY` (bytes), default 54,525,952 (52 MiB): 5 files of
+  10 MB plus 2 MiB for the text fields and the multipart framing. It
+  applies to every request, signed in or not.
+- Puma (`config/puma.rb`, `http_content_length_limit`): a body whose
+  `Content-Length` is larger is answered 413 and the connection closed
+  before any of it is read; a chunked body is counted while it is read
+  and refused when it passes the limit. This covers `bin/rails server`,
+  `make run`, the development container and production.
+- Thruster, in front of Puma in the image, reads the same variable
+  (`ENV MAX_REQUEST_BODY` in the Dockerfile) and answers 413 once a body
+  passes it while it is forwarded.
+- `0` turns the limit off in both; a value that is not a number, or is
+  negative, stops Puma at boot.
+- The default must stay at least `MAX_FILES` x `MAX_SIZE` plus 2 MiB;
+  `test/config/puma_test.rb` fails otherwise, so changing the
+  attachment limits means changing this one too.
+- The browser shows the server's plain 413 answer; there is no check in
+  the browser before sending. A body this large is far beyond what the
+  forms accept anyway (10 MB per file).
+- Apache in front of the container must allow at least the same size
+  (deploy.md "Request size").
+
+Decision: the limit is in the web server, not in a Rails middleware.
+Reason: Puma reads and stores the whole body before the application
+runs, so only the server can refuse it unread.
 
 ## Serving
 
@@ -84,7 +117,19 @@ Routes, with exactly the lookups and checks of their download routes:
 files, disposition; preview: inline only for previewable kinds, 404
 otherwise, the CSP per kind, internal note files not previewable) and
 `test/controllers/shared_tickets_controller_test.rb` (shared preview:
-public files only, locked links redirect).
+public files only, locked links redirect) and
+`test/integration/api_test.rb` (files on new tickets and on replies and
+notes as multipart; a requester's `internal` flag with a file stays a
+public reply; a staff note's file is 404 for the requester; a refused
+type is 422 `invalid` naming the file and stores no comment and no blob)
+and `test/models/mailbox_message_test.rb` (mail attachments) and
+`test/config/puma_test.rb` (request size: the default against the
+attachment limits, `MAX_REQUEST_BODY` and `0`, the Dockerfile value).
+
+Checked by hand on 2026-10-31 with `bin/rails server` and Thruster on
+the local machine: a 1 MiB body reaches the app; 53 MiB with
+`Content-Length` and 53 MiB chunked get 413 from Puma, and from
+Thruster alone (Puma's limit set to 0 behind it).
 
 ## Security Note
 
@@ -93,4 +138,7 @@ types are ever sent inline, with `nosniff`, and images and text with a
 sandboxing `Content-Security-Policy`, so an uploaded file never runs as a
 page of the app; SVG and HTML are refused at upload. PDFs are shown by the
 browser's own viewer without a sandbox (Chrome refuses one); keep the
-browser up to date. Virus scanning is on the roadmap.
+browser up to date. Request bodies over `MAX_REQUEST_BODY` are refused
+before they are read, so nobody, signed in or not, can make the server
+store an arbitrarily large upload in its temporary files. Virus scanning
+is on the roadmap.

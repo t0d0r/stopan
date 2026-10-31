@@ -96,6 +96,7 @@ The container and volume are removed afterwards, also on failure.
 | TRUSTED_PROXIES | no | comma-separated proxy addresses or ranges trusted for `X-Forwarded-For`, so `request.remote_ip` is the visitor's (public-form.md) |
 | DEEPL_API_KEY, DEEPL_API_URL | no | fallback DeepL key for the staff "Translate" button when none is stored in /admin/settings (`:fx` keys use the Free host); the URL overrides the host (translation.md) |
 | MAILBOX_POLLING | no | `false` keeps the mailbox poller from starting; otherwise automatic fetching and its interval are set on /admin/settings (organization-mail.md "Fetching") |
+| MAX_REQUEST_BODY | no, default 54525952 (52 MiB) | largest request body in bytes; Puma (config/puma.rb) and Thruster refuse a larger one with 413 before reading it; `0` turns the limit off (attachments.md "Request size") |
 | RAILS_LOG_LEVEL | no, default info | log level |
 
 ## Verified

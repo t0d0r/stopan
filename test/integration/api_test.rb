@@ -159,6 +159,41 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "replies and notes take files as multipart, with the limits and visibility of the pages" do
+    token = token_for(users(:anna))
+    # A requester's internal flag is ignored: the reply and its file are public.
+    post api_v1_ticket_comments_url(tickets(:printer).number), headers: auth(token),
+                                                              params: { comment: { body: "Photo of the till", internal: "1",
+                                                                                   files: [ fixture_file_upload("dot.png", "image/png") ] } }
+    assert_response :created
+    reply = response.parsed_body["comment"]
+    assert_not reply["internal"]
+    assert_equal [ "dot.png" ], reply["files"].map { |file| file["filename"] }
+    get reply.dig("files", 0, "url"), headers: auth(token)
+    assert_response :success
+    assert_match(/\Aattachment;/, response.headers["Content-Disposition"])
+
+    # A file on a staff note never reaches the requester.
+    post api_v1_ticket_comments_url(tickets(:printer).number), headers: auth(token_for(users(:agent))),
+                                                              params: { comment: { body: "Till log", internal: "1",
+                                                                                   files: [ fixture_file_upload("hello.txt", "text/plain") ] } }
+    assert_response :created
+    note = response.parsed_body["comment"]
+    assert note["internal"]
+    get note.dig("files", 0, "url"), headers: auth(token)
+    assert_response :not_found
+
+    # A refused type makes the whole reply invalid; no comment and no blob are stored.
+    assert_no_difference [ "Comment.count", "ActiveStorage::Blob.count" ] do
+      post api_v1_ticket_comments_url(tickets(:printer).number), headers: auth(token),
+                                                                params: { comment: { body: "Page",
+                                                                                     files: [ fixture_file_upload("page.html", "text/html") ] } }
+    end
+    assert_response :unprocessable_content
+    assert_equal "invalid", response.parsed_body.dig("error", "code")
+    assert_match "page.html", response.parsed_body.dig("error", "message")
+  end
+
   test "notifications and the user's own settings" do
     token = token_for(users(:anna))
     perform_enqueued_jobs { tickets(:printer).add_comment(author: users(:agent), body: "News") }

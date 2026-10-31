@@ -288,6 +288,15 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: removed the backup `pre-deploy-dfb32f4`; `pre-deploy-3f367da` stays as the rollback copy
 - [ ] production: mark the first organization administrators on the organization pages
 
+## Attachments: request size limit (2026-10-31, specs/attachments.md "Request size")
+
+- [x] gap analysis of attachments against the specs (session/2026-10-31-attachments.md)
+- [x] refuse request bodies over `MAX_REQUEST_BODY` (default 52 MiB) in Puma and Thruster, before the body is stored (specs/attachments.md "Request size", specs/docker.md)
+- [x] tests: the limit stays above the attachment limits; reply files and refused types through the API (specs/attachments.md "Acceptance")
+- [x] commit the change on branch `attachments-request-limit` (not merged into main, not pushed)
+- [ ] merge `attachments-request-limit` into main
+- [ ] production: check that Apache and ModSecurity let a 52 MiB upload through, together with the open upload check below (specs/deploy.md)
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

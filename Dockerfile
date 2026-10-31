@@ -73,6 +73,11 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s \
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
+# Thruster refuses a request body over this size before it reaches Puma,
+# which reads the same variable (config/puma.rb, specs/attachments.md
+# "Request size"). 52 MiB leaves room for 5 files of 10 MB and the text.
+ENV MAX_REQUEST_BODY="54525952"
+
 # Start server via Thruster by default, this can be overwritten at runtime
 EXPOSE 80
 CMD ["./bin/thrust", "./bin/rails", "server"]
