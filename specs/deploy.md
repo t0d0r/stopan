@@ -288,19 +288,43 @@ Operator: "add upgrade=websocket through the ISPConfig API".
 - Rollback: `sudo /root/stopan/bin/ispconfig-remote sites_web_domain_update`
   with the old line (built from the saved record the same way).
 
-## Request size (2026-10-31)
+## Request size (2026-10-31, applied 2026-11-01)
 
 The image refuses request bodies over `MAX_REQUEST_BODY`, 52 MiB by
 default (attachments.md "Request size"), in Thruster and Puma. Apache in
 front must let at least that size through, or the largest allowed upload
 (5 files of 10 MB) fails there first: Apache's `LimitRequestBody` and
 ModSecurity's `SecRequestBodyLimit` (the request body including files)
-apply before the container. ModSecurity's recommended configuration
-sets `SecRequestBodyLimit 13107200` (12.5 MiB), which would refuse
-uploads above that. The values on the server have not been checked yet
-(todo "check file uploads through Apache and mod_security"); if they
-need changing, change them in the ISPConfig site's directives like the
-other ModSecurity settings below, not in Apache's files by hand.
+apply before the container.
+
+Found on the server (checked in every file Apache loads,
+`apache2ctl -D DUMP_INCLUDES`):
+
+| setting | where | value | for Stopan |
+|---|---|---|---|
+| `LimitRequestBody` | not set | Apache 2.4.69 default, 1 GiB | enough |
+| `SecRequestBodyLimit` | `/etc/modsecurity/modsecurity.conf`, server-wide | 13107200 (12.5 MiB), `SecRequestBodyLimitAction Reject` | too small: every body over 12.5 MiB got 413, so uploads over that size never worked in production |
+| `SecRequestBodyNoFilesLimit` | same | 131072 (128 KiB, the body without files) | enough for the forms' text |
+
+Fix: the site's directives (`deploy/ispconfig-site.json`) set
+`SecRequestBodyLimit 54525952` inside the `security2_module` block, for
+this site only. The server-wide file and the other sites keep 12.5 MiB.
+ModSecurity still inspects the body; only the size it accepts changed.
+
+- Applied as root through the Remote API like the earlier site changes:
+  record saved to `/root/stopan/site-25-before-request-limit.json`
+  (root, 600), request `site-25-request-limit-update.json` (the current
+  directives plus the one line, with the current `log_retention` and
+  `pm_*` values). The server's directives matched the repository's
+  before the change.
+- ISPConfig rewrote the vhost within seconds (the line is in the
+  `*:443` VirtualHost) and restarted Apache (a few seconds for every
+  site); `apache2ctl configtest` OK.
+- Checked through Apache: a 20 MiB multipart body reaches the app (422,
+  no CSRF token, nothing stored); 53 MiB gets 413. Stopan and g0no `/up`
+  200 after the restart.
+- Rollback: `sites_web_domain_update` with the `apache_directives` of
+  `site-25-before-request-limit.json`.
 
 ## ModSecurity and the session cookie (2026-10-27)
 
@@ -685,6 +709,36 @@ requesters (organization-mail.md "Settings", notifications.md
   headers; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
+
+## Update 2026-11-01 (revision 28361df)
+
+Since 5fd80c0: request bodies over `MAX_REQUEST_BODY` (52 MiB) are
+refused by Thruster and Puma before they are stored (attachments.md
+"Request size"). No migrations. Before it, the site's ModSecurity limit
+was raised to the same size ("Request size" above).
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-5fd80c0.sqlite3` (mode 600; 11 users, 10
+  tickets, 29 comments, 5 files).
+- `DEPLOY_HOST=<ssh host> make deploy`: `stopan 28361df is up`; `latest` is the
+  `28361df` image, container healthy, service active.
+- Checked: no pending migrations; users, tickets, comments and files
+  kept; `MAX_REQUEST_BODY=54525952` in the container; only
+  `127.0.0.1:3183` listens; `/up` 200; `http://` -> 301; `/api/v1/me`
+  401; `/`, `/search`, `/presence` and `/admin` signed out -> 302;
+  `/cable` 101; pages gzip; HSTS, CSP, `X-Frame-Options`, `nosniff`;
+  g0no `/up` 200.
+- Request size: on the server, straight to `127.0.0.1:3183` (past
+  Apache), 1 MiB reaches the app (422) and 53 MiB gets 413 with
+  `Content-Length` and chunked; through Apache 20 MiB reaches the app
+  (422) and 53 MiB gets 413. The test bodies were zeros posted to the
+  sign-in form without a CSRF token, so nothing was stored.
+- Not checked: a real upload of 5 files near 10 MB by a signed-in user
+  (it would create a ticket in production).
+- Rollback: tag `localhost/stopan:5fd80c0` as `latest` and restart; no
+  schema change. The ModSecurity line can stay: it only allows larger
+  bodies to reach the app, which the older code then stores up to the
+  attachment limits.
 
 ## Update 2026-10-29 (revision 5fd80c0)
 

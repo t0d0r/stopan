@@ -295,7 +295,9 @@ approved "go in this order", all done 2026-10-27):
 - [x] tests: the limit stays above the attachment limits; reply files and refused types through the API (specs/attachments.md "Acceptance")
 - [x] commit the change on branch `attachments-request-limit` (0bc597e)
 - [x] merge `attachments-request-limit` into main (fast-forward to 0bc597e)
-- [ ] production: check that Apache and ModSecurity let a 52 MiB upload through, together with the open upload check below (specs/deploy.md)
+- [x] production: ModSecurity allowed only 12.5 MiB; `SecRequestBodyLimit 54525952` set in the Stopan site's directives; 20 MiB now reaches the app, 53 MiB gets 413 (specs/deploy.md "Request size")
+- [x] production: deployed 28361df (no migrations; backup `pre-deploy-5fd80c0`) (specs/deploy.md "Update 2026-11-01")
+- [ ] production: upload 5 files near 10 MB as a signed-in user on a test ticket, then delete the ticket
 
 ## Later (specs/roadmap.md)
 
