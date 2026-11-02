@@ -331,8 +331,9 @@ approved "go in this order", all done 2026-10-27):
 - [x] Scorecard: first run on `main` passed, both badges show; first score 3.8 (specs/ci.md "Acceptance")
 - [x] SECURITY.md with private vulnerability reporting (specs/ci.md "Security policy")
 - [x] base images and the BuildKit frontend pinned by digest in Dockerfile and Dockerfile.dev (specs/docker.md "Pinned base images")
-- [ ] turn on private vulnerability reporting in the GitHub repository settings (specs/ci.md "Security policy")
+- [x] private vulnerability reporting turned on in the GitHub repository settings (specs/ci.md "Security policy")
 - [x] LICENSE: BSD 2-Clause (specs/overview.md "License")
+- [x] production: deployed 436dd64 (pinned base image), no migrations (specs/deploy.md)
 - [ ] later: Dependabot for GitHub Actions and gems (specs/ci.md "Not in this phase")
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 

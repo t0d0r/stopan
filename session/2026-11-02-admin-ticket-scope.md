@@ -212,6 +212,11 @@
 - `LICENSE`: BSD 2-Clause (specs/overview.md "License"); the README has
   a License section and points to `SECURITY.md` for reports.
 
+- Deployed 436dd64, built from the pinned base image, with no
+  migrations and every check passed (specs/deploy.md "Update 2026-11-02
+  (revision 436dd64)").
+- Private vulnerability reporting is on in the repository settings.
+
 ## Decisions
 
 - **Status changes, the opening line and failed emails never fold.** They
@@ -251,8 +256,6 @@
 
 ## Open
 
-- Private vulnerability reporting is still off in the repository
-  settings; `SECURITY.md` points to it.
 - Pinned base images no longer pick up Debian fixes on their own; the
   digest is updated by hand until Dependabot is set up.
 - A super administrator who works an organization's tickets adds

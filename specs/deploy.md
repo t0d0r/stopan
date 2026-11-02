@@ -710,6 +710,25 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-02 (revision 436dd64)
+
+Since 4c73f97: the base image is pinned by digest (docker.md "Pinned
+base images"), so this build pulled `ruby@sha256:6c6b7b8c...`, the
+current `ruby:4.0.7-slim`, newer than the one of earlier builds; plus
+`SECURITY.md` and `LICENSE`, which do not change the app. There were no
+migrations, so no database copy was made.
+
+- Checked:
+  - no migration pending, users and tickets kept;
+  - the server holds the base image by the pinned digest, and the
+    container runs Ruby 4.0.7 (x86_64);
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:4c73f97` as `latest` and restart.
+
 ## Update 2026-11-02 (revision 4c73f97)
 
 Since db88326: runs of event lines between messages fold into one line
