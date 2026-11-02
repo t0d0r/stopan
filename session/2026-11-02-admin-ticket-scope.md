@@ -76,12 +76,14 @@
   page**, because they need the admin area. Without memberships their
   queue is empty.
 
+- Deployed 1fa5564 after a backup (`pre-deploy-28361df.sqlite3`); the
+  migration ran and every check passed (specs/deploy.md "Update
+  2026-11-02 (revision 1fa5564)").
+
 ## Open
 
-- Deploy the email switch (migration `AddEmailRequesterToTickets`).
-
-- Deploy. Before or right after, a super administrator who works an
-  organization's tickets adds themselves as a member on its page.
+- A super administrator who works an organization's tickets adds
+  themselves as a member on its page; until then they do not see them.
 
 ## Verify
 
@@ -89,7 +91,7 @@
 
 ## Next step
 
-Deploy when requested.
+None pending.
 
 ## Security Note
 

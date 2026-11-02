@@ -303,13 +303,13 @@ approved "go in this order", all done 2026-10-27):
 
 - [x] `Ticket.visible_to` and `visible_organizations` by membership for super administrators too; the admin area still covers every organization
 - [x] assignment only to the organization's staff; new tickets only in own organizations; presence counts, the overview's shared list and deleted tickets (pages and API) by membership
-- [ ] production: deploy; a super administrator who should work an organization's tickets adds themselves as a member first
+- [x] production: deployed with 1fa5564; a super administrator who works an organization's tickets adds themselves as a member
 
 ## Emails to the requester: switch and record (2026-11-02, specs/notifications.md "Emails to the requester")
 
 - [x] `tickets.email_requester` (default on); "Email the requester" toggle in the composer for public replies, saved at once, with the warning that mail leaves Stopan
 - [x] internal timeline events `mail_switched`, `mail_sent`, `mail_skipped` (switched off, no SMTP) and `mail_failed`, for emails to the requester only
-- [ ] production: deploy (migration `AddEmailRequesterToTickets`)
+- [x] production: deployed 1fa5564 (migration `AddEmailRequesterToTickets`; backup `pre-deploy-28361df`) (specs/deploy.md)
 
 ## Later (specs/roadmap.md)
 

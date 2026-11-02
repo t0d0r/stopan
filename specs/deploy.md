@@ -710,6 +710,31 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-02 (revision 1fa5564)
+
+Since 28361df:
+- super administrators see tickets only of organizations they are a
+  member of (roles.md);
+- the "Email the requester" toggle per ticket (migration
+  `AddEmailRequesterToTickets`), with internal timeline events for every
+  email to the requester (notifications.md "Emails to the requester").
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-28361df.sqlite3` (mode 600; 12 users, 11
+  tickets).
+- Checked:
+  - the migration ran: `tickets.email_requester` present, all tickets
+    on, none pending;
+  - users and tickets kept;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the served stylesheet and script have the toggle;
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:28361df` as `latest` and restart. The
+  extra `email_requester` column does not disturb the older code.
+
 ## Update 2026-11-01 (revision 28361df)
 
 Since 5fd80c0: request bodies over `MAX_REQUEST_BODY` (52 MiB) are
