@@ -148,6 +148,26 @@ class TicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".composer input[name='comment[internal]']", 2
   end
 
+  test "a run of event lines folds into one line with every line kept inside" do
+    ticket = tickets(:printer)
+    [ "mail_sent", "follower_added", "shared" ].each_with_index do |action, i|
+      TicketEvent.create!(ticket: ticket, action: action, internal: true, to_value: "x@example.com",
+                          from_value: (action == "follower_added" ? "staff" : "reply"), created_at: 1.minute.ago + i)
+    end
+    sign_in users(:agent)
+    get ticket_url(ticket)
+    assert_select "li.timeline__run[data-event-run]", 1 do
+      assert_select "button.timeline__run-toggle[hidden][aria-controls^='event-run-']", 1
+      assert_select ".timeline__run-toggle .timeline__text", "3 events: emails, people, sharing"
+      assert_select ".timeline__run-toggle .internal-tag"
+      assert_select "ol.timeline__run-list > li.timeline__item--event", 3
+    end
+
+    sign_in users(:anna)
+    get ticket_url(ticket)
+    assert_select ".timeline__run", 0
+  end
+
   test "a requester opens a ticket; staff-only fields are ignored" do
     sign_in users(:anna)
     assert_difference "Ticket.count" do

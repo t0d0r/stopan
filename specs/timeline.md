@@ -96,6 +96,45 @@ comments can be read".
   live refreshes and after an in-place edit); a new visit starts
   collapsed again.
 
+### Event lines between messages fold
+
+2026-11-02: on a busy ticket the quiet lines between two messages (emails
+sent, people added to Cc, sharing, assignment) can fill a screen, and the
+replies get lost between them. Such runs fold into one line.
+
+- **A run** is a sequence of event lines with no reply, note or kept
+  line between them.
+- **Kept lines** never fold, and they end a run. They mark the ticket's
+  progress or need attention:
+  - `created`;
+  - `status_changed`;
+  - `mail_failed`;
+  - `deleted` and `restored`.
+- **A run of 3 or more lines** shows as one line:
+  - the text is "9 events: emails, people, sharing";
+  - the kinds are listed in a fixed order, each once:
+    - emails: `mail_sent`, `mail_skipped`, `mail_switched`;
+    - people: `follower_added`, `follower_removed`;
+    - sharing: `shared`, `unshared`;
+    - changes: everything else (priority, assignee, board stage);
+  - the "Only staff can see this" tag, when every line in the run is
+    internal;
+  - the time of the newest line in the run.
+- **Shorter runs stay as they are:** one or two lines take no more room
+  than the folded line.
+- **The folded line is a button** (`aria-expanded`, `aria-controls`)
+  with a chevron, 44px tall on phones. It opens the lines in place, under
+  it, and closes them again.
+- **An opened run stays open** for this page across live refreshes. The
+  key is the run's oldest event, so later events that join the run keep
+  it open. A new visit starts folded.
+- **A link to a line inside a run** (`#event-<id>`) opens the run and
+  scrolls to the line.
+- **Without JavaScript, and when printing,** every line shows. The page
+  always holds every line, so nothing is removed.
+- **Who sees it:** in practice staff only. Every line that can fold is
+  internal, so a requester's page and a shared page have nothing to fold.
+
 ### Order of the timeline
 
 Operator, 2026-10-27: "reverse the order of the comments; a global
@@ -250,6 +289,11 @@ the ticket changes elsewhere, keeping its scroll position.
 - Without a WebSocket the page works as before, without live updates.
 
 ## Acceptance
+
+Folding: `test/helpers/tickets_helper_test.rb` (runs, kept lines, the
+3-line threshold, the summary) and
+`test/controllers/tickets_controller_test.rb` (the folded line and every
+line inside it on the page).
 
 Live updates: `test/channels/tickets_channel_test.rb` (who may subscribe)
 and `test/integration/ticket_live_updates_test.rb` (the page subscribes to

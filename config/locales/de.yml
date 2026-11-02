@@ -357,6 +357,15 @@ de:
       shared: "%{actor} hat das Ticket per Link geteilt"
       shared_password: "%{actor} hat das Ticket per Link mit Passwort geteilt"
       unshared: "%{actor} hat das Teilen des Tickets beendet"
+      run:
+        summary:
+          one: "%{count} Ereignis: %{kinds}"
+          other: "%{count} Ereignisse: %{kinds}"
+        kinds:
+          mail: "E-Mails"
+          people: "Personen"
+          sharing: "Teilen"
+          changes: "Änderungen"
 
     followers:
       title: "Beteiligte"

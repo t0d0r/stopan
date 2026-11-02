@@ -1,0 +1,18 @@
+<%# A run of event lines folded into one line (specs/timeline.md "Event lines between messages fold"). %>
+<%# Every line stays in the page; JavaScript folds them and shows the button. %>
+<% oldest = events.min_by { |event| [ event.created_at, event.id ] } %>
+<% newest = events.max_by { |event| [ event.created_at, event.id ] } %>
+<% internal = events.all?(&:internal?) %>
+<li class="timeline__item timeline__run<%= " timeline__item--internal" if internal %>" data-event-run="<%= oldest.id %>">
+  <button type="button" class="timeline__run-toggle" aria-expanded="true" aria-controls="event-run-<%= oldest.id %>" hidden>
+    <span class="timeline__icon"><%= icon :menu, size: 12 %></span>
+    <span class="timeline__text"><%= event_run_summary(events) %></span>
+    <% if internal %><span class="internal-tag"><%= t("ui.timeline.internal_only") %></span><% end %>
+    <span class="timeline__time"><%= time_ago newest.created_at %></span>
+  </button>
+  <ol class="timeline__run-list" id="event-run-<%= oldest.id %>">
+    <% events.each do |event| %>
+      <%= render "tickets/event", event: event, ticket: ticket %>
+    <% end %>
+  </ol>
+</li>

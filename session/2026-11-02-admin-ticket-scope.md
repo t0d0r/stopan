@@ -155,7 +155,28 @@
 - Deployed db88326 (image preview sizes), with no migrations and every
   check passed (specs/deploy.md "Update 2026-11-02 (revision db88326)").
 
+- Event lines between messages fold (specs/timeline.md "Event lines
+  between messages fold"):
+  - `TicketsHelper#timeline_entries` groups runs of 3 or more event
+    lines; `created`, `status_changed`, `mail_failed`, `deleted` and
+    `restored` stay visible and end a run;
+  - `tickets/_event_run` renders the folded line ("9 events: emails,
+    people, sharing", the staff-only tag, the newest time) and every
+    line under it;
+  - JavaScript (`setUpEventRuns`) folds the runs, keeps opened runs open
+    across live refreshes and opens a run when a link points into it;
+    without JavaScript and in print every line shows;
+  - translations `ui.timeline.run` in en, bg and de;
+  - tests in `test/helpers/tickets_helper_test.rb` and
+    `test/controllers/tickets_controller_test.rb`;
+  - checked in the dev browser at 1440 and 390 px: fold, open, live
+    refresh, a link into a folded run.
+
 ## Decisions
+
+- **Status changes, the opening line and failed emails never fold.** They
+  mark the ticket's progress or need attention. Runs fold from 3 lines,
+  since one or two lines take no more room than the folded line.
 
 - **Followers come in two kinds, by role.** Staff followers see
   everything. Cc are customers who see the public part only. Mail

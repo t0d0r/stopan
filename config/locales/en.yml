@@ -354,6 +354,15 @@ en:
       shared: "%{actor} shared the ticket by link"
       shared_password: "%{actor} shared the ticket by link with a password"
       unshared: "%{actor} stopped sharing the ticket"
+      run:
+        summary:
+          one: "%{count} event: %{kinds}"
+          other: "%{count} events: %{kinds}"
+        kinds:
+          mail: "emails"
+          people: "people"
+          sharing: "sharing"
+          changes: "changes"
 
     followers:
       title: "People"

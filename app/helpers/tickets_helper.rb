@@ -312,6 +312,30 @@ module TicketsHelper
       "follower_removed" => :eye }.fetch(event.action, :spark)
   end
 
+  # Event lines that never fold and end a run (specs/timeline.md "Event
+  # lines between messages fold").
+  KEPT_EVENTS = %w[created status_changed mail_failed deleted restored].freeze
+  FOLD_MIN = 3
+  FOLD_KINDS = { "mail" => %w[mail_sent mail_skipped mail_switched], "people" => %w[follower_added follower_removed],
+                 "sharing" => %w[shared unshared] }.freeze
+
+  # The timeline as a list of entries: an event, or an array of events
+  # for a run that folds into one line.
+  def timeline_entries(events)
+    foldable = ->(event) { !event.comment_event? && KEPT_EVENTS.exclude?(event.action) }
+    events.chunk_while { |a, b| foldable.(a) && foldable.(b) }.flat_map do |run|
+      run.size >= FOLD_MIN ? [ run ] : run
+    end
+  end
+
+  # "9 events: emails, people, sharing"
+  def event_run_summary(events)
+    kinds = events.map { |event| FOLD_KINDS.find { |_, actions| actions.include?(event.action) }&.first || "changes" }.uniq
+    words = (FOLD_KINDS.keys + [ "changes" ]).select { |kind| kinds.include?(kind) }
+                                              .map { |kind| t("ui.timeline.run.kinds.#{kind}") }
+    t("ui.timeline.run.summary", count: events.size, kinds: words.join(", "))
+  end
+
   def assignee_name(user_id)
     @assignee_names ||= {}
     @assignee_names[user_id] ||= User.find_by(id: user_id)&.display_name || t("ui.timeline.removed_user")

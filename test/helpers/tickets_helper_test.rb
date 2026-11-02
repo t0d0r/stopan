@@ -138,4 +138,30 @@ class TicketsHelperTest < ActionView::TestCase
     ticket.update_columns(source: "app")
     assert_not_includes formatted_text(ticket), "mail-footer"
   end
+
+  # specs/timeline.md "Event lines between messages fold"
+  def event(action, id, comment: nil)
+    TicketEvent.new(id: id, action: action, comment_id: comment, internal: action != "status_changed",
+                    created_at: Time.current - (100 - id).minutes)
+  end
+
+  test "runs of 3 or more foldable lines fold; kept lines, replies and short runs stay" do
+    events = [ event("created", 1), event("mail_sent", 2), event("shared", 3), event("follower_added", 4),
+               event("replied", 5, comment: 9), event("mail_sent", 6), event("priority_changed", 7),
+               event("status_changed", 8), event("assignee_changed", 9), event("mail_sent", 10),
+               event("mail_failed", 11), event("follower_added", 12), event("follower_removed", 13),
+               event("stage_changed", 14) ]
+    entries = timeline_entries(events)
+    assert_equal [ 1, [ 2, 3, 4 ], 5, 6, 7, 8, 9, 10, 11, [ 12, 13, 14 ] ],
+                 entries.map { |entry| entry.is_a?(Array) ? entry.map(&:id) : entry.id }
+  end
+
+  test "the folded line names the count and the kinds in a fixed order" do
+    run = [ event("follower_added", 1), event("assignee_changed", 2), event("mail_sent", 3), event("mail_switched", 4),
+            event("shared", 5) ]
+    assert_equal "5 events: emails, people, sharing, changes", event_run_summary(run)
+    I18n.with_locale(:bg) do
+      assert_equal "3 събития: писма", event_run_summary([ event("mail_sent", 1), event("mail_skipped", 2), event("mail_switched", 3) ])
+    end
+  end
 end

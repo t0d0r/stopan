@@ -324,6 +324,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] the password eye also on sign-in, password reset and the own account page (specs/ui.md "Password fields")
 - [x] the password eye as a separate button beside the field, so password manager icons inside the field stay free
 - [x] image preview sized to the image up to the window, with actual size for scaled images (specs/attachments.md "Image size")
+- [x] production: deployed db88326 (image preview sizes), no migrations (specs/deploy.md)
+- [x] runs of 3 or more event lines between messages fold into one line (specs/timeline.md "Event lines between messages fold")
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 
 ## Later (specs/roadmap.md)

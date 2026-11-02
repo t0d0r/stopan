@@ -357,6 +357,15 @@ bg:
       shared: "%{actor} сподели заявката с връзка"
       shared_password: "%{actor} сподели заявката с връзка и парола"
       unshared: "%{actor} спря споделянето на заявката"
+      run:
+        summary:
+          one: "%{count} събитие: %{kinds}"
+          other: "%{count} събития: %{kinds}"
+        kinds:
+          mail: "писма"
+          people: "участници"
+          sharing: "споделяне"
+          changes: "промени"
 
     followers:
       title: "Участници"

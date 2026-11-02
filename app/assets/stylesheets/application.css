@@ -3658,6 +3658,86 @@ turbo-frame {
   font-size: 10px;
 }
 
+/* A run of event lines folded into one line (specs/timeline.md "Event
+   lines between messages fold"). The lines stay in the page; JavaScript
+   hides them and shows the button. */
+.timeline__run-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline__run-list > .timeline__item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline__run-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--desk-ink-soft);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.timeline__run-toggle .timeline__text {
+  font-weight: 600;
+}
+
+.timeline__run-toggle:hover .timeline__text {
+  text-decoration: underline;
+}
+
+.timeline__run-toggle:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.timeline__run-toggle::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.timeline__run-toggle[aria-expanded="true"]::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+.timeline__run.is-folded .timeline__run-toggle {
+  margin-bottom: 0;
+}
+
+.timeline__run.is-folded .timeline__run-list {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .timeline__run-toggle {
+    min-height: 44px;
+  }
+}
+
+@media print {
+  .timeline__run-toggle {
+    display: none;
+  }
+
+  .timeline__run.is-folded .timeline__run-list {
+    display: block;
+  }
+}
+
 /* Composer: blue paper for a public reply, pink for an internal note. */
 .composer {
   margin-bottom: 24px;

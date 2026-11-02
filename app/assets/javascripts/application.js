@@ -870,6 +870,48 @@ function setUpLongRequest() {
   show(openedRequests.has(key));
 }
 
+// Runs of event lines between messages fold into one line
+// (specs/timeline.md "Event lines between messages fold"). Opened runs stay
+// open for this page across live refreshes; a link to a line opens its run.
+const openedEventRuns = new Set();
+let eventRunTargetSeen = null;
+
+function setUpEventRuns() {
+  // A link opens its run once; a live refresh with the same address does not reopen it.
+  const fresh = location.href !== eventRunTargetSeen;
+  eventRunTargetSeen = location.href;
+  const target = fresh && location.hash.startsWith("#event-") ? document.getElementById(location.hash.slice(1)) : null;
+  document.querySelectorAll("[data-event-run]").forEach((run) => {
+    const button = run.querySelector(".timeline__run-toggle");
+    const key = `${location.pathname}#${run.dataset.eventRun}`;
+    const show = (open) => {
+      run.classList.toggle("is-folded", !open);
+      button.setAttribute("aria-expanded", String(open));
+    };
+    button.addEventListener("click", () => {
+      const open = button.getAttribute("aria-expanded") !== "true";
+      if (open) openedEventRuns.add(key); else openedEventRuns.delete(key);
+      show(open);
+    }, { signal: pageSignal });
+    button.hidden = false;
+    if (target && run.contains(target) && !openedEventRuns.has(key)) {
+      openedEventRuns.add(key);
+      show(true);
+      target.scrollIntoView({ block: "center" });
+    } else {
+      show(openedEventRuns.has(key));
+    }
+  });
+}
+
+window.addEventListener("hashchange", () => {
+  const target = location.hash.startsWith("#event-") ? document.getElementById(location.hash.slice(1)) : null;
+  const button = target?.closest("[data-event-run].is-folded")?.querySelector(".timeline__run-toggle");
+  if (!button) return;
+  button.click();
+  target.scrollIntoView({ block: "center" });
+});
+
 // The mail's HTML in a sealed frame with tabs to the text
 // (specs/organization-mail.md "HTML view"). The frame may be read from
 // here (allow-same-origin, no scripts inside), so it grows to its content.
@@ -1002,6 +1044,7 @@ function setUpPage() {
   setUpCopyBoxes();
   setUpMailView();
   setUpLongRequest();
+  setUpEventRuns();
   setUpBulkActions();
   setUpFlushConfirm();
   setUpMemberPicker();

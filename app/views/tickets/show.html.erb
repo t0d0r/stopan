@@ -59,8 +59,12 @@
     <%# Newest first puts the composer above the timeline (timeline.md "Order of the timeline"). %>
     <% if newest_first? %><%= render "tickets/composer", ticket: @ticket, comment: @comment %><% end %>
     <ol class="timeline<%= " timeline--newest-first" if newest_first? %>" aria-labelledby="timeline-title">
-      <% @events.each do |event| %>
-        <%= render "tickets/event", event: event, ticket: @ticket %>
+      <% timeline_entries(@events).each do |entry| %>
+        <% if entry.is_a?(Array) %>
+          <%= render "tickets/event_run", events: entry, ticket: @ticket %>
+        <% else %>
+          <%= render "tickets/event", event: entry, ticket: @ticket %>
+        <% end %>
       <% end %>
     </ol>
 
