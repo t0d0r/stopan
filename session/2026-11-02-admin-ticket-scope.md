@@ -181,6 +181,9 @@
   - README: the OpenSSF Scorecard badge and the workflow status badge;
   - `actionlint` passes on the workflow.
 
+- Deployed 4c73f97 (folded event runs), with no migrations and every
+  check passed (specs/deploy.md "Update 2026-11-02 (revision 4c73f97)").
+
 ## Decisions
 
 - **Status changes, the opening line and failed emails never fold.** They
