@@ -132,6 +132,10 @@
   `ui.password_show` / `ui.password_hide`, and the test is
   `test/integration/password_eye_test.rb`. Checked in the dev browser.
 
+- The password eye is now a separate bordered button beside the field
+  (flex row, the field's height, 44px on phones). Inside the field it
+  covered the icons of password managers.
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see

@@ -323,9 +323,11 @@ in documentation, not in the app.
 
 2026-11-02: first on the shared page's password form ("a button, an eye
 for example, to show what the client types"), then "on sign-in and the
-password change too". These password fields have an eye button inside
-their right edge (`ApplicationHelper#password_with_eye`,
-`setUpPasswordField`):
+password change too". These password fields have an eye button of its
+own right beside the field, the field's height, outside the input
+(`ApplicationHelper#password_with_eye`, `setUpPasswordField`). It used
+to sit inside the field's right edge, where it covered the icons that
+password managers put there (2026-11-02):
 - the shared page's password;
 - sign-in;
 - the new password and its confirmation when resetting it;

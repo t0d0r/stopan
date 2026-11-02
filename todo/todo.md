@@ -322,6 +322,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: removed the 14 older backups; `pre-deploy-1fa5564` stays as the rollback copy
 - [x] shared page password form: eye button to show and hide what was typed (specs/sharing.md "Show what was typed")
 - [x] the password eye also on sign-in, password reset and the own account page (specs/ui.md "Password fields")
+- [x] the password eye as a separate button beside the field, so password manager icons inside the field stay free
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 
 ## Later (specs/roadmap.md)
