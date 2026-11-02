@@ -77,7 +77,7 @@ class AttachmentsControllerTest < ActionDispatch::IntegrationTest
     get ticket_url(@ticket)
     assert_select "a.file-link[href=?][data-preview-kind=text][data-preview-url=?]",
                   ticket_attachment_path(@ticket, @public), preview_ticket_attachment_path(@ticket, @public)
-    assert_select "dialog[data-preview-dialog]"
+    assert_select "dialog[data-preview-dialog][data-actual-label='Show at actual size'][data-fit-label='Fit to window']"
   end
 
   test "files attached to the ticket itself" do

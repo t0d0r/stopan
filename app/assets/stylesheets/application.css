@@ -1108,11 +1108,48 @@ body {
   background: rgba(0, 0, 0, 0.04);
 }
 
+/* Images: the dialog takes the image's natural width up to the window,
+   and scales it down only when it does not fit; a scaled image zooms to
+   its actual size (specs/attachments.md "Image size"). */
+.preview--image {
+  width: fit-content;
+  min-width: min(480px, calc(100 * var(--vw) - 32px));
+  max-width: calc(100 * var(--vw) - 32px);
+}
+
 .preview__media img {
   display: block;
-  max-width: 100%;
+  max-width: calc(100 * var(--vw) - 32px);
   max-height: calc(100 * var(--vh) - 150px);
   object-fit: contain;
+}
+
+.preview__zoom {
+  display: block;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.preview__zoom:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.preview__media.is-actual {
+  display: block;
+  max-height: calc(100 * var(--vh) - 150px);
+}
+
+.preview__media.is-actual .preview__zoom {
+  cursor: zoom-out;
+}
+
+.preview__media.is-actual img {
+  max-width: none;
+  max-height: none;
 }
 
 .preview__media iframe {

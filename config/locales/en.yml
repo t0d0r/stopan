@@ -715,6 +715,8 @@ en:
       download: "Download"
       none: "No preview for this file type. Download it to open it."
       error: "The preview could not be loaded."
+      actual_size: "Show at actual size"
+      fit: "Fit to window"
 
     edit:
       edit: "Edit"

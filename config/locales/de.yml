@@ -718,6 +718,8 @@ de:
       download: "Herunterladen"
       none: "Für diesen Dateityp gibt es keine Vorschau. Laden Sie die Datei herunter, um sie zu öffnen."
       error: "Die Vorschau konnte nicht geladen werden."
+      actual_size: "In Originalgröße anzeigen"
+      fit: "An Fenster anpassen"
 
     edit:
       edit: "Bearbeiten"

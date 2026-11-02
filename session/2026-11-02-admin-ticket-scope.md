@@ -140,6 +140,18 @@
   beside the field), with no migrations and every check passed
   (specs/deploy.md "Update 2026-11-02 (revision 6a9194d)").
 
+- Image preview (specs/attachments.md "Image size"):
+  - the dialog takes the image's natural width up to the window, at
+    least 480px;
+  - an image is scaled down only when it does not fit;
+  - a scaled image becomes a button for its actual size, with the media
+    area scrolling;
+  - PDFs and text keep the 960px dialog;
+  - checked in the dev browser at 1920 and 390 px with a 2600 px and a
+    420 px image.
+- Backups: only `pre-deploy-1fa5564` remains in production (the rollback
+  copy), so there was nothing older to remove.
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see

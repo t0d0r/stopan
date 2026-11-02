@@ -323,6 +323,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] shared page password form: eye button to show and hide what was typed (specs/sharing.md "Show what was typed")
 - [x] the password eye also on sign-in, password reset and the own account page (specs/ui.md "Password fields")
 - [x] the password eye as a separate button beside the field, so password manager icons inside the field stay free
+- [x] image preview sized to the image up to the window, with actual size for scaled images (specs/attachments.md "Image size")
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 
 ## Later (specs/roadmap.md)

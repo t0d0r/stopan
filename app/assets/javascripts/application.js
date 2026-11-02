@@ -561,6 +561,29 @@ function setUpPreview(dialog) {
         const img = document.createElement("img");
         img.src = url;
         img.alt = name;
+        // Scaled down to fit, the image becomes a button for its actual size
+        // (specs/attachments.md "Image size").
+        img.addEventListener("load", () => {
+          const box = img.getBoundingClientRect();
+          if (img.naturalWidth <= Math.ceil(box.width / pageZoom()) + 1 &&
+              img.naturalHeight <= Math.ceil(box.height / pageZoom()) + 1) return;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "preview__zoom";
+          const label = (actual) => {
+            button.setAttribute("aria-pressed", String(actual));
+            button.setAttribute("aria-label", actual ? dialog.dataset.fitLabel : dialog.dataset.actualLabel);
+            button.title = button.getAttribute("aria-label");
+          };
+          label(false);
+          img.replaceWith(button);
+          button.append(img);
+          button.addEventListener("click", () => {
+            const actual = !media.classList.contains("is-actual");
+            media.classList.toggle("is-actual", actual);
+            label(actual);
+          });
+        }, { once: true });
         return img;
       }
       case "pdf": {
@@ -586,6 +609,8 @@ function setUpPreview(dialog) {
     index = (i + items.length) % items.length;
     const item = items[index];
     const { previewKind, previewUrl, filename, details } = item.dataset;
+    media.classList.remove("is-actual");
+    dialog.classList.toggle("preview--image", previewKind === "image");
     media.replaceChildren(render(previewKind, previewUrl, filename));
     caption.textContent = filename;
     meta.textContent = details;

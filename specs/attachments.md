@@ -109,6 +109,21 @@ Routes, with exactly the lookups and checks of their download routes:
   dialog frames the PDF) and rely on the allow-list and `nosniff`.
 - A live page refresh waits while the dialog is open (an open dialog
   makes the page busy).
+- **Image size** (2026-11-02: "the preview shows images far too small").
+  - The dialog for an image is as wide as the image needs: its natural
+    size, up to the window less a 16px margin on each side. It is never
+    narrower than 480px (or the window), so the title strip and the
+    footer keep their buttons. The image is scaled down only when it is
+    larger than the space left for it (the window's height less the
+    strip and the footer).
+  - PDFs and text keep the 960px dialog.
+  - **Actual size:** an image that had to be scaled down is a button.
+    - "Show at actual size" with a zoom-in cursor shows it at its natural
+      size, with the dialog's media area scrolling both ways.
+    - Pressing it again, "Fit to window", scales it back.
+    - `aria-pressed` gives the state.
+    - An image that fits is not a button.
+  - Moving to another file starts again at fit to window.
 
 ## Acceptance
 

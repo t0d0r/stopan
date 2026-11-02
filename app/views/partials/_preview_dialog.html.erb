@@ -1,7 +1,8 @@
 <%# One preview dialog per page, filled by application.js from the clicked
     [data-preview-item] file link (specs/attachments.md "Preview"). %>
 <dialog class="sticky sticky--yellow preview" data-preview-dialog aria-labelledby="preview-caption"
-        data-no-preview="<%= t("ui.preview.none") %>" data-load-error="<%= t("ui.preview.error") %>">
+        data-no-preview="<%= t("ui.preview.none") %>" data-load-error="<%= t("ui.preview.error") %>"
+        data-actual-label="<%= t("ui.preview.actual_size") %>" data-fit-label="<%= t("ui.preview.fit") %>">
   <header class="sticky__bar">
     <button type="button" class="sticky__box" data-preview-close title="<%= t("ui.preview.close") %>"
             aria-label="<%= t("ui.preview.close") %>">&times;</button>
