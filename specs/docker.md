@@ -2,7 +2,7 @@
 
 ## Image (`Dockerfile`)
 
-Production image (`stopan:latest`) based on `ruby:4.0.7-slim`, built in two stages:
+Production image (`stopan:latest`) based on `ruby:4.0.7-slim`, pinned by digest (below), built in two stages:
 
 - gems installed with `BUNDLE_DEPLOYMENT=1`, without the development group
 - assets precompiled at build time with a dummy secret
@@ -14,6 +14,41 @@ Production image (`stopan:latest`) based on `ruby:4.0.7-slim`, built in two stag
 - `HEALTHCHECK` calls `/up`
 - `/rails/storage` holds the SQLite databases and uploaded files; mount a
   volume there
+
+## Pinned base images
+
+2026-11-02: OpenSSF Scorecard (ci.md) flagged the base images as "not
+pinned by hash". A tag such as `ruby:4.0.7-slim` can be moved to another
+image at any time, so a build could pick up content nobody reviewed.
+
+- `Dockerfile` and `Dockerfile.dev` start from
+  `docker.io/library/ruby@sha256:<digest>`, the digest of the
+  multi-platform index of `ruby:<version>-slim`. The same image serves
+  amd64 (production) and arm64 (development on a Mac).
+- A comment above `FROM` names the tag (`ruby:4.0.7-slim`) and how to
+  update.
+- Later stages build on the pinned stage (`FROM base`).
+- The BuildKit frontend in the first line is pinned too
+  (`# syntax=docker/dockerfile:1@sha256:<digest>`). Podman ignores that
+  line.
+- The digest is used without the tag, since Podman's image references
+  accept a tag or a digest, not always both.
+- The `RUBY_VERSION` build argument is gone, because a pinned digest
+  ignores it.
+
+**Updating** (a new Ruby version, or a rebuilt image with Debian fixes):
+1. Run `docker buildx imagetools inspect docker.io/library/ruby:<version>-slim`.
+2. Put its `Digest` in both Dockerfiles, and the version in their
+   comments and in `.ruby-version`.
+3. Do the same for `docker/dockerfile:1` when needed.
+
+**Trade-off:** security fixes in the base image no longer arrive on their
+own with the next build; the digest has to be updated. Dependabot can do
+that later (ci.md "Not in this phase").
+
+`test/config/dockerfile_test.rb` checks that every `FROM` and the syntax
+line are pinned, that both Dockerfiles use the same digest, and that the
+comment names the version in `.ruby-version`.
 
 ## Local run (`compose.yaml`)
 

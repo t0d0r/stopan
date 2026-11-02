@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
 # check=error=true
 
 # This Dockerfile is designed for production. For a local run use compose.yaml
@@ -8,9 +8,12 @@
 #
 # SQLite databases and uploaded files live in /rails/storage; mount a volume there.
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
-ARG RUBY_VERSION=4.0.7
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+# Base image pinned by digest (specs/docker.md "Pinned base images"):
+# ruby:4.0.7-slim, the multi-platform index. Keep the version in line with
+# .ruby-version. To update, run
+#   docker buildx imagetools inspect docker.io/library/ruby:<version>-slim
+# and put its Digest here and in the other Dockerfile.
+FROM docker.io/library/ruby@sha256:6c6b7b8c7d750604178aa60c2fa436890cd17c5695bdbd3213db2e4efbf98eb9 AS base
 
 # Rails app lives here
 WORKDIR /rails

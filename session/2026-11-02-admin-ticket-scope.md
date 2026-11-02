@@ -194,6 +194,21 @@
     no dependency update tool;
   - Maintained 0 until the repository is 90 days old.
 
+- `SECURITY.md` (specs/ci.md "Security policy"): latest `main` only,
+  reports through GitHub's private vulnerability reporting, what a
+  report holds, acknowledgement normally within 7 days, testing rules.
+  No personal address in it.
+- Base images pinned by digest (specs/docker.md "Pinned base images"):
+  - `Dockerfile` and `Dockerfile.dev` start from
+    `docker.io/library/ruby@sha256:...` (the multi-platform index of
+    `ruby:4.0.7-slim`), with the tag and the update steps in a comment;
+  - the `# syntax=docker/dockerfile:1` line is pinned too;
+  - the `RUBY_VERSION` build argument is gone;
+  - digest only, without the tag, because Podman does not always accept
+    both;
+  - `test/config/dockerfile_test.rb` guards the pins, the same digest
+    in both files and the version against `.ruby-version`.
+
 ## Decisions
 
 - **Status changes, the opening line and failed emails never fold.** They
@@ -233,8 +248,12 @@
 
 ## Open
 
-- Scorecard: SECURITY.md, a LICENSE (the license is still to be chosen)
-  and base images pinned by digest would raise the score at little cost.
+- Private vulnerability reporting is still off in the repository
+  settings; `SECURITY.md` points to it.
+- Scorecard: a LICENSE would raise the score; the license is still to be
+  chosen.
+- Pinned base images no longer pick up Debian fixes on their own; the
+  digest is updated by hand until Dependabot is set up.
 - A super administrator who works an organization's tickets adds
   themselves as a member on its page; until then they do not see them.
 

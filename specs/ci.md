@@ -55,10 +55,29 @@ Under the title in `README.md`:
 The score badge shows a result only after the first run on `main` has
 published one.
 
+## Security policy (`SECURITY.md`)
+
+2026-11-02, for Scorecard's Security-Policy check. `SECURITY.md` at the
+root says:
+- only the latest `main` gets fixes;
+- how to report: GitHub's private vulnerability reporting (Security tab,
+  "Report a vulnerability"), never a public issue;
+- what a useful report holds;
+- what happens next: acknowledged normally within 7 days, fixed on
+  `main` and deployed, credited in a GitHub security advisory;
+- the testing rules: own instance with demo data, no denial of service,
+  no other people's data.
+
+It names no personal address. The reporting channel works only while
+private vulnerability reporting is on in the repository settings.
+
+Base images pinned by digest for Pinned-Dependencies: docker.md "Pinned
+base images".
+
 ## Not in this phase
 
-- Dependabot or Renovate updates for the pinned actions and gems (the
-  Dependency-Update-Tool check).
+- Dependabot or Renovate updates for the pinned actions, base image
+  digests and gems (the Dependency-Update-Tool check).
 - A test workflow that runs `make check` on GitHub; checks run locally
   before each commit.
 - A `repo_token` for the full Branch-Protection check.
