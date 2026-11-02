@@ -104,6 +104,11 @@
     by staff;
   - specs/followers.md and sharing.md updated, with tests.
 
+- Deployed 99681ea, the shared link for people in Cc, with no
+  migrations and every check passed (specs/deploy.md "Update 2026-11-02
+  (revision 99681ea)"). An email sent before the fix still holds the
+  ticket page link; the next public reply brings the shared link.
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see
