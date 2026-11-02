@@ -710,6 +710,23 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-02 (revision 6a9194d)
+
+Since 71df093: the password eye on sign-in, password reset and the own
+account page, as a separate button beside the field (ui.md "Password
+fields"). There were no migrations, so no database copy was made.
+
+- Checked:
+  - no migration pending, users and tickets kept;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the sign-in page has the eye, and the served stylesheet has the
+    side-by-side rule;
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:71df093` as `latest` and restart.
+
 ## Update 2026-11-02 (revision 71df093)
 
 Since 99681ea: the eye on the shared page's password field (sharing.md

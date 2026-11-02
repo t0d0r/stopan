@@ -136,6 +136,10 @@
   (flex row, the field's height, 44px on phones). Inside the field it
   covered the icons of password managers.
 
+- Deployed 6a9194d (the password eye on sign-in and the password pages,
+  beside the field), with no migrations and every check passed
+  (specs/deploy.md "Update 2026-11-02 (revision 6a9194d)").
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see
