@@ -216,6 +216,11 @@
   migrations and every check passed (specs/deploy.md "Update 2026-11-02
   (revision 436dd64)").
 - Private vulnerability reporting is on in the repository settings.
+- Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
+  License and Security-Policy are now 10; GitHub detects the license as
+  BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
+  Code-Review, Branch-Protection, SAST, Dependency-Update-Tool, Fuzzing,
+  CII-Best-Practices.
 
 ## Decisions
 
