@@ -209,6 +209,9 @@
   - `test/config/dockerfile_test.rb` guards the pins, the same digest
     in both files and the version against `.ruby-version`.
 
+- `LICENSE`: BSD 2-Clause (specs/overview.md "License"); the README has
+  a License section and points to `SECURITY.md` for reports.
+
 ## Decisions
 
 - **Status changes, the opening line and failed emails never fold.** They
@@ -250,8 +253,6 @@
 
 - Private vulnerability reporting is still off in the repository
   settings; `SECURITY.md` points to it.
-- Scorecard: a LICENSE would raise the score; the license is still to be
-  chosen.
 - Pinned base images no longer pick up Debian fixes on their own; the
   digest is updated by hand until Dependabot is set up.
 - A super administrator who works an organization's tickets adds

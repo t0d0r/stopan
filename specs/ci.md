@@ -74,6 +74,9 @@ private vulnerability reporting is on in the repository settings.
 Base images pinned by digest for Pinned-Dependencies: docker.md "Pinned
 base images".
 
+The License check is answered by `LICENSE` (BSD 2-Clause, overview.md
+"License").
+
 ## Not in this phase
 
 - Dependabot or Renovate updates for the pinned actions, base image

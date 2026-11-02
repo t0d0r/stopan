@@ -71,6 +71,16 @@ and g0no's server deployment files. They remain in git history only.
   the notification panel's refresh signal (notifications.md). Live ticket
   and queue updates are on the roadmap.
 
+## License
+
+2026-11-02: BSD 2-Clause License (`LICENSE`, SPDX `BSD-2-Clause`),
+copyright 2026 the project's author. Reason: a short permissive license
+that lets anyone use, change and ship the code, including in closed
+products, as long as the copyright notice and disclaimer stay. It also
+answers OpenSSF Scorecard's License check (ci.md). Dependencies (gems,
+the Ruby base image) keep their own licenses; none is vendored into the
+repository.
+
 ## Ingress diagram
 
 Operator, 2026-10-27: "generate an ingress workflow diagram too". The

@@ -332,7 +332,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] SECURITY.md with private vulnerability reporting (specs/ci.md "Security policy")
 - [x] base images and the BuildKit frontend pinned by digest in Dockerfile and Dockerfile.dev (specs/docker.md "Pinned base images")
 - [ ] turn on private vulnerability reporting in the GitHub repository settings (specs/ci.md "Security policy")
-- [ ] Scorecard: a LICENSE (needs the license choice) (specs/ci.md)
+- [x] LICENSE: BSD 2-Clause (specs/overview.md "License")
 - [ ] later: Dependabot for GitHub Actions and gems (specs/ci.md "Not in this phase")
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 

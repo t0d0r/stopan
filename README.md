@@ -167,9 +167,14 @@ In development, emails (password reset, notifications) are written to
 Specs (`specs/`) are the source of truth; `todo/todo.md` is the work list
 and `session/` holds the handoff notes between working sessions.
 
+## License
+
+BSD 2-Clause License. See `LICENSE`. Gems and other dependencies keep their
+own licenses.
+
 ## Security Note
 
 Ticket text and attachments are customer data: keep `storage/` backed up and
 private, keep sign-up closed on a public host (`REGISTRATION_OPEN`), and keep
-`.env` out of git (it is ignored). Report suspected security problems to the
-maintainer privately rather than in a public issue.
+`.env` out of git (it is ignored). Report suspected security problems
+privately, as described in `SECURITY.md`, rather than in a public issue.
