@@ -184,6 +184,16 @@
 - Deployed 4c73f97 (folded event runs), with no migrations and every
   check passed (specs/deploy.md "Update 2026-11-02 (revision 4c73f97)").
 
+- Scorecard's first run on `main` passed and both badges show. The
+  first score is 3.8:
+  - 10: Token-Permissions, Binary-Artifacts, Dangerous-Workflow;
+  - Pinned-Dependencies 2: every action is pinned, but the base images
+    in `Dockerfile` (3) and `Dockerfile.dev` (1) are not pinned by
+    digest;
+  - 0: no SECURITY.md, no LICENSE, no SAST, no reviewed pull requests,
+    no dependency update tool;
+  - Maintained 0 until the repository is 90 days old.
+
 ## Decisions
 
 - **Status changes, the opening line and failed emails never fold.** They
@@ -223,8 +233,8 @@
 
 ## Open
 
-- The Scorecard badges show results only after the workflow's first run
-  on `main` on GitHub.
+- Scorecard: SECURITY.md, a LICENSE (the license is still to be chosen)
+  and base images pinned by digest would raise the score at little cost.
 - A super administrator who works an organization's tickets adds
   themselves as a member on its page; until then they do not see them.
 
