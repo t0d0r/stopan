@@ -94,7 +94,7 @@ instead, protected by the recipient's email address as password.
 
 - **When the ticket has no link** as the email is queued
   (`TicketNotifier`, before the requester's email), the app shares it:
-  `Ticket#share_with_requester!` calls `share!` with no actor (shown as
+  `Ticket#share_for_customer!` calls `share!` with no actor (shown as
   the system in the timeline, internal `shared` event "with a password",
   like any share) and the requester's email address as password. Staff
   see the link in the Sharing panel and may stop or replace it; the next
@@ -105,9 +105,11 @@ instead, protected by the recipient's email address as password.
   that the password is the recipient's email address. A link with
   another password (set by staff) is not given: the email keeps the
   ticket page link, since the requester could not open it.
-- Only the requester, only tickets with source `email`. Staff
-  (assignee, subscribers) and requesters of tickets from the app or the
-  public form keep the ticket page link.
+- Only the requester, only tickets with source `email`, and the people in
+  Cc on every ticket (followers.md "Notifications and emails"; their own
+  address also opens the automatic link). Staff (assignee, followers,
+  subscribers) and requesters of tickets from the app or the public form
+  keep the ticket page link.
 - An address shorter than 6 or longer than 72 characters cannot be a
   share password (Model); then nothing is shared and the email keeps the
   ticket page link.

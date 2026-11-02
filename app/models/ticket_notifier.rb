@@ -54,7 +54,7 @@ class TicketNotifier
           @ticket.record_customer_mail("mail_skipped", kind, recipient.email, "switched_off")
           next
         end
-        @ticket.share_with_requester! if recipient == @ticket.requester
+        @ticket.share_for_customer!(recipient)
       end
       TicketMailer.with(recipient: recipient, ticket: @ticket, event_ids: @events.map(&:id)).public_send(kind).deliver_later
     end

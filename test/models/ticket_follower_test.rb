@@ -91,6 +91,31 @@ class TicketFollowerTest < ActiveSupport::TestCase
     assert Notification.exists?(user: users(:boris), ticket: @ticket)
   end
 
+  test "a Cc's email gives the shared page, which takes their own address" do
+    @ticket.add_cc!("ivan.petrov@example.net", actor: users(:agent))
+    ivan = User.find_by(email: "ivan.petrov@example.net")
+    perform_enqueued_jobs { @ticket.add_comment(author: users(:agent), body: "Please restart it.") }
+    @ticket.reload
+    assert @ticket.shared?
+    mail = ActionMailer::Base.deliveries.find { |m| m.to == [ "ivan.petrov@example.net" ] }
+    body = mail.text_part.body.decoded
+    assert_includes body, "/s/#{@ticket.share_token}"
+    assert_match "your email address", body
+    assert_equal :email_password, @ticket.share_link_for(ivan)
+
+    assert @ticket.customer_share_password?(" Ivan.Petrov@example.net ")
+    assert_not @ticket.customer_share_password?("boris@example.com")
+    @ticket.remove_follower!(@ticket.ticket_followers.find_by(user: ivan), actor: users(:agent))
+    assert_not @ticket.reload.customer_share_password?("ivan.petrov@example.net")
+  end
+
+  test "a password set by staff is never opened by a Cc's address" do
+    @ticket.add_cc!("boris@example.com", actor: users(:agent))
+    @ticket.share!(actor: users(:agent), password: "staff-secret-1")
+    assert_not @ticket.customer_share_password?("boris@example.com")
+    assert_nil @ticket.share_link_for(users(:boris))
+  end
+
   test "the mail's To and Cc are suggested, never added" do
     users(:agent_two) # staff address in the headers is left out
     @ticket.update_columns(mail_headers: { "from" => [ "Anna <anna@example.com>" ],

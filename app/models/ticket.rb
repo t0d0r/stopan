@@ -273,21 +273,37 @@ class Ticket < ApplicationRecord
 
   # A ticket from email is read through its share link, with the
   # requester's address as password (specs/sharing.md "Link in the
-  # requester's emails"). Keeps an existing link.
-  def share_with_requester!
-    return if shared? || source != "email"
+  # requester's emails"); people in Cc read every ticket that way, most
+  # have no password of their own (specs/followers.md). Keeps an existing
+  # link.
+  def share_for_customer!(recipient)
+    return if shared? || !shared_link_recipient?(recipient)
 
     share!(actor: nil, password: requester.email)
   end
 
   # The link to give in an email to this recipient, or nil for the ticket
-  # page: the requester of a ticket from email, when the link is open or
-  # its password is their address.
+  # page: the requester of a ticket from email or someone in Cc, when the
+  # link is open or its password is the requester's address (the shared
+  # page also takes a Cc's own address then).
   def share_link_for(recipient)
-    return unless shared? && source == "email" && recipient == requester
+    return unless shared? && shared_link_recipient?(recipient)
     return :open unless share_password?
 
-    :email_password if authenticate_share_password(recipient.email)
+    :email_password if authenticate_share_password(requester.email)
+  end
+
+  def shared_link_recipient?(recipient)
+    (recipient.id == requester_id && source == "email") || cc?(recipient)
+  end
+
+  # The share password is an email address of the customer side: the
+  # requester's (stored), or a current Cc's on the automatic link
+  # (specs/followers.md "Notifications and emails").
+  def customer_share_password?(address)
+    address = address.to_s.strip.downcase
+    address.include?("@") && customer_emails.map(&:downcase).include?(address) &&
+      authenticate_share_password(requester.email).present?
   end
 
   def unshare!(actor:)

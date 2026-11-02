@@ -142,9 +142,21 @@ adds no event. They can stop following at any time.
   - Cc: "You get this email because you are in copy (Cc) on this ticket."
   Cc get the requester's footer: answer by email when the
   organization's mailbox is the Reply-To.
-- Only the requester's emails carry the share link (sharing.md "Link in
-  the requester's emails"). Its password is the requester's address. A
-  Cc gets the ticket page link.
+- **People in Cc get the shared page, on every ticket** (2026-11-02: a
+  Cc without an account got "Open ticket #1012", a page that needs a
+  sign-in, and "they must get the shared link"). The requester's emails
+  keep the rule of sharing.md "Link in the requester's emails" (tickets
+  from email only).
+  - The first email to a Cc makes the link when none exists
+    (`Ticket#share_for_customer!`). As for the requester, its password
+    is the requester's address.
+  - The shared page also takes **the Cc's own address** as the password
+    (`Ticket#customer_share_password?`), so the email can say "the
+    password is your email address". Only while the person is still in
+    Cc and a member of the organization, and only on that automatic link:
+    a password set by staff is never bypassed. With such a password the
+    email keeps the ticket page link.
+  - An open link (no password) is given as it is.
 
 ## Email replies
 

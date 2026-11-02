@@ -92,6 +92,18 @@
     `make check` passes with 551 runs;
   - checked in the dev browser at 1440 and 390 px.
 
+- In production, a person in Cc without a password got the ticket page
+  link, which needs a sign-in. Fixed:
+  - `Ticket#share_for_customer!` replaces `share_with_requester!`. The
+    first email to a Cc makes the automatic link, protected by the
+    requester's address;
+  - `share_link_for` gives that link to the requester of a ticket from
+    email and to every Cc;
+  - the shared page also accepts a current Cc's own address on the
+    automatic link (`customer_share_password?`), never on a password set
+    by staff;
+  - specs/followers.md and sharing.md updated, with tests.
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see

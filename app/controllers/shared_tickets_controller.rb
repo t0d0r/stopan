@@ -51,11 +51,13 @@ class SharedTicketsController < ApplicationController
   private
 
   # An email address as password may be typed in any case or with spaces
-  # around it (specs/sharing.md "Link in the requester's emails").
+  # around it (specs/sharing.md "Link in the requester's emails"); on the
+  # automatic link a Cc's own address works too (specs/followers.md).
   def password_matches?(password)
     candidates = [ password ]
     candidates << password.strip.downcase if password.include?("@")
-    candidates.uniq.any? { |candidate| @ticket.authenticate_share_password(candidate) }
+    candidates.uniq.any? { |candidate| @ticket.authenticate_share_password(candidate) } ||
+      @ticket.customer_share_password?(password)
   end
 
   # Files of the ticket and of its public replies only.

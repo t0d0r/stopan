@@ -50,6 +50,18 @@ class CcAccessTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "the shared page opens with the Cc's own address" do
+    @ticket.share!(actor: nil, password: "anna@example.com")
+    sign_out :user
+    post unlock_shared_ticket_url(@ticket.share_token), params: { password: "wrong@example.com" }
+    assert_response :unprocessable_content
+    post unlock_shared_ticket_url(@ticket.share_token), params: { password: "BORIS@example.com " }
+    assert_redirected_to shared_ticket_url(@ticket.share_token)
+    get shared_ticket_url(@ticket.share_token)
+    assert_match "Public answer.", response.body
+    assert_no_match "Secret internal remark.", response.body
+  end
+
   test "a Cc's email reply becomes a public reply" do
     raw = <<~MAIL
       From: Boris <boris@example.com>

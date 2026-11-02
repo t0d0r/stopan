@@ -318,6 +318,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] notifier: followers and Cc as recipients; the email switch covers Cc; mail events carry the address (`ticket_events.detail`)
 - [x] People panel on the ticket page; internal follower events
 - [x] production: deployed 018a5a2 (migrations `CreateTicketFollowers`, `AddDetailToTicketEvents`; backup `pre-deploy-1fa5564`) (specs/deploy.md)
+- [x] people in Cc get the shared page in their emails (on every ticket), opened with their own address on the automatic link
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 
 ## Later (specs/roadmap.md)
