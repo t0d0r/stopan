@@ -120,6 +120,9 @@
   - test in `shared_tickets_controller_test.rb`;
   - checked in the dev browser at 1440 and 390 px.
 
+- Deployed 71df093 (the password eye), with no migrations and every
+  check passed (specs/deploy.md "Update 2026-11-02 (revision 71df093)").
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see

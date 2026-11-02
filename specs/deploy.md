@@ -710,6 +710,22 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-02 (revision 71df093)
+
+Since 99681ea: the eye on the shared page's password field (sharing.md
+"Show what was typed"). There were no migrations, so no database copy
+was made.
+
+- Checked:
+  - no migration pending, users and tickets kept;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the served stylesheet and script have the eye;
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:99681ea` as `latest` and restart.
+
 ## Update 2026-11-02 (revision 99681ea)
 
 Since 018a5a2: people in Cc get the shared page in their emails and open
