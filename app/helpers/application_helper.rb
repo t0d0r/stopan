@@ -125,6 +125,20 @@ module ApplicationHelper
              class: "menubar__role menubar__role--#{user.role}", title: role_label(user))
   end
 
+  # A password field with an eye that shows what was typed (specs/ui.md
+  # "Password fields"): the block renders the input, field_id is its id.
+  # The button stays hidden until application.js sets it up.
+  def password_with_eye(field_id, &block)
+    show = t("ui.password_show")
+    hide = t("ui.password_hide")
+    button = tag.button(type: "button", class: "password-field__toggle", hidden: true, title: show,
+                        data: { password_toggle: true, show_label: show, hide_label: hide },
+                        aria: { pressed: false, controls: field_id, label: show }) do
+      tag.span(icon(:eye, size: 16), class: "password-field__show") + tag.span(icon(:eye_off, size: 16), class: "password-field__hide")
+    end
+    tag.div(capture(&block) + button, class: "password-field", data: { password_field: true })
+  end
+
   # On or off for an organization's outgoing mail or mailbox: a green or
   # grey pill with the word, never colour alone (ui.md "Admin").
   def mail_state_pill(enabled)

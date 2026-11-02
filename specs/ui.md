@@ -319,6 +319,33 @@ in documentation, not in the app.
   ends in an ellipsis, and the tooltip and the copy hold the whole
   address.
 
+### Password fields
+
+2026-11-02: first on the shared page's password form ("a button, an eye
+for example, to show what the client types"), then "on sign-in and the
+password change too". These password fields have an eye button inside
+their right edge (`ApplicationHelper#password_with_eye`,
+`setUpPasswordField`):
+- the shared page's password;
+- sign-in;
+- the new password and its confirmation when resetting it;
+- the new password, its confirmation and the current password on the
+  own account page.
+
+How the eye behaves:
+- pressing it shows the text, and pressing it again hides it;
+- its name and tooltip say "Show password" or "Hide password";
+- `aria-pressed` gives its state, and the icon changes to a crossed-out
+  eye while the text shows;
+- the field keeps focus and the caret position;
+- sending the form hides the text again, so a browser never keeps it as
+  plain text;
+- without JavaScript the button is not shown;
+- on phones it is a 44px target.
+
+The admin's mail password fields are write-only and empty when shown, so
+they have no eye.
+
 ## Accessibility
 
 - Works at 390px width with no horizontal page scroll. Navigation (menu

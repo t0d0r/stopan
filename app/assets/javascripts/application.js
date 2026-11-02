@@ -120,8 +120,8 @@ function setUpRequesterMail(block) {
 }
 
 // The eye on a password field shows or hides what was typed, keeping the
-// focus and the caret; sending the form hides it again (specs/sharing.md
-// "Show what was typed").
+// focus and the caret; sending the form hides it again (specs/ui.md
+// "Password fields").
 function setUpPasswordField(field) {
   const input = field.querySelector("input");
   const button = field.querySelector("[data-password-toggle]");

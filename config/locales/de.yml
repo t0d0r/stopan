@@ -14,6 +14,8 @@ de:
     logout: "Abmelden"
     save: "Speichern"
     skip_to_content: "Zum Inhalt springen"
+    password_show: "Passwort anzeigen"
+    password_hide: "Passwort verbergen"
     unassigned: "Nicht zugewiesen"
     form_errors:
       one: "Bitte beheben Sie dieses Problem:"
@@ -807,8 +809,6 @@ de:
       public_note: "Eine schreibgeschützte Kopie von Ticket %{reference}, per Link geteilt."
       locked_title: "Dieses Ticket ist geschützt"
       locked_hint: "Geben Sie das Passwort ein, das Sie mit dem Link erhalten haben."
-      show_password: "Passwort anzeigen"
-      hide_password: "Passwort verbergen"
       unlock: "Öffnen"
       missing_title: "Link nicht verfügbar"
       missing_hint: "Dieser Link existiert nicht oder wird nicht mehr geteilt. Bitten Sie die Person, die ihn gesendet hat, um einen neuen."

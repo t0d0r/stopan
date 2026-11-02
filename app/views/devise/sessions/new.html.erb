@@ -8,7 +8,7 @@
 
   <div class="field">
     <%= f.label :password, t(:password) %>
-    <%= f.password_field :password, autocomplete: "current-password" %>
+    <%= password_with_eye "user_password" do %><%= f.password_field :password, autocomplete: "current-password" %><% end %>
   </div>
 
   <% if devise_mapping.rememberable? %>

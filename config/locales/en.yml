@@ -11,6 +11,8 @@ en:
     logout: "Logout"
     save: "Save"
     skip_to_content: "Skip to content"
+    password_show: "Show password"
+    password_hide: "Hide password"
     unassigned: "Unassigned"
     form_errors:
       one: "Please fix this problem:"
@@ -804,8 +806,6 @@ en:
       public_note: "A read-only copy of ticket %{reference}, shared by link."
       locked_title: "This ticket is protected"
       locked_hint: "Enter the password you were given with the link."
-      show_password: "Show password"
-      hide_password: "Hide password"
       unlock: "Open"
       missing_title: "Link not available"
       missing_hint: "This link does not exist or is no longer shared. Ask the person who sent it for a new one."

@@ -34,7 +34,7 @@
             <div class="field">
               <%= f.label :password, t("ui.new_password") %>
               <i><%= t("ui.account_page.password_keep") %></i>
-              <%= f.password_field :password, autocomplete: "new-password" %>
+              <%= password_with_eye "user_password" do %><%= f.password_field :password, autocomplete: "new-password" %><% end %>
               <% if @minimum_password_length %>
                 <em><%= t("ui.password_minimum", count: @minimum_password_length) %></em>
               <% end %>
@@ -42,14 +42,14 @@
 
             <div class="field">
               <%= f.label :password_confirmation, t("ui.confirm_new_password") %>
-              <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+              <%= password_with_eye "user_password_confirmation" do %><%= f.password_field :password_confirmation, autocomplete: "new-password" %><% end %>
             </div>
 
             <% if resource.password_chosen? %>
               <div class="field">
                 <%= f.label :current_password, t("ui.account_page.current_password") %>
                 <i><%= t("ui.account_page.current_password_hint") %></i>
-                <%= f.password_field :current_password, autocomplete: "current-password" %>
+                <%= password_with_eye "user_current_password" do %><%= f.password_field :current_password, autocomplete: "current-password" %><% end %>
               </div>
             <% else %>
               <p class="field-hint"><%= t("ui.account_page.first_password_hint") %></p>

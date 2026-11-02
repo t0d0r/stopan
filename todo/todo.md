@@ -321,6 +321,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] people in Cc get the shared page in their emails (on every ticket), opened with their own address on the automatic link
 - [x] production: removed the 14 older backups; `pre-deploy-1fa5564` stays as the rollback copy
 - [x] shared page password form: eye button to show and hide what was typed (specs/sharing.md "Show what was typed")
+- [x] the password eye also on sign-in, password reset and the own account page (specs/ui.md "Password fields")
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 
 ## Later (specs/roadmap.md)

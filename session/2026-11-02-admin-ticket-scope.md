@@ -123,6 +123,15 @@
 - Deployed 71df093 (the password eye), with no migrations and every
   check passed (specs/deploy.md "Update 2026-11-02 (revision 71df093)").
 
+- The password eye is now `ApplicationHelper#password_with_eye`, used on:
+  - the shared page;
+  - sign-in;
+  - password reset (both fields);
+  - the own account page (new, confirmation and current password).
+  The spec moved to specs/ui.md "Password fields", the labels to
+  `ui.password_show` / `ui.password_hide`, and the test is
+  `test/integration/password_eye_test.rb`. Checked in the dev browser.
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see
