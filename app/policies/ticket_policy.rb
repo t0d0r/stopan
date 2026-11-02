@@ -18,10 +18,11 @@ class TicketPolicy
     user.staff? || user.memberships.exists?
   end
 
+  # The requester and the people in Cc reply publicly (specs/followers.md).
   def reply?
     return false if ticket.deleted?
 
-    user.staff? || own?
+    user.staff? || own? || cc?
   end
 
   def note?
@@ -70,7 +71,7 @@ class TicketPolicy
     return false if ticket.deleted?
     return true if user.staff?
 
-    comment.author_id == user.id && !comment.internal? && own?
+    comment.author_id == user.id && !comment.internal? && (own? || cc?)
   end
 
   def see_revisions?
@@ -85,5 +86,9 @@ class TicketPolicy
 
   def own?
     ticket.requester_id == user.id && user.member_of?(ticket.organization)
+  end
+
+  def cc?
+    ticket.cc?(user) && user.member_of?(ticket.organization)
   end
 end

@@ -2666,6 +2666,67 @@ body {
   margin-top: 12px;
 }
 
+/* The People panel: staff followers and Cc (specs/followers.md). */
+.followers .section-title:not(:first-child) {
+  margin-top: 16px;
+}
+
+.followers__list {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+
+.followers__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.followers__item:last-child {
+  border-bottom: 0;
+}
+
+.followers__item > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.followers__email {
+  display: block;
+  font-size: 12px;
+}
+
+.side-panel .followers__item .button_to {
+  display: inline;
+  flex: none;
+  margin: 0;
+}
+
+.followers__add {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.followers__add .select,
+.followers__add .field-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.side-panel .followers__suggest {
+  color: var(--accent);
+}
+
+.followers__hint {
+  margin: 10px 0 2px;
+}
+
 .message {
   margin-bottom: 0;
 }

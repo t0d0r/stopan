@@ -56,7 +56,48 @@
     `test/controllers/requester_mails_controller_test.rb`;
   - checked in the dev browser: on, off, and the event after a reload.
 
+- Followers and Cc (specs/followers.md; README, roles.md, notifications.md,
+  organization-mail.md, timeline.md, data-model.md and roadmap.md
+  updated):
+  - migrations `CreateTicketFollowers` (unique ticket and user; the
+    adder is nullified when that user is deleted) and
+    `AddDetailToTicketEvents`;
+  - `TicketFollower`: active members of the organization, never the
+    requester; the kind comes from the role;
+  - `Ticket`:
+    - `follow!`, `add_cc!` (finds or creates the requester and the
+      membership, like mailbox mail; refuses staff, deactivated users,
+      the requester and duplicates) and `remove_follower!`;
+    - `cc_suggestions` from the mail headers;
+    - `customer?`, `cc?`, `customer_emails`;
+    - automatic follow for staff authors;
+    - Cc lists refresh live;
+  - `Ticket.visible_to` gives requesters their own tickets and their Cc
+    tickets. `TicketFilter#own` follows it, and "My tickets" shows a "Cc"
+    tag;
+  - `TicketPolicy`: a Cc replies and edits their own public replies;
+    resolve, edit and share stay with the requester;
+  - `TicketNotifier` adds followers as candidates. The email switch
+    covers every Cc. `TicketMailer` records customer mails with the
+    address, and the reason or error goes in `detail`. Mail reasons
+    `follower` and `cc` were added;
+  - `MailboxMessage`: an email from a Cc becomes their public reply;
+  - `TicketFollowersController` and the `_followers` panel (People).
+    Follower events are internal and quiet;
+  - tests:
+    - `test/models/ticket_follower_test.rb`;
+    - `test/controllers/ticket_followers_controller_test.rb`;
+    - `test/integration/cc_access_test.rb`;
+    - the mail record tests were updated.
+    `make check` passes with 551 runs;
+  - checked in the dev browser at 1440 and 390 px.
+
 ## Decisions
+
+- **Followers come in two kinds, by role.** Staff followers see
+  everything. Cc are customers who see the public part only. Mail
+  headers suggest Cc addresses but never add them. Follower events are
+  internal, so customers and shared pages never see who follows.
 
 - **The email switch is per ticket, not per reply.** It saves at once,
   with no save button, and covers every email to the requester: new
@@ -82,6 +123,8 @@
 
 ## Open
 
+- Deploy followers and Cc (two migrations).
+
 - A super administrator who works an organization's tickets adds
   themselves as a member on its page; until then they do not see them.
 
@@ -91,7 +134,7 @@
 
 ## Next step
 
-None pending.
+Deploy followers and Cc when requested.
 
 ## Security Note
 

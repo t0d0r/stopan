@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_02_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_02_120100) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -199,9 +199,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_090000) do
     t.integer "comment_id"
     t.boolean "internal", default: false, null: false
     t.datetime "created_at", null: false
+    t.string "detail"
     t.index ["actor_id"], name: "index_ticket_events_on_actor_id"
     t.index ["comment_id"], name: "index_ticket_events_on_comment_id"
     t.index ["ticket_id", "created_at"], name: "index_ticket_events_on_ticket_id_and_created_at"
+  end
+
+  create_table "ticket_followers", force: :cascade do |t|
+    t.integer "ticket_id", null: false
+    t.integer "user_id", null: false
+    t.integer "added_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ticket_id", "user_id"], name: "index_ticket_followers_on_ticket_id_and_user_id", unique: true
+    t.index ["user_id"], name: "index_ticket_followers_on_user_id"
   end
 
   create_table "tickets", force: :cascade do |t|
@@ -303,6 +314,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_090000) do
   add_foreign_key "ticket_events", "comments"
   add_foreign_key "ticket_events", "tickets"
   add_foreign_key "ticket_events", "users", column: "actor_id"
+  add_foreign_key "ticket_followers", "tickets"
+  add_foreign_key "ticket_followers", "users"
+  add_foreign_key "ticket_followers", "users", column: "added_by_id", on_delete: :nullify
   add_foreign_key "tickets", "organizations"
   add_foreign_key "tickets", "stages", on_delete: :nullify
   add_foreign_key "tickets", "users", column: "assignee_id"

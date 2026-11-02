@@ -49,7 +49,7 @@
             <span class="toggle__label"><%= t("ui.composer.email_requester") %></span>
           </label>
           <p class="composer__mail-hint" id="requester-mail-hint" aria-live="polite">
-            <span class="composer__mail-on"><%= icon :envelope, size: 13 %> <%= t("ui.composer.email_on", email: ticket.requester.email) %></span>
+            <span class="composer__mail-on"><%= icon :envelope, size: 13 %> <%= t("ui.composer.email_on", email: ticket.customer_emails.to_sentence) %></span>
             <span class="composer__mail-off"><%= icon :lock, size: 13 %> <%= t("ui.composer.email_off") %></span>
           </p>
         </div>

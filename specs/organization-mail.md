@@ -119,7 +119,7 @@ in-process job queue as today.
 3. **Reply or new ticket:** a reply when the subject has `[Stopan
    #<number>]` or `In-Reply-To`/`References` has `<ticket-<number>@host>`,
    the ticket belongs to this organization, and the sender is its
-   requester or staff. Then the text becomes a public reply by the sender
+   requester, in its Cc (followers.md) or staff. Then the text becomes a public reply by the sender
    (with the usual automatic status changes, timeline.md: a requester's
    reply to a done ticket reopens it). Otherwise a new ticket in the
    organization: subject from the mail subject (stripped of `Re:`/`Fwd:`,

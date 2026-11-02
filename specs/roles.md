@@ -7,7 +7,7 @@ default) are requesters.
 
 | role | who | in short |
 |------|-----|----------|
-| `requester` | a customer contact | opens tickets for an organization they belong to; sees and works only on their own tickets (only public timeline entries) |
+| `requester` | a customer contact | opens tickets for an organization they belong to; sees and works only on their own tickets and those they are Cc on (followers.md; only public timeline entries) |
 | `agent` | support staff | sees and works every ticket of the organizations they belong to |
 | `admin` | super administrator ("Super administrator" in the interface) | every ticket of the organizations they belong to, like an agent; users, organizations, memberships and the settings of the whole service desk for every organization |
 

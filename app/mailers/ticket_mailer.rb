@@ -4,13 +4,13 @@
 # nothing when they may not.
 class TicketMailer < ApplicationMailer
   helper :tickets, :markdown
-  helper_method :notification_intro, :reply_hint, :reply_note
+  helper_method :notification_intro, :reply_hint, :reply_note, :customer_reason?
 
-  # Emails to the requester leave a record in the ticket's history
-  # (specs/notifications.md "Emails to the requester").
+  # Emails to the requester and Cc leave a record in the ticket's history
+  # (specs/notifications.md "Emails to the requester", specs/followers.md).
   before_deliver { @delivering = true }
-  after_deliver :record_requester_mail
-  rescue_from StandardError, with: :requester_mail_failed
+  after_deliver :record_customer_mail
+  rescue_from StandardError, with: :customer_mail_failed
 
   def created = notify
   def replied = notify
@@ -44,33 +44,33 @@ class TicketMailer < ApplicationMailer
     end
   end
 
-  def requester_mail?
-    @_mail_was_called && @ticket && @recipient && @recipient.id == @ticket.requester_id
+  def customer_mail?
+    @_mail_was_called && @ticket && @recipient && @ticket.customer?(@recipient)
   end
 
   # Sent, or dropped because no outgoing mail server exists.
-  def record_requester_mail
-    return unless requester_mail?
+  def record_customer_mail
+    return unless customer_mail?
 
     if message.perform_deliveries
-      @ticket.record_requester_mail("mail_sent", @kind, @recipient.email)
+      @ticket.record_customer_mail("mail_sent", @kind, @recipient.email)
     else
-      @ticket.record_requester_mail("mail_skipped", @kind, "no_smtp")
+      @ticket.record_customer_mail("mail_skipped", @kind, @recipient.email, "no_smtp")
     end
   end
 
-  # A failed email to the requester is recorded and logged, not retried;
-  # anything else fails as before.
-  def requester_mail_failed(error)
-    raise error unless @delivering && requester_mail?
+  # A failed email to the customer side is recorded and logged, not
+  # retried; anything else fails as before.
+  def customer_mail_failed(error)
+    raise error unless @delivering && customer_mail?
 
-    Rails.logger.warn("Email to the requester of ticket #{@ticket.number} failed: #{error.class}")
-    @ticket.record_requester_mail("mail_failed", @kind, "#{error.class.name.demodulize}: #{error.message}")
+    Rails.logger.warn("Email to a customer of ticket #{@ticket.number} failed: #{error.class}")
+    @ticket.record_customer_mail("mail_failed", @kind, @recipient.email, "#{error.class.name.demodulize}: #{error.message}")
   end
 
   # One sentence on what happened, in the recipient's language.
   def notification_intro
-    key = @kind == "created" ? "created_#{@reason}" : @kind
+    key = @kind == "created" ? "created_#{@reason.presence_in(%w[requester assignee]) || "subscriber"}" : @kind
     t("mailer.ticket.intro.#{key}", actor: @actor&.display_name || t("ui.timeline.system"),
                                     reference: @ticket.reference, requester: @ticket.requester.display_name,
                                     from: status_label(@status_event&.from_value), to: status_label(@status_event&.to_value))
@@ -85,7 +85,7 @@ class TicketMailer < ApplicationMailer
   def reply_note
     return t("mailer.ticket.no_reply") unless replies_by_email?
 
-    t(@reason == "requester" ? "mailer.ticket.reply_by_email" : "mailer.ticket.reply_by_email_staff")
+    t(customer_reason? ? "mailer.ticket.reply_by_email" : "mailer.ticket.reply_by_email_staff")
   end
 
   def replies_by_email?
@@ -99,7 +99,13 @@ class TicketMailer < ApplicationMailer
   def notification_reason
     if @ticket.requester_id == @recipient.id then "requester"
     elsif @ticket.assignee_id == @recipient.id then "assignee"
+    elsif @ticket.ticket_followers.exists?(user_id: @recipient.id) then @recipient.staff? ? "follower" : "cc"
     else "subscriber"
     end
+  end
+
+  # The requester and Cc get the customer's wording (specs/followers.md).
+  def customer_reason?
+    @reason.in?(%w[requester cc])
   end
 end

@@ -38,7 +38,8 @@ up to 5 attached files.
 | `unshared` | sharing stopped | - | yes |
 | `stage_changed` | the board stage changes (board.md) | old / new stage name | yes |
 | `mail_switched` | emails to the requester turned on or off (notifications.md "Emails to the requester") | `on` / `off` | yes |
-| `mail_sent`, `mail_skipped`, `mail_failed` | an email to the requester sent, not sent, or failed (same section); actor is the system | kind / address, reason or error | yes |
+| `mail_sent`, `mail_skipped`, `mail_failed` | an email to the requester or a Cc sent, not sent, or failed (same section); actor is the system | kind / address; `detail` the reason or error | yes |
+| `follower_added`, `follower_removed` | a staff follower or Cc added or removed (followers.md) | `staff` or `cc` / user id | yes |
 
 Assignee values are stored as user ids and shown with the user's current
 display name; users that appear in history cannot be deleted (only

@@ -30,6 +30,7 @@ class OrganizationFlush
     ApplicationRecord.transaction do
       remember_highest_number
       Notification.where(ticket_id: ticket_ids).delete_all
+      TicketFollower.where(ticket_id: ticket_ids).delete_all
       TicketEvent.where(ticket_id: ticket_ids).delete_all
       Translation.where(translatable_type: "Ticket", translatable_id: ticket_ids)
                  .or(Translation.where(translatable_type: "Comment", translatable_id: comment_ids)).delete_all

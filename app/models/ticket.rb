@@ -37,6 +37,9 @@ class Ticket < ApplicationRecord
   has_many :comments, -> { order(:created_at, :id) }, inverse_of: :ticket, dependent: :restrict_with_error
   has_many :events, -> { order(:created_at, :id) }, class_name: "TicketEvent", inverse_of: :ticket,
            dependent: :restrict_with_error
+  # Staff followers and people in Cc (specs/followers.md).
+  has_many :ticket_followers, dependent: :delete_all
+  has_many :followers, through: :ticket_followers, source: :user
 
   # The share password is optional (specs/sharing.md).
   has_secure_password :share_password, validations: false, reset_token: false
@@ -74,14 +77,17 @@ class Ticket < ApplicationRecord
   scope :done, -> { where(status: DONE) }
 
   # Staff (super administrators too, since 2026-11-02) see the tickets of
-  # their organizations, requesters only their own in the organizations
-  # they still belong to (specs/roles.md).
+  # their organizations, requesters their own and those they are Cc on, in
+  # the organizations they still belong to (specs/roles.md,
+  # specs/followers.md).
   def self.visible_to(user)
     return none unless user
 
     # Deleted tickets are gone for everyone (specs/tickets.md "Deleting").
     scope = where(deleted_at: nil, organization_id: user.memberships.select(:organization_id))
-    user.staff? ? scope : scope.where(requester_id: user.id)
+    return scope if user.staff?
+
+    scope.where(requester_id: user.id).or(scope.where(id: TicketFollower.where(user_id: user.id).select(:ticket_id)))
   end
 
   # Write transactions on SQLite are immediate (Rails 8), so reading the
@@ -168,10 +174,80 @@ class Ticket < ApplicationRecord
     end
   end
 
-  # One email to the requester sent, not sent or failed, for staff to see
-  # in the history (same section).
-  def record_requester_mail(action, kind, value)
-    events.create!(action: action, internal: true, from_value: kind.to_s, to_value: value.to_s.squish.first(200))
+  # One email to the customer side sent, not sent or failed, for staff to
+  # see in the history (same section, specs/followers.md).
+  def record_customer_mail(action, kind, address, detail = nil)
+    events.create!(action: action, internal: true, from_value: kind.to_s, to_value: address.to_s.first(200),
+                   detail: detail&.to_s&.squish&.first(200))
+  end
+
+  # The requester and the people in Cc (specs/followers.md).
+  def customer?(user)
+    user.id == requester_id || cc?(user)
+  end
+
+  def cc?(user)
+    !user.staff? && ticket_followers.exists?(user_id: user.id)
+  end
+
+  def cc_users
+    followers.merge(User.requesters).order(:name, :email)
+  end
+
+  def staff_followers
+    followers.merge(User.staff).ordered
+  end
+
+  # Addresses the customer-side emails go to, for the composer's warning.
+  def customer_emails
+    [ requester.email, *cc_users.active.where(id: organization.memberships.select(:user_id)).pluck(:email) ].uniq
+  end
+
+  # A staff member follows: themselves or added by a colleague.
+  def follow!(user, actor:)
+    add_follower(user, actor: actor, kind: "staff")
+  end
+
+  # Someone from the customer side in Cc, found or created by address like
+  # an email to the mailbox would (specs/followers.md "Adding to Cc by
+  # email"). Returns the follower, or nil with the reason in errors.
+  def add_cc!(email, actor:)
+    address = email.to_s.strip.downcase
+    return cc_refused(:invalid) unless address.match?(URI::MailTo::EMAIL_REGEXP)
+
+    user = User.find_by("lower(email) = ?", address)
+    return cc_refused(:staff) if user&.staff?
+    return cc_refused(:deactivated) if user&.deactivated?
+    return cc_refused(:requester) if user && user.id == requester_id
+    return cc_refused(:taken) if user && ticket_followers.exists?(user_id: user.id)
+
+    transaction do
+      user ||= User.create!(name: address.split("@").first.first(100), email: address, password: SecureRandom.base58(32),
+                            role: "requester", password_chosen: false)
+      Membership.find_or_create_by!(user: user, organization: organization)
+      add_follower(user, actor: actor, kind: "cc")
+    end
+  end
+
+  # Addresses from the mail's To and Cc that could be put in Cc, never
+  # added on their own (specs/followers.md "The panel").
+  def cc_suggestions
+    return [] if mail_headers.blank?
+
+    addresses = Array(mail_headers["to"]) + Array(mail_headers["cc"])
+    addresses = addresses.filter_map { |value| (value.to_s[/<([^>]+)>/, 1] || value.to_s).strip.downcase.presence }.uniq
+    own = [ organization.mail_from_address, organization.mailbox_address, requester.email ].compact.map(&:downcase)
+    known = User.where("lower(email) IN (?)", addresses)
+    taken = known.where(id: ticket_followers.select(:user_id)).or(known.staff).pluck(:email).map(&:downcase)
+    (addresses - own - taken).select { |address| address.match?(URI::MailTo::EMAIL_REGEXP) }.first(10)
+  end
+
+  def remove_follower!(follower, actor:)
+    transaction do
+      follower.destroy!
+      events.create!(action: "follower_removed", actor: actor, internal: true,
+                     from_value: follower.cc? ? "cc" : "staff", to_value: follower.user_id.to_s)
+    end
   end
 
   # Soft delete (specs/tickets.md "Deleting"): the ticket disappears for
@@ -278,6 +354,8 @@ class Ticket < ApplicationRecord
 
     Turbo::StreamsChannel.broadcast_refresh_later_to(self, :page, :public)
     Turbo::StreamsChannel.broadcast_refresh_later_to(requester, :tickets)
+    # The people in Cc have the ticket in their lists too (specs/followers.md).
+    cc_users.each { |user| Turbo::StreamsChannel.broadcast_refresh_later_to(user, :tickets) }
   end
 
   # Tells an open shared page to reload itself (specs/sharing.md); the
@@ -311,6 +389,7 @@ class Ticket < ApplicationRecord
       comment.save!
       new_status = status.presence || status_after(comment)
       apply_changes!({ status: new_status }, actor: author) if new_status && new_status != self.status
+      follow_as_author(author)
     end
     comment
   rescue ActiveRecord::RecordInvalid
@@ -320,6 +399,27 @@ class Ticket < ApplicationRecord
   end
 
   private
+
+  def add_follower(user, actor:, kind:)
+    transaction do
+      follower = ticket_followers.create!(user: user, added_by: actor)
+      events.create!(action: "follower_added", actor: actor, internal: true, from_value: kind, to_value: user.id.to_s)
+      follower
+    end
+  end
+
+  def cc_refused(reason)
+    errors.add(:base, I18n.t("ui.followers.refused.#{reason}"))
+    nil
+  end
+
+  # Staff who write on a ticket follow it from then on, silently
+  # (specs/followers.md "Following automatically").
+  def follow_as_author(author)
+    return unless author.staff? && !ticket_followers.exists?(user_id: author.id)
+
+    ticket_followers.create(user: author, added_by: author)
+  end
 
   def revision_text
     { subject: subject_in_database, body: description_in_database }

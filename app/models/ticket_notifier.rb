@@ -47,22 +47,23 @@ class TicketNotifier
       store(recipient, kind)
       next if postponing_only?(recipient, kind)
 
-      if recipient == @ticket.requester
-        # Emails to the requester may be off for this ticket (specs/notifications.md).
+      if @ticket.customer?(recipient)
+        # Emails to the requester and Cc may be off for this ticket
+        # (specs/notifications.md, specs/followers.md).
         unless Ticket.where(id: @ticket.id).pick(:email_requester)
-          @ticket.record_requester_mail("mail_skipped", kind, "switched_off")
+          @ticket.record_customer_mail("mail_skipped", kind, recipient.email, "switched_off")
           next
         end
-        @ticket.share_with_requester!
+        @ticket.share_with_requester! if recipient == @ticket.requester
       end
       TicketMailer.with(recipient: recipient, ticket: @ticket, event_ids: @events.map(&:id)).public_send(kind).deliver_later
     end
     members_to_tell(recipients.keys).each { |member| store(member, :created) }
   end
 
-  # Postponing reaches the requester in the app only (specs/notifications.md).
+  # Postponing reaches the requester and Cc in the app only (specs/notifications.md).
   def postponing_only?(recipient, kind)
-    kind == :status_changed && recipient == @ticket.requester &&
+    kind == :status_changed && @ticket.customer?(recipient) &&
       TicketEvent.visible_to(recipient).where(id: @events.map(&:id)).all? do |event|
         event.action == "status_changed" && event.to_value == Ticket::POSTPONED
       end
@@ -102,7 +103,7 @@ class TicketNotifier
   end
 
   def candidates
-    users = [ @ticket.requester, @ticket.assignee ]
+    users = [ @ticket.requester, @ticket.assignee, *@ticket.followers ]
     users += User.new_ticket_subscribers.to_a if @events.any? { |event| event.action == "created" }
     users.compact.uniq
   end

@@ -311,6 +311,15 @@ approved "go in this order", all done 2026-10-27):
 - [x] internal timeline events `mail_switched`, `mail_sent`, `mail_skipped` (switched off, no SMTP) and `mail_failed`, for emails to the requester only
 - [x] production: deployed 1fa5564 (migration `AddEmailRequesterToTickets`; backup `pre-deploy-28361df`) (specs/deploy.md)
 
+## Followers and Cc (2026-11-02, specs/followers.md)
+
+- [x] `ticket_followers`; staff followers (follow, add a colleague, automatic on writing) and customer Cc (by email, from the mail's To/Cc as suggestions)
+- [x] Cc in `Ticket.visible_to` (public part only), My tickets with a "Cc" tag, public replies in Stopan and by email
+- [x] notifier: followers and Cc as recipients; the email switch covers Cc; mail events carry the address (`ticket_events.detail`)
+- [x] People panel on the ticket page; internal follower events
+- [ ] production: deploy (migrations `CreateTicketFollowers`, `AddDetailToTicketEvents`)
+- [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

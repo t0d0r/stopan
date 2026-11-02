@@ -8,6 +8,7 @@ class User < ApplicationRecord
          :trackable, :validatable, :lockable
 
   has_many :memberships, dependent: :destroy
+  has_many :ticket_followings, class_name: "TicketFollower", dependent: :delete_all
   has_many :notifications, dependent: :delete_all
   has_many :api_tokens, dependent: :delete_all
   has_many :organizations, -> { order(:name) }, through: :memberships

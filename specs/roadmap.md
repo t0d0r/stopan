@@ -16,7 +16,7 @@ before it is built. The "foundation" column says what already exists.
 | reporting | **specified in reports.md**; later: CSV export, custom date ranges, business hours | events table, `done_at`, comments |
 | agent groups | groups/teams, restrict agents to groups or organizations, group queues | role column; `Ticket.visible_to` is the single place to narrow |
 | organization visibility | let selected requesters see all tickets of their organization | membership row can carry a flag |
-| CC / followers | more people on one ticket | - |
+| CC / followers | **specified in followers.md**; later: requesters adding Cc, people outside the organization, API | `Ticket.visible_to`, notifier candidates |
 | tags, custom fields, ticket forms | categorisation | - |
 | knowledge base / self-service | articles, suggested answers | - |
 | satisfaction survey | CSAT after resolve | - |

@@ -12,6 +12,7 @@
 | [public-form.md](public-form.md) | public request page per organization, accounts by email, magic sign-in links, abuse limits |
 | [attachments.md](attachments.md) | file limits, allowed types, authorized downloads and the preview dialog |
 | [queues.md](queues.md) | agent queue views, filters, search, sort, pagination and the requester's "My tickets" |
+| [followers.md](followers.md) | staff followers and customer Cc on a ticket: who, visibility, the People panel, emails and email replies |
 | [org-admins.md](org-admins.md) | super administrators and organization administrators: the membership mark, what each may do, enforcement |
 | [admin.md](admin.md) | admin dashboard, users and roles, organizations and memberships |
 | [data-model.md](data-model.md) | tables, columns, indexes and deletion rules |

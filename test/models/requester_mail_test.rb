@@ -11,7 +11,7 @@ class RequesterMailTest < ActiveSupport::TestCase
   end
 
   def mail_events
-    @ticket.events.where(action: TicketEvent::MAIL_ACTIONS).order(:id).map { |e| [ e.action, e.from_value, e.to_value ] }
+    @ticket.events.where(action: TicketEvent::MAIL_ACTIONS).order(:id).map { |e| [ e.action, e.from_value, e.to_value, e.detail ].compact }
   end
 
   def reply(body = "Please try a new roll.")
@@ -36,7 +36,7 @@ class RequesterMailTest < ActiveSupport::TestCase
       reply
     end
     assert_empty ActionMailer::Base.deliveries
-    assert_equal [ "mail_skipped", "replied", "switched_off" ], mail_events.last
+    assert_equal [ "mail_skipped", "replied", "anna@example.com", "switched_off" ], mail_events.last
     assert_not @ticket.reload.email_requester?
 
     @ticket.switch_requester_mail!(true, actor: users(:agent))
@@ -55,7 +55,7 @@ class RequesterMailTest < ActiveSupport::TestCase
     Rails.configuration.x.global_smtp = false
     reply
     assert_empty ActionMailer::Base.deliveries
-    assert_equal [ [ "mail_skipped", "replied", "no_smtp" ] ], mail_events
+    assert_equal [ [ "mail_skipped", "replied", "anna@example.com", "no_smtp" ] ], mail_events
   ensure
     Rails.configuration.x.global_smtp = nil
   end
@@ -70,8 +70,8 @@ class RequesterMailTest < ActiveSupport::TestCase
   test "a failed email to the requester is recorded, not raised" do
     ActionMailer::Base.delivery_method = :failing
     reply
-    action, kind, error = mail_events.sole
-    assert_equal %w[mail_failed replied], [ action, kind ]
+    action, kind, address, error = mail_events.sole
+    assert_equal %w[mail_failed replied anna@example.com], [ action, kind, address ]
     assert_equal "IOError: 535 bad credentials", error
   ensure
     ActionMailer::Base.delivery_method = :test

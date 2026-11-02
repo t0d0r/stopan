@@ -25,7 +25,8 @@ class MailboxMessage
     return staff_reply(user) if user&.staff?
 
     ticket = referenced_ticket
-    if ticket && user && ticket.requester_id == user.id
+    # The requester, or someone in its Cc who may still see it (specs/followers.md).
+    if ticket && user && (ticket.requester_id == user.id || (ticket.cc?(user) && Ticket.visible_to(user).exists?(ticket.id)))
       reply(ticket, user)
     else
       new_ticket(user)

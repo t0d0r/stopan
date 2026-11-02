@@ -22,7 +22,7 @@ class RequesterMailsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "requesters see no toggle and no mail events" do
-    @ticket.record_requester_mail("mail_sent", "replied", "anna@example.com")
+    @ticket.record_customer_mail("mail_sent", "replied", "anna@example.com")
     sign_in users(:anna)
     get ticket_url(@ticket)
     assert_select "[data-requester-mail]", 0
@@ -56,7 +56,7 @@ class RequesterMailsControllerTest < ActionDispatch::IntegrationTest
     assert_not @ticket.reload.email_requester?
     assert_empty ActionMailer::Base.deliveries.select { |mail| mail.to == [ "anna@example.com" ] }
     get ticket_url(@ticket)
-    assert_select ".timeline__text", /No email to the requester \(New reply\): emails are off for this ticket/
+    assert_select ".timeline__text", /No email to anna@example.com \(New reply\): emails are off for this ticket/
 
     # An internal note leaves the switch alone.
     post ticket_comments_url(@ticket), params: { email_requester: "1", comment: { body: "Note.", internal: "1" } }

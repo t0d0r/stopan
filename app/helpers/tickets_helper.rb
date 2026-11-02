@@ -267,9 +267,35 @@ module TicketsHelper
     when "mail_switched" then t("ui.timeline.mail_switched_#{event.to_value == "on" ? "on" : "off"}", actor: actor)
     when "mail_sent" then t("ui.timeline.mail_sent", address: event.to_value, kind: mail_kind_name(event.from_value))
     when "mail_skipped"
-      reason = event.to_value == "no_smtp" ? "no_smtp" : "switched_off"
-      t("ui.timeline.mail_skipped_#{reason}", kind: mail_kind_name(event.from_value))
-    when "mail_failed" then t("ui.timeline.mail_failed", kind: mail_kind_name(event.from_value), error: event.to_value)
+      reason = mail_detail(event) == "no_smtp" ? "no_smtp" : "switched_off"
+      t("ui.timeline.mail_skipped_#{reason}", address: mail_address(event), kind: mail_kind_name(event.from_value))
+    when "mail_failed"
+      t("ui.timeline.mail_failed", address: mail_address(event), kind: mail_kind_name(event.from_value), error: mail_detail(event))
+    when "follower_added", "follower_removed" then follower_sentence(event, actor)
+    end
+  end
+
+  # Mail events keep the address in to_value and the reason or error in
+  # detail; those recorded before followers.md kept the reason in to_value
+  # and no address.
+  def mail_detail(event)
+    event.detail || event.to_value
+  end
+
+  def mail_address(event)
+    event.detail ? event.to_value : t("ui.timeline.the_requester")
+  end
+
+  # "Maria follows the ticket", "... added Petar as a follower", "... added
+  # Ivan to Cc" and the removals (specs/followers.md "Events").
+  def follower_sentence(event, actor)
+    removed = event.action == "follower_removed"
+    if event.from_value == "cc"
+      t(removed ? "ui.timeline.cc_removed" : "ui.timeline.cc_added", actor: actor, name: assignee_name(event.to_value))
+    elsif event.actor_id.to_s == event.to_value
+      t(removed ? "ui.timeline.follower_self_removed" : "ui.timeline.follower_self", actor: actor)
+    else
+      t(removed ? "ui.timeline.follower_removed" : "ui.timeline.follower_added", actor: actor, name: assignee_name(event.to_value))
     end
   end
 
@@ -282,7 +308,8 @@ module TicketsHelper
     { "created" => :spark, "status_changed" => :status, "priority_changed" => :flag,
       "assignee_changed" => :user, "shared" => :link, "unshared" => :link, "stage_changed" => :flag,
       "deleted" => :status, "restored" => :status, "mail_switched" => :envelope, "mail_sent" => :envelope,
-      "mail_skipped" => :envelope, "mail_failed" => :envelope }.fetch(event.action, :spark)
+      "mail_skipped" => :envelope, "mail_failed" => :envelope, "follower_added" => :eye,
+      "follower_removed" => :eye }.fetch(event.action, :spark)
   end
 
   def assignee_name(user_id)

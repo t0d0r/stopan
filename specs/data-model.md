@@ -91,8 +91,16 @@ before the edit), `created_at` (when the edit was made). Index on
 
 `ticket_id` (FK), `actor_id` (FK users, nullable), `action` (string),
 `from_value`, `to_value` (strings), `comment_id` (FK comments, nullable),
-`internal` (boolean, default false), `created_at`. Index on
+`internal` (boolean, default false), `detail` (string, nullable: the
+reason or error of a mail event, followers.md), `created_at`. Index on
 `[ticket_id, created_at]`. No `updated_at`.
+
+## ticket_followers
+
+Staff followers and Cc of a ticket (followers.md): `ticket_id` (FK),
+`user_id` (FK), `added_by_id` (FK users, nullable), timestamps. Unique
+index on `[ticket_id, user_id]`, index on `user_id`. Deleted with the
+ticket (flush) and with the user.
 
 ## notifications
 

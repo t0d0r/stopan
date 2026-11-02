@@ -106,8 +106,10 @@ class TicketFilter
     Ticket.visible_to(user)
   end
 
+  # For a requester the visible tickets are their own and those they are
+  # Cc on (specs/followers.md).
   def own
-    base.where(requester_id: user.id)
+    base
   end
 
   def in_view(name)

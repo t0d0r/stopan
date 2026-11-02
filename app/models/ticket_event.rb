@@ -2,10 +2,12 @@
 # (specs/timeline.md); `internal` rows are hidden from requesters.
 class TicketEvent < ApplicationRecord
   ACTIONS = %w[created replied noted status_changed priority_changed assignee_changed shared unshared stage_changed deleted restored
-               mail_switched mail_sent mail_skipped mail_failed].freeze
-  # The record of emails to the requester (specs/notifications.md "Emails to
-  # the requester"): they notify nobody themselves.
+               mail_switched mail_sent mail_skipped mail_failed follower_added follower_removed].freeze
+  # The record of emails to the customer side (specs/notifications.md
+  # "Emails to the requester") and who follows (specs/followers.md): they
+  # notify nobody themselves.
   MAIL_ACTIONS = %w[mail_switched mail_sent mail_skipped mail_failed].freeze
+  QUIET_ACTIONS = (MAIL_ACTIONS + %w[follower_added follower_removed]).freeze
 
   belongs_to :ticket
   belongs_to :actor, class_name: "User", optional: true, inverse_of: :ticket_events
@@ -13,7 +15,7 @@ class TicketEvent < ApplicationRecord
 
   validates :action, inclusion: { in: ACTIONS }
 
-  after_create { TicketNotifier.collect(self) unless MAIL_ACTIONS.include?(action) }
+  after_create { TicketNotifier.collect(self) unless QUIET_ACTIONS.include?(action) }
   # Open ticket pages reload (specs/timeline.md), and public changes also
   # reload an open shared page (specs/sharing.md).
   after_create_commit do

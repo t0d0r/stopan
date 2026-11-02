@@ -31,6 +31,7 @@ For a batch on ticket T made by actor A, the candidates are:
 |-----------|------|
 | T's requester | always |
 | T's assignee (after the change) | always |
+| T's followers: staff followers and Cc (followers.md) | always |
 | staff with "email me about new tickets" on | only for a batch with a `created` event |
 
 Each candidate is dropped when they are A, deactivated, cannot see T, or
@@ -89,6 +90,11 @@ it is on, warn that an email will leave the system", and "the checkbox
 is a toggle, with no need for a save button".
 
 ### The switch
+
+Since followers.md the switch covers the customer side: the requester
+and everyone in Cc (label "Email the requester and Cc"; the warning
+lists every address), and every mail event names its address.
+
 
 - `tickets.email_requester` (boolean, not null, default true): whether
   the ticket's requester gets **any** email about it. This covers the

@@ -43,6 +43,8 @@ Rails.application.routes.draw do
     resource :share, only: %i[create destroy], controller: "ticket_shares"
     # Emails to the requester on or off (specs/notifications.md).
     resource :requester_mail, only: :update
+    # Staff followers and Cc (specs/followers.md).
+    resources :followers, only: %i[create destroy], controller: "ticket_followers"
     # The HTML of the mail a ticket came from, in a sealed frame (organization-mail.md "HTML view").
     resource :mail, only: :show, controller: "ticket_mails"
     resources :translations, only: :create
