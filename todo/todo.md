@@ -326,6 +326,9 @@ approved "go in this order", all done 2026-10-27):
 - [x] image preview sized to the image up to the window, with actual size for scaled images (specs/attachments.md "Image size")
 - [x] production: deployed db88326 (image preview sizes), no migrations (specs/deploy.md)
 - [x] runs of 3 or more event lines between messages fold into one line (specs/timeline.md "Event lines between messages fold")
+- [x] OpenSSF Scorecard workflow with pinned actions, and the Scorecard badges in the README (specs/ci.md)
+- [ ] Scorecard: first run on `main`, check both badges and the code scanning results (specs/ci.md "Acceptance")
+- [ ] later: Dependabot for GitHub Actions and gems (specs/ci.md "Not in this phase")
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 
 ## Later (specs/roadmap.md)

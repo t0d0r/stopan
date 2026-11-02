@@ -20,6 +20,7 @@
 | [mobile.md](mobile.md) | rules for phones: 44px touch targets, 16px fields, no sideways scrolling, no hover-only content, with sources |
 | [ui.md](ui.md) | Stickies-based look adapted to a service desk, pages, behaviour, accessibility, translations |
 | [docker.md](docker.md) | Docker image, compose file and environment variables |
+| [ci.md](ci.md) | GitHub Actions: the OpenSSF Scorecard workflow, its permissions and pinned actions, and the README badges |
 | [deploy.md](deploy.md) | production on stopan.linuxfan.org: ISPConfig site, rootless Podman, setup, verification, rollback |
 | [notifications.md](notifications.md) | email notifications: recipients, which email, visibility rules, language, SMTP settings, delivery |
 | [mail-oauth.md](mail-oauth.md) | plan: Google and Microsoft accounts (OAuth 2.0, XOAUTH2) for organization mail |

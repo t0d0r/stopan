@@ -2,6 +2,9 @@
 
 # Stopan
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/t0d0r/stopan/badge)](https://scorecard.dev/viewer/?uri=github.com/t0d0r/stopan)
+[![Scorecard GitHub Action](https://github.com/t0d0r/stopan/actions/workflows/scorecard.yml/badge.svg)](https://github.com/t0d0r/stopan/actions/workflows/scorecard.yml)
+
 A service desk. Customers ("requesters") belong to organizations and open
 tickets; agents triage, answer and resolve them in a shared queue;
 administrators manage users, roles and organizations. Every change to a

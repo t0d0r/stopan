@@ -172,6 +172,15 @@
   - checked in the dev browser at 1440 and 390 px: fold, open, live
     refresh, a link into a folded run.
 
+- OpenSSF Scorecard (specs/ci.md):
+  - `.github/workflows/scorecard.yml`: push to `main`, weekly, branch
+    protection changes and by hand; `read-all` with
+    `security-events: write` and `id-token: write` for the job; every
+    action pinned to a commit SHA; results published and uploaded to
+    code scanning;
+  - README: the OpenSSF Scorecard badge and the workflow status badge;
+  - `actionlint` passes on the workflow.
+
 ## Decisions
 
 - **Status changes, the opening line and failed emails never fold.** They
@@ -211,6 +220,8 @@
 
 ## Open
 
+- The Scorecard badges show results only after the workflow's first run
+  on `main` on GitHub.
 - A super administrator who works an organization's tickets adds
   themselves as a member on its page; until then they do not see them.
 
