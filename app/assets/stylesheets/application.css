@@ -2719,6 +2719,58 @@ body {
   min-width: 0;
 }
 
+/* A password field with an eye that shows what was typed
+   (specs/sharing.md "Show what was typed"). */
+.password-field {
+  position: relative;
+}
+
+.password-field .field-input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.password-field__toggle[hidden] {
+  display: none;
+}
+
+.password-field__toggle:hover,
+.password-field__toggle:focus-visible,
+.password-field__toggle[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+.password-field__toggle:focus-visible {
+  outline: 2px solid var(--accent-ring);
+}
+
+.password-field__hide,
+.password-field__toggle[aria-pressed="true"] .password-field__show {
+  display: none;
+}
+
+.password-field__toggle[aria-pressed="true"] .password-field__hide {
+  display: inline-flex;
+}
+
 .side-panel .followers__suggest {
   color: var(--accent);
 }
@@ -5707,6 +5759,16 @@ turbo-frame {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+  }
+
+  .password-field .field-input {
+    padding-right: 50px;
+  }
+
+  .password-field__toggle {
+    right: 0;
+    width: 44px;
+    height: 44px;
   }
 
   .menubar__brand,

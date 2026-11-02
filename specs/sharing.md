@@ -137,6 +137,18 @@ not already carry.
 
 - An unknown, replaced or stopped token renders "Link not available" with
   404, the same for every reason.
+- **Show what was typed** (2026-11-02: "a button, an eye for example, to
+  show what the client types"). The password field has an eye button
+  inside its right edge:
+  - pressing it shows the text, and pressing it again hides it;
+  - its name and tooltip say "Show password" or "Hide password";
+  - `aria-pressed` gives its state, and the icon changes to a crossed-out
+    eye while the text shows;
+  - the field keeps focus and the caret position;
+  - sending the form hides the text again, so a browser never keeps it
+    as plain text;
+  - without JavaScript the button is not shown;
+  - on phones it is a 44px target.
 - File routes of a locked link redirect to `/s/:token`.
 - Files are looked up through the shared ticket and its public comments
   only, so a token never reaches another ticket's files or an internal

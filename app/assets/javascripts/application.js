@@ -119,6 +119,33 @@ function setUpRequesterMail(block) {
   }, { signal: pageSignal });
 }
 
+// The eye on a password field shows or hides what was typed, keeping the
+// focus and the caret; sending the form hides it again (specs/sharing.md
+// "Show what was typed").
+function setUpPasswordField(field) {
+  const input = field.querySelector("input");
+  const button = field.querySelector("[data-password-toggle]");
+  if (!input || !button) return;
+  const show = (visible) => {
+    input.type = visible ? "text" : "password";
+    const label = visible ? button.dataset.hideLabel : button.dataset.showLabel;
+    button.setAttribute("aria-pressed", String(visible));
+    button.setAttribute("aria-label", label);
+    button.title = label;
+  };
+  button.hidden = false;
+  // Keep the focus in the field while the button is pressed.
+  button.addEventListener("mousedown", (event) => event.preventDefault(), { signal: pageSignal });
+  button.addEventListener("click", () => {
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    show(input.type === "password");
+    input.focus();
+    if (start !== null) input.setSelectionRange(start, end);
+  }, { signal: pageSignal });
+  input.form?.addEventListener("submit", () => show(false), { signal: pageSignal });
+}
+
 // Phone menu (ui.md "Menu bar"): the button shows the sections, preferences
 // and account under the bar; a click outside or Escape closes it. Turbo
 // swaps the whole bar on the next page, so it starts closed there.
@@ -944,6 +971,7 @@ function setUpPage() {
   setUpPreview(document.querySelector("[data-preview-dialog]"));
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
   document.querySelectorAll("[data-requester-mail]").forEach(setUpRequesterMail);
+  document.querySelectorAll("[data-password-field]").forEach(setUpPasswordField);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
   setUpCopyBoxes();

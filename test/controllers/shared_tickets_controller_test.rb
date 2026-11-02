@@ -67,6 +67,16 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form#unlock_form"
   end
 
+  test "the password field has an eye to show what was typed, hidden until JavaScript runs" do
+    token = share(password: "s3cret!")
+    get shared_ticket_url(token)
+    assert_select "form#unlock_form [data-password-field]" do
+      assert_select "input[type=password]#password"
+      assert_select "button[type=button][data-password-toggle][hidden][aria-pressed=false][aria-controls=password]" \
+                    "[aria-label='Show password'][data-hide-label='Hide password']"
+    end
+  end
+
   test "an email address as password may be typed in another case; other passwords are exact" do
     token = share(password: "anna@example.com")
     post unlock_shared_ticket_url(token), params: { password: " Anna@Example.COM " }

@@ -29,6 +29,7 @@ module IconsHelper
     envelope: '<rect x="2" y="3.5" width="12" height="9" rx="1.2" /><path d="m2.5 4.5 5.5 4.5 5.5-4.5" />',
     pencil: '<path d="M10.8 2.8a1.6 1.6 0 0 1 2.3 2.3L5.5 12.7l-3 .8.8-3z" /><path d="m9.6 4 2.4 2.4" />',
     eye: '<path d="M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8 12.1 12.5 8 12.5 1.5 8 1.5 8z" /><circle cx="8" cy="8" r="2" />',
+    eye_off: '<path d="M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8 12.1 12.5 8 12.5 1.5 8 1.5 8z" /><circle cx="8" cy="8" r="2" /><path d="m2.5 13.5 11-11" />',
     user: '<circle cx="8" cy="5.5" r="2.8" /><path d="M2.8 14a5.2 5.2 0 0 1 10.4 0" />',
     building: '<rect x="3" y="2" width="7" height="12" rx="1" /><path d="M10 6h2.5a.5.5 0 0 1 .5.5V14H10' \
               'M5.5 5h2M5.5 8h2M5.5 11h2" />',

@@ -112,6 +112,14 @@
 - Production backups: the 14 older copies were removed; only
   `pre-deploy-1fa5564.sqlite3` (before the follower migrations) remains.
 
+- The shared page's password form has an eye button
+  (`[data-password-field]`, `setUpPasswordField`, new `eye_off` icon):
+  - it shows and hides what was typed, keeping the focus and the caret;
+  - sending the form hides the text again;
+  - the button is hidden without JavaScript, and is 44px on phones;
+  - test in `shared_tickets_controller_test.rb`;
+  - checked in the dev browser at 1440 and 390 px.
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see
