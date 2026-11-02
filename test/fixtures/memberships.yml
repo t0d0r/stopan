@@ -31,3 +31,13 @@ agent_two_globex:
 retired_acme:
   user: retired
   organization: acme
+
+# Super administrators see tickets of their own organizations only
+# (specs/roles.md); the test admin works both.
+admin_acme:
+  user: admin
+  organization: acme
+
+admin_globex:
+  user: admin
+  organization: globex

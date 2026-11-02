@@ -11,7 +11,9 @@ organization and nothing else.
 - **Super administrator**: the `admin` role (roles.md). It is renamed in
   the interface only: "Super administrator", "Супер администратор",
   "Super-Administrator". The stored value stays `admin`, so existing
-  accounts, tokens and tests keep working. Their rights are unchanged.
+  accounts, tokens and tests keep working. Since 2026-11-02 they see
+  tickets only of organizations they are a member of (roles.md); the
+  admin area still covers every organization.
 - **Organization administrator**: an agent whose membership of an
   organization has the "organization admin" mark
   (`memberships.admin = true`). They "administer" that organization. An

@@ -13,6 +13,7 @@ class SeedsTest < ActiveSupport::TestCase
   end
 
   test "creates the admin user when it is missing, even if other users exist" do
+    Membership.where(user: User.where(username: "admin")).delete_all
     User.where(username: "admin").delete_all
     User.create!(email: "other@example.com", password: "password", username: "other")
 
@@ -50,6 +51,7 @@ class SeedsTest < ActiveSupport::TestCase
   end
 
   test "skips without credentials" do
+    Membership.where(user: User.where(username: "admin")).delete_all
     User.where(username: "admin").delete_all
     out = run_seeds({})
     assert_not User.exists?(username: "admin")

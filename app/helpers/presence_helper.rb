@@ -11,7 +11,7 @@ module PresenceHelper
       users = User.where(id: Presence.user_ids | [ current_user.id ], deactivated_at: nil)
       staff = users.select(&:staff?).sort_by { |user| [ user == current_user ? 0 : 1, user.display_name.downcase ] }
       requesters = users.where(role: "requester")
-      requesters = requesters.joins(:memberships).where(memberships: { organization_id: current_user.organization_ids }) unless current_user.admin?
+      requesters = requesters.joins(:memberships).where(memberships: { organization_id: current_user.organization_ids })
       PresenceView.new(staff: staff, requester_count: requesters.distinct.count)
     end
   end

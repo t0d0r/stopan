@@ -10,6 +10,7 @@ class TicketReportTest < ActiveSupport::TestCase
     @org = Organization.create!(name: "Initech")
     Membership.create!(user: users(:anna), organization: @org)
     Membership.create!(user: users(:agent), organization: @org)
+    Membership.create!(user: users(:admin), organization: @org)
   end
 
   def ticket(created:, status: "new", done: nil, assignee: nil)

@@ -73,16 +73,17 @@ class Admin::OrgAdminsTest < ActionDispatch::IntegrationTest
   end
 
   test "members: only allowed users are added, own and marked memberships stay" do
+    boss = User.create!(email: "boss@example.com", password: "secret-pass-123", role: "admin")
     get admin_organization_url(@acme)
     assert_select "[data-member-picker] input[value=?]", users(:drifter).id.to_s
-    assert_select "[data-member-picker] input[value=?]", users(:admin).id.to_s, 0
+    assert_select "[data-member-picker] input[value=?]", boss.id.to_s, 0
     assert_select "[data-member-picker] input[value=?]", users(:carl).id.to_s, 0
     assert_select "form[action=?]", admin_membership_path(memberships(:agent_acme)), 0
     assert_select "form[action=?]", admin_membership_path(memberships(:boris_acme))
     assert_select "form[action=?] input[name='membership[admin]']", admin_membership_path(memberships(:anna_acme)), 0
 
     assert_no_difference -> { Membership.count } do
-      post admin_organization_memberships_url(@acme), params: { user_ids: [ users(:carl).id, users(:admin).id ] }
+      post admin_organization_memberships_url(@acme), params: { user_ids: [ users(:carl).id, boss.id ] }
     end
     assert_difference -> { @acme.memberships.count }, 1 do
       post admin_organization_memberships_url(@acme), params: { user_ids: [ users(:drifter).id ] }
@@ -100,9 +101,8 @@ class Admin::OrgAdminsTest < ActionDispatch::IntegrationTest
     assert_no_difference -> { Membership.count } do
       delete admin_membership_url(memberships(:agent_two_acme))
     end
-    admin_acme = Membership.create!(user: users(:admin), organization: @acme)
     assert_no_difference -> { Membership.count } do
-      delete admin_membership_url(admin_acme)
+      delete admin_membership_url(memberships(:admin_acme))
     end
     assert_difference -> { Membership.count }, -1 do
       delete admin_membership_url(memberships(:boris_acme))
@@ -133,7 +133,7 @@ class Admin::OrgAdminsTest < ActionDispatch::IntegrationTest
     assert_select "##{dom_id(users(:anna))}"
     assert_select "##{dom_id(users(:agent_two))}"
     assert_select "##{dom_id(users(:carl))}", 0
-    assert_select "##{dom_id(users(:admin))}", 0
+    assert_select "a[href=?]", edit_admin_user_path(users(:admin)), 0
     assert_select "##{dom_id(users(:drifter))}", 0
     assert_select "a[href=?]", edit_admin_user_path(users(:anna))
     assert_select "a[href=?]", edit_admin_user_path(users(:agent_two)), 0

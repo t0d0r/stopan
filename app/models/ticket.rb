@@ -73,14 +73,13 @@ class Ticket < ApplicationRecord
   scope :unsolved, -> { where(status: UNSOLVED) }
   scope :done, -> { where(status: DONE) }
 
-  # Administrators see every ticket, agents those of their organizations,
-  # requesters only their own in the organizations they still belong to
-  # (specs/roles.md).
+  # Staff (super administrators too, since 2026-11-02) see the tickets of
+  # their organizations, requesters only their own in the organizations
+  # they still belong to (specs/roles.md).
   def self.visible_to(user)
     return none unless user
-    # Deleted tickets are gone for everyone (specs/tickets.md "Deleting").
-    return where(deleted_at: nil) if user.admin?
 
+    # Deleted tickets are gone for everyone (specs/tickets.md "Deleting").
     scope = where(deleted_at: nil, organization_id: user.memberships.select(:organization_id))
     user.staff? ? scope : scope.where(requester_id: user.id)
   end
@@ -230,19 +229,14 @@ class Ticket < ApplicationRecord
     user.staff? ? [ :queue, :staff ] : [ user, :tickets ]
   end
 
-  # Who may be assigned tickets of an organization: administrators and its
-  # agents (specs/roles.md).
+  # Who may be assigned tickets of an organization: its active staff,
+  # agents and super administrators (specs/roles.md).
   def self.assignable_staff(organization_id)
-    User.active.where(role: "admin")
-        .or(User.active.where(role: "agent", id: Membership.where(organization_id: organization_id).select(:user_id)))
-        .ordered
+    User.active.staff.where(id: Membership.where(organization_id: organization_id).select(:user_id)).ordered
   end
 
-  # Staff an agent may pick in filters: administrators and the agents of
-  # the user's organizations (everyone's for administrators).
+  # Staff a user may pick in filters: the staff of the user's organizations.
   def self.assignable_staff_for(user)
-    return User.staff.active.ordered if user.admin?
-
     assignable_staff(user.memberships.select(:organization_id))
   end
 
@@ -340,7 +334,7 @@ class Ticket < ApplicationRecord
   def assignee_is_active_staff
     return errors.add(:assignee, :not_staff) unless assignee&.staff? && !assignee.deactivated?
 
-    errors.add(:assignee, :not_in_organization) unless assignee.admin? || assignee.member_of?(organization)
+    errors.add(:assignee, :not_in_organization) unless assignee.member_of?(organization)
   end
 
   def status_transition_allowed

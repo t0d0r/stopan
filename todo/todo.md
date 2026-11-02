@@ -299,6 +299,12 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed 28361df (no migrations; backup `pre-deploy-5fd80c0`) (specs/deploy.md "Update 2026-11-01")
 - [ ] production: upload 5 files near 10 MB as a signed-in user on a test ticket, then delete the ticket
 
+## Super administrators see their own organizations' tickets (2026-11-02, specs/roles.md)
+
+- [x] `Ticket.visible_to` and `visible_organizations` by membership for super administrators too; the admin area still covers every organization
+- [x] assignment only to the organization's staff; new tickets only in own organizations; presence counts, the overview's shared list and deleted tickets (pages and API) by membership
+- [ ] production: deploy; a super administrator who should work an organization's tickets adds themselves as a member first
+
 ## Later (specs/roadmap.md)
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)

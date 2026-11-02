@@ -1,7 +1,7 @@
 <%# The ticket table of the queue and the search page: bulk bar, rows and pagination
     (specs/queues.md "Table", "Bulk actions"). Locals: filter, staff, list_path, empty. %>
-<%# Who each row's assign menu may offer: admins and the ticket organization's agents (roles.md). %>
-<% agent_orgs = Membership.where(user_id: staff.reject(&:admin?).map(&:id)).pluck(:user_id, :organization_id).group_by(&:last).transform_values { |pairs| pairs.map(&:first) } %>
+<%# Who each row's assign menu may offer: the ticket organization's staff (roles.md). %>
+<% agent_orgs = Membership.where(user_id: staff.map(&:id)).pluck(:user_id, :organization_id).group_by(&:last).transform_values { |pairs| pairs.map(&:first) } %>
 <% if filter.tickets.any? %>
   <%= render "tickets/bulk_bar", filter: filter, staff: staff %>
   <div class="table-scroll">
@@ -39,7 +39,7 @@
             <td class="text col-assignee">
               <div class="assignee">
                 <%= render "tickets/assign_menu", ticket: ticket,
-                           staff: staff.select { |user| user.admin? || agent_orgs.fetch(ticket.organization_id, []).include?(user.id) } %>
+                           staff: staff.select { |user| agent_orgs.fetch(ticket.organization_id, []).include?(user.id) } %>
                 <%= render "tickets/take_button", ticket: ticket if ticket.assignee_id.nil? %>
               </div>
             </td>

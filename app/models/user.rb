@@ -91,10 +91,10 @@ class User < ApplicationRecord
     deactivated_at.present?
   end
 
-  # Organizations whose tickets the user sees: all for administrators,
-  # their own for everyone else (specs/roles.md).
+  # Organizations whose tickets the user sees: their own, for every role
+  # (specs/roles.md).
   def visible_organizations
-    admin? ? Organization.all : organizations
+    organizations
   end
 
   # Organizations the user manages in the admin area: all for super

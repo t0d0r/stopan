@@ -232,7 +232,8 @@ Response headers on `/s/...`:
 The admin dashboard lists shared tickets (number and subject linking to the
 ticket, since when, open or with password) with a "Stop sharing" button for
 each, so an administrator can see everything that is readable without
-sign-in.
+sign-in. Since 2026-11-02 the list holds the shared tickets of the
+organizations the administrator is a member of (roles.md).
 
 ## Not in this phase
 

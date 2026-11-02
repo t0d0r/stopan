@@ -26,8 +26,8 @@ class TicketsController < ApplicationController
       @ticket.organization ||= current_user.organizations.first if current_user.organizations.one?
     end
 
-    # Agents create tickets only in their own organizations (roles.md).
-    unless current_user.admin? || !current_user.staff? || @ticket.organization.nil? || current_user.member_of?(@ticket.organization)
+    # Staff create tickets only in their own organizations (roles.md).
+    unless !current_user.staff? || @ticket.organization.nil? || current_user.member_of?(@ticket.organization)
       @ticket.errors.add(:organization, :not_yours)
       return render(:new, status: :unprocessable_content)
     end
@@ -111,12 +111,11 @@ class TicketsController < ApplicationController
     @ticket = find_visible_ticket(params[:id])
   end
 
-  # Administrators may also open a deleted ticket, read-only, to review
-  # and restore it (specs/tickets.md "Deleting"); organization
-  # administrators those of their organizations (specs/org-admins.md).
+  # Administrators may also open a deleted ticket of their organizations,
+  # read-only, to review and restore it (specs/tickets.md "Deleting",
+  # specs/org-admins.md).
   def find_ticket_for_page(number)
-    return Ticket.find_by!(number: number.to_s) if current_user.admin?
-    return find_visible_ticket(number) unless current_user.org_admin?
+    return find_visible_ticket(number) unless current_user.admin_area?
 
     Ticket.visible_to(current_user).or(AdminScope.new(current_user).deleted_tickets).find_by!(number: number.to_s)
   end

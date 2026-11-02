@@ -111,7 +111,7 @@ Administrators only (403 for others):
 | `GET/PATCH /api/v1/settings` | `auto_postpone_days, default_look, mailbox_polling, mailbox_poll_seconds, timeline_order, translation_enabled, deepl_api_key` (write-only; `deepl_api_key_set` tells whether one is stored) |
 | `POST/PATCH/DELETE /api/v1/stages[/:id]`, `POST /api/v1/stages/:id/move` (`direction` up/down) | board stages |
 | `POST /api/v1/messages` | `recipients`, `text`: a message to users' notifications |
-| `GET /api/v1/deleted_tickets`, `POST /api/v1/deleted_tickets/:number/restore` | deleted tickets and restoring one (tickets.md "Deleting") |
+| `GET /api/v1/deleted_tickets`, `POST /api/v1/deleted_tickets/:number/restore` | deleted tickets of the super administrator's organizations and restoring one (tickets.md "Deleting") |
 
 Not in the API, as they need a browser: signing in and passwords
 (Devise), the Google connection and wizard, impersonation, themes and

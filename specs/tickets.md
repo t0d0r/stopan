@@ -163,7 +163,10 @@ id, or blank for nobody. Requesters get 403.
 
 Operator, 2026-10-27: "agents should be able to delete tickets so they
 are not seen any more; administrators can review deleted tickets and
-bring them back when needed". Deleting is a soft delete: nothing is
+bring them back when needed". Super administrators review and restore
+the deleted tickets of organizations they are a member of, organization
+administrators those of their organizations (roles.md, org-admins.md).
+Deleting is a soft delete: nothing is
 removed from the database, so the audit history stays complete.
 
 - `tickets.deleted_at` and `tickets.deleted_by_id`. Staff who may update

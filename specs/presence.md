@@ -19,8 +19,8 @@ has that ticket open, so two agents do not answer the same ticket at once.
   then one line with the number of requesters online ("and 2
   requesters"), never their names.
 - Requesters counted for an agent are those who share an organization
-  with the agent (the agent's ticket scope, roles.md); administrators
-  count all requesters. Staff names are visible to all staff, as in the
+  with the agent (the agent's ticket scope, roles.md); super
+  administrators likewise since 2026-11-02. Staff names are visible to all staff, as in the
   assignee menus.
 - Requesters do not see the button. They are counted, nothing more.
 - On phones the button stays in the one-row bar (icon, search, presence,

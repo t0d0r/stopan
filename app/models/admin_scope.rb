@@ -57,7 +57,11 @@ class AdminScope
     super_admin? || (membership.user_id != user.id && !membership.admin? && !membership.user.admin?)
   end
 
+  # Deleted tickets to review: of the super administrator's own
+  # organizations (specs/roles.md), of the administered ones for
+  # organization administrators.
   def deleted_tickets
-    super_admin? ? Ticket.deleted : Ticket.deleted.where(organization_id: organizations.select(:id))
+    scope = super_admin? ? user.memberships.select(:organization_id) : organizations.select(:id)
+    Ticket.deleted.where(organization_id: scope)
   end
 end
