@@ -710,6 +710,23 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-02 (revision db88326)
+
+Since 6a9194d: image previews sized to the image, with an actual size
+view (attachments.md "Image size"). There were no migrations, so no
+database copy was made.
+
+- Checked:
+  - no migration pending, users and tickets kept;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the served stylesheet and script have the actual size button
+    (`preview__zoom`);
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:6a9194d` as `latest` and restart.
+
 ## Update 2026-11-02 (revision 6a9194d)
 
 Since 71df093: the password eye on sign-in, password reset and the own

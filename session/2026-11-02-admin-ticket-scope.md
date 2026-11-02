@@ -152,6 +152,9 @@
 - Backups: only `pre-deploy-1fa5564` remains in production (the rollback
   copy), so there was nothing older to remove.
 
+- Deployed db88326 (image preview sizes), with no migrations and every
+  check passed (specs/deploy.md "Update 2026-11-02 (revision db88326)").
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see
