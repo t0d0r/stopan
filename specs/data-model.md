@@ -64,6 +64,7 @@ Unique index on the pair.
 | edited_at, edited_by_id | last edit of subject or description (FK users, nullable; timeline.md "Editing") |
 | markdown | boolean, default false: the description is Markdown (markdown.md) |
 | source | `app` (default), `web_form` or `email` (organization-mail.md, public-form.md) |
+| email_requester | boolean, not null, default true: whether the requester gets emails about this ticket (notifications.md "Emails to the requester") |
 | stage_id | FK stages, nullable: the board stage within the status (board.md) |
 | created_at, updated_at | indexed `updated_at` for the default sort |
 

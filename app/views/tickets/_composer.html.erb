@@ -36,6 +36,24 @@
       </div>
       <%= render "partials/markdown_check", f: f %>
       <p class="composer__hint composer__hint--internal"><%= icon :lock %> <%= t("ui.composer.internal_hint") %></p>
+      <%# Emails to the requester: a toggle that saves at once, and what it means;
+          hidden for an internal note (specs/notifications.md "Emails to the requester"). %>
+      <% if staff && policy.reply? && policy.update? && ticket.requester %>
+        <div class="composer__mail<%= " is-off" unless ticket.email_requester? %>" data-requester-mail
+             data-path="<%= ticket_requester_mail_path(ticket) %>">
+          <%= hidden_field_tag :email_requester, "0", id: nil %>
+          <label class="toggle">
+            <%= check_box_tag :email_requester, "1", ticket.email_requester?, role: "switch", class: "toggle__input",
+                              data: { requester_mail_toggle: true }, aria: { describedby: "requester-mail-hint" } %>
+            <span class="toggle__track" aria-hidden="true"></span>
+            <span class="toggle__label"><%= t("ui.composer.email_requester") %></span>
+          </label>
+          <p class="composer__mail-hint" id="requester-mail-hint" aria-live="polite">
+            <span class="composer__mail-on"><%= icon :envelope, size: 13 %> <%= t("ui.composer.email_on", email: ticket.requester.email) %></span>
+            <span class="composer__mail-off"><%= icon :lock, size: 13 %> <%= t("ui.composer.email_off") %></span>
+          </p>
+        </div>
+      <% end %>
       <div class="composer__row">
         <div class="field composer__files">
           <%= f.label :files, t("ui.fields.files"), class: "sr-only" %>

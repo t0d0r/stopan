@@ -155,6 +155,25 @@ class Ticket < ApplicationRecord
     deleted_at.present?
   end
 
+  # Emails to the requester on or off (specs/notifications.md "Emails to
+  # the requester"): written without touching updated_at, with an internal
+  # event naming who did it.
+  def switch_requester_mail!(on, actor:)
+    return if email_requester == on
+
+    transaction do
+      update_columns(email_requester: on)
+      events.create!(action: "mail_switched", actor: actor, internal: true,
+                     from_value: on ? "off" : "on", to_value: on ? "on" : "off")
+    end
+  end
+
+  # One email to the requester sent, not sent or failed, for staff to see
+  # in the history (same section).
+  def record_requester_mail(action, kind, value)
+    events.create!(action: action, internal: true, from_value: kind.to_s, to_value: value.to_s.squish.first(200))
+  end
+
   # Soft delete (specs/tickets.md "Deleting"): the ticket disappears for
   # everyone, its share link stops, an internal event records who did it.
   def soft_delete!(actor:)

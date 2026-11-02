@@ -81,7 +81,68 @@ Examples:
   email (the events are internal to staff, and nobody is the new
   assignee).
 
-## Notification panel (in the app)
+## Emails to the requester: switch and record
+
+2026-11-02: "show this movement" (which emails went to the requester),
+"a checkbox whether to send emails at all, even on a public reply", "when
+it is on, warn that an email will leave the system", and "the checkbox
+is a toggle, with no need for a save button".
+
+### The switch
+
+- `tickets.email_requester` (boolean, not null, default true): whether
+  the ticket's requester gets **any** email about it. This covers the
+  emails for new tickets opened for them, public replies and status
+  changes. When it is off, the requester still gets the in-app
+  notification, but no email and no share link for an email. The
+  switch does not affect staff emails.
+- **Where:** in the composer, for staff, under the text while "Public
+  reply" is chosen. It is hidden for an internal note, which never
+  emails anyone. It is a toggle (`input type=checkbox role=switch`,
+  label "Email the requester").
+- **No save button.** Flipping it saves at once:
+  - `PATCH /tickets/:number/requester_mail` with `email_requester=1|0`,
+    through Turbo's fetch, so this tab skips its own refresh;
+  - staff who may update the ticket only (`TicketPolicy#update?`, 403
+    otherwise);
+  - on failure the toggle flips back.
+  Without JavaScript the toggle is a plain check box in the reply form,
+  and sending the reply saves it first. The setting stays on the ticket
+  for every later reply, by anyone, until someone flips it again.
+- **Warning while on**, next to the toggle (an icon and text, never
+  colour alone): "anna@example.com will get public replies and status
+  changes by email, outside Stopan." While off: "No email goes to the
+  requester for this ticket; they see replies in Stopan only." Both
+  update at once when the toggle flips.
+- Each change writes an internal `mail_switched` event (from/to `on` and
+  `off`, the actor), shown as "Maria turned emails to the requester off".
+
+### The record in the history
+
+Every email that would go to the ticket's requester leaves an internal
+event in the timeline, staff only, with the system as actor
+(timeline.md "Events"):
+
+| event | when | shown as |
+|-------|------|----------|
+| `mail_sent` | the email was handed to the SMTP server (`after_deliver`) | "Email to anna@example.com: new reply" |
+| `mail_skipped`, reason `switched_off` | the switch was off when the email would have been queued | "No email to the requester: emails are off for this ticket" |
+| `mail_skipped`, reason `no_smtp` | neither the organization nor the server has outgoing mail | "No email to the requester: no outgoing mail server" |
+| `mail_failed` | sending raised an error | "Email to the requester failed: <error, at most 200 characters>" |
+
+- `from_value` holds the email kind (`created`, `replied`,
+  `status_changed`, ...). `to_value` holds the address for `mail_sent`,
+  the reason for `mail_skipped`, and the error text for `mail_failed`.
+- Only emails to the requester are recorded. Staff emails stay
+  internal notifications. **Reason:** only the requester's mail leaves
+  for the customer. Recording every staff email would bury the timeline.
+- A failed email to the requester is recorded and logged, and is not
+  retried. Emails to staff keep failing as before.
+- These events start no notifications and no emails themselves. They
+  refresh open staff pages like any internal event.
+- Postponing, which sends the requester no email by design (above),
+  leaves no mail event.
+
 
 Requested by the operator on 2026-10-26: "let there be a notification
 panel". Every notification decided above is also stored for the app, so

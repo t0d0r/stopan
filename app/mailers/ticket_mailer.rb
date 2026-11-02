@@ -6,6 +6,12 @@ class TicketMailer < ApplicationMailer
   helper :tickets, :markdown
   helper_method :notification_intro, :reply_hint, :reply_note
 
+  # Emails to the requester leave a record in the ticket's history
+  # (specs/notifications.md "Emails to the requester").
+  before_deliver { @delivering = true }
+  after_deliver :record_requester_mail
+  rescue_from StandardError, with: :requester_mail_failed
+
   def created = notify
   def replied = notify
   def noted = notify
@@ -36,6 +42,30 @@ class TicketMailer < ApplicationMailer
            subject: t("mailer.ticket.subject", number: @ticket.number, kind: t("mailer.ticket.kinds.#{@kind}"),
                                                subject: @ticket.subject)
     end
+  end
+
+  def requester_mail?
+    @_mail_was_called && @ticket && @recipient && @recipient.id == @ticket.requester_id
+  end
+
+  # Sent, or dropped because no outgoing mail server exists.
+  def record_requester_mail
+    return unless requester_mail?
+
+    if message.perform_deliveries
+      @ticket.record_requester_mail("mail_sent", @kind, @recipient.email)
+    else
+      @ticket.record_requester_mail("mail_skipped", @kind, "no_smtp")
+    end
+  end
+
+  # A failed email to the requester is recorded and logged, not retried;
+  # anything else fails as before.
+  def requester_mail_failed(error)
+    raise error unless @delivering && requester_mail?
+
+    Rails.logger.warn("Email to the requester of ticket #{@ticket.number} failed: #{error.class}")
+    @ticket.record_requester_mail("mail_failed", @kind, "#{error.class.name.demodulize}: #{error.message}")
   end
 
   # One sentence on what happened, in the recipient's language.

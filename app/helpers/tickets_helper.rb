@@ -264,13 +264,25 @@ module TicketsHelper
       if event.to_value.present? then t("ui.timeline.stage_changed", actor: actor, stage: event.to_value)
       else t("ui.timeline.stage_cleared", actor: actor, stage: event.from_value)
       end
+    when "mail_switched" then t("ui.timeline.mail_switched_#{event.to_value == "on" ? "on" : "off"}", actor: actor)
+    when "mail_sent" then t("ui.timeline.mail_sent", address: event.to_value, kind: mail_kind_name(event.from_value))
+    when "mail_skipped"
+      reason = event.to_value == "no_smtp" ? "no_smtp" : "switched_off"
+      t("ui.timeline.mail_skipped_#{reason}", kind: mail_kind_name(event.from_value))
+    when "mail_failed" then t("ui.timeline.mail_failed", kind: mail_kind_name(event.from_value), error: event.to_value)
     end
+  end
+
+  # The email's kind in the reader's language, as in the email subject.
+  def mail_kind_name(kind)
+    t("mailer.ticket.kinds.#{kind}", default: kind.to_s)
   end
 
   def event_icon(event)
     { "created" => :spark, "status_changed" => :status, "priority_changed" => :flag,
       "assignee_changed" => :user, "shared" => :link, "unshared" => :link, "stage_changed" => :flag,
-      "deleted" => :status, "restored" => :status }.fetch(event.action, :spark)
+      "deleted" => :status, "restored" => :status, "mail_switched" => :envelope, "mail_sent" => :envelope,
+      "mail_skipped" => :envelope, "mail_failed" => :envelope }.fetch(event.action, :spark)
   end
 
   def assignee_name(user_id)

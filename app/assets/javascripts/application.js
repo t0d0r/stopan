@@ -92,6 +92,33 @@ function setUpComposer(composer) {
   composer.querySelectorAll("[data-composer-mode]").forEach((radio) => radio.addEventListener("change", update));
 }
 
+// "Email the requester" (specs/notifications.md "Emails to the requester"):
+// the toggle saves at once, and the warning under it follows. The save is
+// a POST with _method through Turbo's fetch, so this tab skips its own
+// refresh; on failure the toggle flips back.
+function setUpRequesterMail(block) {
+  const box = block.querySelector("[data-requester-mail-toggle]");
+  const show = () => block.classList.toggle("is-off", !box.checked);
+  box.addEventListener("change", async () => {
+    show();
+    const body = new FormData();
+    body.append("_method", "patch");
+    body.append("email_requester", box.checked ? "1" : "0");
+    const token = document.querySelector("meta[name=csrf-token]")?.content;
+    let ok = false;
+    try {
+      const send = window.Turbo?.fetch || window.fetch;
+      const response = await send(block.dataset.path, {
+        method: "POST", body, credentials: "same-origin", headers: { "X-CSRF-Token": token, Accept: "text/html" }
+      });
+      ok = response.ok;
+    } catch {}
+    // A saved toggle is not work in progress for the live refresh check.
+    if (ok) box.defaultChecked = box.checked;
+    else { box.checked = !box.checked; show(); }
+  }, { signal: pageSignal });
+}
+
 // Phone menu (ui.md "Menu bar"): the button shows the sections, preferences
 // and account under the bar; a click outside or Escape closes it. Turbo
 // swaps the whole bar on the next page, so it starts closed there.
@@ -916,6 +943,7 @@ function setUpPage() {
   setUpConfirm(document.querySelector("[data-confirm-dialog]"));
   setUpPreview(document.querySelector("[data-preview-dialog]"));
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
+  document.querySelectorAll("[data-requester-mail]").forEach(setUpRequesterMail);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
   setUpCopyBoxes();

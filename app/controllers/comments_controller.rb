@@ -10,6 +10,11 @@ class CommentsController < ApplicationController
     # Only staff can write internal notes; a requester's flag is ignored.
     internal = policy.note? && params.dig(:comment, :internal) == "1"
     authorize!(internal ? policy.note? : policy.reply?)
+    # Without JavaScript the "Email the requester" toggle comes with the
+    # reply and is saved first (specs/notifications.md).
+    if !internal && params.key?(:email_requester) && policy.update?
+      @ticket.switch_requester_mail!(params[:email_requester] == "1", actor: current_user)
+    end
 
     @comment = @ticket.add_comment(author: current_user, body: comment_params[:body], internal: internal,
                                    markdown: comment_params[:markdown] == "1",

@@ -37,6 +37,8 @@ up to 5 attached files.
 | `shared` | share link created or replaced (sharing.md) | to: `password` for a password link, else blank | yes |
 | `unshared` | sharing stopped | - | yes |
 | `stage_changed` | the board stage changes (board.md) | old / new stage name | yes |
+| `mail_switched` | emails to the requester turned on or off (notifications.md "Emails to the requester") | `on` / `off` | yes |
+| `mail_sent`, `mail_skipped`, `mail_failed` | an email to the requester sent, not sent, or failed (same section); actor is the system | kind / address, reason or error | yes |
 
 Assignee values are stored as user ids and shown with the user's current
 display name; users that appear in history cannot be deleted (only

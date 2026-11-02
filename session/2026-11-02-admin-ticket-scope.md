@@ -33,7 +33,37 @@
   - `ticket_test.rb` visible_to, the report, seeds and org admin tests
     adjusted.
 
+- Emails to the requester (specs/notifications.md "Emails to the
+  requester", timeline.md "Events", data-model.md):
+  - `tickets.email_requester`, migration `AddEmailRequesterToTickets`,
+    default on;
+  - in the composer, for staff while "Public reply" is chosen, an "Email
+    the requester" toggle (`role=switch`). It saves at once through
+    `RequesterMailsController#update` (POST with `_method=patch`, Turbo
+    fetch). Without JavaScript it comes with the reply
+    (`CommentsController#create`). The warning under it names the
+    address and says the mail leaves Stopan;
+  - `Ticket#switch_requester_mail!` writes `mail_switched`;
+  - `TicketNotifier` skips the requester's email when the switch is off
+    and records `mail_skipped switched_off`. The in-app notification
+    still goes, and no share link is made;
+  - `TicketMailer` records `mail_sent` (`after_deliver`),
+    `mail_skipped no_smtp` (message not performed) and `mail_failed`
+    (`rescue_from` while delivering, logged, not raised), only for the
+    requester;
+  - mail events skip `TicketNotifier.collect`;
+  - tests: `test/models/requester_mail_test.rb` and
+    `test/controllers/requester_mails_controller_test.rb`;
+  - checked in the dev browser: on, off, and the event after a reload.
+
 ## Decisions
+
+- **The email switch is per ticket, not per reply.** It saves at once,
+  with no save button, and covers every email to the requester: new
+  tickets opened for them, replies and status changes. Staff emails are
+  not affected.
+- **Only emails to the requester are recorded in the timeline.** They are
+  the mail that leaves for the customer.
 
 - **The admin area stays global.** Settings, users, organizations, mail
   and the danger zone still cover every organization. The overview's
@@ -47,6 +77,8 @@
   queue is empty.
 
 ## Open
+
+- Deploy the email switch (migration `AddEmailRequesterToTickets`).
 
 - Deploy. Before or right after, a super administrator who works an
   organization's tickets adds themselves as a member on its page.

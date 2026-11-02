@@ -47,7 +47,14 @@ class TicketNotifier
       store(recipient, kind)
       next if postponing_only?(recipient, kind)
 
-      @ticket.share_with_requester! if recipient == @ticket.requester
+      if recipient == @ticket.requester
+        # Emails to the requester may be off for this ticket (specs/notifications.md).
+        unless Ticket.where(id: @ticket.id).pick(:email_requester)
+          @ticket.record_requester_mail("mail_skipped", kind, "switched_off")
+          next
+        end
+        @ticket.share_with_requester!
+      end
       TicketMailer.with(recipient: recipient, ticket: @ticket, event_ids: @events.map(&:id)).public_send(kind).deliver_later
     end
     members_to_tell(recipients.keys).each { |member| store(member, :created) }
