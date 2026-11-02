@@ -121,9 +121,11 @@
   migration ran and every check passed (specs/deploy.md "Update
   2026-11-02 (revision 1fa5564)").
 
-## Open
+- Deployed 018a5a2 after a backup (`pre-deploy-1fa5564.sqlite3`); both
+  migrations ran and every check passed (specs/deploy.md "Update
+  2026-11-02 (revision 018a5a2)").
 
-- Deploy followers and Cc (two migrations).
+## Open
 
 - A super administrator who works an organization's tickets adds
   themselves as a member on its page; until then they do not see them.
@@ -134,7 +136,7 @@
 
 ## Next step
 
-Deploy followers and Cc when requested.
+None pending; later items for followers are in todo.
 
 ## Security Note
 

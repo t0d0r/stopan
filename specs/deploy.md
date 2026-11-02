@@ -710,6 +710,28 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-02 (revision 018a5a2)
+
+Since 1fa5564: staff followers and customer Cc on tickets (followers.md;
+migrations `CreateTicketFollowers` and `AddDetailToTicketEvents`).
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-1fa5564.sqlite3` (mode 600; 12 users, 13
+  tickets).
+- Checked:
+  - both migrations ran: `ticket_followers` and `ticket_events.detail`
+    present, none pending;
+  - users and tickets kept;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the served stylesheet has the People panel rules;
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:1fa5564` as `latest` and restart. The
+  new table and column do not disturb the older code. Cc access ends with
+  the rollback, since the older `visible_to` ignores followers.
+
 ## Update 2026-11-02 (revision 1fa5564)
 
 Since 28361df:
