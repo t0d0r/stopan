@@ -286,7 +286,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] "Administrator" shown as "Super administrator"; shield toggle for the mark on member rows; organization admin pill
 - [x] production: deployed 5fd80c0 (migration `AddAdminToMemberships`; backup `pre-deploy-3f367da`) (specs/deploy.md)
 - [x] production: removed the backup `pre-deploy-dfb32f4`; `pre-deploy-3f367da` stays as the rollback copy
-- [ ] production: mark the first organization administrators on the organization pages
+- [x] production: two former super administrators are now agents who administer their organization; one super administrator remains
 
 ## Attachments: request size limit (2026-10-31, specs/attachments.md "Request size")
 

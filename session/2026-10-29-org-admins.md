@@ -81,10 +81,15 @@
 - Removed the production backup `pre-deploy-dfb32f4.sqlite3`;
   `pre-deploy-3f367da.sqlite3` is the rollback copy for 5fd80c0.
 
+- 2026-11-02, production: two super administrators became agents with
+  the organization admin mark on their only organization (a one-off
+  `rails runner` script that changed nothing unless each name matched one
+  super administrator with a membership). They had no unsolved tickets in
+  other organizations. One super administrator remains.
+
 ## Open
 
-- Production has no organization administrators yet; a super
-  administrator marks them on the organization pages.
+- Nothing for this feature.
 
 ## Verify
 
@@ -94,7 +99,7 @@ menu's "Admin".
 
 ## Next step
 
-Mark the first organization administrators in production.
+None pending for organization administrators.
 
 ## Security Note
 
