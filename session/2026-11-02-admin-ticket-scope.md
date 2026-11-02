@@ -109,6 +109,9 @@
   (revision 99681ea)"). An email sent before the fix still holds the
   ticket page link; the next public reply brings the shared link.
 
+- Production backups: the 14 older copies were removed; only
+  `pre-deploy-1fa5564.sqlite3` (before the follower migrations) remains.
+
 ## Decisions
 
 - **Followers come in two kinds, by role.** Staff followers see
