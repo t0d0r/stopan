@@ -344,6 +344,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] copy button on Markdown code blocks (specs/markdown.md "Copy code")
 - [x] STOPAN wordmark (traced, currentColor SVG) in place of the name in the menu bar (specs/ui.md "Logo")
 - [x] every button as high as the fields, except .btn--small (specs/ui.md "Form fields")
+- [x] production: deployed fa54a8b (composer layout, searchable selects, code copy, wordmark, button heights), no migrations (specs/deploy.md)
 - [ ] /tickets/new counts as busy for the live refresh as soon as it loads (the requester's organization script changes the select)
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 

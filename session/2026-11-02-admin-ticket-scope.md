@@ -258,8 +258,7 @@
   check passed (specs/deploy.md "Update 2026-11-03 (revision fd2638b)").
 - Composer: the "Then set status" select sits above the send button in
   one right-hand column (`.composer__send`), both as wide as the wider
-  one; full width on phones (specs/timeline.md "Composer"). Not
-  deployed yet.
+  one; full width on phones (specs/timeline.md "Composer").
 - Searchable selects (specs/ui.md "Searchable selects"): a native list
   is not fit for many people. `select[data-combobox]` (`combobox_data`
   helper, `setUpCombobox`) becomes a text field with the select's look
@@ -269,14 +268,14 @@
   filters still work; its required check shows on the field. Used for
   the new ticket requester and the queue's assignee and organization
   filters. The width comes from a CSS variable, not the `size`
-  attribute, which CSS reads as a list box. Not deployed yet.
+  attribute, which CSS reads as a list box.
 - Copy code (specs/markdown.md "Copy code"): every `.markdown-body pre`
   gets a copy button in its corner from a `<template data-code-copy>` in
   the layout (`setUpCodeCopy`, also after a Turbo frame load and a cache
   restore). It copies the block's text without the last line break,
   shows a check mark and "Copied", stays put while the block scrolls,
   and is skipped by the message's copy box. Stored and sanitized HTML
-  are unchanged. Not deployed yet.
+  are unchanged.
 - Wordmark (specs/ui.md "Logo"): the middle of three lettering styles
   (bold angular capitals, octagonal O with a diamond) traced from the
   drawing into `app/assets/images/stopan-wordmark.svg`: one even-odd
@@ -285,9 +284,12 @@
   Ramer-Douglas-Peucker at 0.9 px), since no tracing tool is installed.
   `ApplicationHelper#wordmark` inlines it in the menu bar, 14 px high,
   in place of "Stopan"; checked in Notes light and dark and Omarchy
-  dark. Not deployed yet.
+  dark.
 - Buttons: every `.btn` except `.btn--small` is as high as the fields
-  (36 px, 44 px on phones). Not deployed yet.
+  (36 px, 44 px on phones).
+- Deployed fa54a8b (composer layout, searchable selects, code copy,
+  wordmark, button heights), with no migrations and every check passed
+  (specs/deploy.md "Update 2026-11-03 (revision fa54a8b)").
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
