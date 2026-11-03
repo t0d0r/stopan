@@ -256,6 +256,10 @@
   - `test/integration/form_fields_test.rb` (9 tests).
 - Deployed fd2638b (icons and form fields), with no migrations and every
   check passed (specs/deploy.md "Update 2026-11-03 (revision fd2638b)").
+- Composer: the "Then set status" select sits above the send button in
+  one right-hand column (`.composer__send`), both as wide as the wider
+  one; full width on phones (specs/timeline.md "Composer"). Not
+  deployed yet.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

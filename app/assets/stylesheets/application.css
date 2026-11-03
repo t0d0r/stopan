@@ -4256,13 +4256,24 @@ turbo-frame {
   margin: 0;
 }
 
+/* The status select above the button, both as wide as the wider one
+   (timeline.md "Composer"). */
+.composer__send {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: auto;
+}
+
 .composer__status {
   display: flex;
   flex-direction: column;
+  margin: 0;
 }
 
-.composer__submit {
-  margin-left: auto;
+.composer__send :is(.select, .btn) {
+  width: 100%;
 }
 
 .composer.is-internal .btn--primary {
@@ -4466,11 +4477,7 @@ turbo-frame {
     max-width: none;
   }
 
-  .composer__submit {
-    width: 100%;
-  }
-
-  .composer__submit .btn {
+  .composer__send {
     width: 100%;
   }
 

@@ -59,6 +59,8 @@
           <%= f.label :files, t("ui.fields.files"), class: "sr-only" %>
           <%= render "partials/file_drop", f: f, hint_id: "composer-files-hint" %>
         </div>
+        <%# The status select sits above the button (timeline.md "Composer"). %>
+        <div class="composer__send">
         <% if staff %>
           <div class="field composer__status">
             <%= label_tag "comment_status", t("ui.composer.submit_as") %>
@@ -76,6 +78,7 @@
             <span data-composer-icon="internal"<%= " hidden" unless internal %>><%= icon :lock %></span>
             <span data-composer-label><%= internal ? t("ui.composer.add_note") : t("ui.composer.send_reply") %></span>
           </button>
+        </div>
         </div>
       </div>
     <% end %>

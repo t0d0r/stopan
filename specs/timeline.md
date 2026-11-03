@@ -257,6 +257,10 @@ At the end of the timeline, for users who may reply:
   turns pink for a note and the button label changes), text area, files,
   "Submit as" status select (keep current, or an allowed transition) and
   the submit button.
+- **Layout of the last row** (2026-11-03): files on the left; on the
+  right one column with the status select above the submit button, both
+  as wide as the wider of the two. On phones the column takes the full
+  width.
 
 ## Live updates of the ticket page
 

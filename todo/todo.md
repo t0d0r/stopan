@@ -339,7 +339,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] form fields: one base style, selects with a chevron, check boxes and radios, errors under the field (FieldFormBuilder), file drop zone, leading icons, joined input and button groups (specs/ui.md "Form fields")
 - [ ] form fields, open: buttons not beside a field stay 30 px next to 36 px fields; check the 5-file / 10 MB limits before sending; join the Google setup copy fields and the public link field; move FieldFormBuilder to app/form_builders after a dev container restart (specs/ui.md "Form fields")
 - [x] production: deployed fd2638b (icons and form fields), no migrations (specs/deploy.md)
-- [ ] /tickets/new counts as busy for the live refresh as soon as it loads (the requester's organization script changes the select); the composer's "Then set status" select is not full width on phones
+- [x] composer: the status select above the send button, one column as wide as the wider of the two; full width on phones (specs/timeline.md "Composer")
+- [ ] /tickets/new counts as busy for the live refresh as soon as it loads (the requester's organization script changes the select)
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 
 ## Later (specs/roadmap.md)
