@@ -110,6 +110,14 @@ SHAs by hand.
   cannot tell which tag to follow. The digest is still updated by hand.
 - **Dependabot alerts and security updates** are repository settings,
   separate from this file.
+- **Security fixes do not wait for the weekly run.** `make audit`
+  (bundler-audit and the Ruby advisory database) lists every vulnerable
+  gem, indirect ones included, and often before GitHub shows an alert.
+  A vulnerable gem is moved to its fixed release with
+  `bundle update --conservative <gems>`, then `make check`, commit and
+  deploy. The open Dependabot pull request for the same gems closes by
+  itself once `main` has them. First done 2026-11-03: sqlite3, crass,
+  loofah, nokogiri, rack and rails-html-sanitizer.
 
 ## Not in this phase
 
