@@ -336,7 +336,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed 436dd64 (pinned base image), no migrations (specs/deploy.md)
 - [x] Dependabot version updates for GitHub Actions and gems, grouped, with a cooldown (specs/ci.md "Dependency updates")
 - [x] Dependabot alerts turned on in the repository settings (specs/ci.md "Dependency updates")
-- [ ] Dependabot security updates (automatic fix pull requests): repository setting, still off
+- [x] Dependabot security updates (automatic fix pull requests) turned on in the repository settings (specs/ci.md "Dependency updates")
 - [x] gem security fixes from `make audit`: sqlite3 2.10.2, crass 1.0.8, loofah 2.25.3, nokogiri 1.19.7, rack 3.2.8, rails-html-sanitizer 1.7.2, with bootsnap 1.26.1 and msgpack 1.8.7 (specs/ci.md "Dependency updates")
 - [x] production: deployed 6a89f1d (gem security fixes), no migrations (specs/deploy.md)
 - [x] Heroicons 2.2.0 replace the own icons, and icons on buttons, flash messages, panels, menu sections, account menu and timeline lines (specs/ui.md "Icons")

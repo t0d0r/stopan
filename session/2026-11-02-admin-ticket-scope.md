@@ -311,6 +311,9 @@
 - Deployed 6a89f1d (gem security fixes), no migrations; the running app
   reports the new gem versions and every check passed (specs/deploy.md
   "Update 2026-11-03 (revision 6a89f1d)").
+- Dependabot security updates turned on in the repository settings,
+  next to the alerts: a fix pull request opens as soon as an alert has
+  a fixed release, without the cooldown; merged only after `make check`.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -356,8 +359,6 @@
 
 ## Open
 
-- Dependabot security updates (automatic fix pull requests) are off in
-  the repository settings; alerts are on.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the

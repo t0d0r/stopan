@@ -109,7 +109,12 @@ SHAs by hand.
   image by digest only (docker.md "Pinned base images"), so Dependabot
   cannot tell which tag to follow. The digest is still updated by hand.
 - **Dependabot alerts and security updates** are repository settings,
-  separate from this file.
+  separate from this file. Both are on (2026-11-03). Alerts list known
+  advisories for the locked gems and pinned actions. Security updates
+  open a pull request as soon as an alert has a fixed release, without
+  the cooldown and outside the weekly run; they follow the groups and
+  prefixes above. They are merged the same way: only after `make check`
+  passes locally, never automatically.
 - **Security fixes do not wait for the weekly run.** `make audit`
   (bundler-audit and the Ruby advisory database) lists every vulnerable
   gem, indirect ones included, and often before GitHub shows an alert.
