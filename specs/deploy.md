@@ -710,6 +710,26 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-03 (revision 6a89f1d)
+
+Since fa54a8b: gem security fixes from `make audit` (ci.md "Dependency
+updates"): sqlite3 2.10.2, crass 1.0.8, loofah 2.25.3, nokogiri 1.19.7,
+rack 3.2.8, rails-html-sanitizer 1.7.2, with bootsnap 1.26.1 and
+msgpack 1.8.7. The Dependabot config itself changes nothing on the
+server. There were no migrations, so no database copy was made.
+
+- Checked:
+  - no migration pending, users and tickets present;
+  - the running app reports the new gem versions;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the stylesheet, script and sign-in page are unchanged in content
+    (combobox, code copy, wordmark);
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:fa54a8b` as `latest` and restart.
+
 ## Update 2026-11-03 (revision fa54a8b)
 
 Since fd2638b: the composer's status select above the send button

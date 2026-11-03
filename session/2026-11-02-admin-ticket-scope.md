@@ -308,6 +308,9 @@
   1.8.7 from the pull request. `make audit` is clean, `make check`
   passes. Rule added to specs/ci.md: security fixes do not wait for the
   weekly run.
+- Deployed 6a89f1d (gem security fixes), no migrations; the running app
+  reports the new gem versions and every check passed (specs/deploy.md
+  "Update 2026-11-03 (revision 6a89f1d)").
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
