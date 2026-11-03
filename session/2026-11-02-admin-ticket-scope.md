@@ -270,6 +270,13 @@
   the new ticket requester and the queue's assignee and organization
   filters. The width comes from a CSS variable, not the `size`
   attribute, which CSS reads as a list box. Not deployed yet.
+- Copy code (specs/markdown.md "Copy code"): every `.markdown-body pre`
+  gets a copy button in its corner from a `<template data-code-copy>` in
+  the layout (`setUpCodeCopy`, also after a Turbo frame load and a cache
+  restore). It copies the block's text without the last line break,
+  shows a check mark and "Copied", stays put while the block scrolls,
+  and is skipped by the message's copy box. Stored and sanitized HTML
+  are unchanged. Not deployed yet.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

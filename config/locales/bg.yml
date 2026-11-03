@@ -728,6 +728,7 @@ bg:
 
     copy:
       label: "Копирай текста"
+      code: "Копирай кода"
       copied: "Копирано"
 
     preview:

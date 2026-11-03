@@ -36,6 +36,24 @@ or a note can be written in Markdown and is then shown formatted.
   is not a page), code and tables get a light grey background and rules,
   quotes a left rule. Long code lines scroll inside their block.
 - Copy box: copies the text as shown (formatted, without Markdown syntax).
+- **Copy code** (2026-11-03): every code block (a fenced ```` ``` ````
+  block or an indented one, `pre`) gets a copy button.
+  - **Where:** the block's top right corner, on the ticket page, in
+    translations and on the shared page.
+  - **Look:** the copy icon, always visible: phones have no hover
+    (mobile.md).
+  - **What it copies:** the block's text exactly as written, with line
+    breaks and indentation, without the last line break.
+  - **After copying:** a check mark shows for a moment, and the title
+    and accessible name say "Copied".
+  - **Placement:** the button sits outside the scrolling part, so it
+    stays in the corner when a long line scrolls sideways.
+  - **Not in the message's copy box:** the copy box leaves the button
+    out (`data-copy-skip`).
+  - **No change to the stored or sanitized HTML.** JavaScript adds the
+    button from a `<template>` in the layout, also after an in-place
+    edit or a live refresh. Without JavaScript the code can still be
+    selected by hand.
 - Task list items (`- [ ]`, `- [x]`) are check boxes; see "Task lists".
 
 ## Plain text links

@@ -3352,6 +3352,67 @@ input[type="search"].field-input {
   background: none;
 }
 
+/* Copy button of a code block (specs/markdown.md "Copy code"): in the
+   corner of a wrapper, so it stays put while the block scrolls. */
+.code-block {
+  position: relative;
+  margin: 0 0 0.8em;
+}
+
+.markdown-body .code-block pre {
+  margin: 0;
+  padding-right: 44px;
+}
+
+.code-copy {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  background: var(--field-bg);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.code-copy:hover {
+  color: var(--ink);
+}
+
+.code-copy:focus-visible {
+  outline: 3px solid var(--accent-ring);
+  outline-offset: 1px;
+}
+
+.code-copy__done,
+.code-copy.is-copied .code-copy__icon {
+  display: none;
+}
+
+.code-copy.is-copied .code-copy__done {
+  display: inline-flex;
+  color: #1f7a33;
+}
+
+@media (max-width: 760px) {
+  .code-copy {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media print {
+  .code-copy {
+    display: none;
+  }
+}
+
 .markdown-body blockquote {
   padding-left: 12px;
   border-left: 3px solid var(--rule);

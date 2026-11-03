@@ -70,4 +70,21 @@ class MarkdownTest < ActionDispatch::IntegrationTest
     assert_includes mail.html_part.body.to_s, "<strong>the spare</strong>"
     assert_includes mail.text_part.body.to_s, "Use **the spare** roll"
   end
+
+  # specs/markdown.md "Copy code"
+  test "code blocks render as plain pre and the page carries the copy button template" do
+    ticket = tickets(:printer)
+    reply = ticket.add_comment(author: users(:agent), body: "Run:\n\n```\nlpstat -p\n```", markdown: true)
+    sign_in users(:anna)
+    get ticket_url(ticket)
+    assert_select "#event-#{reply.event.id} .markdown-body pre code", /lpstat -p/
+    assert_select "#event-#{reply.event.id} .markdown-body button", 0
+    assert_select "template[data-code-copy]", 1
+    template = Nokogiri::HTML5(response.body).at_css("template[data-code-copy]")
+    button = Nokogiri::HTML5.fragment(template.inner_html).at_css("button.code-copy")
+    assert_equal [ "button", "Copy code", "Copy code", "Copied", "" ],
+                 [ button["type"], button["aria-label"], button["title"], button["data-copied"], button["data-copy-skip"] ]
+    assert button.at_css(".code-copy__icon svg.icon")
+    assert button.at_css(".code-copy__done svg.icon")
+  end
 end

@@ -121,5 +121,13 @@
     <%= render "partials/confirm_dialog" %>
   <% end %>
   <%= render "partials/preview_dialog" unless devise_controller? %>
+  <%# The copy button of Markdown code blocks (specs/markdown.md "Copy code"). %>
+  <template data-code-copy>
+    <button type="button" class="code-copy" data-copy-skip title="<%= t("ui.copy.code") %>" aria-label="<%= t("ui.copy.code") %>"
+            data-label="<%= t("ui.copy.code") %>" data-copied="<%= t("ui.copy.copied") %>">
+      <span class="code-copy__icon"><%= icon :copy, size: 14 %></span>
+      <span class="code-copy__done"><%= icon :check, size: 14 %></span>
+    </button>
+  </template>
 </body>
 </html>

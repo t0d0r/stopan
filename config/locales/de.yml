@@ -728,6 +728,7 @@ de:
 
     copy:
       label: "Text kopieren"
+      code: "Code kopieren"
       copied: "Kopiert"
 
     preview:

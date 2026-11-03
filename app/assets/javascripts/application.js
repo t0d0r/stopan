@@ -495,6 +495,40 @@ function setUpCopyBoxes() {
   });
 }
 
+// Each code block of a Markdown message gets a copy button in its corner
+// (specs/markdown.md "Copy code"). The block is wrapped, so the button
+// stays put while a long line scrolls; the message's copy box skips it.
+function setUpCodeCopy(root = document) {
+  const template = document.querySelector("template[data-code-copy]");
+  if (!template) return;
+  root.querySelectorAll(".markdown-body pre").forEach((pre) => {
+    // A page restored from Turbo's cache keeps the wrapper but not the
+    // listener: the expando below is not part of the snapshot.
+    if (!pre.parentElement.classList.contains("code-block")) {
+      const block = document.createElement("div");
+      block.className = "code-block";
+      pre.before(block);
+      block.append(pre, template.content.firstElementChild.cloneNode(true));
+    }
+    const button = pre.parentElement.querySelector(".code-copy");
+    if (!button || button.codeCopyReady) return;
+    button.codeCopyReady = true;
+    let timer;
+    button.addEventListener("click", async () => {
+      await copyText(pre.textContent.replace(/\n$/, ""));
+      clearTimeout(timer);
+      button.classList.add("is-copied");
+      button.title = button.dataset.copied;
+      button.setAttribute("aria-label", button.dataset.copied);
+      timer = setTimeout(() => {
+        button.classList.remove("is-copied");
+        button.title = button.dataset.label;
+        button.setAttribute("aria-label", button.dataset.label);
+      }, 1500);
+    });
+  });
+}
+
 // Menu bar dropdowns (the notification panel) close on a click outside
 // and on Escape, which returns focus to their button. They are looked up on
 // each event, because a live refresh replaces the notification panel.
@@ -1333,6 +1367,7 @@ function setUpPage() {
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
   setUpCopyBoxes();
+  setUpCodeCopy();
   setUpMailView();
   setUpLongRequest();
   setUpEventRuns();
@@ -1576,6 +1611,7 @@ function setUpBoard(board) {
 // text area is set up to grow here.
 document.addEventListener("turbo:frame-load", (event) => {
   event.target.querySelectorAll("textarea[data-autogrow]").forEach(autoGrow);
+  setUpCodeCopy(event.target);
   if (event.target.id === "description-text") {
     setUpMailView();
     setUpLongRequest();
