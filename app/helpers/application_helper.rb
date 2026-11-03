@@ -120,6 +120,15 @@ module ApplicationHelper
 
   # The menu bar shows the role as an icon, named for screen readers and in
   # its tooltip (ui.md "Menu bar").
+  # The STOPAN wordmark (ui.md "Logo"), inline so its ink follows the
+  # theme (currentColor). The file is ours and static: no scripts or links.
+  WORDMARK = Rails.root.join("app/assets/images/stopan-wordmark.svg").read.freeze
+
+  def wordmark(height: 14)
+    width = (height * 818.0 / 137).round
+    WORDMARK.sub("<svg ", %(<svg class="wordmark" width="#{width}" height="#{height}" aria-hidden="true" focusable="false" )).html_safe
+  end
+
   ROLE_ICONS = { "requester" => :user, "agent" => :headset, "admin" => :shield }.freeze
 
   def role_icon(user)

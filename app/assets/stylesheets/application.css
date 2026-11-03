@@ -192,6 +192,15 @@ form.button_to {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
 }
 
+/* The STOPAN wordmark in place of the name (ui.md "Logo"). */
+.menubar__name {
+  display: inline-flex;
+}
+
+.menubar__name .wordmark {
+  display: block;
+}
+
 /* New ticket: a "+" on green paper next to the name (ui.md "Menu bar"). */
 .menubar .menubar__new {
   width: 24px;

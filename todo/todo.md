@@ -342,6 +342,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] composer: the status select above the send button, one column as wide as the wider of the two; full width on phones (specs/timeline.md "Composer")
 - [x] searchable selects (combobox over the real select) for the new ticket requester and the queue assignee and organization filters (specs/ui.md "Searchable selects")
 - [x] copy button on Markdown code blocks (specs/markdown.md "Copy code")
+- [x] STOPAN wordmark (traced, currentColor SVG) in place of the name in the menu bar (specs/ui.md "Logo")
 - [ ] /tickets/new counts as busy for the live refresh as soon as it loads (the requester's organization script changes the select)
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 

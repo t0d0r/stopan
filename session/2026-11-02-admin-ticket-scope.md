@@ -277,6 +277,15 @@
   shows a check mark and "Copied", stays put while the block scrolls,
   and is skipped by the message's copy box. Stored and sanitized HTML
   are unchanged. Not deployed yet.
+- Wordmark (specs/ui.md "Logo"): the middle of three lettering styles
+  (bold angular capitals, octagonal O with a diamond) traced from the
+  drawing into `app/assets/images/stopan-wordmark.svg`: one even-odd
+  path, 10 contours, about 1 KB, `currentColor`. Traced with a small
+  script (PNG decode, marching squares at the 50 % ink level,
+  Ramer-Douglas-Peucker at 0.9 px), since no tracing tool is installed.
+  `ApplicationHelper#wordmark` inlines it in the menu bar, 14 px high,
+  in place of "Stopan"; checked in Notes light and dark and Omarchy
+  dark. Not deployed yet.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

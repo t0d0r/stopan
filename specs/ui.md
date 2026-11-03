@@ -14,7 +14,7 @@ Turbo Drive for page changes.
 
 - **Desk:** warm grey background (`--desk`), darker in dark mode.
 - **Menu bar:** translucent bar at the top. Left: the sticky icon and
-  "Stopan" (icon only under 560px), then "New ticket" as a "+" on green
+  the STOPAN wordmark (ui.md "Logo"; icon only under 560px), then "New ticket" as a "+" on green
   paper (a link with the label "New ticket" for screen readers and as
   its tooltip, `aria-current` on the new ticket page; 2026-10-28: "after
   Stopan, as a + icon"; it stays in the phone bar's one row), then
@@ -95,6 +95,20 @@ and 48 px PNGs). Change those four files together.
 `public/apple-touch-icon.png`: iOS and macOS ask for that name first,
 whatever the page links, and got 404 without it (2026-10-28). Copy it
 again whenever the touch icon changes.
+
+**Wordmark** (2026-11-03): STOPAN in bold angular capitals with
+octagonal O holding a diamond, the middle of three lettering styles
+drawn for the name. It replaces the word "Stopan" next to the sticky
+icon in the menu bar.
+- `app/assets/images/stopan-wordmark.svg`: traced from the drawing into
+  one even-odd path, viewBox 818 x 137, `fill="currentColor"`. It is
+  10 contours, about 1 KB, with no scripts, links or external
+  references.
+- `ApplicationHelper#wordmark(height:)` inlines it, so its ink follows
+  the theme and the look. It is decorative (`aria-hidden`); the link
+  keeps the label "Stopan".
+- **Size:** 14 px high in the menu bar (84 px wide).
+- **Phones:** the wordmark hides under 560 px, as the name did.
 
 **Documentation logo:** candidate 3, the teal mark on the yellow sticky
 note (`docs/logos/3-sticky-icon.svg`), heads the README. It is used only
