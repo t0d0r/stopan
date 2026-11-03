@@ -298,6 +298,7 @@
   auto-merge: a branch is merged after `make check` passes locally. The
   base image digest stays a manual update. `test/config/github_test.rb`
   checks the config and that every workflow action is pinned to a SHA.
+- Pushed; Dependabot alerts turned on in the repository settings.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -343,8 +344,8 @@
 
 ## Open
 
-- Dependabot alerts and security updates are off in the repository
-  settings; the config file covers version updates only.
+- Dependabot security updates (automatic fix pull requests) are off in
+  the repository settings; alerts are on.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
