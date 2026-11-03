@@ -338,6 +338,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] Heroicons 2.2.0 replace the own icons, and icons on buttons, flash messages, panels, menu sections, account menu and timeline lines (specs/ui.md "Icons")
 - [x] form fields: one base style, selects with a chevron, check boxes and radios, errors under the field (FieldFormBuilder), file drop zone, leading icons, joined input and button groups (specs/ui.md "Form fields")
 - [ ] form fields, open: buttons not beside a field stay 30 px next to 36 px fields; check the 5-file / 10 MB limits before sending; join the Google setup copy fields and the public link field; move FieldFormBuilder to app/form_builders after a dev container restart (specs/ui.md "Form fields")
+- [x] production: deployed fd2638b (icons and form fields), no migrations (specs/deploy.md)
 - [ ] /tickets/new counts as busy for the live refresh as soon as it loads (the requester's organization script changes the select); the composer's "Then set status" select is not full width on phones
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 

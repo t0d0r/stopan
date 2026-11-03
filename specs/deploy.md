@@ -710,6 +710,26 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-03 (revision fd2638b)
+
+Since 436dd64: Heroicons in place of the own icons and icons in new
+places (ui.md "Icons"), and the new form fields: one base style,
+selects with a chevron, errors under each field, the file drop zone,
+leading icons and joined groups (ui.md "Form fields"). There were no
+migrations, so no database copy was made.
+
+- Checked:
+  - no migration pending, users and tickets kept;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the served stylesheet and script have the new code
+    (`--field-chevron`, `dropzone`, `setUpDropzone`), and the sign-in
+    page draws its icons on the 24 px grid;
+  - g0no `/up` 200.
+- Rollback: tag `localhost/stopan:436dd64` as `latest` and restart.
+
 ## Update 2026-11-02 (revision 436dd64)
 
 Since 4c73f97: the base image is pinned by digest (docker.md "Pinned

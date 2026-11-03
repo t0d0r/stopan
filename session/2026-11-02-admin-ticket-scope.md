@@ -254,6 +254,8 @@
     fields, never on passwords; joined groups for "Add a colleague",
     the Cc email and the share link (sharing.md, followers.md);
   - `test/integration/form_fields_test.rb` (9 tests).
+- Deployed fd2638b (icons and form fields), with no migrations and every
+  check passed (specs/deploy.md "Update 2026-11-03 (revision fd2638b)").
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
