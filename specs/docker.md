@@ -43,8 +43,8 @@ image at any time, so a build could pick up content nobody reviewed.
 3. Do the same for `docker/dockerfile:1` when needed.
 
 **Trade-off:** security fixes in the base image no longer arrive on their
-own with the next build; the digest has to be updated. Dependabot can do
-that later (ci.md "Not in this phase").
+own with the next build; the digest has to be updated by hand.
+Dependabot does not cover it (ci.md "Dependency updates").
 
 `test/config/dockerfile_test.rb` checks that every `FROM` and the syntax
 line are pinned, that both Dockerfiles use the same digest, and that the

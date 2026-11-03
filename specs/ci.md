@@ -77,10 +77,44 @@ base images".
 The License check is answered by `LICENSE` (BSD 2-Clause, overview.md
 "License").
 
+## Dependency updates (Dependabot)
+
+2026-11-03: `.github/dependabot.yml` asks Dependabot for version updates
+of the GitHub Actions and the gems. This answers Scorecard's
+Dependency-Update-Tool check, and replaces updating the pinned action
+SHAs by hand.
+
+- **GitHub Actions** (`.github/workflows`):
+  - weekly, on Monday;
+  - one grouped pull request for all actions;
+  - Dependabot keeps the commit SHA pins and updates the version
+    comment next to them;
+  - commit prefix `ci(deps)`.
+- **Gems** (`Gemfile`, `Gemfile.lock`):
+  - weekly, on Monday;
+  - minor and patch updates in one grouped pull request; each major
+    update in its own;
+  - at most 5 open pull requests;
+  - commit prefix `chore(deps)`, `chore(deps-dev)` for development and
+    test gems.
+- **Cooldown:** a new release is proposed only after it has been
+  public for a while: 7 days by default, 3 for patch, 7 for minor, 30
+  for major. A hijacked or broken release is usually found and pulled
+  within days; waiting keeps it out.
+- **No auto-merge.** There is no test workflow on GitHub (below). A
+  Dependabot pull request is merged only after its branch passes
+  `make check` locally; a deploy follows the usual steps
+  (specs/deploy.md).
+- **Base image digests are not covered.** The Dockerfiles name the Ruby
+  image by digest only (docker.md "Pinned base images"), so Dependabot
+  cannot tell which tag to follow. The digest is still updated by hand.
+- **Dependabot alerts and security updates** are repository settings,
+  separate from this file.
+
 ## Not in this phase
 
-- Dependabot or Renovate updates for the pinned actions, base image
-  digests and gems (the Dependency-Update-Tool check).
+- Dependabot updates of the base image digest (it would need
+  `ruby:<tag>@sha256:<digest>`, which Podman may not accept).
 - A test workflow that runs `make check` on GitHub; checks run locally
   before each commit.
 - A `repo_token` for the full Branch-Protection check.
