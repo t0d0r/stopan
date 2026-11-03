@@ -1030,9 +1030,9 @@ input[type="search"].field-input {
   background: rgba(255, 255, 255, 0.95);
 }
 
-/* Buttons that sit beside fields are as high as the fields. */
-:is(.composer__submit, .input-group, .filters__actions, .advanced-search__go, .stages-list__item, .stages-new,
-  .public-link, .wizard-copy) .btn {
+/* Buttons are as high as the fields, beside a field or not; only small
+   buttons stay small (ui.md "Form fields"). */
+.btn:not(.btn--small) {
   min-height: var(--field-height);
 }
 

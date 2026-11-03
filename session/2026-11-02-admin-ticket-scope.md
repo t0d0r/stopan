@@ -286,6 +286,8 @@
   `ApplicationHelper#wordmark` inlines it in the menu bar, 14 px high,
   in place of "Stopan"; checked in Notes light and dark and Omarchy
   dark. Not deployed yet.
+- Buttons: every `.btn` except `.btn--small` is as high as the fields
+  (36 px, 44 px on phones). Not deployed yet.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -331,9 +333,7 @@
 
 ## Open
 
-- Form fields: buttons not beside a field stay 30 px next to 36 px
-  fields (making every `.btn` 36 px would make dense tables taller); the
-  file count and size limits are checked only on the server, and chosen
+- Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
   digest is updated by hand until Dependabot is set up.

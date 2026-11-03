@@ -337,12 +337,13 @@ approved "go in this order", all done 2026-10-27):
 - [ ] later: Dependabot for GitHub Actions and gems (specs/ci.md "Not in this phase")
 - [x] Heroicons 2.2.0 replace the own icons, and icons on buttons, flash messages, panels, menu sections, account menu and timeline lines (specs/ui.md "Icons")
 - [x] form fields: one base style, selects with a chevron, check boxes and radios, errors under the field (FieldFormBuilder), file drop zone, leading icons, joined input and button groups (specs/ui.md "Form fields")
-- [ ] form fields, open: buttons not beside a field stay 30 px next to 36 px fields; check the 5-file / 10 MB limits before sending; join the Google setup copy fields and the public link field; move FieldFormBuilder to app/form_builders after a dev container restart (specs/ui.md "Form fields")
+- [ ] form fields, open: check the 5-file / 10 MB limits before sending; join the Google setup copy fields and the public link field; move FieldFormBuilder to app/form_builders after a dev container restart (specs/ui.md "Form fields")
 - [x] production: deployed fd2638b (icons and form fields), no migrations (specs/deploy.md)
 - [x] composer: the status select above the send button, one column as wide as the wider of the two; full width on phones (specs/timeline.md "Composer")
 - [x] searchable selects (combobox over the real select) for the new ticket requester and the queue assignee and organization filters (specs/ui.md "Searchable selects")
 - [x] copy button on Markdown code blocks (specs/markdown.md "Copy code")
 - [x] STOPAN wordmark (traced, currentColor SVG) in place of the name in the menu bar (specs/ui.md "Logo")
+- [x] every button as high as the fields, except .btn--small (specs/ui.md "Form fields")
 - [ ] /tickets/new counts as busy for the live refresh as soon as it loads (the requester's organization script changes the select)
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 

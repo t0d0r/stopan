@@ -488,8 +488,11 @@ in both looks and both themes.
   them (`.field-error`, in red, linked from the field with
   `aria-describedby`), added by the default form builder
   (`FieldFormBuilder`), so the forms themselves do not change.
-- **Buttons beside fields** (composer, joined groups, filter and stage
-  rows) are as high as the fields.
+- **Buttons are as high as the fields** (`--field-height`, 36 px, 44 px
+  on phones), beside a field or not (2026-11-03: "Update ticket" and the
+  Save buttons were 30 px next to 36 px fields). Rows of dense tables
+  with a button grow a little; that is accepted. Only `.btn--small`
+  (e.g. the impersonation banner) stays small.
 - **Leading icons** inside a field, at its left edge only (a wrapper
   `.input-icon` with the icon, and `padding-left` on the field): the
   search fields (search page, member picker, admin lists; the menu bar
