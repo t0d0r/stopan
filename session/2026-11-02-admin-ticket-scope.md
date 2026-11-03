@@ -314,6 +314,13 @@
 - Dependabot security updates turned on in the repository settings,
   next to the alerts: a fix pull request opens as soon as an alert has
   a fixed release, without the cooldown; merged only after `make check`.
+- `make check` now runs `lint`, `audit` and `test` (specs/ci.md "Gem
+  audit in make check"). `make audit` updates the advisory database
+  first; offline it warns and checks against the local copy, and fails
+  only when there is no copy. `config/bundler-audit.yml` has an empty
+  ignore list; an entry needs a reason and a date. Checked: the lock file
+  from fa54a8b fails the audit (exit 1); with the network blocked the
+  target warns and still checks.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -368,7 +375,7 @@
 
 ## Verify
 
-`make check`.
+`make check` (lint, gem audit and tests; the audit needs the network to update its database, else it uses the local copy).
 
 ## Next step
 

@@ -36,10 +36,11 @@ hooks: ## use the project's git hooks (.githooks: gitleaks pre-commit); sets cor
 	git config core.hooksPath .githooks
 	@echo "pre-commit hook active: gitleaks scans staged changes"
 
-audit: deps ## check gems for known vulnerabilities (downloads the advisory database)
-	bin/bundler-audit check --update
+audit: deps ## check gems for known vulnerabilities (updates the advisory database; offline uses the local copy)
+	@bin/bundler-audit update --quiet || echo "WARNING: could not update the advisory database; checking against the local copy"
+	bin/bundler-audit check
 
-check: lint test ## lint and test; must pass before a commit
+check: lint audit test ## lint, gem audit and test; must pass before a commit
 
 run: build ## build, create the admin user from .env if missing, start http://localhost:3000
 	@bin/setup-env

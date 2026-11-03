@@ -124,6 +124,28 @@ SHAs by hand.
   itself once `main` has them. First done 2026-11-03: sqlite3, crass,
   loofah, nokogiri, rack and rails-html-sanitizer.
 
+## Gem audit in `make check`
+
+2026-11-03: `make check` runs `lint`, `audit` and `test`. A commit is
+blocked while `Gemfile.lock` holds a gem with a known advisory, so a
+vulnerable gem is found at the next commit, not weeks later.
+
+- **The advisory database is updated first.** `make audit` updates the
+  Ruby advisory database (a git checkout in the user's data directory,
+  `~/.local/share/ruby-advisory-db`, the tool's cache), then checks
+  `Gemfile.lock` against it.
+- **Offline still works.** When the update fails (no network), the
+  target prints a warning and checks against the local copy. Only when
+  there is no local copy at all does it fail, since then nothing can
+  be checked.
+- **An advisory that does not apply, or that has no fixed release yet,**
+  goes on the ignore list in `config/bundler-audit.yml`. It needs a comment
+  with the reason and the date; the entry is removed once a fixed
+  release exists. Without a reason it is not added.
+- **Acceptance:** `make check` prints the audit result and fails when
+  `bin/bundler-audit check` fails; with the network off and a local
+  copy present, it warns and still checks.
+
 ## Not in this phase
 
 - Dependabot updates of the base image digest (it would need

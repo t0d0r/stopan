@@ -1,5 +1,6 @@
 # Audit all gems listed in the Gemfile for known security problems by running bin/bundler-audit.
-# CVEs that are not relevant to the application can be enumerated on the ignore list below.
+# make audit runs it, and make check runs make audit (specs/ci.md "Gem audit in make check").
+# An advisory that does not apply, or has no fixed release yet, goes on the ignore list
+# with a comment giving the reason and the date. Remove the entry once a fix is released.
 
-ignore:
-  - CVE-THAT-DOES-NOT-APPLY
+ignore: []
