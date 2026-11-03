@@ -332,6 +332,11 @@
   features, fixes, performance, dependencies, documentation, other),
   leaves out `docs(session|deploy|todo)` and quotes `@name` and `#123`.
   SECURITY.md: the latest release and `main` get fixes.
+- Released v0.1.0 with `make release VERSION=0.1.0`: annotated tag on
+  0f74129, GitHub release "Stopan v0.1.0" marked latest, notes with 201
+  entries since the start of the project. Production runs 6a89f1d; the
+  commits since then change only the Makefile, docs, tests, the audit
+  config and `bin/release-notes`, so the running app matches v0.1.0.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -377,6 +382,8 @@
 
 ## Open
 
+- Tags and releases are not signed (no signing key yet), so Scorecard's
+  Signed-Releases check stays low (specs/release.md "Not in this phase").
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
