@@ -158,6 +158,7 @@ make help     # all targets
 make check    # rubocop, brakeman, gitleaks, gem audit and the test suite; must pass before a commit
 make hooks    # once per clone: gitleaks pre-commit hook (needs gitleaks)
 make audit    # known-vulnerability check for gems (part of make check)
+make release VERSION=0.1.0  # tag main and publish the GitHub release (specs/release.md)
 ```
 
 In development, emails (password reset, notifications) are written to

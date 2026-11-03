@@ -1,0 +1,102 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Release notes from Conventional Commit subjects (specs/release.md
+# "Release notes"). Prints Markdown for a GitHub release.
+#
+#   bin/release-notes [FROM] [TO]
+#
+# FROM defaults to the newest tag reachable from TO (every commit when
+# there is no tag); TO defaults to HEAD.
+
+require "open3"
+
+class ReleaseNotes
+  Commit = Struct.new(:hash, :subject, :body)
+
+  PATTERN = /\A(?<type>[a-z]+)(?:\((?<scope>[^)]+)\))?(?<bang>!)?: (?<description>.+)\z/
+  BREAKING_FOOTER = /^BREAKING[ -]CHANGE: /
+  LEFT_OUT_DOCS = %w[session deploy todo].freeze
+  SECTIONS = {
+    breaking: "Breaking changes",
+    feat: "Features",
+    fix: "Fixes",
+    perf: "Performance",
+    deps: "Dependencies",
+    docs: "Documentation",
+    other: "Other changes"
+  }.freeze
+  SECURITY_NOTE = <<~NOTE.strip
+    Report vulnerabilities privately, as SECURITY.md describes, never in a
+    public issue. Only the latest release and `main` get security fixes.
+  NOTE
+
+  attr_reader :commits, :since
+
+  def initialize(commits, since: nil)
+    @commits = commits
+    @since = since
+  end
+
+  def to_markdown
+    lines = [ since ? "Changes since #{since}." : "First release: every change since the start of the project." ]
+    grouped = commits.filter_map { |commit| entry(commit) }.group_by(&:first)
+    SECTIONS.each do |key, title|
+      next unless grouped[key]
+      lines.push("", "## #{title}", "")
+      lines.concat(grouped[key].map(&:last))
+    end
+    lines.push("", "## Security Note", "", SECURITY_NOTE)
+    lines.join("\n") + "\n"
+  end
+
+  private
+
+  # [section, line] for a commit, or nil when it is left out.
+  def entry(commit)
+    match = PATTERN.match(commit.subject.strip)
+    return [ :other, line(nil, commit.subject.strip, commit.hash) ] unless match
+
+    type, scope = match[:type], match[:scope]
+    return if type == "docs" && LEFT_OUT_DOCS.include?(scope)
+
+    [ section(type, scope, match[:bang] || commit.body.to_s.match?(BREAKING_FOOTER)), line(scope, match[:description], commit.hash) ]
+  end
+
+  def section(type, scope, breaking)
+    return :breaking if breaking
+    return :deps if scope == "deps"
+    SECTIONS.key?(type.to_sym) ? type.to_sym : :other
+  end
+
+  def line(scope, description, hash)
+    text = quote_references(description)
+    scope ? "- **#{scope}:** #{text} (#{hash})" : "- #{text} (#{hash})"
+  end
+
+  # @name would notify someone and #123 would link an issue on GitHub.
+  def quote_references(text)
+    text.gsub(/(?<![\w`])(?:@[\w-]+|#\d+)/) { "`#{it}`" }
+  end
+end
+
+def git(*args)
+  out, status = Open3.capture2("git", *args, err: File::NULL)
+  [ out.strip, status.success? ]
+end
+
+if $PROGRAM_NAME == __FILE__
+  to = ARGV[1] || "HEAD"
+  from = ARGV[0]
+  if from.nil?
+    tag, found = git("describe", "--tags", "--abbrev=0", to)
+    from = tag if found && !tag.empty?
+  end
+  log, ok = git("log", "--reverse", "--format=%h%x1f%s%x1f%b%x1e", from ? "#{from}..#{to}" : to)
+  abort "git log failed for #{from ? "#{from}..#{to}" : to}" unless ok
+  commits = log.split("\x1e").map(&:strip).reject(&:empty?).map do |record|
+    hash, subject, body = record.split("\x1f", 3)
+    ReleaseNotes::Commit.new(hash, subject, body)
+  end
+  print ReleaseNotes.new(commits, since: from).to_markdown
+end

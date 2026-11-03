@@ -321,6 +321,17 @@
   ignore list; an entry needs a reason and a date. Checked: the lock file
   from fa54a8b fails the audit (exit 1); with the network blocked the
   target warns and still checks.
+- Releases (specs/release.md): Semantic Versioning from 0.x, tags
+  `vX.Y.Z` on `main`; the tag is the only place the version is kept, so
+  a release needs no commit. `make release VERSION=x.y.z` refuses
+  without a valid version, without a signed-in `gh`, off `main`, with
+  uncommitted tracked changes, when `HEAD` differs from `origin/main`
+  or when the tag exists; then runs `make check`, writes the notes with
+  `bin/release-notes`, tags, pushes the tag and creates the GitHub
+  release. `bin/release-notes` groups Conventional Commits (breaking,
+  features, fixes, performance, dependencies, documentation, other),
+  leaves out `docs(session|deploy|todo)` and quotes `@name` and `#123`.
+  SECURITY.md: the latest release and `main` get fixes.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

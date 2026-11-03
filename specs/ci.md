@@ -59,7 +59,8 @@ published one.
 
 2026-11-02, for Scorecard's Security-Policy check. `SECURITY.md` at the
 root says:
-- only the latest `main` gets fixes;
+- only the latest release and the latest `main` get fixes; there are no
+  release branches (release.md);
 - how to report: GitHub's private vulnerability reporting (Security tab,
   "Report a vulnerability"), never a public issue;
 - what a useful report holds;

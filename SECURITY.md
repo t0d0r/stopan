@@ -2,8 +2,10 @@
 
 ## Supported versions
 
-Stopan is released from `main`. Only the latest commit on `main` gets
-security fixes; there are no maintained release branches.
+Releases are tags on `main` (`vX.Y.Z`, see the GitHub releases). Only
+the latest release and the latest commit on `main` get security fixes;
+a fix lands on `main` and goes out in the next release. There are no
+maintained release branches.
 
 ## Reporting a vulnerability
 
