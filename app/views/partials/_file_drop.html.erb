@@ -1,0 +1,27 @@
+<%# File drop zone (specs/ui.md "Form fields"). The real file input stays in
+    the form and keeps its label; application.js shows the area, adds
+    dropped files and lists the chosen ones. Without it the plain input
+    shows. Locals: f (the form builder; the attribute is :files), hint_id. %>
+<div class="dropzone" data-dropzone
+     data-remove-label="<%= t("ui.dropzone.remove", name: "%{name}") %>"
+     data-chosen-zero="<%= t("ui.dropzone.chosen.zero") %>"
+     data-chosen-one="<%= t("ui.dropzone.chosen.one") %>"
+     data-chosen-other="<%= t("ui.dropzone.chosen.other", count: "%{count}") %>">
+  <label for="<%= f.field_id(:files) %>" class="dropzone__area" data-dropzone-area hidden>
+    <%= icon :clip, size: 18 %>
+    <span><%= t("ui.dropzone.prompt_html") %></span>
+  </label>
+  <%= f.file_field :files, multiple: true, class: "field-file dropzone__input", data: { dropzone_input: true },
+                           aria: { describedby: hint_id } %>
+  <ul class="dropzone__list" aria-label="<%= t("ui.dropzone.list") %>" data-dropzone-list hidden></ul>
+  <p class="sr-only" aria-live="polite" data-dropzone-status></p>
+  <template data-dropzone-item>
+    <li class="dropzone__file">
+      <%= icon :clip, size: 14 %>
+      <span class="dropzone__name"></span>
+      <span class="dropzone__size"></span>
+      <button type="button" class="dropzone__remove"><%= icon :close, size: 14 %></button>
+    </li>
+  </template>
+</div>
+<small class="field-hint" id="<%= hint_id %>"><%= t("ui.files_hint", count: Attachable::MAX_FILES, size: Attachable::MAX_SIZE / 1.megabyte) %></small>

@@ -306,9 +306,9 @@ module TicketsHelper
 
   def event_icon(event)
     { "created" => :spark, "status_changed" => :status, "priority_changed" => :flag,
-      "assignee_changed" => :user, "shared" => :link, "unshared" => :link, "stage_changed" => :flag,
-      "deleted" => :status, "restored" => :status, "mail_switched" => :envelope, "mail_sent" => :envelope,
-      "mail_skipped" => :envelope, "mail_failed" => :envelope, "follower_added" => :eye,
+      "assignee_changed" => :assignee, "shared" => :link, "unshared" => :link_off, "stage_changed" => :board,
+      "deleted" => :trash, "restored" => :restore, "mail_switched" => :envelope, "mail_sent" => :envelope,
+      "mail_skipped" => :envelope, "mail_failed" => :warning, "follower_added" => :eye,
       "follower_removed" => :eye }.fetch(event.action, :spark)
   end
 

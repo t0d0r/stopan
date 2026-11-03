@@ -67,8 +67,7 @@
         <% end %>
         <div class="field">
           <%= f.label :files, t("ui.fields.files") %>
-          <%= f.file_field :files, multiple: true, class: "field-file", aria: { describedby: "files-hint" } %>
-          <small class="field-hint" id="files-hint"><%= t("ui.files_hint", count: Attachable::MAX_FILES, size: Attachable::MAX_SIZE / 1.megabyte) %></small>
+          <%= render "partials/file_drop", f: f, hint_id: "files-hint" %>
         </div>
         <div class="form-actions">
           <%= link_to t("ui.cancel"), tickets_path, class: "btn" %>

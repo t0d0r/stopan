@@ -23,6 +23,14 @@ de:
     files_hint:
       one: "Bis zu %{count} Datei mit höchstens %{size} MB. Bilder, PDF, Text, CSV, ZIP und Office-Dokumente."
       other: "Bis zu %{count} Dateien mit je höchstens %{size} MB. Bilder, PDF, Text, CSV, ZIP und Office-Dokumente."
+    dropzone:
+      prompt_html: "Ziehen Sie Dateien hierher oder <span class=\"dropzone__choose\">wählen Sie Dateien aus</span>"
+      list: "Ausgewählte Dateien"
+      remove: "%{name} entfernen"
+      chosen:
+        zero: "Keine Dateien ausgewählt"
+        one: "1 Datei ausgewählt"
+        other: "%{count} Dateien ausgewählt"
 
     account_page:
       nickname_hint: "Wird in der Menüleiste statt Ihres Namens angezeigt. Optional."

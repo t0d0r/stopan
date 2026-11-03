@@ -172,6 +172,9 @@ and `session/` holds the handoff notes between working sessions.
 BSD 2-Clause License. See `LICENSE`. Gems and other dependencies keep their
 own licenses.
 
+The icons are Heroicons 2.2.0 by Tailwind Labs, MIT License
+(`vendor/heroicons/LICENSE`), copied into `app/helpers/icons_helper.rb`.
+
 ## Security Note
 
 Ticket text and attachments are customer data: keep `storage/` backed up and

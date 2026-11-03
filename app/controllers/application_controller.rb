@@ -3,6 +3,9 @@ class ApplicationController < ActionController::Base
   # allow on something they can see (specs/roles.md).
   class NotAuthorized < StandardError; end
 
+  # Fields with errors show their messages (specs/ui.md "Form fields").
+  default_form_builder FieldFormBuilder
+
   around_action :switch_locale
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :check_impersonation

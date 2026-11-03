@@ -6,8 +6,10 @@
   <h3 class="section-title" id="member-picker-title"><%= t("ui.admin.picker.title") %></h3>
   <div class="member-picker__search" hidden data-picker-search-wrap>
     <%= label_tag "member-picker-search", t("ui.admin.picker.search"), class: "sr-only" %>
-    <%= search_field_tag "member-picker-search", nil, class: "field-input", autocomplete: "off", spellcheck: false,
-                         placeholder: t("ui.admin.picker.search"), data: { picker_search: true }, name: nil %>
+    <%= input_icon :search do %>
+      <%= search_field_tag "member-picker-search", nil, class: "field-input", autocomplete: "off", spellcheck: false,
+                           placeholder: t("ui.admin.picker.search"), data: { picker_search: true }, name: nil %>
+    <% end %>
   </div>
   <ul class="member-picker__list" aria-labelledby="member-picker-title">
     <% candidates.each do |user| %>

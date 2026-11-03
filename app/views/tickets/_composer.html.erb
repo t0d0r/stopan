@@ -57,8 +57,7 @@
       <div class="composer__row">
         <div class="field composer__files">
           <%= f.label :files, t("ui.fields.files"), class: "sr-only" %>
-          <%= f.file_field :files, multiple: true, class: "field-file", aria: { describedby: "composer-files-hint" } %>
-          <small class="field-hint" id="composer-files-hint"><%= t("ui.files_hint", count: Attachable::MAX_FILES, size: Attachable::MAX_SIZE / 1.megabyte) %></small>
+          <%= render "partials/file_drop", f: f, hint_id: "composer-files-hint" %>
         </div>
         <% if staff %>
           <div class="field composer__status">
@@ -72,7 +71,10 @@
         <div class="composer__submit">
           <button type="submit" class="btn btn--primary" data-composer-submit
                   data-public-label="<%= t("ui.composer.send_reply") %>" data-internal-label="<%= t("ui.composer.add_note") %>">
-            <%= internal ? t("ui.composer.add_note") : t("ui.composer.send_reply") %>
+            <%# The icon follows the mode, like the label (ui.md "Icons"). %>
+            <span data-composer-icon="public"<%= " hidden" if internal %>><%= icon :send %></span>
+            <span data-composer-icon="internal"<%= " hidden" unless internal %>><%= icon :lock %></span>
+            <span data-composer-label><%= internal ? t("ui.composer.add_note") : t("ui.composer.send_reply") %></span>
           </button>
         </div>
       </div>

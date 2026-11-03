@@ -9,17 +9,21 @@
         <%= time_ago ticket.shared_at %>
       </p>
       <%= share_viewers_tag ShareViewers.count(ticket), scope: :panel %>
-      <div class="sharing__link">
+      <div class="sharing__link input-group input-group--stacked">
         <%= label_tag "share-url", t("ui.share.link"), class: "sr-only" %>
-        <%= text_field_tag "share-url", shared_ticket_url(ticket.share_token), readonly: true, class: "field-input",
-                           data: { select_on_focus: true } %>
+        <%= input_icon :link do %>
+          <%= text_field_tag "share-url", shared_ticket_url(ticket.share_token), readonly: true, class: "field-input",
+                             data: { select_on_focus: true } %>
+        <% end %>
         <button type="button" class="btn" data-copy="share-url" data-copied-label="<%= t("ui.share.copied") %>">
           <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.share.copy") %></span>
         </button>
       </div>
-      <%= button_to t("ui.share.stop"), ticket_share_path(ticket), method: :delete, class: "btn btn--danger btn--block",
+      <%= button_to ticket_share_path(ticket), method: :delete, class: "btn btn--danger btn--block",
                     form: { data: confirm_data(title: t("ui.share.stop_title"), body: t("ui.share.stop_body"),
-                                               button: t("ui.share.stop")) } %>
+                                               button: t("ui.share.stop")) } do %>
+        <%= icon :link_off %> <%= t("ui.share.stop") %>
+      <% end %>
       <details class="sharing__new">
         <summary><%= t("ui.share.new_link") %></summary>
         <%= render "tickets/share_form", ticket: ticket, submit: t("ui.share.replace") %>

@@ -25,11 +25,19 @@
   --quote-1: #5ea97a;
   --quote-2: #d0924a;
   --field-bg: rgba(255, 255, 255, 0.55);
+  --field-bg-readonly: rgba(255, 255, 255, 0.3);
   --field-border: rgba(43, 42, 38, 0.18);
+  --field-border-hover: rgba(43, 42, 38, 0.36);
+  --field-height: 36px;
+  /* Select chevrons (ui.md "Form fields"): fields sit on light paper in the
+     notes look in both themes, so one dark chevron; omarchy sets its own. */
+  --field-chevron-paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%235f5d57' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  --field-chevron: var(--field-chevron-paper);
 
   --accent: #0a64d6;
   --accent-ring: rgba(10, 100, 214, 0.28);
   --danger: #b3261e;
+  --danger-ring: rgba(179, 38, 30, 0.25);
   --expense: #b3261e;
 
   --shadow: 0 1px 1px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.13);
@@ -241,14 +249,20 @@ form.button_to {
   outline: 3px solid var(--accent-ring);
 }
 
+/* The section's icon on a small sticky in its colour (ui.md "Icons"). */
 .nav-link__dot {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  border: 1px solid rgba(0, 0, 0, 0.28);
-  border-radius: 2px;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  padding-top: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  border-radius: 4px;
   background: var(--paper);
   box-shadow: inset 0 2px 0 var(--bar);
+  color: var(--ink);
 }
 
 .menubar__button:hover {
@@ -326,6 +340,7 @@ form.button_to {
 .account-menu__item {
   display: flex;
   align-items: center;
+  gap: 8px;
   width: 100%;
   min-height: 32px;
   padding: 0 10px;
@@ -804,6 +819,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* Room between an icon and the label (ui.md "Icons"). */
+  gap: 6px;
   padding: 5px 14px;
   border: 1px solid var(--field-border);
   border-radius: 6px;
@@ -856,24 +873,126 @@ body {
   margin-top: 10px;
 }
 
+/* ---------- form fields (ui.md "Form fields") ----------
+   One base style for text-like inputs, selects and text areas: the
+   classes .field-input and .select, and the plain inputs of the account
+   pages. Colours come from the look (--field-*). */
 .field-input,
-:is(.auth, .account-page) input[type="email"],
-:is(.auth, .account-page) input[type="password"],
-:is(.auth, .account-page) input[type="text"] {
+.select,
+:is(.auth, .account-page) input:is([type="email"], [type="password"], [type="text"]) {
   min-width: 0;
-  padding: 6px 9px;
+  min-height: var(--field-height);
+  padding: 7px 10px;
   border: 1px solid var(--field-border);
   border-radius: 6px;
-  background: var(--field-bg);
+  background-color: var(--field-bg);
   color: var(--ink);
   font: 14px/1.4 var(--font);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.field-input::placeholder,
+:is(.auth, .account-page) input::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.8;
+}
+
+:is(.field-input, .select, :is(.auth, .account-page) input):hover:not(:disabled, [readonly], :focus) {
+  border-color: var(--field-border-hover);
 }
 
 .field-input:focus,
+.select:focus,
 :is(.auth, .account-page) input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-ring);
   outline: none;
+}
+
+:is(.field-input, .select, :is(.auth, .account-page) input):disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.field-input[readonly] {
+  background-color: var(--field-bg-readonly);
+}
+
+input[type="search"].field-input {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Selects draw their own chevron; the select itself stays native. */
+.select {
+  max-width: 100%;
+  padding-right: 30px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: var(--field-chevron);
+  background-position: right 9px center;
+  background-repeat: no-repeat;
+  background-size: 14px 14px;
+  cursor: pointer;
+}
+
+.select:is([multiple], [size]:not([size="1"])) {
+  padding-right: 10px;
+  background-image: none;
+}
+
+/* Errors: a red border and ring, from aria-invalid or Rails' wrapper,
+   which must not change the layout (ui.md "Form fields"). */
+.field_with_errors {
+  display: contents;
+}
+
+:is(.field-input, .select, :is(.auth, .account-page) input):is([aria-invalid="true"], .field_with_errors > *) {
+  border-color: var(--danger);
+}
+
+:is(.field-input, .select, :is(.auth, .account-page) input):is([aria-invalid="true"], .field_with_errors > *):focus {
+  box-shadow: 0 0 0 3px var(--danger-ring);
+}
+
+.field-error {
+  display: block;
+  margin: 4px 0 0;
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Paper stays light in the notes look's dark theme, so native parts on it
+   (check boxes, radios, date pickers, select menus) are drawn light too;
+   in the dark scheme an empty box looked filled. Omarchy's paper follows
+   the theme. */
+:root:not([data-look="omarchy"]) .sticky {
+  color-scheme: light;
+}
+
+/* Check boxes and radios stay native, in one size and the accent colour.
+   :where keeps them below any component rule (the toggle hides its box). */
+:where(input[type="checkbox"], input[type="radio"]) {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  vertical-align: -3px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+:where(input[type="checkbox"], input[type="radio"]):disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-input,
+  .select,
+  :is(.auth, .account-page) input {
+    transition: none;
+  }
 }
 
 .field-input--date { flex: 0 0 10.5em; }
@@ -900,6 +1019,231 @@ body {
 
 .field-file::file-selector-button:hover {
   background: rgba(255, 255, 255, 0.95);
+}
+
+/* Buttons that sit beside fields are as high as the fields. */
+:is(.composer__submit, .input-group, .filters__actions, .advanced-search__go, .stages-list__item, .stages-new,
+  .public-link, .wizard-copy) .btn {
+  min-height: var(--field-height);
+}
+
+/* File drop zone (ui.md "Form fields"): the real file input stays in the
+   form; application.js adds .is-enhanced, shows the area and lists the
+   files. Without it the plain input shows. */
+.dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.dropzone__area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 1px dashed var(--field-border-hover);
+  border-radius: 6px;
+  background-color: var(--field-bg-readonly);
+  color: var(--ink-soft);
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.12s, background-color 0.12s, box-shadow 0.12s;
+}
+
+.dropzone__area[hidden] {
+  display: none;
+}
+
+.dropzone__area:hover {
+  border-color: var(--ink-soft);
+  background-color: var(--field-bg);
+  color: var(--ink);
+}
+
+.dropzone__choose {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.dropzone.is-dragover .dropzone__area {
+  border-style: solid;
+  border-color: var(--accent);
+  background-color: color-mix(in srgb, var(--accent) 10%, var(--field-bg));
+  color: var(--ink);
+}
+
+.dropzone:has(.dropzone__input:focus-visible) .dropzone__area {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+/* Hidden from sight, not from the keyboard or screen readers. */
+.dropzone.is-enhanced .dropzone__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.dropzone__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dropzone__list[hidden] {
+  display: none;
+}
+
+.dropzone__file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 2px 3px 2px 10px;
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  background-color: var(--field-bg);
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.dropzone__file > .icon {
+  color: var(--ink-soft);
+}
+
+/* width 0: a long name must not widen the form (it ends in an ellipsis). */
+.dropzone__name {
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropzone__size {
+  flex: none;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dropzone__remove {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.dropzone__remove:hover {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
+}
+
+.dropzone__remove:focus-visible {
+  outline: 3px solid var(--accent-ring);
+  outline-offset: 0;
+  color: var(--danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropzone__area {
+    transition: none;
+  }
+}
+
+/* A leading icon inside a field, at its left edge only (ui.md "Form
+   fields"; never on password fields). */
+.input-icon {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.input-icon > .icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  z-index: 2;
+  color: var(--ink-soft);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.input-icon .field-input {
+  flex: 1 1 auto;
+  width: 100%;
+  padding-left: 32px;
+}
+
+/* A field and its button joined into one control (ui.md "Form fields"). */
+.input-group {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.input-group > :is(.field-input, .select, .input-icon, .field_with_errors) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.input-group > :is(.field-input, .select),
+.input-group > .input-icon .field-input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group > .btn {
+  flex: none;
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* The focused part draws its ring over its neighbour. */
+.input-group :is(.field-input, .select, .btn):is(:focus, :focus-visible) {
+  position: relative;
+  z-index: 1;
+}
+
+.input-group--stacked {
+  flex-direction: column;
+}
+
+.input-group--stacked > :is(.field-input, .select),
+.input-group--stacked > .input-icon .field-input {
+  border-radius: 6px 6px 0 0;
+}
+
+.input-group--stacked > .btn {
+  margin: -1px 0 0;
+  border-radius: 0 0 6px 6px;
 }
 
 /* ---------- sign-in and other account pages ---------- */
@@ -1535,23 +1879,6 @@ body {
   margin-top: 4px;
 }
 
-.select {
-  min-width: 0;
-  max-width: 100%;
-  padding: 5px 8px;
-  border: 1px solid var(--field-border);
-  border-radius: 6px;
-  background: var(--field-bg);
-  color: var(--ink);
-  font: 14px/1.4 var(--font);
-}
-
-.select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-ring);
-  outline: none;
-}
-
 [aria-invalid="true"] {
   border-color: var(--danger);
 }
@@ -1856,16 +2183,8 @@ body {
   border-bottom: 1px solid var(--rule);
 }
 
-.filters .search-field {
+.filters__search {
   flex: 1 1 220px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.5);
-  color: var(--ink-soft);
-}
-
-.filters .search-field__input {
-  color: var(--ink);
-  font-size: 14px;
 }
 
 .filters__field {
@@ -1889,11 +2208,17 @@ body {
 
 /* A filter that narrows the list stands out in yellow paper. */
 .select.is-set {
+  --field-chevron: var(--field-chevron-paper);
   border-color: #d9c43f;
-  background: #fff6a8;
+  background-color: #fff6a8;
   box-shadow: inset 0 -2px 0 #f5e270;
   color: #2b2a26;
   font-weight: 600;
+}
+
+.select.is-set:focus {
+  border-color: var(--accent);
+  box-shadow: inset 0 -2px 0 #f5e270, 0 0 0 3px var(--accent-ring);
 }
 
 .filters--compact {
@@ -2429,6 +2754,16 @@ body {
   justify-content: center;
 }
 
+/* On the ticket page the field and "Copy link" are one control, joined
+   top to bottom (ui.md "Form fields"). */
+.sharing__link.input-group {
+  gap: 0;
+}
+
+.sharing__link.input-group > .btn {
+  flex: none;
+}
+
 .sharing .button_to {
   display: block;
 }
@@ -2745,15 +3080,7 @@ body {
 }
 
 .followers__add {
-  display: flex;
-  gap: 6px;
   margin-top: 10px;
-}
-
-.followers__add .select,
-.followers__add .field-input {
-  flex: 1;
-  min-width: 0;
 }
 
 /* A password field with an eye that shows what was typed (specs/ui.md
@@ -2761,14 +3088,33 @@ body {
    icons password managers put inside the field stay free. */
 .password-field {
   display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   gap: 6px;
 }
 
-.password-field > input[type] {
-  flex: 1 1 auto;
+.password-field > input[type],
+.password-field > .field_with_errors > input[type] {
+  flex: 1 1 0;
   width: auto;
   min-width: 0;
+}
+
+/* A field's own error message takes the next row in a row of controls
+   (ui.md "Form fields"). */
+:is(.password-field, .edit-subject) > .field-error {
+  order: 1;
+  flex-basis: 100%;
+  margin-top: 0;
+}
+
+.edit-subject:has(> .field-error) {
+  flex-wrap: wrap;
+}
+
+.edit-subject > .field-error {
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .password-field__toggle {
@@ -3906,6 +4252,7 @@ turbo-frame {
   display: flex;
   flex: 1 1 260px;
   flex-direction: column;
+  min-width: 0;
   margin: 0;
 }
 
@@ -5604,6 +5951,10 @@ turbo-frame {
   --quote-2: var(--om-yellow);
   --field-bg: var(--om-surface);
   --field-border: var(--om-border-strong);
+  --field-bg-readonly: color-mix(in srgb, var(--om-surface) 40%, transparent);
+  --field-border-hover: var(--om-muted);
+  --field-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23646674' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  --danger-ring: color-mix(in srgb, var(--om-red) 35%, transparent);
   --accent: var(--om-accent);
   --accent-ring: color-mix(in srgb, var(--om-accent) 35%, transparent);
   --danger: var(--om-red);
@@ -5640,6 +5991,7 @@ turbo-frame {
     --om-red: #f7768e;
     --om-tint: 10%;
     --om-tint-bar: 20%;
+    --field-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238589a2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
     color-scheme: dark;
   }
 }
@@ -5664,6 +6016,7 @@ turbo-frame {
   --om-red: #f7768e;
   --om-tint: 10%;
   --om-tint-bar: 20%;
+  --field-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238589a2' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
   color-scheme: dark;
 }
 
@@ -5904,9 +6257,7 @@ turbo-frame {
     min-height: 44px;
   }
 
-  .auth input[type="email"],
-  .auth input[type="password"],
-  .auth input[type="text"] {
+  :is(.auth, .account-page) input:is([type="email"], [type="password"], [type="text"]) {
     min-height: 44px;
     font-size: 16px;
   }
@@ -5917,9 +6268,61 @@ turbo-frame {
   }
 
   /* Rule 2: 16px text fields, so iOS does not zoom in. */
-  :is(input, select, textarea, .select, .field-input, .search-field, .search-field__input),
-  .filters .search-field__input {
+  :is(input:not([type="submit"], [type="button"], [type="reset"]), select, textarea, .select, .field-input, .search-field,
+    .search-field__input) {
     font-size: 16px;
+  }
+
+  /* Fields and the buttons beside them (ui.md "Form fields"). */
+  :root {
+    --field-height: 44px;
+  }
+
+  .sharing__link .field-input {
+    font-size: 16px;
+  }
+
+  .dropzone__area {
+    min-height: 56px;
+  }
+
+  .dropzone__file {
+    padding-block: 0;
+  }
+
+  .dropzone__remove {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* A label that holds a check box or radio, or stands next to one, is
+     the 44px target (ui.md "Form fields"). */
+  :where(label:has(> :is(input[type="checkbox"], input[type="radio"]):not(.toggle__input)),
+    :is(input[type="checkbox"], input[type="radio"]) + label) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+  }
+
+  .field:has(> input[type="checkbox"] + label) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .field:has(> input[type="checkbox"] + label) > label {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    min-height: 44px;
+    margin: 0;
+    padding-left: 8px;
+  }
+
+  .field:has(> input[type="checkbox"] + label) > :is(em, i, .field-hint) {
+    flex-basis: 100%;
+    margin-top: 0;
   }
 }
 

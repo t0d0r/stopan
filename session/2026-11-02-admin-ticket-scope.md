@@ -216,6 +216,44 @@
   migrations and every check passed (specs/deploy.md "Update 2026-11-02
   (revision 436dd64)").
 - Private vulnerability reporting is on in the repository settings.
+- Icons (specs/ui.md "Icons", 2026-11-03):
+  - Heroicons 2.2.0 outline paths copied into `IconsHelper::ICONS`, with
+    the file name in a comment; the npm package was checked against the
+    registry's sha512 first; the MIT licence is in
+    `vendor/heroicons/LICENSE` and named in the README;
+  - `markdown` and `headset` stay Stopan's own (no counterpart), scaled
+    from the 16 px grid;
+  - `icon()` draws on the 24 px grid, stroke 2 at 16 px and below, 1.5
+    above; call sites keep the app's names;
+  - new places: flash messages, timeline lines (assignee, stage,
+    unshared, failed email, deleted, restored, folded run), side panel
+    title strips, the menu sections (icon on a small sticky in the
+    section's colour), the account menu, and buttons (send reply or
+    add note, delete ticket, follow, add colleague or Cc, remove, stop
+    sharing); `.btn` got a 6 px gap;
+  - `test/helpers/icons_helper_test.rb`;
+  - checked in the dev browser: Notes and Omarchy, light and dark,
+    1440 and 390 px.
+- Form fields (specs/ui.md "Form fields", 2026-11-03):
+  - one base style for `.field-input`, `.select` and the plain inputs of
+    the account pages: 36 px (44 px on phones), hover, focus ring,
+    disabled and read-only states; new variables `--field-height`,
+    `--field-border-hover`, `--field-bg-readonly`, `--danger-ring`,
+    `--field-chevron`;
+  - selects drawn with a `data:` chevron; native check boxes and radios
+    in the accent colour; stickies use `color-scheme: light`, so empty
+    boxes on light paper in the dark theme no longer look filled;
+  - `FieldFormBuilder` (default form builder, in `app/helpers/`) adds
+    `aria-invalid` and the messages under each field with errors;
+    `.field_with_errors` is `display: contents`;
+  - file drop zone (`partials/_file_drop`, `setUpDropzone`) in the
+    composer and the new ticket form: the real file input stays, files
+    are listed with size and a remove button, plain input without
+    JavaScript;
+  - leading icons (`input_icon`) on search, Cc email and share link
+    fields, never on passwords; joined groups for "Add a colleague",
+    the Cc email and the share link (sharing.md, followers.md);
+  - `test/integration/form_fields_test.rb` (9 tests).
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -261,6 +299,10 @@
 
 ## Open
 
+- Form fields: buttons not beside a field stay 30 px next to 36 px
+  fields (making every `.btn` 36 px would make dense tables taller); the
+  file count and size limits are checked only on the server, and chosen
+  files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
   digest is updated by hand until Dependabot is set up.
 - A super administrator who works an organization's tickets adds

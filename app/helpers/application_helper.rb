@@ -74,9 +74,11 @@ module ApplicationHelper
   end
 
   # A menu bar section link with its paper colour square.
-  def nav_link(label, path, dot:, current:)
+  # A menu bar section: its icon on a small sticky in the section's colour
+  # (ui.md "Icons").
+  def nav_link(label, path, dot:, current:, icon_name:)
     link_to path, class: "nav-link", aria: { current: ("page" if current) } do
-      tag.span(class: "nav-link__dot sticky--#{dot}", "aria-hidden": "true") + label
+      tag.span(icon(icon_name, size: 11), class: "nav-link__dot sticky--#{dot}", "aria-hidden": "true") + label
     end
   end
 

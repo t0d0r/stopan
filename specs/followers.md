@@ -66,10 +66,12 @@ ui.md "Ticket page on phones").
 - "Following" with each staff follower, and a "Remove" button for each;
 - "Follow" or "Stop following" for themselves;
 - an "Add a colleague" select of the organization's staff who are not
-  following yet (`Ticket#assignable_staff`), with an "Add" button;
+  following yet (`Ticket#assignable_staff`), with an "Add" button joined
+  to it (ui.md "Form fields");
 - "Cc" with each person in copy (name and email) and a "Remove" button
   for each;
-- an "Add to Cc" email field with an "Add" button;
+- an "Add to Cc" email field with an "Add" button (joined to the field,
+  with an envelope icon at the field's left; ui.md "Form fields");
 - **suggestions:** the addresses from the mail's To and Cc
   (organization-mail.md "Mail details"), each with an "Add to Cc"
   button. The list leaves out:

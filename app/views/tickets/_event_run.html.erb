@@ -5,7 +5,7 @@
 <% internal = events.all?(&:internal?) %>
 <li class="timeline__item timeline__run<%= " timeline__item--internal" if internal %>" data-event-run="<%= oldest.id %>">
   <button type="button" class="timeline__run-toggle" aria-expanded="true" aria-controls="event-run-<%= oldest.id %>" hidden>
-    <span class="timeline__icon"><%= icon :menu, size: 12 %></span>
+    <span class="timeline__icon"><%= icon :events, size: 12 %></span>
     <span class="timeline__text"><%= event_run_summary(events) %></span>
     <% if internal %><span class="internal-tag"><%= t("ui.timeline.internal_only") %></span><% end %>
     <span class="timeline__time"><%= time_ago newest.created_at %></span>

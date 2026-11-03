@@ -5,7 +5,7 @@
 <% cc = ticket.cc_users.to_a %>
 <% if staff || cc.any? %>
   <section class="sticky sticky--green panel side-panel followers" id="followers" aria-labelledby="followers-title" data-side-panel>
-    <%= side_panel_bar t("ui.followers.title"), "followers-body", icon_name: :eye %>
+    <%= side_panel_bar t("ui.followers.title"), "followers-body", icon_name: :people %>
     <div class="panel__body" id="followers-body">
       <h2 class="sr-only" id="followers-title"><%= t("ui.followers.title") %></h2>
       <% if staff %>
@@ -17,8 +17,10 @@
               <li class="followers__item">
                 <span><%= follower.user.display_name %></span>
                 <% if manage %>
-                  <%= button_to t("ui.followers.remove"), ticket_follower_path(ticket, follower), method: :delete, class: "link-button",
-                                aria: { label: t("ui.followers.remove_label", name: follower.user.display_name) } %>
+                  <%= button_to ticket_follower_path(ticket, follower), method: :delete, class: "link-button",
+                                aria: { label: t("ui.followers.remove_label", name: follower.user.display_name) } do %>
+                    <%= icon :close, size: 12 %> <%= t("ui.followers.remove") %>
+                  <% end %>
                 <% end %>
               </li>
             <% end %>
@@ -29,17 +31,21 @@
         <% if manage %>
           <% mine = following.find { |f| f.user_id == current_user.id } %>
           <% if mine %>
-            <%= button_to t("ui.followers.unfollow"), ticket_follower_path(ticket, mine), method: :delete, class: "btn btn--block" %>
+            <%= button_to ticket_follower_path(ticket, mine), method: :delete, class: "btn btn--block" do %>
+              <%= icon :eye_off %> <%= t("ui.followers.unfollow") %>
+            <% end %>
           <% elsif ticket.assignable_staff.exists?(current_user.id) %>
-            <%= button_to t("ui.followers.follow"), ticket_followers_path(ticket), params: { user_id: current_user.id }, class: "btn btn--block" %>
+            <%= button_to ticket_followers_path(ticket), params: { user_id: current_user.id }, class: "btn btn--block" do %>
+              <%= icon :eye %> <%= t("ui.followers.follow") %>
+            <% end %>
           <% end %>
           <% colleagues = ticket.assignable_staff.where.not(id: [ current_user.id, *following.map(&:user_id) ]).to_a %>
           <% if colleagues.any? %>
-            <%= form_with url: ticket_followers_path(ticket), class: "followers__add" do %>
+            <%= form_with url: ticket_followers_path(ticket), class: "followers__add input-group" do %>
               <%= label_tag "follower_user_id", t("ui.followers.add_colleague"), class: "sr-only" %>
               <%= select_tag :user_id, options_from_collection_for_select(colleagues, :id, :display_name), id: "follower_user_id",
                              include_blank: t("ui.followers.add_colleague"), class: "select", required: true %>
-              <%= submit_tag t("ui.followers.add"), name: nil, class: "btn" %>
+              <%= button_tag type: "submit", name: nil, class: "btn" do %><%= icon :user_plus %> <%= t("ui.followers.add") %><% end %>
             <% end %>
           <% end %>
         <% end %>
@@ -56,8 +62,10 @@
               </span>
               <% if manage %>
                 <% follower = ticket.ticket_followers.find_by(user_id: user.id) %>
-                <%= button_to t("ui.followers.remove"), ticket_follower_path(ticket, follower), method: :delete, class: "link-button",
-                              aria: { label: t("ui.followers.remove_cc_label", name: user.display_name) } %>
+                <%= button_to ticket_follower_path(ticket, follower), method: :delete, class: "link-button",
+                              aria: { label: t("ui.followers.remove_cc_label", name: user.display_name) } do %>
+                  <%= icon :close, size: 12 %> <%= t("ui.followers.remove") %>
+                <% end %>
               <% end %>
             </li>
           <% end %>
@@ -66,11 +74,13 @@
         <p class="field-hint"><%= t("ui.followers.no_cc") %></p>
       <% end %>
       <% if manage %>
-        <%= form_with url: ticket_followers_path(ticket), class: "followers__add" do %>
+        <%= form_with url: ticket_followers_path(ticket), class: "followers__add input-group" do %>
           <%= label_tag "cc_email", t("ui.followers.add_cc"), class: "sr-only" %>
-          <%= email_field_tag :email, nil, id: "cc_email", class: "field-input", placeholder: t("ui.followers.add_cc"),
-                              autocomplete: "off", required: true %>
-          <%= submit_tag t("ui.followers.add"), name: nil, class: "btn" %>
+          <%= input_icon :envelope do %>
+            <%= email_field_tag :email, nil, id: "cc_email", class: "field-input", placeholder: t("ui.followers.add_cc"),
+                                autocomplete: "off", required: true %>
+          <% end %>
+          <%= button_tag type: "submit", name: nil, class: "btn" do %><%= icon :user_plus %> <%= t("ui.followers.add") %><% end %>
         <% end %>
         <% suggestions = ticket.cc_suggestions %>
         <% if suggestions.any? %>
@@ -79,8 +89,10 @@
             <% suggestions.each do |address| %>
               <li class="followers__item">
                 <span class="followers__email"><%= address %></span>
-                <%= button_to t("ui.followers.add_to_cc"), ticket_followers_path(ticket), params: { email: address }, class: "link-button followers__suggest",
-                              aria: { label: t("ui.followers.add_to_cc_label", email: address) } %>
+                <%= button_to ticket_followers_path(ticket), params: { email: address }, class: "link-button followers__suggest",
+                              aria: { label: t("ui.followers.add_to_cc_label", email: address) } do %>
+                  <%= icon :user_plus, size: 12 %> <%= t("ui.followers.add_to_cc") %>
+                <% end %>
               </li>
             <% end %>
           </ul>

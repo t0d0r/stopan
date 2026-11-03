@@ -8,8 +8,10 @@
   <% if search_page %>
     <div class="filters__field search-page__query">
       <%= label_tag :q, t("ui.search.query") %>
-      <%= search_field_tag :q, filter.query, class: "field-input", autocomplete: "off", autofocus: filter.query.nil?,
-                           placeholder: t("ui.queue.search_placeholder") %>
+      <%= input_icon :search do %>
+        <%= search_field_tag :q, filter.query, class: "field-input", autocomplete: "off", autofocus: filter.query.nil?,
+                             placeholder: t("ui.queue.search_placeholder") %>
+      <% end %>
     </div>
   <% end %>
   <div class="filters__field">

@@ -111,6 +111,112 @@ in documentation, not in the app.
   and STOPAN side by side, ink follows `currentColor`).
 - Logos stay static SVG (no scripts, links or external references).
 
+## Icons
+
+2026-11-03: the app's own 35 icons gave way to Heroicons, and icons were
+added where they help to find a thing at a glance (buttons, messages,
+panels, timeline lines). Reason: with icons in new places, hand-drawn
+ones would drift apart in style; one drawn set keeps a single look and
+has a ready icon for each new need.
+
+**Source and licence**
+- Heroicons 2.2.0 (github.com/tailwindlabs/heroicons), outline style on
+  the 24 px grid, MIT License, Copyright (c) Tailwind Labs, Inc. The
+  licence text is in `vendor/heroicons/LICENSE`; the README names it.
+- The path data is copied unchanged from `24/outline/<name>.svg` into
+  `IconsHelper::ICONS`, with the file name in a comment. The npm package
+  was checked against the registry's sha512 before copying.
+- No npm package, CDN or icon font at run time. Icons stay inline SVG:
+  - no extra requests;
+  - no change to the Content Security Policy;
+  - no new dependency to pin (ci.md).
+- **Own drawings:** `markdown` and `headset` (the agent's role icon) have
+  no Heroicons counterpart. They stay Stopan's own, drawn on a 16 px
+  grid and scaled to 24.
+
+**Drawing**
+- `icon(name, size:, label:)`: `viewBox="0 0 24 24"`, `currentColor`,
+  round caps and joins.
+- **Stroke width:** 2 at 16 px and below, 1.5 above. Heroicons are drawn
+  for 1.5 at 24 px, which is too faint at the 11 to 16 px used here.
+- **Names:** the app keeps its own names, so call sites read by meaning:
+
+  | name | Heroicon | name | Heroicon |
+  |------|----------|------|----------|
+  | clip | paper-clip | lock | lock-closed |
+  | search | magnifying-glass | copy | document-duplicate |
+  | menu | bars-3 | close | x-mark |
+  | widen / narrow | arrows-pointing-out / -in | impersonate | arrow-right-end-on-rectangle |
+  | eye_off | eye-slash | building | building-office-2 |
+  | reply | arrow-uturn-left | note | document-text |
+  | status | arrow-path | gear | cog-6-tooth |
+  | spark | sparkles | globe | language |
+  | shield | shield-check | up / down | chevron-up / -down |
+  | trash | trash | send | paper-airplane |
+  | user_plus | user-plus | link_off | link-slash |
+  | warning | exclamation-triangle | success | check-circle |
+  | info | information-circle | queue | inbox-stack |
+  | board | view-columns | chart | chart-bar |
+  | people | user-group | sliders | adjustments-horizontal |
+  | sign_out | arrow-right-start-on-rectangle | key | key |
+  | assignee | user-circle | download | arrow-down-tray |
+  | events | queue-list | restore | arrow-uturn-up |
+
+  Others have the same name as their Heroicon: clock, sun, moon, check,
+  inbox, plus, bell, link, envelope, pencil, eye, user, flag.
+
+**Where icons are used**
+- **Flash messages:** the title strip shows `success` (notices) or
+  `warning` (alerts) before the caption.
+- **Timeline lines** (timeline.md):
+  - created: `spark`;
+  - status: `status`;
+  - priority: `flag`;
+  - assignee: `assignee`;
+  - board stage: `board`;
+  - shared: `link`;
+  - unshared: `link_off`;
+  - emails: `envelope`;
+  - failed email: `warning`;
+  - followers and Cc: `eye`;
+  - deleted: `trash`;
+  - restored: `restore`;
+  - a folded run: `events`.
+- **Ticket page side panels**, in the title strip:
+  - Properties: `sliders`;
+  - Requester: `user`;
+  - People: `people`;
+  - Sharing: `link`.
+- **Buttons** with an icon before the text:
+  - Send reply: `send`; Add internal note: `lock`. The icon follows
+    the composer's mode, like the label;
+  - Delete ticket: `trash`;
+  - Add colleague and Add to Cc: `user_plus`;
+  - Remove a follower or Cc: `close`;
+  - Follow and Stop following: `eye` and `eye_off`;
+  - Stop sharing: `link_off`.
+- **Menu bar sections:** the coloured square before each section grows
+  into a small sticky (17 px, the section's paper and title strip
+  colour) carrying the section's icon in ink, so the colour cue stays:
+  - Queue and My tickets: `queue`;
+  - Board: `board`;
+  - Search: `search`;
+  - Reports: `chart`.
+- **Account menu:**
+  - Account: `user`;
+  - Administration: `gear`;
+  - Logout: `sign_out`.
+
+**Rules**
+- An icon next to text is decorative (`aria-hidden`). Buttons keep
+  6 px between icon and label (`.btn` gap).
+- A button that shows only an icon has an `aria-label` and a `title`.
+- An icon never stands for a state on its own: status, priority and
+  internal notes keep their words (Accessibility).
+- New icons come from the same Heroicons version and style. The path
+  data is copied unchanged, and the name and file are added to this
+  table.
+
 ## Pages
 
 - **Page titles** (2026-10-28: "remove them as titles"): the queue, the
@@ -319,6 +425,93 @@ in documentation, not in the app.
   ends in an ellipsis, and the tooltip and the copy hold the whole
   address.
 
+### Form fields
+
+2026-11-03: forms looked uneven: native file input, native selects and
+checkboxes next to styled fields. All forms now share one field style,
+in both looks and both themes.
+
+- **One base style** for text-like inputs (text, email, password,
+  number, URL, search, date), selects and text areas: the classes
+  `.field-input` and `.select`, and the plain inputs of the account
+  pages (`.auth`, `.account-page`). 36px high on wide screens (text
+  areas by their rows), 44px with 16px text at 760px and less
+  (mobile.md rules 1 and 2); 14px text, 7px 10px padding, 6px corners,
+  a 1px `--field-border` on `--field-bg`. Each look sets those colours
+  (Notes: white over the paper; Omarchy: the palette's surface and
+  strong border).
+- **States:** hover darkens the border (`--field-border-hover`); focus
+  turns the border to the accent and adds the 3px `--accent-ring`;
+  disabled fields are faded (opacity 0.55) with a not-allowed cursor;
+  read-only fields (share link, API token, copy fields) have a quieter
+  background (`--field-bg-readonly`), no hover change, and keep the
+  focus ring since they can be selected. Border and ring changes fade
+  in 0.12 s, not at all with reduced motion.
+- **Selects** draw their own chevron: `appearance: none` and a down
+  chevron as a `data:` SVG background in the right padding (the CSP
+  allows `data:` images). Its colour is set per look and theme
+  (`--field-chevron`): dark grey in Notes, where fields sit on light
+  paper in both themes, and the palette's muted text in Omarchy light
+  and dark, so it is visible on every surface. A set filter (yellow
+  paper, queues.md) keeps the dark chevron. The select stays native:
+  keyboard, type-ahead and the phone's own picker work as before, and
+  the queue's filter selects still submit on change.
+- **Check boxes and radios** stay native inputs (labels, keyboard,
+  screen readers), 16px, in the accent colour (`accent-color`). On
+  phones a label that holds a check box or radio, or stands next to
+  one, is at least 44px high, so the label is the target (mobile.md
+  rule 1).
+- **Native parts on paper:** in the Notes look the stickies keep
+  `color-scheme: light` in the dark theme too, since their paper stays
+  light; otherwise the browser drew an empty check box or radio as a
+  dark filled one there. Omarchy's paper follows the theme, so its
+  native parts do too.
+- **Errors:** a field with an error has a red border (`--danger`) and a
+  red focus ring, from `aria-invalid="true"` or Rails' error wrapper
+  (`.field_with_errors`, which no longer changes the layout:
+  `display: contents`). The `role="alert"` box at the top of the form
+  stays. Fields of a model form also show their own messages under
+  them (`.field-error`, in red, linked from the field with
+  `aria-describedby`), added by the default form builder
+  (`FieldFormBuilder`), so the forms themselves do not change.
+- **Buttons beside fields** (composer, joined groups, filter and stage
+  rows) are as high as the fields.
+- **Leading icons** inside a field, at its left edge only (a wrapper
+  `.input-icon` with the icon, and `padding-left` on the field): the
+  search fields (search page, member picker, admin lists; the menu bar
+  search keeps its own look), the Cc email field (envelope) and the
+  share link (link). Never on password fields, and nothing at the right
+  edge of password and email fields, where password managers put their
+  icons (see "Password fields").
+- **Joined groups** (`.input-group`): a field and the button that acts
+  on it share one border, with square corners where they meet: "Add a
+  colleague" and the Cc email field with their "Add" buttons in the
+  People panel (followers.md). The share link and "Copy link" are
+  joined top to bottom (`.input-group--stacked`): the field keeps its
+  own row in the narrow side column and the button sits under it, as
+  wide as the field (sharing.md "Managing the link").
+- **File drop zone** (composer and new ticket): a dashed area with the
+  clip icon and "Drop files here or choose files", the limits hint
+  under it. The real `<input type="file" multiple>` stays in the form,
+  visually hidden but focusable: Tab reaches it, Enter or Space opens
+  the picker, its focus ring shows on the area, and it keeps its label
+  ("Attachments"). The area is a second label of the input, so a click
+  opens the picker. Files dropped on the area are added (the area is
+  highlighted while files are dragged over it). Chosen files are listed
+  under the area, one per row, with the clip icon, name (ellipsis when
+  long), size (B, kB or MB in the page's language) and a remove button
+  (close icon, named "Remove <file name>"); choosing or dropping again
+  adds to the list, and the same file is not listed twice. The list is
+  written back into the input with `DataTransfer`, so the form sends
+  exactly the listed files and the live refresh still treats chosen
+  files as work in progress. A polite live region says how many files
+  are chosen. After a remove the focus moves to the next remove button
+  (the previous one after the last), or to the input when the list is
+  empty. The server checks the limits
+  as before. Without JavaScript, or in a browser without
+  `DataTransfer`, the plain file input shows instead, its button styled
+  like `.btn`.
+
 ### Password fields
 
 2026-11-02: first on the shared page's password form ("a button, an eye
@@ -360,7 +553,8 @@ they have no eye.
   that scrolls sideways by design (board.md).
 - Visible focus rings; every field has a label; errors are listed in an
   `role="alert"` box at the top of the form and fields with errors get
-  `aria-invalid`.
+  `aria-invalid`, a red border and, in model forms, their message under
+  them ("Form fields").
 - Status, priority and internal notes never rely on colour alone.
 - Landmarks: `header`, `nav`, `main`, `aside` on the ticket page; one `h1`
   per page; the timeline is an ordered list.
@@ -478,4 +672,8 @@ on horizontal overflow and compresses with `pngquant` when installed.
 User text is always rendered escaped. CSS and JS are served from the app;
 a Content Security Policy (`config/initializers/content_security_policy.rb`)
 allows only same-origin scripts, styles, images and forms, with a nonce for
-Turbo's progress bar style, and forbids framing.
+Turbo's progress bar style, and forbids framing. The select chevrons are
+`data:` SVG images, which the policy allows for images only. The file
+drop zone reads only the names and sizes of the chosen files in the
+browser; nothing is uploaded before the form is sent, and the server
+checks the files as before (attachments.md).

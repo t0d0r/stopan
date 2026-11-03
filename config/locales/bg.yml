@@ -23,6 +23,14 @@ bg:
     files_hint:
       one: "До %{count} файл, до %{size} MB. Изображения, PDF, текст, CSV, ZIP и офис документи."
       other: "До %{count} файла, до %{size} MB всеки. Изображения, PDF, текст, CSV, ZIP и офис документи."
+    dropzone:
+      prompt_html: "Пуснете файловете тук или <span class=\"dropzone__choose\">изберете файлове</span>"
+      list: "Избрани файлове"
+      remove: "Премахване на %{name}"
+      chosen:
+        zero: "Няма избрани файлове"
+        one: "Избран е 1 файл"
+        other: "Избрани са %{count} файла"
 
     account_page:
       nickname_hint: "Показва се в горното меню вместо името ви. Не е задължителен."

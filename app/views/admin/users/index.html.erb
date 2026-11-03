@@ -13,10 +13,10 @@
     </div>
     <%= form_with url: admin_users_path, method: :get, class: "filters filters--compact",
                                               data: { filter_form: true, turbo_action: "replace" } do %>
-      <div class="filters__search search-field">
+      <div class="filters__search input-icon">
         <%= icon :search %>
         <%= label_tag :q, t("ui.admin.search_users"), class: "sr-only" %>
-        <%= search_field_tag :q, @query, class: "search-field__input", placeholder: t("ui.admin.search_users") %>
+        <%= search_field_tag :q, @query, class: "field-input", placeholder: t("ui.admin.search_users") %>
       </div>
       <div class="filters__field">
         <%= label_tag :role, t("ui.fields.role") %>

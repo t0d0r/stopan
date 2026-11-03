@@ -87,7 +87,9 @@ function setUpComposer(composer) {
     composer.classList.toggle("is-internal", internal);
     composer.classList.toggle("sticky--pink", internal);
     composer.classList.toggle(`sticky--${composer.dataset.staffColor}`, !internal);
-    if (button) button.textContent = internal ? button.dataset.internalLabel : button.dataset.publicLabel;
+    if (!button) return;
+    button.querySelector("[data-composer-label]").textContent = internal ? button.dataset.internalLabel : button.dataset.publicLabel;
+    button.querySelectorAll("[data-composer-icon]").forEach((icon) => { icon.hidden = (icon.dataset.composerIcon === "internal") !== internal; });
   };
   composer.querySelectorAll("[data-composer-mode]").forEach((radio) => radio.addEventListener("change", update));
 }
@@ -144,6 +146,115 @@ function setUpPasswordField(field) {
     if (start !== null) input.setSelectionRange(start, end);
   }, { signal: pageSignal });
   input.form?.addEventListener("submit", () => show(false), { signal: pageSignal });
+}
+
+// File drop zone (specs/ui.md "Form fields"): the real file input keeps the
+// files. The area is its label (a click opens the picker) and takes dropped
+// files; the list shows each chosen file with a remove button. The input's
+// files are rebuilt with DataTransfer, so the form sends exactly the listed
+// files and pageIsBusy still sees them. Without DataTransfer the plain
+// input stays as it is.
+function setUpDropzone(zone) {
+  const input = zone.querySelector("[data-dropzone-input]");
+  const area = zone.querySelector("[data-dropzone-area]");
+  const list = zone.querySelector("[data-dropzone-list]");
+  const status = zone.querySelector("[data-dropzone-status]");
+  const template = zone.querySelector("template[data-dropzone-item]");
+  if (!input || !area || !list || !status || !template) return;
+  try { new DataTransfer(); } catch { return; }
+
+  let files = Array.from(input.files);
+  const key = (file) => [file.name, file.size, file.lastModified].join("/");
+  const language = document.documentElement.lang || undefined;
+  const format = (value, unit, digits) => {
+    try {
+      return new Intl.NumberFormat(language, { style: "unit", unit, unitDisplay: "short", maximumFractionDigits: digits }).format(value);
+    } catch {
+      return `${value.toFixed(digits)} ${{ byte: "B", kilobyte: "kB", megabyte: "MB" }[unit]}`;
+    }
+  };
+  // Binary steps, as the server's limit (Attachable::MAX_SIZE) and its hint;
+  // "B" for bytes in every language (Intl writes "byte" or "Byte").
+  const size = (bytes) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return format(bytes / 1024, "kilobyte", 0);
+    return format(bytes / 1024 / 1024, "megabyte", 1);
+  };
+  const chosen = (count) => {
+    if (count === 0) return zone.dataset.chosenZero;
+    if (count === 1) return zone.dataset.chosenOne;
+    return zone.dataset.chosenOther.replace("%{count}", () => String(count));
+  };
+  const write = () => {
+    const transfer = new DataTransfer();
+    files.forEach((file) => transfer.items.add(file));
+    input.files = transfer.files;
+  };
+  const render = (announce) => {
+    list.replaceChildren(...files.map((file, index) => {
+      const item = template.content.firstElementChild.cloneNode(true);
+      item.querySelector(".dropzone__name").textContent = file.name;
+      item.querySelector(".dropzone__size").textContent = size(file.size);
+      const button = item.querySelector(".dropzone__remove");
+      const label = zone.dataset.removeLabel.replace("%{name}", () => file.name);
+      button.setAttribute("aria-label", label);
+      button.title = label;
+      button.addEventListener("click", () => remove(index));
+      return item;
+    }));
+    list.hidden = files.length === 0;
+    if (announce) status.textContent = chosen(files.length);
+  };
+  const add = (more) => {
+    const known = new Set(files.map(key));
+    Array.from(more).forEach((file) => {
+      if (known.has(key(file))) return;
+      known.add(key(file));
+      files.push(file);
+    });
+    write();
+    render(true);
+  };
+  function remove(index) {
+    files.splice(index, 1);
+    write();
+    render(true);
+    const buttons = list.querySelectorAll(".dropzone__remove");
+    (buttons[index] || buttons[index - 1] || input).focus();
+  }
+
+  // The picker replaces the input's files (cancelling may empty them): add
+  // what was picked to the earlier ones and write them all back.
+  input.addEventListener("change", () => add(input.files));
+
+  let depth = 0;
+  const carriesFiles = (event) => Array.from(event.dataTransfer?.types || []).includes("Files");
+  zone.addEventListener("dragenter", (event) => {
+    if (!carriesFiles(event)) return;
+    event.preventDefault();
+    depth += 1;
+    zone.classList.add("is-dragover");
+  });
+  zone.addEventListener("dragover", (event) => {
+    if (!carriesFiles(event)) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+  });
+  zone.addEventListener("dragleave", () => {
+    depth = Math.max(0, depth - 1);
+    if (depth === 0) zone.classList.remove("is-dragover");
+  });
+  zone.addEventListener("drop", (event) => {
+    if (!carriesFiles(event)) return;
+    event.preventDefault();
+    depth = 0;
+    zone.classList.remove("is-dragover");
+    add(event.dataTransfer.files);
+  });
+
+  zone.classList.add("is-enhanced");
+  area.hidden = false;
+  render(false);
 }
 
 // Phone menu (ui.md "Menu bar"): the button shows the sections, preferences
@@ -1039,6 +1150,7 @@ function setUpPage() {
   document.querySelectorAll("[data-composer]").forEach(setUpComposer);
   document.querySelectorAll("[data-requester-mail]").forEach(setUpRequesterMail);
   document.querySelectorAll("[data-password-field]").forEach(setUpPasswordField);
+  document.querySelectorAll("[data-dropzone]").forEach(setUpDropzone);
   setUpAssignMenus(document.querySelectorAll("details[data-assign-menu]"));
   setUpCopyButtons();
   setUpCopyBoxes();

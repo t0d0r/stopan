@@ -38,13 +38,13 @@
     <% if user_signed_in? && !without_organization? %>
       <nav class="menubar__nav" aria-label="<%= t("ui.nav.label") %>">
         <%= nav_link current_user.staff? ? t("ui.nav.queue") : t("ui.nav.my_tickets"), tickets_path, dot: "yellow",
-                     current: current_section == :tickets %>
+                     current: current_section == :tickets, icon_name: :queue %>
         <% if current_user.staff? %>
-          <%= nav_link t("ui.nav.board"), board_path, dot: "purple", current: current_section == :board %>
-          <%= nav_link t("ui.nav.search"), search_path, dot: "pink", current: current_section == :search %>
+          <%= nav_link t("ui.nav.board"), board_path, dot: "purple", current: current_section == :board, icon_name: :board %>
+          <%= nav_link t("ui.nav.search"), search_path, dot: "pink", current: current_section == :search, icon_name: :search %>
         <% end %>
         <% if current_user.staff? %>
-          <%= nav_link t("ui.nav.reports"), reports_path, dot: "blue", current: current_section == :reports %>
+          <%= nav_link t("ui.nav.reports"), reports_path, dot: "blue", current: current_section == :reports, icon_name: :chart %>
         <% end %>
       </nav>
       <%# The search page has its own field (queues.md "Search page"). %>
@@ -70,14 +70,15 @@
           <div class="account-menu__panel sticky sticky--yellow">
             <header class="sticky__bar"><span class="sticky__caption"><%= current_user.email %></span></header>
             <ul class="account-menu__list">
-              <li><%= link_to t("ui.account"), edit_user_registration_path, class: "account-menu__item" %></li>
+              <li><%= link_to edit_user_registration_path, class: "account-menu__item" do %><%= icon :user %> <%= t("ui.account") %><% end %></li>
               <%# Administration lives here, for super and organization administrators (ui.md "Menu bar"). %>
               <% if current_user.admin_area? %>
-                <li><%= link_to t("ui.nav.admin"), admin_root_path, class: "account-menu__item",
-                                aria: { current: ("page" if current_section == :admin) } %></li>
+                <li><%= link_to admin_root_path, class: "account-menu__item", aria: { current: ("page" if current_section == :admin) } do %>
+                  <%= icon :gear %> <%= t("ui.nav.admin") %>
+                <% end %></li>
               <% end %>
-              <li><%= button_to t("ui.logout"), destroy_user_session_path, method: :delete, class: "account-menu__item",
-                                form_class: "button_to menubar__logout" %></li>
+              <li><%= button_to destroy_user_session_path, method: :delete, class: "account-menu__item",
+                                form_class: "button_to menubar__logout" do %><%= icon :sign_out %> <%= t("ui.logout") %><% end %></li>
             </ul>
           </div>
         </details>
