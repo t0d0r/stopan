@@ -710,6 +710,28 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-04 (v0.1.0, revision 0f74129)
+
+The first release (release.md), deployed from its tag: the working copy
+was switched to `v0.1.0` (detached), `make deploy` shipped it, and the
+working copy went back to `main`. Since 6a89f1d only the Makefile,
+docs, tests, the audit config and `bin/release-notes` changed, so the
+app behaves as before. There were no migrations, so no database copy
+was made.
+
+- Checked:
+  - no migration pending, users and tickets present;
+  - the running app reports the gem versions of 6a89f1d;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the stylesheet, script and sign-in page have the combobox, code
+    copy and wordmark;
+  - g0no `/up` 200.
+- Images kept: 0f74129, 6a89f1d, fa54a8b.
+- Rollback: tag `localhost/stopan:6a89f1d` as `latest` and restart.
+
 ## Update 2026-11-03 (revision 6a89f1d)
 
 Since fa54a8b: gem security fixes from `make audit` (ci.md "Dependency

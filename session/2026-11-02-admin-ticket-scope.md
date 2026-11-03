@@ -337,6 +337,10 @@
   entries since the start of the project. Production runs 6a89f1d; the
   commits since then change only the Makefile, docs, tests, the audit
   config and `bin/release-notes`, so the running app matches v0.1.0.
+- 2026-11-04: deployed v0.1.0 from its tag (detached checkout, `make
+  deploy`, back to `main`), no migrations, every check passed
+  (specs/deploy.md "Update 2026-11-04 (v0.1.0, revision 0f74129)").
+  release.md now says how a tag is deployed.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

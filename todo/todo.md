@@ -342,6 +342,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] `make check` runs `make audit`: advisory database updated first, local copy when offline; ignore entries need a reason and a date (specs/ci.md "Gem audit in make check")
 - [x] releases: SemVer from 0.x, `make release VERSION=x.y.z` (checks, tag, GitHub release), `bin/release-notes` from Conventional Commits; SECURITY.md supports the latest release (specs/release.md)
 - [x] first release v0.1.0: tag on 0f74129, GitHub release marked latest (specs/release.md)
+- [x] production: deployed v0.1.0 (0f74129) from its tag, no migrations (specs/deploy.md)
 - [ ] signed tags and release files for Scorecard's Signed-Releases check (specs/release.md "Not in this phase")
 - [x] Heroicons 2.2.0 replace the own icons, and icons on buttons, flash messages, panels, menu sections, account menu and timeline lines (specs/ui.md "Icons")
 - [x] form fields: one base style, selects with a chevron, check boxes and radios, errors under the field (FieldFormBuilder), file drop zone, leading icons, joined input and button groups (specs/ui.md "Form fields")

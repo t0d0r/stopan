@@ -43,6 +43,15 @@ from `main` without versions (deploy.md names each revision).
 
 A release does not deploy. A deploy follows deploy.md and records the
 revision; when it runs a tagged commit, the record names the tag too.
+`make deploy` ships `HEAD`, so a release is deployed from its tag:
+
+```sh
+git switch --detach vX.Y.Z
+DEPLOY_HOST=<host> make deploy
+git switch main
+```
+
+Commits after the tag (notes, records) are then not shipped.
 
 ## Release notes (`bin/release-notes [FROM] [TO]`)
 
