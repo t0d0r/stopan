@@ -260,6 +260,16 @@
   one right-hand column (`.composer__send`), both as wide as the wider
   one; full width on phones (specs/timeline.md "Composer"). Not
   deployed yet.
+- Searchable selects (specs/ui.md "Searchable selects"): a native list
+  is not fit for many people. `select[data-combobox]` (`combobox_data`
+  helper, `setUpCombobox`) becomes a text field with the select's look
+  and a list that narrows by name and detail (the requester's email);
+  WAI-ARIA combobox; the real select stays hidden, holds the value and
+  fires `change`, so the organization list and the auto-submitting
+  filters still work; its required check shows on the field. Used for
+  the new ticket requester and the queue's assignee and organization
+  filters. The width comes from a CSS variable, not the `size`
+  attribute, which CSS reads as a list box. Not deployed yet.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

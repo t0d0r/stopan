@@ -1178,6 +1178,89 @@ input[type="search"].field-input {
 
 /* A leading icon inside a field, at its left edge only (ui.md "Form
    fields"; never on password fields). */
+/* A searchable select (ui.md "Searchable selects"): a text field with the
+   select's look and chevron, and a list that narrows as you type. */
+.combobox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.combobox__input {
+  width: calc(var(--combobox-chars, 12) * 1ch + 42px);
+  max-width: 100%;
+  cursor: text;
+}
+
+.combobox__list,
+.combobox__empty {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  z-index: 30;
+  min-width: 14em;
+  margin: 0;
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  background: var(--paper, #fff);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+}
+
+.combobox__list {
+  max-height: 290px;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  overscroll-behavior: contain;
+}
+
+.combobox__empty {
+  padding: 9px 12px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.combobox__option {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 34px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.combobox__option.is-active,
+.combobox__option:hover {
+  background: var(--bar);
+}
+
+.combobox__option[aria-selected="true"] {
+  font-weight: 600;
+}
+
+.combobox__text,
+.combobox__detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combobox__detail {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+@media (max-width: 760px) {
+  .combobox__option {
+    min-height: 44px;
+  }
+}
+
 .input-icon {
   position: relative;
   display: flex;

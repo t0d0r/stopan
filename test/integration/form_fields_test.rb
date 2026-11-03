@@ -103,4 +103,18 @@ class FormFieldsTest < ActionDispatch::IntegrationTest
     assert_select ".field-error", 0
     assert_select "#ticket_subject[aria-describedby=subject-hint]"
   end
+
+  # specs/ui.md "Searchable selects"
+  test "long selects are marked searchable and stay real selects" do
+    sign_in users(:agent)
+    get new_ticket_url
+    assert_select "select#ticket_requester_id[name='ticket[requester_id]'][required][data-combobox][data-combobox-empty='No match']" do
+      assert_select "option[value=''][data-detail]", 0
+      assert_select "option[value=?][data-detail=?]", users(:anna).id.to_s, users(:anna).email
+    end
+    get tickets_url
+    assert_select "form[data-filter-form] select#assignee[data-combobox][data-auto-submit]"
+    assert_select "form[data-filter-form] select#organization[data-combobox][data-auto-submit]"
+    assert_select "form[data-filter-form] select#status[data-combobox]", 0
+  end
 end

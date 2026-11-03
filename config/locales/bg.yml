@@ -23,6 +23,8 @@ bg:
     files_hint:
       one: "До %{count} файл, до %{size} MB. Изображения, PDF, текст, CSV, ZIP и офис документи."
       other: "До %{count} файла, до %{size} MB всеки. Изображения, PDF, текст, CSV, ZIP и офис документи."
+    combobox:
+      no_match: "Няма съвпадение"
     dropzone:
       prompt_html: "Пуснете файловете тук или <span class=\"dropzone__choose\">изберете файлове</span>"
       list: "Избрани файлове"

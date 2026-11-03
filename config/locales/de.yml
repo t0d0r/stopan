@@ -23,6 +23,8 @@ de:
     files_hint:
       one: "Bis zu %{count} Datei mit höchstens %{size} MB. Bilder, PDF, Text, CSV, ZIP und Office-Dokumente."
       other: "Bis zu %{count} Dateien mit je höchstens %{size} MB. Bilder, PDF, Text, CSV, ZIP und Office-Dokumente."
+    combobox:
+      no_match: "Kein Treffer"
     dropzone:
       prompt_html: "Ziehen Sie Dateien hierher oder <span class=\"dropzone__choose\">wählen Sie Dateien aus</span>"
       list: "Ausgewählte Dateien"

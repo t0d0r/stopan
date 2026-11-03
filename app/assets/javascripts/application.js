@@ -1136,6 +1136,185 @@ function setUpMemberPicker() {
   });
 }
 
+// A select whose list can grow long becomes a text field with a list that
+// narrows as you type (specs/ui.md "Searchable selects"). The select stays
+// in the form, hidden: it holds and sends the value, and its change event
+// still drives dependent scripts and the filters that send on change.
+function setUpCombobox(select) {
+  // A page restored from Turbo's cache still holds the last field: rebuild it.
+  select.parentElement.querySelector(`:scope > [data-combobox-for="${select.id}"]`)?.remove();
+  select.hidden = false;
+
+  const id = select.id || `combobox-${Math.random().toString(36).slice(2)}`;
+  select.id = id;
+  const wrap = document.createElement("div");
+  wrap.className = "combobox";
+  wrap.dataset.comboboxFor = id;
+  const input = document.createElement("input");
+  input.type = "text";
+  input.id = `${id}-combobox`;
+  input.className = `${select.className} combobox__input`;
+  input.autocomplete = "off";
+  input.spellcheck = false;
+  input.setAttribute("role", "combobox");
+  input.setAttribute("aria-autocomplete", "list");
+  input.setAttribute("aria-expanded", "false");
+  input.setAttribute("aria-controls", `${id}-listbox`);
+  ["aria-invalid", "aria-describedby"].forEach((name) => {
+    if (select.hasAttribute(name)) input.setAttribute(name, select.getAttribute(name));
+  });
+  input.disabled = select.disabled;
+  const list = document.createElement("ul");
+  list.id = `${id}-listbox`;
+  list.className = "combobox__list";
+  list.setAttribute("role", "listbox");
+  list.hidden = true;
+  const empty = document.createElement("p");
+  empty.className = "combobox__empty";
+  empty.textContent = select.dataset.comboboxEmpty || "";
+  empty.hidden = true;
+  wrap.append(input, list, empty);
+  select.before(wrap);
+  select.hidden = true;
+  document.querySelectorAll(`label[for="${id}"]`).forEach((label) => { label.htmlFor = input.id; });
+  if (!input.hasAttribute("aria-label") && !document.querySelector(`label[for="${input.id}"]`)) {
+    input.setAttribute("aria-label", select.getAttribute("aria-label") || "");
+  }
+
+  const options = () => [...select.options].filter((option) => !option.hidden && !option.disabled);
+  const blank = () => [...select.options].find((option) => option.value === "");
+  const shownText = (option) => option?.text || "";
+  // As wide as the longest option, like a select (not the size attribute:
+  // CSS reads that as a list box).
+  const longest = Math.max(0, ...[...select.options].map((option) => option.text.length));
+  input.style.setProperty("--combobox-chars", Math.min(Math.max(longest, 8), 30));
+  input.placeholder = blank()?.text || "";
+  input.value = shownText(select.selectedOptions[0]);
+  input.defaultValue = input.value;
+
+  let rows = [];
+  let active = -1;
+  const setActive = (index) => {
+    rows.forEach((row, i) => row.classList.toggle("is-active", i === index));
+    active = index;
+    if (index >= 0) {
+      input.setAttribute("aria-activedescendant", rows[index].id);
+      rows[index].scrollIntoView({ block: "nearest" });
+    } else {
+      input.removeAttribute("aria-activedescendant");
+    }
+  };
+  const render = (query) => {
+    const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const matches = options().filter((option) => {
+      if (option.value === "") return words.length === 0;
+      const haystack = `${option.text} ${option.dataset.detail || ""}`.toLowerCase();
+      return words.every((word) => haystack.includes(word));
+    });
+    list.replaceChildren();
+    rows = matches.map((option, i) => {
+      const row = document.createElement("li");
+      row.id = `${list.id}-${i}`;
+      row.className = "combobox__option";
+      row.setAttribute("role", "option");
+      row.setAttribute("aria-selected", String(option.selected));
+      row.dataset.value = option.value;
+      const text = document.createElement("span");
+      text.className = "combobox__text";
+      text.textContent = option.text;
+      row.append(text);
+      if (option.dataset.detail) {
+        const detail = document.createElement("span");
+        detail.className = "combobox__detail";
+        detail.textContent = option.dataset.detail;
+        row.append(detail);
+      }
+      list.append(row);
+      return row;
+    });
+    empty.hidden = rows.length > 0;
+    const selected = rows.findIndex((row) => row.getAttribute("aria-selected") === "true");
+    setActive(words.length ? (rows.length ? 0 : -1) : selected);
+  };
+  const open = (query = "") => {
+    render(query);
+    list.hidden = rows.length === 0;
+    input.setAttribute("aria-expanded", String(rows.length > 0));
+  };
+  const isOpen = () => !list.hidden || !empty.hidden;
+  const close = () => {
+    list.hidden = true;
+    empty.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+    setActive(-1);
+  };
+  const choose = (value) => {
+    const changed = select.value !== value;
+    select.value = value;
+    input.value = shownText(select.selectedOptions[0]);
+    input.setCustomValidity("");
+    close();
+    if (changed) select.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+  // Leaving the field: an empty field chooses the blank option; text that
+  // names no option gives way to the chosen text.
+  const settle = () => {
+    if (input.value.trim() === "" && blank()) {
+      choose("");
+    } else {
+      input.value = shownText(select.selectedOptions[0]);
+      close();
+    }
+  };
+
+  // Focus selects the text, so typing replaces it; a click that gives the
+  // focus must not put the caret in place of that selection.
+  let keepSelection = false;
+  input.addEventListener("mousedown", () => { keepSelection = document.activeElement !== input; }, { signal: pageSignal });
+  input.addEventListener("mouseup", (event) => {
+    if (keepSelection) event.preventDefault();
+    keepSelection = false;
+  }, { signal: pageSignal });
+  input.addEventListener("focus", () => { input.select(); open(); }, { signal: pageSignal });
+  input.addEventListener("click", () => { if (!isOpen()) open(); }, { signal: pageSignal });
+  input.addEventListener("input", () => {
+    input.setCustomValidity("");
+    open(input.value);
+  }, { signal: pageSignal });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!isOpen()) return open(input.value === shownText(select.selectedOptions[0]) ? "" : input.value);
+      if (rows.length) setActive((active + (event.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length);
+    } else if (event.key === "Enter" && isOpen()) {
+      event.preventDefault();
+      if (active >= 0) choose(rows[active].dataset.value);
+    } else if (event.key === "Escape" && isOpen()) {
+      event.preventDefault();
+      input.value = shownText(select.selectedOptions[0]);
+      close();
+    }
+  }, { signal: pageSignal });
+  input.addEventListener("blur", settle, { signal: pageSignal });
+  // A press on the list must not take the focus from the field first.
+  list.addEventListener("mousedown", (event) => event.preventDefault(), { signal: pageSignal });
+  list.addEventListener("click", (event) => {
+    const row = event.target.closest(".combobox__option");
+    if (row) choose(row.dataset.value);
+  }, { signal: pageSignal });
+  // The hidden select's required check is shown on the field.
+  select.addEventListener("invalid", (event) => {
+    event.preventDefault();
+    input.setCustomValidity(select.validationMessage);
+    input.reportValidity();
+  }, { signal: pageSignal });
+  // Scripts that change the select (or disable it) show on the field.
+  select.addEventListener("change", () => {
+    input.value = shownText(select.selectedOptions[0]);
+    input.disabled = select.disabled;
+  }, { signal: pageSignal });
+}
+
 function setUpPage() {
   registerStreamActions();
   clearInterval(heldRefresh);
@@ -1160,6 +1339,7 @@ function setUpPage() {
   setUpBulkActions();
   setUpFlushConfirm();
   setUpMemberPicker();
+  document.querySelectorAll("select[data-combobox]").forEach(setUpCombobox);
   setUpDoubleClickEdit();
   setUpTaskLists();
   setUpTranslations();

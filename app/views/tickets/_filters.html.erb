@@ -29,12 +29,12 @@
     <%= select_tag :assignee,
                    options_for_select([ [ t("ui.queue.assignee_me"), "me" ], [ t("ui.queue.assignee_none"), "none" ] ] +
                                       staff.map { |u| [ u.display_name, u.id.to_s ] }, filter.assignee),
-                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.assignee), data: { auto_submit: true } %>
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.assignee), data: { auto_submit: true, **combobox_data } %>
   </div>
   <div class="filters__field">
     <%= label_tag :organization, t("ui.fields.organization") %>
     <%= select_tag :organization, options_from_collection_for_select(current_user.visible_organizations.ordered, :id, :name, filter.organization_id),
-                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true } %>
+                   include_blank: t("ui.queue.any"), class: class_names("select", "is-set": filter.organization_id), data: { auto_submit: true, **combobox_data } %>
   </div>
   <div class="filters__field">
     <%= label_tag :sort, t("ui.queue.sort") %>

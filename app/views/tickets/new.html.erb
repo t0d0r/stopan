@@ -16,11 +16,11 @@
                            User.active.where(id: Membership.where(organization_id: current_user.visible_organizations.select(:id)).select(:user_id))
                                .ordered.includes(:memberships).map { |user|
                              orgs = user.memberships.map(&:organization_id) & current_user.visible_organizations.pluck(:id)
-                             [ user.display_name, user.id, { data: { organizations: orgs.join(" ") } } ]
+                             [ user.display_name, user.id, { data: { organizations: orgs.join(" "), detail: user.email } } ]
                            },
                            { include_blank: t("ui.new_ticket.choose") },
                            class: "select", required: true, aria: { invalid: invalid?(@ticket, :requester) },
-                           data: { requester_organizations: "ticket_organization_id" } %>
+                           data: { requester_organizations: "ticket_organization_id", **combobox_data } %>
             </div>
             <div class="field">
               <%= f.label :organization_id, t("ui.fields.organization") %>

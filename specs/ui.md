@@ -511,6 +511,46 @@ in both looks and both themes.
   as before. Without JavaScript, or in a browser without
   `DataTransfer`, the plain file input shows instead, its button styled
   like `.btn`.
+- **Searchable selects** (`select[data-combobox]`, 2026-11-03: a native
+  list is not fit for choosing among many people). A select whose list
+  can grow long becomes a text field with a list that narrows as you
+  type:
+  - **Where:** the requester on the staff "New ticket" form, and the
+    queue's assignee and organization filters.
+  - **The field:** a text field with the select's look (`.select`, its
+    chevron and the yellow of a set filter), as wide as the longest
+    option. It shows the chosen option's text, the blank option's
+    ("Choose...", "Any") too, as a select does. Focus selects the text,
+    so typing replaces it.
+  - **The list:** opens on focus, click, typing or Down. It shows every
+    option, and narrows to the options whose text and detail contain
+    all typed words. The detail is a second, quieter line, e.g. the
+    requester's email. Matching ignores case.
+    - At most about 8 rows show at once; the rest scroll.
+    - "No match" shows when nothing fits.
+    - Rows are 44 px tall on phones.
+  - **Keyboard:**
+    - Up and Down move through the list;
+    - Enter or a click chooses;
+    - Escape closes the list and puts back the chosen text;
+    - Tab leaves and keeps the choice.
+    - Leaving with text that names no option puts back the chosen text.
+    - Leaving with the text cleared chooses the blank option, when the
+      select has one.
+  - **Under it** the real `<select>` stays in the form, hidden. It holds
+    the value and sends it.
+    - Choosing sets it and fires its `change` event, so dependent
+      scripts still run: the organization list of the new ticket form,
+      and the filters that send on change.
+    - Its `required` check is reported on the text field.
+  - **Accessibility:** the WAI-ARIA combobox pattern:
+    - the field has `role="combobox"`, `aria-expanded`,
+      `aria-controls` and `aria-activedescendant`;
+    - the list is a `listbox` of `option`s with `aria-selected`;
+    - the field takes over the select's label.
+  - **Without JavaScript** the native select shows, as before.
+  - **Busy for live refresh:** only while the field has focus or the
+    choice has changed, like any field.
 
 ### Password fields
 
