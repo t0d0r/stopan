@@ -89,21 +89,8 @@ docker-dev-logs: ## follow the development container logs
 docker-dev-down: ## stop the development container (gems, database and tmp stay in volumes)
 	docker compose -f compose.dev.yaml down
 
-release: ## tag main as vVERSION and publish the GitHub release with notes from bin/release-notes (VERSION=x.y.z; specs/release.md)
-	@test -n "$(VERSION)" || { echo "VERSION is missing: make release VERSION=0.1.0"; exit 1; }
-	@echo "$(VERSION)" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$$' || { echo "VERSION must be three numbers without a leading v, for example 0.1.0 (got $(VERSION))"; exit 1; }
-	@command -v gh >/dev/null && gh auth status >/dev/null 2>&1 || { echo "gh is missing or not signed in (gh auth login)"; exit 1; }
-	@test "$$(git rev-parse --abbrev-ref HEAD)" = main || { echo "releases are made from main"; exit 1; }
-	@git diff --quiet && git diff --cached --quiet || { echo "tracked files have uncommitted changes; commit or stash them first"; exit 1; }
-	@git fetch -q origin main --tags
-	@test "$$(git rev-parse HEAD)" = "$$(git rev-parse origin/main)" || { echo "HEAD differs from origin/main; push or pull first"; exit 1; }
-	@! git rev-parse -q --verify "refs/tags/v$(VERSION)" >/dev/null || { echo "tag v$(VERSION) already exists"; exit 1; }
-	$(MAKE) check
-	@mkdir -p tmp
-	bin/release-notes > tmp/release-notes-v$(VERSION).md
-	git tag -a v$(VERSION) -m "Stopan v$(VERSION)"
-	git push origin v$(VERSION)
-	gh release create v$(VERSION) --verify-tag --latest --title "Stopan v$(VERSION)" --notes-file tmp/release-notes-v$(VERSION).md
+release: ## tag main as vVERSION with a signed tag and publish the GitHub release (VERSION=x.y.z; specs/release.md)
+	@bin/release $(VERSION)
 
 deploy: ## ship HEAD to the server, build and restart there (needs DEPLOY_HOST; specs/deploy.md)
 	@bin/deploy

@@ -1,0 +1,4 @@
+# Keys allowed to sign Stopan release tags (specs/release.md "Signed tags").
+# Verify a tag from the repository root:
+#   git -c gpg.ssh.allowedSignersFile=.github/allowed_signers tag -v vX.Y.Z
+t0d0r namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMjalammM2WurvzqosPN/KKHhUwyV4IFLJ05CQz0vz4T

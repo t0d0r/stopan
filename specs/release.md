@@ -19,15 +19,20 @@ from `main` without versions (deploy.md names each revision).
 - **The git tag is the only place the version is kept.** Nothing in the
   tree repeats it, so a release needs no commit, and a file can never
   disagree with the tag.
-- Tags are annotated (`git tag -a`), with the message `Stopan vX.Y.Z`.
+- Tags are signed (`git tag -s`, below), with the message `Stopan vX.Y.Z`.
+  v0.1.0 is the one unsigned tag; it was published before signing.
 
 ## How to release
 
-`make release VERSION=X.Y.Z` (without the leading `v`):
+`make release VERSION=X.Y.Z` (without the leading `v`) runs
+`bin/release`:
 
 1. It refuses, with a message, when:
    - `VERSION` is missing or not three numbers;
    - `gh` is missing or not signed in;
+   - signing is not set up: `gpg.format` is not `ssh`, `user.signingkey`
+     is not set or its file is missing, the key is not in
+     `.github/allowed_signers`, or ssh-agent does not hold it;
    - the branch is not `main`;
    - tracked files have uncommitted changes (untracked files are
      ignored);
@@ -37,7 +42,9 @@ from `main` without versions (deploy.md names each revision).
 3. It writes the release notes with `bin/release-notes` to
    `tmp/release-notes-vX.Y.Z.md`, before the tag exists, so they cover
    the commits since the previous tag.
-4. It creates the annotated tag on `HEAD` and pushes the tag.
+4. It creates the signed tag on `HEAD` and verifies it against
+   `.github/allowed_signers`. If the check fails, the tag is deleted
+   again and nothing is pushed. Otherwise it pushes the tag.
 5. It creates the GitHub release from the pushed tag (`--verify-tag`),
    titled `Stopan vX.Y.Z`, marked latest, with the notes file.
 
@@ -52,6 +59,45 @@ git switch main
 ```
 
 Commits after the tag (notes, records) are then not shipped.
+
+## Signed tags
+
+2026-11-05: release tags are signed with SSH (git `gpg.format=ssh`).
+
+- **Why:** a signed tag shows that the release came from the
+  maintainer's key, not only from someone who can push to GitHub.
+- **A separate ed25519 key, only for signing.** It is not used to log
+  in anywhere. A leaked login key cannot sign a release, and a leaked
+  signing key opens no server.
+- **SSH, not GPG:** ssh-agent is already in use, there is no keyring to
+  keep, and GitHub verifies both.
+- **The private key** has a passphrase and stays on the maintainer's
+  machine. ssh-agent holds it (on macOS with the keychain:
+  `ssh-add --apple-use-keychain <private key>`), so `make release` signs
+  without a prompt.
+- **Git config in this repository only** (`.git/config`, not
+  committed):
+  - `gpg.format ssh`;
+  - `user.signingkey <path of the public key>`: git asks ssh-agent for
+    the private key;
+  - `tag.gpgSign true`: every annotated tag is signed;
+  - `gpg.ssh.allowedSignersFile <absolute path of
+    .github/allowed_signers>`, so `git tag -v` works.
+- **`.github/allowed_signers`** (committed) lists the keys that may
+  sign releases. Each line has:
+  - the principal `t0d0r`, the GitHub account, never an email address;
+  - `namespaces="git"`;
+  - the public key, without its comment (which would name the machine).
+- **Anyone can verify a tag** from a clone:
+  `git -c gpg.ssh.allowedSignersFile=.github/allowed_signers tag -v vX.Y.Z`.
+- **On GitHub** the same public key is added to the account as a
+  *signing* key, so tags and releases show "Verified". GitHub matches
+  the tagger email with the account's verified emails.
+- **Changing the key:**
+  - a replaced key keeps its line with `valid-before="YYYYMMDD"`, so
+    older tags still verify;
+  - a leaked key is removed from the file and from GitHub.
+- **Commits stay unsigned.** Only releases are signed.
 
 ## Release notes (`bin/release-notes [FROM] [TO]`)
 
@@ -81,8 +127,11 @@ Commits after the tag (notes, records) are then not shipped.
 
 ## Not in this phase
 
-- Signed tags and signed release files (Scorecard's Signed-Releases
-  check): there is no signing key set up yet.
+- Signed release files. Scorecard's Signed-Releases check looks for
+  signature or provenance files attached to the release (`.sig`,
+  `.asc`, `.intoto.jsonl`, ...), not at signed tags, so signed tags do
+  not raise that score.
+- Signed commits.
 - Release files (archives, images): the server builds the image from
   the source (deploy.md); GitHub adds the source archives itself.
 - A `CHANGELOG.md`: the release notes on GitHub are the change log.
@@ -91,6 +140,12 @@ Commits after the tag (notes, records) are then not shipped.
 ## Acceptance
 
 - `make release` refuses in each case of step 1, before `make check`.
+- A new release tag is signed: `git tag -v` with
+  `.github/allowed_signers` prints a good signature for `t0d0r`, and
+  GitHub shows the tag as "Verified".
+- `.github/allowed_signers` has only lines with a principal without
+  `@`, `namespaces="git"` and an ed25519 key without a comment
+  (test/config/release_test.rb).
 - `bin/release-notes` groups the commits as above, lists breaking
   changes first, leaves out the working notes, and quotes `@name` and
   `#123` (test/bin/release_notes_test.rb).
@@ -100,6 +155,9 @@ Commits after the tag (notes, records) are then not shipped.
 ## Security Note
 
 Release notes are public and built from commit subjects, which already
-follow the rule of no secrets, personal data or private URLs. The tag
-is not signed; a signed tag and signed release files are the next step
-for supply-chain checks. Only the latest release gets security fixes.
+follow the rule of no secrets, personal data or private URLs. Release
+tags are signed with a separate SSH key that has a passphrase and never
+leaves the maintainer's machine. Its public half is committed and
+registered on GitHub; the private half is never written to the
+repository, a note or a log. Only the latest release gets security
+fixes.

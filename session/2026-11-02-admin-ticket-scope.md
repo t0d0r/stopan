@@ -341,6 +341,32 @@
   deploy`, back to `main`), no migrations, every check passed
   (specs/deploy.md "Update 2026-11-04 (v0.1.0, revision 0f74129)").
   release.md now says how a tag is deployed.
+- 2026-11-05, in progress: signed release tags (specs/release.md
+  "Signed tags"). SSH signing with a separate ed25519 key, only for
+  signing, with a passphrase, held by ssh-agent. `make release` now
+  runs `bin/release`, which also refuses when signing is not set up,
+  signs the tag with `git tag -s`, verifies it against
+  `.github/allowed_signers` and deletes it again if that fails, before
+  anything is pushed. test/config/release_test.rb checks the allowed
+  signers file and the order sign, verify, push.
+- The signing key exists (ed25519, passphrase, held by ssh-agent with
+  the keychain). `.github/allowed_signers` has its public key for the
+  principal `t0d0r`; the repository git config has `gpg.format ssh`,
+  `user.signingkey`, `tag.gpgSign` and the allowed signers path.
+  Checked with a local test tag (deleted, never pushed): good signature
+  with the repository config and with the relative path a clone would
+  use; rejected against a file holding another key. `make release` now
+  passes the signing checks. v0.1.0 stays unsigned.
+- The audit in `make check` stopped a commit: new advisories in Rails
+  8.1.4 (Active Storage file read/write in image analysis and code
+  execution in video previews; Action Pack Strong Parameters bypass and
+  RemoteIp spoofing; Action View XSS in text helpers; Active Support
+  DoS; Action Mailbox replay). Rails updated to 8.1.4.1 with
+  `bundle update rails --conservative`; only the Rails gems moved. The
+  production image has no ffmpeg, poppler, vips or ImageMagick and the
+  variant processor is disabled, which limits the Active Storage
+  issues; the Action Pack and Action View fixes apply directly.
+  Production still runs Rails 8.1.4 until the next deploy.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -386,8 +412,10 @@
 
 ## Open
 
-- Tags and releases are not signed (no signing key yet), so Scorecard's
-  Signed-Releases check stays low (specs/release.md "Not in this phase").
+- The signing key is not yet a signing key on the GitHub account, so
+  signed tags do not show "Verified" there yet. Scorecard's
+  Signed-Releases check looks at signature files attached to releases,
+  not at tags, so it stays low (specs/release.md "Not in this phase").
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
@@ -401,7 +429,9 @@
 
 ## Next step
 
-None pending; later items for followers are in todo.
+Deploy Rails 8.1.4.1 (it is committed, not yet in production). Add the
+signing key on GitHub as a signing key; the next release is the first
+signed tag.
 
 ## Security Note
 

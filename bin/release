@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+# Tags main as vVERSION with a signed tag and publishes the GitHub
+# release (specs/release.md "How to release" and "Signed tags").
+#
+#   bin/release 0.2.0      (make release VERSION=0.2.0)
+
+version=${1:-$VERSION}
+fail() { echo "$*" >&2; exit 1; }
+
+[ -n "$version" ] || fail "VERSION is missing: make release VERSION=0.1.0"
+[[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
+  fail "VERSION must be three numbers without a leading v, for example 0.1.0 (got $version)"
+tag=v$version
+
+command -v gh >/dev/null && gh auth status >/dev/null 2>&1 || fail "gh is missing or not signed in (gh auth login)"
+
+# Signing (specs/release.md "Signed tags").
+signers="$PWD/.github/allowed_signers"
+setup='see specs/release.md "Signed tags"'
+[ "$(git config --get gpg.format)" = ssh ] || fail "tags are signed with SSH: git config gpg.format ssh ($setup)"
+key=$(git config --get user.signingkey) || fail "no signing key: git config user.signingkey <public key file> ($setup)"
+key=${key/#\~/$HOME}
+[ -f "$key" ] || fail "the signing key file $key does not exist ($setup)"
+blob=$(awk '{print $2}' "$key")
+[ -n "$blob" ] && [ -f "$signers" ] && grep -qF "$blob" "$signers" ||
+  fail "the signing key is not in .github/allowed_signers ($setup)"
+ssh-add -L 2>/dev/null | grep -qF "$blob" ||
+  fail "ssh-agent does not hold the signing key: ssh-add --apple-use-keychain <private key> ($setup)"
+
+[ "$(git rev-parse --abbrev-ref HEAD)" = main ] || fail "releases are made from main"
+git diff --quiet && git diff --cached --quiet || fail "tracked files have uncommitted changes; commit or stash them first"
+git fetch -q origin main --tags
+[ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || fail "HEAD differs from origin/main; push or pull first"
+! git rev-parse -q --verify "refs/tags/$tag" >/dev/null || fail "tag $tag already exists"
+
+make check
+
+mkdir -p tmp
+notes=tmp/release-notes-$tag.md
+bin/release-notes > "$notes"
+
+git tag -s "$tag" -m "Stopan $tag"
+git -c gpg.ssh.allowedSignersFile="$signers" tag -v "$tag" ||
+  { git tag -d "$tag" >/dev/null; fail "the signature of $tag did not verify; the tag was deleted and nothing was pushed"; }
+
+git push origin "$tag"
+gh release create "$tag" --verify-tag --latest --title "Stopan $tag" --notes-file "$notes"
