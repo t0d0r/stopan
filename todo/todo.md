@@ -348,7 +348,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] Rails 8.1.4.1 security release, found by the audit in make check (specs/ci.md "Gem audit in make check")
 - [x] release v0.1.1, the first signed tag (Rails 8.1.4.1 and signed tags), GitHub shows it "Verified" (specs/release.md)
 - [x] production: deployed v0.1.1 (3a4f4c5) from its tag, Rails 8.1.4.1, no migrations (specs/deploy.md)
-- [~] signed release files: source archive and SSH signature on every release, `make release-files` for earlier releases; attach to v0.1.0 and v0.1.1 (specs/release.md "Signed release files")
+- [x] signed release files: source archive and SSH signature on every release, `make release-files` for earlier releases; attached to v0.1.0 and v0.1.1; Scorecard Signed-Releases 8 (specs/release.md "Signed release files")
 - [ ] SLSA provenance for 10 of 10 in Scorecard's Signed-Releases (needs a release build on GitHub Actions) (specs/release.md "Not in this phase")
 - [x] Heroicons 2.2.0 replace the own icons, and icons on buttons, flash messages, panels, menu sections, account menu and timeline lines (specs/ui.md "Icons")
 - [x] form fields: one base style, selects with a chevron, check boxes and radios, errors under the field (FieldFormBuilder), file drop zone, leading icons, joined input and button groups (specs/ui.md "Form fields")

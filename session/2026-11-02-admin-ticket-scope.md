@@ -387,6 +387,14 @@
   version. Checked with a dry run: good signature; a changed archive
   and the `git` namespace are rejected. Scorecard's Signed-Releases
   check counts `.sig` files (8 of 10); 10 needs SLSA provenance.
+- Attached the signed files to v0.1.0 and v0.1.1 with `make
+  release-files`. Checked as a user would: the files downloaded from
+  the releases verify against `allowed_signers` from the public
+  repository, and their file lists match the tags.
+- Scorecard (v5.6.0) after a manual run: 6.2 (from 5.1).
+  Signed-Releases 8 ("2 out of the last 2 releases have a total of 2
+  signed artifacts"); Pinned-Dependencies, Dependency-Update-Tool and
+  Vulnerabilities 10.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -432,9 +440,9 @@
 
 ## Open
 
-- Scorecard's Signed-Releases check looks at signature files attached
-  to releases, not at tags, so it stays low (specs/release.md "Not in
-  this phase").
+- Scorecard's Signed-Releases check stays at 8 until releases carry
+  SLSA provenance, which needs a release build on GitHub Actions
+  (specs/release.md "Not in this phase").
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
@@ -448,8 +456,8 @@
 
 ## Next step
 
-Attach the signed files to v0.1.0 and v0.1.1 with `make release-files`
-and verify a download.
+None pending. Open items: SLSA provenance, the form field items and
+the follower items in todo.
 
 ## Security Note
 
