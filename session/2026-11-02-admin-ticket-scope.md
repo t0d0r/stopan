@@ -376,6 +376,17 @@
 - 2026-11-06: deployed v0.1.1 (3a4f4c5) from its tag, no migrations;
   the app reports Rails 8.1.4.1 and every check passed (specs/deploy.md
   "Update 2026-11-06 (v0.1.1, revision 3a4f4c5)").
+- Signed release files (specs/release.md "Signed release files"): every
+  release gets `stopan-X.Y.Z.tar.gz` (`git archive` of the tag) and its
+  SSH signature `stopan-X.Y.Z.tar.gz.sig` (namespace `file`), verified
+  against `.github/allowed_signers` before upload. The allowed signers
+  line now has `namespaces="git,file"`. `bin/release` builds and checks
+  the files before it pushes the tag; `bin/release --files` (`make
+  release-files VERSION=x.y.z`) attaches them to an existing release.
+  The release notes' security note shows the verify command with the
+  version. Checked with a dry run: good signature; a changed archive
+  and the `git` namespace are rejected. Scorecard's Signed-Releases
+  check counts `.sig` files (8 of 10); 10 needs SLSA provenance.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -437,9 +448,8 @@
 
 ## Next step
 
-None pending. Open items: signed release files for Scorecard's
-Signed-Releases check, the form field items and the follower items in
-todo.
+Attach the signed files to v0.1.0 and v0.1.1 with `make release-files`
+and verify a download.
 
 ## Security Note
 

@@ -43,10 +43,14 @@ from `main` without versions (deploy.md names each revision).
    `tmp/release-notes-vX.Y.Z.md`, before the tag exists, so they cover
    the commits since the previous tag.
 4. It creates the signed tag on `HEAD` and verifies it against
-   `.github/allowed_signers`. If the check fails, the tag is deleted
-   again and nothing is pushed. Otherwise it pushes the tag.
-5. It creates the GitHub release from the pushed tag (`--verify-tag`),
-   titled `Stopan vX.Y.Z`, marked latest, with the notes file.
+   `.github/allowed_signers`.
+5. It builds the source archive from the tag, signs it and verifies the
+   signature ("Signed release files" below).
+6. If a check in step 4 or 5 fails, the tag is deleted again and
+   nothing is pushed. Otherwise it pushes the tag.
+7. It creates the GitHub release from the pushed tag (`--verify-tag`),
+   titled `Stopan vX.Y.Z`, marked latest, with the notes file and the
+   two release files.
 
 A release does not deploy. A deploy follows deploy.md and records the
 revision; when it runs a tagged commit, the record names the tag too.
@@ -86,7 +90,8 @@ Commits after the tag (notes, records) are then not shipped.
 - **`.github/allowed_signers`** (committed) lists the keys that may
   sign releases. Each line has:
   - the principal `t0d0r`, the GitHub account, never an email address;
-  - `namespaces="git"`;
+  - `namespaces="git,file"`: the key signs tags (`git`) and release
+    files (`file`), nothing else;
   - the public key, without its comment (which would name the machine).
 - **Anyone can verify a tag** from a clone:
   `git -c gpg.ssh.allowedSignersFile=.github/allowed_signers tag -v vX.Y.Z`.
@@ -98,6 +103,41 @@ Commits after the tag (notes, records) are then not shipped.
     older tags still verify;
   - a leaked key is removed from the file and from GitHub.
 - **Commits stay unsigned.** Only releases are signed.
+
+## Signed release files
+
+2026-11-06: every release carries a source archive and its signature.
+
+- **Why:** a signed tag is checked with git; a signed file can be
+  checked by anyone who downloads it, without a clone. It also answers
+  Scorecard's Signed-Releases check, which looks for signature files
+  among the release files (`.sig` and others). That check gives 8 of 10
+  when every release has a signature, and 10 only with SLSA provenance
+  (below, "Not in this phase").
+- **The files**, attached to the GitHub release:
+  - `stopan-X.Y.Z.tar.gz`: `git archive` of the tag, with the prefix
+    `stopan-X.Y.Z/`. Built from the tag, never from the working copy,
+    so it holds exactly the released commit. GitHub's own source
+    archives stay as they are.
+  - `stopan-X.Y.Z.tar.gz.sig`: its SSH signature (`ssh-keygen -Y sign`,
+    namespace `file`), made with the release signing key through
+    ssh-agent.
+- **Checked before upload:** the signature is verified against
+  `.github/allowed_signers` (`ssh-keygen -Y find-principals`, then
+  `-Y verify`); if that fails, nothing is uploaded.
+- **Anyone can verify a download:**
+
+  ```sh
+  ssh-keygen -Y verify -f allowed_signers -I t0d0r -n file \
+    -s stopan-X.Y.Z.tar.gz.sig < stopan-X.Y.Z.tar.gz
+  ```
+
+  `allowed_signers` is `.github/allowed_signers` from the repository.
+- **Earlier releases:** `make release-files VERSION=X.Y.Z` builds,
+  signs, verifies and attaches the two files to an existing release,
+  from its tag. It replaces files of the same name. v0.1.0 and v0.1.1
+  got their files this way.
+- **The release notes say how to verify** (their Security Note).
 
 ## Release notes (`bin/release-notes [FROM] [TO]`)
 
@@ -122,15 +162,17 @@ Commits after the tag (notes, records) are then not shipped.
 - **No mentions or links by accident:** `@name` and `#123` in a subject
   are put in backticks, so GitHub neither notifies anyone nor links an
   issue.
-- **Ends with a "Security Note"** section: report vulnerabilities as
-  SECURITY.md says; only the latest release and `main` get fixes.
+- **Ends with a "Security Note"** section: the tag and the source
+  archive are signed, with the command to verify the archive; report
+  vulnerabilities as SECURITY.md says; only the latest release and
+  `main` get fixes.
 
 ## Not in this phase
 
-- Signed release files. Scorecard's Signed-Releases check looks for
-  signature or provenance files attached to the release (`.sig`,
-  `.asc`, `.intoto.jsonl`, ...), not at signed tags, so signed tags do
-  not raise that score.
+- SLSA provenance (`.intoto.jsonl`), which Scorecard needs for 10 of
+  10 in Signed-Releases. It has to be made by a build on GitHub Actions
+  (the SLSA generator), while releases are made on the maintainer's
+  machine.
 - Signed commits.
 - Release files (archives, images): the server builds the image from
   the source (deploy.md); GitHub adds the source archives itself.
@@ -144,8 +186,12 @@ Commits after the tag (notes, records) are then not shipped.
   `.github/allowed_signers` prints a good signature for `t0d0r`, and
   GitHub shows the tag as "Verified".
 - `.github/allowed_signers` has only lines with a principal without
-  `@`, `namespaces="git"` and an ed25519 key without a comment
+  `@`, `namespaces="git,file"` and an ed25519 key without a comment
   (test/config/release_test.rb).
+- Every release from v0.1.0 on has `stopan-X.Y.Z.tar.gz` and
+  `stopan-X.Y.Z.tar.gz.sig`; the verify command above prints a good
+  signature for `t0d0r`; `bin/release` builds, signs and verifies the
+  files before it pushes the tag.
 - `bin/release-notes` groups the commits as above, lists breaking
   changes first, leaves out the working notes, and quotes `@name` and
   `#123` (test/bin/release_notes_test.rb).
@@ -156,8 +202,8 @@ Commits after the tag (notes, records) are then not shipped.
 
 Release notes are public and built from commit subjects, which already
 follow the rule of no secrets, personal data or private URLs. Release
-tags are signed with a separate SSH key that has a passphrase and never
-leaves the maintainer's machine. Its public half is committed and
+tags and release files are signed with a separate SSH key that has a
+passphrase and never leaves the maintainer's machine. Its public half is committed and
 registered on GitHub; the private half is never written to the
 repository, a note or a log. Only the latest release gets security
 fixes.

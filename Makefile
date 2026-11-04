@@ -4,7 +4,7 @@
 
 IMAGE ?= stopan:latest
 
-.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-check docker-up docker-down docker-logs docker-dev docker-dev-restart docker-dev-logs docker-dev-down deploy release
+.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-check docker-up docker-down docker-logs docker-dev docker-dev-restart docker-dev-logs docker-dev-down deploy release release-files
 
 help: ## list the targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-18s %s\n", $$1, $$2}'
@@ -89,8 +89,11 @@ docker-dev-logs: ## follow the development container logs
 docker-dev-down: ## stop the development container (gems, database and tmp stay in volumes)
 	docker compose -f compose.dev.yaml down
 
-release: ## tag main as vVERSION with a signed tag and publish the GitHub release (VERSION=x.y.z; specs/release.md)
+release: ## tag main as vVERSION with a signed tag and publish the GitHub release with the signed source archive (VERSION=x.y.z; specs/release.md)
 	@bin/release $(VERSION)
+
+release-files: ## build, sign and attach the signed source archive to the existing release vVERSION (VERSION=x.y.z; specs/release.md)
+	@bin/release --files $(VERSION)
 
 deploy: ## ship HEAD to the server, build and restart there (needs DEPLOY_HOST; specs/deploy.md)
 	@bin/deploy

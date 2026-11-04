@@ -4,11 +4,11 @@ load Rails.root.join("bin/release-notes").to_s
 
 # Release notes from Conventional Commits (specs/release.md "Release notes").
 class ReleaseNotesTest < ActiveSupport::TestCase
-  def notes(subjects, since: nil)
+  def notes(subjects, since: nil, version: nil)
     commits = subjects.each_with_index.map do |(subject, body), index|
       ReleaseNotes::Commit.new(format("%07x", index + 1), subject, body.to_s)
     end
-    ReleaseNotes.new(commits, since: since).to_markdown
+    ReleaseNotes.new(commits, since: since, version: version).to_markdown
   end
 
   def sections(markdown)
@@ -71,6 +71,13 @@ class ReleaseNotesTest < ActiveSupport::TestCase
     assert_match(/\AFirst release: every change since the start of the project\.\n/, notes([ "feat: x" ]))
     markdown = notes([ "feat: x" ], since: "v0.1.0")
     assert_match(/\AChanges since v0\.1\.0\.\n/, markdown)
-    assert_match(/## Security Note\n\nReport vulnerabilities privately, as SECURITY\.md describes.*security fixes\.\n\z/m, markdown)
+    assert_match(/## Security Note\n\nThe tag and the source archive .*Report vulnerabilities privately, as SECURITY\.md describes.*security fixes\.\n\z/m, markdown)
+  end
+
+  test "the security note shows how to verify the signed archive of this version" do
+    markdown = notes([ "feat: x" ], version: "0.2.0")
+    assert_includes markdown, "ssh-keygen -Y verify -f allowed_signers -I t0d0r -n file \\\n  -s stopan-0.2.0.tar.gz.sig < stopan-0.2.0.tar.gz\n"
+    assert_not_includes markdown, "X.Y.Z"
+    assert_includes notes([ "feat: x" ]), "stopan-X.Y.Z.tar.gz"
   end
 end

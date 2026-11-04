@@ -1,10 +1,19 @@
 #!/bin/bash -e
 
-# Tags main as vVERSION with a signed tag and publishes the GitHub
-# release (specs/release.md "How to release" and "Signed tags").
+# Releases (specs/release.md).
 #
-#   bin/release 0.2.0      (make release VERSION=0.2.0)
+#   bin/release 0.2.0           tag main as v0.2.0 with a signed tag and
+#                               publish the GitHub release with the
+#                               signed source archive (make release)
+#   bin/release --files 0.1.0   build, sign and attach the release files
+#                               to the existing release v0.1.0
+#                               (make release-files)
 
+mode=release
+if [ "$1" = --files ]; then
+  mode=files
+  shift
+fi
 version=${1:-$VERSION}
 fail() { echo "$*" >&2; exit 1; }
 
@@ -28,6 +37,32 @@ blob=$(awk '{print $2}' "$key")
 ssh-add -L 2>/dev/null | grep -qF "$blob" ||
   fail "ssh-agent does not hold the signing key: ssh-add --apple-use-keychain <private key> ($setup)"
 
+# The source archive of the tag and its signature (specs/release.md
+# "Signed release files"). Prints the two paths. Each step returns on
+# failure, since -e does not apply inside a function called with ||.
+release_files() {
+  local dir=tmp/release archive principal
+  archive=$dir/stopan-$version.tar.gz
+  mkdir -p "$dir" || return 1
+  rm -f "$archive" "$archive.sig" || return 1
+  git archive --format=tar.gz --prefix="stopan-$version/" -o "$archive" "$tag" || return 1
+  ssh-keygen -q -Y sign -f "$key" -n file "$archive" >&2 || return 1
+  principal=$(ssh-keygen -Y find-principals -f "$signers" -s "$archive.sig") || return 1
+  ssh-keygen -Y verify -f "$signers" -I "$principal" -n file -s "$archive.sig" < "$archive" >&2 || return 1
+  echo "$archive" "$archive.sig"
+}
+
+if [ "$mode" = files ]; then
+  git fetch -q origin --tags
+  git rev-parse -q --verify "refs/tags/$tag" >/dev/null || fail "tag $tag does not exist"
+  gh release view "$tag" >/dev/null 2>&1 || fail "there is no GitHub release $tag"
+  files=$(release_files) || fail "the release files of $tag did not sign or verify; nothing was uploaded"
+  # shellcheck disable=SC2086
+  gh release upload "$tag" $files --clobber
+  echo "attached to $tag: $files"
+  exit 0
+fi
+
 [ "$(git rev-parse --abbrev-ref HEAD)" = main ] || fail "releases are made from main"
 git diff --quiet && git diff --cached --quiet || fail "tracked files have uncommitted changes; commit or stash them first"
 git fetch -q origin main --tags
@@ -38,11 +73,14 @@ make check
 
 mkdir -p tmp
 notes=tmp/release-notes-$tag.md
-bin/release-notes > "$notes"
+RELEASE_VERSION=$version bin/release-notes > "$notes"
 
 git tag -s "$tag" -m "Stopan $tag"
 git -c gpg.ssh.allowedSignersFile="$signers" tag -v "$tag" ||
   { git tag -d "$tag" >/dev/null; fail "the signature of $tag did not verify; the tag was deleted and nothing was pushed"; }
+files=$(release_files) ||
+  { git tag -d "$tag" >/dev/null; fail "the release files of $tag did not sign or verify; the tag was deleted and nothing was pushed"; }
 
 git push origin "$tag"
-gh release create "$tag" --verify-tag --latest --title "Stopan $tag" --notes-file "$notes"
+# shellcheck disable=SC2086
+gh release create "$tag" --verify-tag --latest --title "Stopan $tag" --notes-file "$notes" $files

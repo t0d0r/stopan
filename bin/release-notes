@@ -7,7 +7,8 @@
 #   bin/release-notes [FROM] [TO]
 #
 # FROM defaults to the newest tag reachable from TO (every commit when
-# there is no tag); TO defaults to HEAD.
+# there is no tag); TO defaults to HEAD. RELEASE_VERSION (x.y.z) names
+# the release files in the security note; without it they read X.Y.Z.
 
 require "open3"
 
@@ -27,15 +28,25 @@ class ReleaseNotes
     other: "Other changes"
   }.freeze
   SECURITY_NOTE = <<~NOTE.strip
+    The tag and the source archive `stopan-X.Y.Z.tar.gz` are signed with
+    the release SSH key. Verify a download with `.github/allowed_signers`
+    from the repository:
+
+    ```sh
+    ssh-keygen -Y verify -f allowed_signers -I t0d0r -n file \\
+      -s stopan-X.Y.Z.tar.gz.sig < stopan-X.Y.Z.tar.gz
+    ```
+
     Report vulnerabilities privately, as SECURITY.md describes, never in a
     public issue. Only the latest release and `main` get security fixes.
   NOTE
 
-  attr_reader :commits, :since
+  attr_reader :commits, :since, :version
 
-  def initialize(commits, since: nil)
+  def initialize(commits, since: nil, version: nil)
     @commits = commits
     @since = since
+    @version = version
   end
 
   def to_markdown
@@ -46,7 +57,7 @@ class ReleaseNotes
       lines.push("", "## #{title}", "")
       lines.concat(grouped[key].map(&:last))
     end
-    lines.push("", "## Security Note", "", SECURITY_NOTE)
+    lines.push("", "## Security Note", "", version ? SECURITY_NOTE.gsub("X.Y.Z", version) : SECURITY_NOTE)
     lines.join("\n") + "\n"
   end
 
@@ -98,5 +109,7 @@ if $PROGRAM_NAME == __FILE__
     hash, subject, body = record.split("\x1f", 3)
     ReleaseNotes::Commit.new(hash, subject, body)
   end
-  print ReleaseNotes.new(commits, since: from).to_markdown
+  version = ENV.fetch("RELEASE_VERSION", "")
+  version = nil if version.empty?
+  print ReleaseNotes.new(commits, since: from, version: version).to_markdown
 end
