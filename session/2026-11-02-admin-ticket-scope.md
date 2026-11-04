@@ -367,6 +367,15 @@
   variant processor is disabled, which limits the Active Storage
   issues; the Action Pack and Action View fixes apply directly.
   Production still runs Rails 8.1.4 until the next deploy.
+- Released v0.1.1 with `make release VERSION=0.1.1`, the first signed
+  tag: verified locally before the push, and "Verified" on GitHub once
+  the key was added to the account as a signing key (GitHub checks
+  tags pushed before that too). The `gh` token got the
+  `admin:ssh_signing_key` scope only to add the key; it was removed
+  again afterwards.
+- 2026-11-06: deployed v0.1.1 (3a4f4c5) from its tag, no migrations;
+  the app reports Rails 8.1.4.1 and every check passed (specs/deploy.md
+  "Update 2026-11-06 (v0.1.1, revision 3a4f4c5)").
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -412,10 +421,9 @@
 
 ## Open
 
-- The signing key is not yet a signing key on the GitHub account, so
-  signed tags do not show "Verified" there yet. Scorecard's
-  Signed-Releases check looks at signature files attached to releases,
-  not at tags, so it stays low (specs/release.md "Not in this phase").
+- Scorecard's Signed-Releases check looks at signature files attached
+  to releases, not at tags, so it stays low (specs/release.md "Not in
+  this phase").
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
@@ -429,9 +437,9 @@
 
 ## Next step
 
-Deploy Rails 8.1.4.1 (it is committed, not yet in production). Add the
-signing key on GitHub as a signing key; the next release is the first
-signed tag.
+None pending. Open items: signed release files for Scorecard's
+Signed-Releases check, the form field items and the follower items in
+todo.
 
 ## Security Note
 

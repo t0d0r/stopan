@@ -710,6 +710,29 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-06 (v0.1.1, revision 3a4f4c5)
+
+The first signed release (release.md "Signed tags"), deployed from its
+tag as release.md describes. Since v0.1.0: the Rails 8.1.4.1 security
+release (Active Storage, Action Pack, Action View, Active Support and
+Action Mailbox advisories) and signed release tags. There were no
+migrations, so no database copy was made. The image build installs the
+gems again, since `Gemfile.lock` changed, which makes the build longer.
+
+- Checked:
+  - no migration pending, users and tickets present;
+  - the running app reports Rails 8.1.4.1;
+  - `/up` 200; `http://` -> 301; `/api/v1/me` 401;
+  - signed out, `/search`, `/presence` and `/admin` -> 302;
+  - `/cable` 101;
+  - assets gzip, the four security headers;
+  - the stylesheet, script and sign-in page have the combobox, code
+    copy and wordmark;
+  - g0no `/up` 200.
+- Images kept: 3a4f4c5, 0f74129, 6a89f1d.
+- Rollback: tag `localhost/stopan:0f74129` as `latest` and restart. That
+  brings back Rails 8.1.4 with its advisories, so only for an outage.
+
 ## Update 2026-11-04 (v0.1.0, revision 0f74129)
 
 The first release (release.md), deployed from its tag: the working copy
