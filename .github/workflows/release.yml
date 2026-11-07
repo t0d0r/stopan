@@ -1,0 +1,86 @@
+# Release build (specs/release.md "Release build"): the source archive of
+# a release tag, built from the tag on a GitHub-hosted runner, with signed
+# SLSA build provenance. bin/release on the maintainer's machine
+# downloads both from the run, checks them, signs the archive and
+# publishes the release; this workflow writes nothing to the repository
+# or its releases.
+name: Release build
+run-name: Release build ${{ inputs.tag || github.ref_name }}
+
+on:
+  push:
+    tags: [ "v[0-9]+.[0-9]+.[0-9]+" ]
+  # An existing tag, built again (make release-files).
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag, for example v0.1.1"
+        required: true
+        type: string
+
+# Nothing by default; the job asks for what it needs.
+permissions: {}
+
+concurrency:
+  group: release-build-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and attest
+    runs-on: ubuntu-24.04
+    permissions:
+      # Check out the tag.
+      contents: read
+      # Sign the provenance (Sigstore, through the OIDC token).
+      id-token: write
+      # Store it under the repository's attestations.
+      attestations: write
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+
+    steps:
+      - name: Check the tag name
+        run: |
+          [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::not a release tag: $TAG"; exit 1; }
+          echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
+
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ env.TAG }}
+          persist-credentials: false
+
+      - name: Verify the tag signature
+        run: |
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$TAG^{commit}")"
+          if [ "$TAG" = v0.1.0 ]; then
+            echo "v0.1.0 is the one unsigned tag (specs/release.md)"
+          else
+            git -c gpg.ssh.allowedSignersFile=.github/allowed_signers tag -v "$TAG"
+          fi
+
+      - name: Build the source archive
+        run: |
+          mkdir dist
+          git -c tar.umask=0002 archive --format=tar.gz --prefix="stopan-$VERSION/" -o "dist/stopan-$VERSION.tar.gz" "refs/tags/$TAG"
+          sha256sum "dist/stopan-$VERSION.tar.gz"
+
+      - name: Attest the build provenance
+        id: attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/stopan-${{ env.VERSION }}.tar.gz
+
+      - name: Add the provenance to the release files
+        env:
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
+        run: cp "$BUNDLE" "dist/stopan-$VERSION.tar.gz.intoto.jsonl"
+
+      - name: Upload the release files
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-files
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7

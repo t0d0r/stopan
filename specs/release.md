@@ -39,18 +39,27 @@ from `main` without versions (deploy.md names each revision).
    - `HEAD` differs from `origin/main` after a fetch (push first);
    - the tag already exists.
 2. It runs `make check`.
-3. It writes the release notes with `bin/release-notes` to
-   `tmp/release-notes-vX.Y.Z.md`, before the tag exists, so they cover
-   the commits since the previous tag.
-4. It creates the signed tag on `HEAD` and verifies it against
+3. It creates the signed tag on `HEAD` and verifies it against
    `.github/allowed_signers`.
-5. It builds the source archive from the tag, signs it and verifies the
-   signature ("Signed release files" below).
-6. If a check in step 4 or 5 fails, the tag is deleted again and
-   nothing is pushed. Otherwise it pushes the tag.
-7. It creates the GitHub release from the pushed tag (`--verify-tag`),
+4. It writes the release notes with `bin/release-notes`, from the
+   previous tag to the new one, to `tmp/release-notes-vX.Y.Z.md`.
+5. If step 3 or 4 fails, the tag is deleted again and nothing is
+   pushed. Otherwise it pushes the tag.
+6. The push starts the release build on GitHub Actions ("Release build"
+   below), which builds the source archive and attests its provenance.
+   `bin/release` waits for that run.
+7. It downloads the two files from the run, checks them, and signs the
+   archive ("Signed release files" below).
+8. It creates the GitHub release from the pushed tag (`--verify-tag`),
    titled `Stopan vX.Y.Z`, marked latest, with the notes file and the
-   two release files.
+   three release files.
+9. If step 6, 7 or 8 fails, the tag is public but there is no release
+   yet, and nothing unchecked was published. Once the cause is fixed,
+   `make release-files VERSION=X.Y.Z` builds the files again and
+   creates the release.
+
+The tag is pushed before the files exist, since GitHub can only build
+a pushed tag. Signing is checked in step 1, so step 7 rarely fails.
 
 A release does not deploy. A deploy follows deploy.md and records the
 revision; when it runs a tagged commit, the record names the tag too.
@@ -104,39 +113,139 @@ Commits after the tag (notes, records) are then not shipped.
   - a leaked key is removed from the file and from GitHub.
 - **Commits stay unsigned.** Only releases are signed.
 
+## Release build (`.github/workflows/release.yml`)
+
+2026-11-07: the release files are built on GitHub Actions, with SLSA
+build provenance.
+
+- **Why:** provenance tells anyone who downloads the archive how it was
+  built: by this repository's release workflow, on a GitHub-hosted
+  runner, from which commit. It is signed through Sigstore, so it
+  cannot be made up afterwards. Provenance from the maintainer's
+  machine would prove nothing, which is why the build moved to GitHub.
+  Scorecard's Signed-Releases check gives 10 of 10 only to releases
+  with provenance (`.intoto.jsonl`); signature files alone give 8.
+- **GitHub's attestation action, not the SLSA generator.**
+  `actions/attest-build-provenance` makes SLSA v1 build provenance,
+  signed through Sigstore. It was chosen over
+  `slsa-framework/slsa-github-generator` because:
+  - the generator must be referenced by a version tag, never a commit
+    SHA, and its release is not immutable, so Scorecard's
+    Pinned-Dependencies check would count it as unpinned; the
+    attestation action is pinned by SHA like every other action;
+  - it is GitHub's own action, and Dependabot updates it with the
+    others;
+  - the provenance is verified with `gh`, which a release already
+    needs, and GitHub also lists it under the repository's
+    attestations.
+
+  It reaches SLSA Build Level 2: a hosted build platform and signed
+  provenance. Level 3 would need the build in a separate reusable
+  workflow ("Not in this phase").
+- **When:**
+  - on the push of a tag `vX.Y.Z`;
+  - by hand (`workflow_dispatch`), with an existing tag as input, for
+    `make release-files`.
+
+  Each run is named `Release build vX.Y.Z`.
+- **Permissions:** none at the top. The one job has only:
+  - `contents: read`, to check out the tag;
+  - `id-token: write`, to sign the provenance (Sigstore, through
+    GitHub's OIDC token);
+  - `attestations: write`, to store it under the repository's
+    attestations.
+
+  It never writes to the repository or its releases. `bin/release`
+  uploads the files from the maintainer's machine, after checking
+  them.
+- **Steps:**
+  1. Check that the tag is `vX.Y.Z`. The tag name reaches the scripts
+     only through an environment variable, never as an expression in
+     the script.
+  2. Check out the tag, without keeping the token
+     (`persist-credentials: false`), and check that `HEAD` is the
+     tag's commit.
+  3. Verify the tag's signature against `.github/allowed_signers` of
+     the tag. v0.1.0, the one unsigned tag, is the only exception.
+  4. Build `stopan-X.Y.Z.tar.gz`: `git archive` of the tag, with the
+     prefix `stopan-X.Y.Z/` and `tar.umask` 0002 (git's default,
+     stated so that a local setting cannot change the comparison in
+     `bin/release`).
+  5. Attest its provenance. The attestation, a Sigstore bundle on one
+     JSON line, becomes `stopan-X.Y.Z.tar.gz.intoto.jsonl`.
+  6. Upload both files as the run artifact `release-files`, kept 7
+     days.
+- **A run by hand names `main` as its source.** The workflow runs from
+  `main` and checks out the tag. v0.1.0 and v0.1.1 were tagged before
+  the workflow existed, so their provenance was made this way.
+- **Pinned actions**, by commit SHA with the version in a comment, as
+  in ci.md:
+
+  | action | version |
+  |--------|---------|
+  | `actions/checkout` | v7.0.1 |
+  | `actions/attest-build-provenance` | v4.2.2 |
+  | `actions/upload-artifact` | v7.0.2 |
+
 ## Signed release files
 
 2026-11-06: every release carries a source archive and its signature.
+2026-11-07: and its build provenance. The archive is built by the
+release build, no longer on the maintainer's machine.
 
 - **Why:** a signed tag is checked with git; a signed file can be
-  checked by anyone who downloads it, without a clone. It also answers
-  Scorecard's Signed-Releases check, which looks for signature files
-  among the release files (`.sig` and others). That check gives 8 of 10
-  when every release has a signature, and 10 only with SLSA provenance
-  (below, "Not in this phase").
+  checked by anyone who downloads it, without a clone. Scorecard's
+  Signed-Releases check looks for signature files (`.sig` and others)
+  and provenance files (`.intoto.jsonl`) among the release files.
 - **The files**, attached to the GitHub release:
   - `stopan-X.Y.Z.tar.gz`: `git archive` of the tag, with the prefix
-    `stopan-X.Y.Z/`. Built from the tag, never from the working copy,
-    so it holds exactly the released commit. GitHub's own source
-    archives stay as they are.
+    `stopan-X.Y.Z/`, built by the release build. It holds exactly the
+    released commit. GitHub's own source archives stay as they are.
+  - `stopan-X.Y.Z.tar.gz.intoto.jsonl`: its build provenance (above).
   - `stopan-X.Y.Z.tar.gz.sig`: its SSH signature (`ssh-keygen -Y sign`,
     namespace `file`), made with the release signing key through
     ssh-agent.
-- **Checked before upload:** the signature is verified against
+- **Checked before signing**, on the maintainer's machine, by
+  `bin/release`:
+  - the run succeeded, and its artifact holds exactly the two files;
+  - a run from the tag push built the tag's own commit; a run by hand
+    ran from a commit on `main`;
+  - `gh attestation verify` with the bundle: signed for this
+    repository by `.github/workflows/release.yml`, on a GitHub-hosted
+    runner, from the run's commit and ref;
+  - the archive holds exactly the tag: unpacked, it is byte for byte
+    the tar that `git archive` makes locally from the tag. The tar is
+    the same across git versions; only the gzip layer differs between
+    machines, so the compressed bytes are not compared.
+- **Then signed and checked:** the signature is verified against
   `.github/allowed_signers` (`ssh-keygen -Y find-principals`, then
-  `-Y verify`); if that fails, nothing is uploaded.
+  `-Y verify`). If any check fails, nothing is uploaded.
+- **What the signature means:** the maintainer checked that the
+  archive GitHub built is exactly the signed tag.
 - **Anyone can verify a download:**
 
   ```sh
   ssh-keygen -Y verify -f allowed_signers -I t0d0r -n file \
     -s stopan-X.Y.Z.tar.gz.sig < stopan-X.Y.Z.tar.gz
+  gh attestation verify stopan-X.Y.Z.tar.gz --repo t0d0r/stopan \
+    --signer-workflow t0d0r/stopan/.github/workflows/release.yml
   ```
 
   `allowed_signers` is `.github/allowed_signers` from the repository.
-- **Earlier releases:** `make release-files VERSION=X.Y.Z` builds,
-  signs, verifies and attaches the two files to an existing release,
-  from its tag. It replaces files of the same name. v0.1.0 and v0.1.1
-  got their files this way.
+  `gh attestation verify` reads the provenance from GitHub; with
+  `--bundle stopan-X.Y.Z.tar.gz.intoto.jsonl` it uses the release file
+  instead.
+- **Earlier releases, and a release that failed after its tag was
+  pushed:** `make release-files VERSION=X.Y.Z` starts the release build
+  by hand for an existing tag, waits for it, checks and signs the
+  files the same way, and attaches all three, replacing files of the
+  same name. When the tag has no release yet, it creates the release,
+  with the notes.
+- **v0.1.0 and v0.1.1:** they first got a locally built archive and its
+  signature (2026-11-06), then an archive from the release build with
+  provenance and a new signature (2026-11-07). The rebuilt archives
+  hold the same files, but their bytes and checksums changed, since
+  the gzip layer comes from another machine.
 - **The release notes say how to verify** (their Security Note).
 
 ## Release notes (`bin/release-notes [FROM] [TO]`)
@@ -163,19 +272,17 @@ Commits after the tag (notes, records) are then not shipped.
   are put in backticks, so GitHub neither notifies anyone nor links an
   issue.
 - **Ends with a "Security Note"** section: the tag and the source
-  archive are signed, with the command to verify the archive; report
-  vulnerabilities as SECURITY.md says; only the latest release and
-  `main` get fixes.
+  archive are signed and the archive has build provenance, with the
+  commands to verify both; report vulnerabilities as SECURITY.md says;
+  only the latest release and `main` get fixes.
 
 ## Not in this phase
 
-- SLSA provenance (`.intoto.jsonl`), which Scorecard needs for 10 of
-  10 in Signed-Releases. It has to be made by a build on GitHub Actions
-  (the SLSA generator), while releases are made on the maintainer's
-  machine.
+- SLSA Build Level 3: the build in a separate reusable workflow, so
+  that the build steps cannot reach the signing of the provenance.
 - Signed commits.
-- Release files (archives, images): the server builds the image from
-  the source (deploy.md); GitHub adds the source archives itself.
+- Container images as release files: the server builds the image from
+  the source (deploy.md).
 - A `CHANGELOG.md`: the release notes on GitHub are the change log.
 - Release branches: fixes go to `main` and into the next release.
 
@@ -188,10 +295,17 @@ Commits after the tag (notes, records) are then not shipped.
 - `.github/allowed_signers` has only lines with a principal without
   `@`, `namespaces="git,file"` and an ed25519 key without a comment
   (test/config/release_test.rb).
-- Every release from v0.1.0 on has `stopan-X.Y.Z.tar.gz` and
-  `stopan-X.Y.Z.tar.gz.sig`; the verify command above prints a good
-  signature for `t0d0r`; `bin/release` builds, signs and verifies the
-  files before it pushes the tag.
+- `bin/release` signs and verifies the tag before it pushes it, and
+  checks the run, the provenance and the archive before it signs the
+  archive and publishes (test/config/release_test.rb).
+- `.github/workflows/release.yml` passes `actionlint`, asks for no
+  permission beyond the three above, pins its actions by SHA, and puts
+  no expression into a script (test/config/release_test.rb,
+  test/config/github_test.rb).
+- Every release from v0.1.0 on has `stopan-X.Y.Z.tar.gz`,
+  `stopan-X.Y.Z.tar.gz.intoto.jsonl` and `stopan-X.Y.Z.tar.gz.sig`;
+  both verify commands above pass on the downloaded files; Scorecard's
+  Signed-Releases check is 10.
 - `bin/release-notes` groups the commits as above, lists breaking
   changes first, leaves out the working notes, and quotes `@name` and
   `#123` (test/bin/release_notes_test.rb).
@@ -203,7 +317,11 @@ Commits after the tag (notes, records) are then not shipped.
 Release notes are public and built from commit subjects, which already
 follow the rule of no secrets, personal data or private URLs. Release
 tags and release files are signed with a separate SSH key that has a
-passphrase and never leaves the maintainer's machine. Its public half is committed and
-registered on GitHub; the private half is never written to the
-repository, a note or a log. Only the latest release gets security
-fixes.
+passphrase and never leaves the maintainer's machine. Its public half
+is committed and registered on GitHub; the private half is never
+written to the repository, a note or a log. The release build cannot
+write to the repository or its releases; what it makes is treated as
+untrusted until `bin/release` has checked it. Its provenance is public
+(Sigstore's transparency log) and names only the repository, the
+workflow, the commit and the runner. Only the latest release gets
+security fixes.

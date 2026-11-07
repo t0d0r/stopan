@@ -43,6 +43,19 @@ policy, and others).
   personal access token (`repo_token`) the Branch-Protection check cannot
   read every setting, so it may score lower; that is accepted.
 
+## Release build workflow
+
+2026-11-07: `.github/workflows/release.yml` builds the source archive
+of a release tag and attests its SLSA build provenance. release.md
+"Release build" describes it. It follows the same rules as the
+Scorecard workflow:
+- actions pinned to commit SHAs (`actions/checkout`,
+  `actions/attest-build-provenance`, `actions/upload-artifact`);
+- no secrets, only the job's own token;
+- no permissions at the top, and the job asks only for
+  `contents: read`, `id-token: write` and `attestations: write`.
+  It cannot write to the repository or its releases.
+
 ## Badges
 
 Under the title in `README.md`:
@@ -157,7 +170,7 @@ vulnerable gem is found at the next commit, not weeks later.
 
 ## Acceptance
 
-- `actionlint .github/workflows/scorecard.yml` passes.
+- `actionlint` passes for both workflows.
 - After a push to `main` the run succeeds, the Code scanning page lists
   the Scorecard results, and both badges show.
 

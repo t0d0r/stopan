@@ -395,6 +395,27 @@
   Signed-Releases 8 ("2 out of the last 2 releases have a total of 2
   signed artifacts"); Pinned-Dependencies, Dependency-Update-Tool and
   Vulnerabilities 10.
+- Release build on GitHub Actions with SLSA build provenance
+  (specs/release.md "Release build"). `.github/workflows/release.yml`
+  runs on a tag push and by hand for an existing tag. It checks the tag
+  name, checks out the tag, verifies its signature (v0.1.0 excepted),
+  builds `stopan-X.Y.Z.tar.gz` with `git archive`, attests it with
+  `actions/attest-build-provenance` v4.2.2 and uploads the archive and
+  `stopan-X.Y.Z.tar.gz.intoto.jsonl` (the Sigstore bundle) as the run
+  artifact `release-files`. Its permissions are only `contents: read`,
+  `id-token: write` and `attestations: write`; it never writes to the
+  repository or its releases.
+- `bin/release` pushes the signed tag, waits for that run, downloads
+  the two files, checks the run's commit and ref, runs `gh attestation
+  verify` with the bundle, checks that the unpacked archive is byte for
+  byte the local `git archive` of the tag, then signs the archive and
+  creates the release with all three files. `bin/release --files`
+  (`make release-files`) starts the build by hand for an existing tag
+  and attaches the files, or creates the release when it is missing.
+  The release notes' security note adds the `gh attestation verify`
+  command. Checked locally: actionlint passes; the content check
+  accepts the published v0.1.1 archive and rejects v0.1.0 and a changed
+  copy. Not yet run on GitHub, since the workflow is not on `main` yet.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -402,6 +423,20 @@
   CII-Best-Practices.
 
 ## Decisions
+
+- **Provenance from `actions/attest-build-provenance`, not the SLSA
+  generator.** The generator must be referenced by a version tag and its
+  release is not immutable, so Scorecard's Pinned-Dependencies check
+  would count it as unpinned. GitHub's action is pinned by SHA, updated
+  by Dependabot, and verified with `gh`. It gives SLSA Build Level 2;
+  Level 3 (a reusable build workflow) is left for later.
+- **The release build has no write access.** The maintainer's machine
+  uploads the files after checking the provenance and the content, so
+  the SSH signature means "this archive from GitHub is exactly the
+  signed tag".
+- **The tag is pushed before its files exist**, since GitHub builds only
+  pushed tags. A failure after the push leaves a tag without a release;
+  `make release-files` finishes it.
 
 - **Status changes, the opening line and failed emails never fold.** They
   mark the ticket's progress or need attention. Runs fold from 3 lines,
@@ -440,9 +475,11 @@
 
 ## Open
 
-- Scorecard's Signed-Releases check stays at 8 until releases carry
-  SLSA provenance, which needs a release build on GitHub Actions
-  (specs/release.md "Not in this phase").
+- The release build has not run on GitHub yet. v0.1.0 and v0.1.1 still
+  carry the locally built archive and signature; `make release-files`
+  replaces them with the build's archive, its provenance and a new
+  signature (same files, new checksums). Scorecard's Signed-Releases
+  check stays at 8 until then.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
@@ -456,8 +493,10 @@
 
 ## Next step
 
-None pending. Open items: SLSA provenance, the form field items and
-the follower items in todo.
+Push the release build, then `make release-files VERSION=0.1.0` and
+`VERSION=0.1.1`; check both downloads with the two verify commands in
+specs/release.md and rerun Scorecard. Other open items: the form field
+items and the follower items in todo.
 
 ## Security Note
 

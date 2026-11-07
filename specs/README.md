@@ -21,7 +21,7 @@
 | [ui.md](ui.md) | Stickies-based look adapted to a service desk, pages, behaviour, accessibility, translations |
 | [docker.md](docker.md) | Docker image, compose file and environment variables |
 | [ci.md](ci.md) | GitHub Actions and repository security: the OpenSSF Scorecard workflow, pinned actions, Dependabot, SECURITY.md and the README badges |
-| [release.md](release.md) | versions (SemVer, 0.x), `make release`, the tag and the GitHub release, release notes from Conventional Commits |
+| [release.md](release.md) | versions (SemVer, 0.x), `make release`, signed tags, the release build on GitHub Actions with SLSA provenance, signed release files, release notes from Conventional Commits |
 | [deploy.md](deploy.md) | production on stopan.linuxfan.org: ISPConfig site, rootless Podman, setup, verification, rollback |
 | [notifications.md](notifications.md) | email notifications: recipients, which email, visibility rules, language, SMTP settings, delivery |
 | [mail-oauth.md](mail-oauth.md) | plan: Google and Microsoft accounts (OAuth 2.0, XOAUTH2) for organization mail |

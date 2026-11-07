@@ -89,10 +89,10 @@ docker-dev-logs: ## follow the development container logs
 docker-dev-down: ## stop the development container (gems, database and tmp stay in volumes)
 	docker compose -f compose.dev.yaml down
 
-release: ## tag main as vVERSION with a signed tag and publish the GitHub release with the signed source archive (VERSION=x.y.z; specs/release.md)
+release: ## tag main as vVERSION (signed), push it, then publish the GitHub release with the archive from the release build, checked and signed (VERSION=x.y.z; specs/release.md)
 	@bin/release $(VERSION)
 
-release-files: ## build, sign and attach the signed source archive to the existing release vVERSION (VERSION=x.y.z; specs/release.md)
+release-files: ## run the release build again for the existing tag vVERSION, then check, sign and attach its files (VERSION=x.y.z; specs/release.md)
 	@bin/release --files $(VERSION)
 
 deploy: ## ship HEAD to the server, build and restart there (needs DEPLOY_HOST; specs/deploy.md)
