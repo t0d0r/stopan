@@ -245,7 +245,8 @@ release build, no longer on the maintainer's machine.
   signature (2026-11-06), then an archive from the release build with
   provenance and a new signature (2026-11-07). The rebuilt archives
   hold the same files, but their bytes and checksums changed, since
-  the gzip layer comes from another machine.
+  the gzip layer comes from another machine. After that, Scorecard's
+  Signed-Releases check was 10.
 - **The release notes say how to verify** (their Security Note).
 
 ## Release notes (`bin/release-notes [FROM] [TO]`)

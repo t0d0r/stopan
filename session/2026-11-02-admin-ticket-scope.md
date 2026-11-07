@@ -415,7 +415,21 @@
   The release notes' security note adds the `gh attestation verify`
   command. Checked locally: actionlint passes; the content check
   accepts the published v0.1.1 archive and rejects v0.1.0 and a changed
-  copy. Not yet run on GitHub, since the workflow is not on `main` yet.
+  copy.
+- The release build ran by hand for v0.1.1 and v0.1.0 through `make
+  release-files`. The v0.1.1 run verified the tag's signature; the
+  v0.1.0 run skipped it as the one unsigned tag. Both releases now
+  carry the archive from the build, its provenance and a new
+  signature; v0.1.1 stays the latest. Checked as a user would, from the
+  release downloads: `ssh-keygen -Y verify` prints a good signature,
+  `gh attestation verify` with `--signer-workflow` passes (SLSA v1
+  provenance, GitHub-hosted runner, workflow at `main`, entry in the
+  transparency log), the unpacked archives equal `git archive` of the
+  tags, and a changed archive is rejected.
+- Scorecard (v5.6.0) after a manual run: 6.3 (from 6.2).
+  Signed-Releases 10 ("2 out of the last 2 releases have a total of 4
+  signed artifacts"); Pinned-Dependencies, Token-Permissions and
+  Dangerous-Workflow stay 10.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -475,11 +489,6 @@
 
 ## Open
 
-- The release build has not run on GitHub yet. v0.1.0 and v0.1.1 still
-  carry the locally built archive and signature; `make release-files`
-  replaces them with the build's archive, its provenance and a new
-  signature (same files, new checksums). Scorecard's Signed-Releases
-  check stays at 8 until then.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
@@ -493,10 +502,9 @@
 
 ## Next step
 
-Push the release build, then `make release-files VERSION=0.1.0` and
-`VERSION=0.1.1`; check both downloads with the two verify commands in
-specs/release.md and rerun Scorecard. Other open items: the form field
-items and the follower items in todo.
+None pending. The next release goes through `make release` and gets
+its files from the tag push run. Open items in todo: SLSA Build Level
+3, the form field items and the follower items.
 
 ## Security Note
 
