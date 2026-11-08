@@ -25,6 +25,9 @@ fail() { echo "$*" >&2; exit 1; }
 tag=v$version
 notes=tmp/release-notes-$tag.md
 workflow=release.yml
+# The reusable workflow that builds and signs the provenance (SLSA Build
+# Level 3): the provenance must be signed in its name.
+builder=release-build.yml
 
 command -v gh >/dev/null && gh auth status >/dev/null 2>&1 || fail "gh is missing or not signed in (gh auth login)"
 repo=$(gh repo view --json nameWithOwner --jq .nameWithOwner) || fail "gh cannot read the GitHub repository"
@@ -98,12 +101,13 @@ release_files() {
   esac
 
   rm -rf "$dir" && mkdir -p "$dir" || return 1
-  gh run download "$run" --name release-files --dir "$dir" || return 1
+  gh run download "$run" --name release-archive --dir "$dir" || return 1
+  gh run download "$run" --name release-provenance --dir "$dir" || return 1
   [ "$(ls "$dir")" = "$(printf '%s\n' "${archive##*/}" "${archive##*/}.intoto.jsonl")" ] ||
     { echo "run $run made other files than the archive and its provenance: $(cd "$dir" && echo *)" >&2; return 1; }
 
   gh attestation verify "$archive" --bundle "$archive.intoto.jsonl" --repo "$repo" \
-    --signer-workflow "$repo/.github/workflows/$workflow" --source-ref "$source_ref" --source-digest "$sha" \
+    --signer-workflow "$repo/.github/workflows/$builder" --source-ref "$source_ref" --source-digest "$sha" \
     --deny-self-hosted-runners >&2 || return 1
   gzip -dc "$archive" | cmp -s - <(git -c tar.umask=0002 archive --format=tar --prefix="stopan-$version/" "$tag") ||
     { echo "the archive of run $run is not git archive of $tag" >&2; return 1; }

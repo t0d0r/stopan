@@ -113,18 +113,18 @@ Commits after the tag (notes, records) are then not shipped.
   - a leaked key is removed from the file and from GitHub.
 - **Commits stay unsigned.** Only releases are signed.
 
-## Release build (`.github/workflows/release.yml`)
+## Release build (`.github/workflows/release.yml`, `release-build.yml`)
 
 2026-11-07: the release files are built on GitHub Actions, with SLSA
-build provenance.
+build provenance. 2026-11-08: at SLSA Build Level 3.
 
 - **Why:** provenance tells anyone who downloads the archive how it was
-  built: by this repository's release workflow, on a GitHub-hosted
-  runner, from which commit. It is signed through Sigstore, so it
-  cannot be made up afterwards. Provenance from the maintainer's
-  machine would prove nothing, which is why the build moved to GitHub.
-  Scorecard's Signed-Releases check gives 10 of 10 only to releases
-  with provenance (`.intoto.jsonl`); signature files alone give 8.
+  built: by this repository's release build, on a GitHub-hosted runner,
+  from which commit. It is signed through Sigstore, so it cannot be
+  made up afterwards. Provenance from the maintainer's machine would
+  prove nothing, which is why the build moved to GitHub. Scorecard's
+  Signed-Releases check gives 10 of 10 only to releases with
+  provenance (`.intoto.jsonl`); signature files alone give 8.
 - **GitHub's attestation action, not the SLSA generator.**
   `actions/attest-build-provenance` makes SLSA v1 build provenance,
   signed through Sigstore. It was chosen over
@@ -138,48 +138,75 @@ build provenance.
   - the provenance is verified with `gh`, which a release already
     needs, and GitHub also lists it under the repository's
     attestations.
-
-  It reaches SLSA Build Level 2: a hosted build platform and signed
-  provenance. Level 3 would need the build in a separate reusable
-  workflow ("Not in this phase").
+- **SLSA Build Level 3**, in the way GitHub documents it for artifact
+  attestations ("Using artifact attestations and reusable workflows to
+  achieve SLSA v1 Build Level 3"):
+  - **The build and the attestation are in a reusable workflow,**
+    `.github/workflows/release-build.yml`. The provenance is signed in
+    its name, so `gh attestation verify --signer-workflow
+    t0d0r/stopan/.github/workflows/release-build.yml` accepts only
+    provenance made there. The calling workflow
+    (`.github/workflows/release.yml`) only names the tag; it cannot add
+    steps to the reusable workflow's jobs.
+  - **The steps that build cannot sign.** Level 3 asks that the
+    secret used to sign the provenance is out of reach of the build
+    steps. The build job has no `id-token` permission, so it never
+    gets the OIDC token that Sigstore signs with. A separate job signs:
+    it checks nothing out, runs no project code, and takes from the
+    build job only the archive's SHA-256, checked to be 64 hex digits.
+  - Level 2 (2026-11-07) had the build and the signing in one job of
+    `release.yml`.
 - **When:**
   - on the push of a tag `vX.Y.Z`;
   - by hand (`workflow_dispatch`), with an existing tag as input, for
     `make release-files`.
 
   Each run is named `Release build vX.Y.Z`.
-- **Permissions:** none at the top. The one job has only:
-  - `contents: read`, to check out the tag;
-  - `id-token: write`, to sign the provenance (Sigstore, through
-    GitHub's OIDC token);
-  - `attestations: write`, to store it under the repository's
-    attestations.
+- **Permissions:** none at the top of either file.
+  - `release.yml` grants its one job, the call of the reusable
+    workflow, `contents: read`, `id-token: write` and
+    `attestations: write`: the most that the reusable workflow's jobs
+    may then use.
+  - The build job has only `contents: read`, to check out the tag.
+  - The provenance job has only `id-token: write`, to sign through
+    GitHub's OIDC token, and `attestations: write`, to store the
+    provenance under the repository's attestations.
 
-  It never writes to the repository or its releases. `bin/release`
+  Nothing writes to the repository or its releases. `bin/release`
   uploads the files from the maintainer's machine, after checking
   them.
-- **Steps:**
-  1. Check that the tag is `vX.Y.Z`. The tag name reaches the scripts
+- **The build job:**
+  1. Checks that the tag is `vX.Y.Z`. The tag name reaches the scripts
      only through an environment variable, never as an expression in
      the script.
-  2. Check out the tag, without keeping the token
-     (`persist-credentials: false`), and check that `HEAD` is the
+  2. Checks out the tag, without keeping the token
+     (`persist-credentials: false`), and checks that `HEAD` is the
      tag's commit.
-  3. Verify the tag's signature against `.github/allowed_signers` of
+  3. Verifies the tag's signature against `.github/allowed_signers` of
      the tag. v0.1.0, the one unsigned tag, is the only exception.
-  4. Build `stopan-X.Y.Z.tar.gz`: `git archive` of the tag, with the
+  4. Builds `stopan-X.Y.Z.tar.gz`: `git archive` of the tag, with the
      prefix `stopan-X.Y.Z/` and `tar.umask` 0002 (git's default,
      stated so that a local setting cannot change the comparison in
      `bin/release`).
-  5. Attest its provenance. The attestation, a Sigstore bundle on one
-     JSON line, becomes `stopan-X.Y.Z.tar.gz.intoto.jsonl`.
-  6. Upload both files as the run artifact `release-files`, kept 7
-     days.
+  5. Hands the archive's SHA-256 to the provenance job as a job output,
+     and uploads the archive as the run artifact `release-archive`.
+- **The provenance job:**
+  1. Checks the tag again and that the SHA-256 is 64 hex digits; the
+     archive name comes from the tag, not from the build job.
+  2. Attests the provenance of `stopan-X.Y.Z.tar.gz` with that digest.
+  3. Uploads the attestation, a Sigstore bundle on one JSON line, as
+     `stopan-X.Y.Z.tar.gz.intoto.jsonl` in the run artifact
+     `release-provenance`.
+
+  Both artifacts are kept 7 days.
 - **A run by hand names `main` as its source.** The workflow runs from
   `main` and checks out the tag. v0.1.0 and v0.1.1 were tagged before
   the workflow existed, so their provenance was made this way.
 - **Pinned actions**, by commit SHA with the version in a comment, as
-  in ci.md:
+  in ci.md. The reusable workflow is called by its path in this
+  repository (`./.github/workflows/release-build.yml`), so it is the
+  version of the same commit; Scorecard counts such a reference as
+  pinned.
 
   | action | version |
   |--------|---------|
@@ -207,12 +234,13 @@ release build, no longer on the maintainer's machine.
     ssh-agent.
 - **Checked before signing**, on the maintainer's machine, by
   `bin/release`:
-  - the run succeeded, and its artifact holds exactly the two files;
+  - the run succeeded, and its two artifacts hold exactly the archive
+    and its provenance;
   - a run from the tag push built the tag's own commit; a run by hand
     ran from a commit on `main`;
   - `gh attestation verify` with the bundle: signed for this
-    repository by `.github/workflows/release.yml`, on a GitHub-hosted
-    runner, from the run's commit and ref;
+    repository by `.github/workflows/release-build.yml`, on a
+    GitHub-hosted runner, from the run's commit and ref;
   - the archive holds exactly the tag: unpacked, it is byte for byte
     the tar that `git archive` makes locally from the tag. The tar is
     the same across git versions; only the gzip layer differs between
@@ -228,7 +256,7 @@ release build, no longer on the maintainer's machine.
   ssh-keygen -Y verify -f allowed_signers -I t0d0r -n file \
     -s stopan-X.Y.Z.tar.gz.sig < stopan-X.Y.Z.tar.gz
   gh attestation verify stopan-X.Y.Z.tar.gz --repo t0d0r/stopan \
-    --signer-workflow t0d0r/stopan/.github/workflows/release.yml
+    --signer-workflow t0d0r/stopan/.github/workflows/release-build.yml
   ```
 
   `allowed_signers` is `.github/allowed_signers` from the repository.
@@ -279,8 +307,9 @@ release build, no longer on the maintainer's machine.
 
 ## Not in this phase
 
-- SLSA Build Level 3: the build in a separate reusable workflow, so
-  that the build steps cannot reach the signing of the provenance.
+- The reusable build workflow in a repository of its own. It would let
+  other people own the build than own Stopan; with one maintainer it
+  adds nothing, and GitHub's Level 3 guide allows the same repository.
 - Signed commits.
 - Container images as release files: the server builds the image from
   the source (deploy.md).
@@ -299,10 +328,14 @@ release build, no longer on the maintainer's machine.
 - `bin/release` signs and verifies the tag before it pushes it, and
   checks the run, the provenance and the archive before it signs the
   archive and publishes (test/config/release_test.rb).
-- `.github/workflows/release.yml` passes `actionlint`, asks for no
-  permission beyond the three above, pins its actions by SHA, and puts
-  no expression into a script (test/config/release_test.rb,
+- `.github/workflows/release.yml` and `release-build.yml` pass
+  `actionlint`, pin their actions by SHA, and put no expression into a
+  script. Only the provenance job can get the OIDC token; the build
+  job has `contents: read` and nothing else (test/config/release_test.rb,
   test/config/github_test.rb).
+- The provenance of a release is signed by `release-build.yml`:
+  `gh attestation verify` with `--signer-workflow` naming it passes,
+  and naming `release.yml` fails.
 - Every release from v0.1.0 on has `stopan-X.Y.Z.tar.gz`,
   `stopan-X.Y.Z.tar.gz.intoto.jsonl` and `stopan-X.Y.Z.tar.gz.sig`;
   both verify commands above pass on the downloaded files; Scorecard's

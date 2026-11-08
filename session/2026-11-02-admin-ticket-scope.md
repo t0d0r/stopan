@@ -430,6 +430,20 @@
   Signed-Releases 10 ("2 out of the last 2 releases have a total of 4
   signed artifacts"); Pinned-Dependencies, Token-Permissions and
   Dangerous-Workflow stay 10.
+- SLSA Build Level 3 for the release build (specs/release.md "Release
+  build"). The work moved into the reusable workflow
+  `.github/workflows/release-build.yml`, which `release.yml` calls
+  with the tag. It has two jobs: `build` (only `contents: read`;
+  checks the tag name, checks out the tag, verifies its signature,
+  builds the archive, hands its SHA-256 on as a job output, uploads
+  the artifact `release-archive`) and `provenance` (only `id-token:
+  write` and `attestations: write`; checks the tag and that the digest
+  is 64 hex digits, attests by digest, uploads the artifact
+  `release-provenance`). `bin/release` downloads both artifacts and
+  requires the provenance to be signed by `release-build.yml`. The
+  release notes name it in the verify command. The pin test allows a
+  workflow of this repository called by path. actionlint passes. Not
+  yet run on GitHub.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -442,8 +456,14 @@
   generator.** The generator must be referenced by a version tag and its
   release is not immutable, so Scorecard's Pinned-Dependencies check
   would count it as unpinned. GitHub's action is pinned by SHA, updated
-  by Dependabot, and verified with `gh`. It gives SLSA Build Level 2;
-  Level 3 (a reusable build workflow) is left for later.
+  by Dependabot, and verified with `gh`.
+- **SLSA Build Level 3 as GitHub documents it for attestations:** the
+  build and the attestation in a reusable workflow, which signs the
+  provenance in its own name. In addition the build job has no
+  `id-token` permission, so the steps that build never get the token
+  that signs; a separate job signs the digest and runs no project
+  code. The reusable workflow stays in this repository: a repository
+  of its own would only matter if someone else owned the build.
 - **The release build has no write access.** The maintainer's machine
   uploads the files after checking the provenance and the content, so
   the SSH signature means "this archive from GitHub is exactly the
@@ -489,6 +509,9 @@
 
 ## Open
 
+- The Level 3 build has not run on GitHub yet. v0.1.0 and v0.1.1 still
+  carry the Level 2 provenance, signed by `release.yml`; `make
+  release-files` gives them provenance signed by `release-build.yml`.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
@@ -502,9 +525,11 @@
 
 ## Next step
 
-None pending. The next release goes through `make release` and gets
-its files from the tag push run. Open items in todo: SLSA Build Level
-3, the form field items and the follower items.
+Push the Level 3 build, then `make release-files VERSION=0.1.1` and
+`VERSION=0.1.0`; check the downloads with the verify commands in
+specs/release.md (`--signer-workflow` naming `release-build.yml`) and
+rerun Scorecard. Other open items in todo: the form field items and
+the follower items.
 
 ## Security Note
 

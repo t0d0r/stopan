@@ -46,15 +46,20 @@ policy, and others).
 ## Release build workflow
 
 2026-11-07: `.github/workflows/release.yml` builds the source archive
-of a release tag and attests its SLSA build provenance. release.md
-"Release build" describes it. It follows the same rules as the
+of a release tag and attests its SLSA build provenance. 2026-11-08: it
+calls the reusable workflow `.github/workflows/release-build.yml`,
+which does the work in two jobs, for SLSA Build Level 3. release.md
+"Release build" describes both. They follow the same rules as the
 Scorecard workflow:
 - actions pinned to commit SHAs (`actions/checkout`,
-  `actions/attest-build-provenance`, `actions/upload-artifact`);
-- no secrets, only the job's own token;
-- no permissions at the top, and the job asks only for
-  `contents: read`, `id-token: write` and `attestations: write`.
-  It cannot write to the repository or its releases.
+  `actions/attest-build-provenance`, `actions/upload-artifact`); the
+  reusable workflow is called by its path in this repository
+  (`./.github/workflows/release-build.yml`), which Scorecard counts as
+  pinned and test/config/github_test.rb allows;
+- no secrets, only the jobs' own tokens;
+- no permissions at the top. The build job has `contents: read` only;
+  the provenance job has `id-token: write` and `attestations: write`
+  only. Neither can write to the repository or its releases.
 
 ## Badges
 

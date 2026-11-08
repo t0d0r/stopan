@@ -15,9 +15,10 @@ class GithubConfigTest < ActiveSupport::TestCase
     assert_equal %w[minor patch], updates["bundler"].dig("groups", "gems", "update-types")
   end
 
-  test "every workflow step pins its action to a full commit SHA" do
+  test "every action is pinned to a full commit SHA; workflows of this repository are called by path" do
     Dir[Rails.root.join(".github/workflows/*.yml")].each do |file|
       File.read(file).scan(/^\s*(?:-\s*)?uses:\s*(\S+)/).flatten.each do |action|
+        next if action.match?(%r{\A\./\.github/workflows/[\w-]+\.yml\z}) && File.exist?(Rails.root.join(action))
         assert_match(/@\h{40}\z/, action, "#{File.basename(file)}: #{action} is not pinned to a commit SHA")
       end
     end

@@ -1,0 +1,110 @@
+# Release build, reusable (specs/release.md "Release build"): the source
+# archive of a release tag and its signed SLSA build provenance, at SLSA
+# Build Level 3. The provenance is signed in the name of this workflow,
+# and the job that builds never gets the token that signs. Called by
+# release.yml; writes nothing to the repository or its releases.
+name: Release build (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: "Release tag, for example v0.1.1"
+        required: true
+        type: string
+
+# Nothing by default; each job asks for what it needs.
+permissions: {}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-24.04
+    permissions:
+      # Check out the tag. No id-token: the build cannot sign.
+      contents: read
+    outputs:
+      sha256: ${{ steps.archive.outputs.sha256 }}
+    env:
+      TAG: ${{ inputs.tag }}
+
+    steps:
+      - name: Check the tag name
+        run: |
+          [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::not a release tag: $TAG"; exit 1; }
+          echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
+
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+          persist-credentials: false
+
+      - name: Verify the tag signature
+        run: |
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$TAG^{commit}")"
+          if [ "$TAG" = v0.1.0 ]; then
+            echo "v0.1.0 is the one unsigned tag (specs/release.md)"
+          else
+            git -c gpg.ssh.allowedSignersFile=.github/allowed_signers tag -v "$TAG"
+          fi
+
+      - name: Build the source archive
+        id: archive
+        run: |
+          mkdir dist
+          git -c tar.umask=0002 archive --format=tar.gz --prefix="stopan-$VERSION/" -o "dist/stopan-$VERSION.tar.gz" "refs/tags/$TAG"
+          sha256sum "dist/stopan-$VERSION.tar.gz"
+          echo "sha256=$(sha256sum "dist/stopan-$VERSION.tar.gz" | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the archive
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-archive
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  provenance:
+    name: Attest the provenance
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      # Sign the provenance (Sigstore, through the OIDC token).
+      id-token: write
+      # Store it under the repository's attestations.
+      attestations: write
+    env:
+      TAG: ${{ inputs.tag }}
+      SHA256: ${{ needs.build.outputs.sha256 }}
+
+    steps:
+      # Nothing from the build job is trusted unchecked: the name comes
+      # from the tag, and the digest must look like one.
+      - name: Check the tag and the digest
+        run: |
+          [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::not a release tag: $TAG"; exit 1; }
+          [[ $SHA256 =~ ^[0-9a-f]{64}$ ]] || { echo "::error::not a SHA-256 digest: $SHA256"; exit 1; }
+          echo "ARCHIVE=stopan-${TAG#v}.tar.gz" >> "$GITHUB_ENV"
+
+      - name: Attest the build provenance
+        id: attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.ARCHIVE }}
+          subject-digest: sha256:${{ env.SHA256 }}
+
+      - name: Name the provenance after the archive
+        env:
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          mkdir provenance
+          cp "$BUNDLE" "provenance/$ARCHIVE.intoto.jsonl"
+
+      - name: Upload the provenance
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-provenance
+          path: provenance/
+          if-no-files-found: error
+          retention-days: 7

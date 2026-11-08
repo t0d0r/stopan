@@ -77,7 +77,7 @@ class ReleaseNotesTest < ActiveSupport::TestCase
   test "the security note shows how to verify the signature and the provenance of this version" do
     markdown = notes([ "feat: x" ], version: "0.2.0")
     assert_includes markdown, "ssh-keygen -Y verify -f allowed_signers -I t0d0r -n file \\\n  -s stopan-0.2.0.tar.gz.sig < stopan-0.2.0.tar.gz\n"
-    assert_includes markdown, "gh attestation verify stopan-0.2.0.tar.gz --repo t0d0r/stopan \\\n  --signer-workflow t0d0r/stopan/.github/workflows/release.yml\n"
+    assert_includes markdown, "gh attestation verify stopan-0.2.0.tar.gz --repo t0d0r/stopan \\\n  --signer-workflow t0d0r/stopan/.github/workflows/release-build.yml\n"
     assert_not_includes markdown, "X.Y.Z"
     assert_includes notes([ "feat: x" ]), "stopan-X.Y.Z.tar.gz"
   end

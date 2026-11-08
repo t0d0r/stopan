@@ -30,7 +30,7 @@ class ReleaseNotes
   SECURITY_NOTE = <<~NOTE.strip
     The tag and the source archive `stopan-X.Y.Z.tar.gz` are signed with
     the release SSH key. The archive was built from the tag on GitHub
-    Actions and has signed SLSA build provenance
+    Actions and has signed SLSA Build Level 3 provenance
     (`stopan-X.Y.Z.tar.gz.intoto.jsonl`). Verify a download with
     `.github/allowed_signers` from the repository and the GitHub CLI:
 
@@ -38,7 +38,7 @@ class ReleaseNotes
     ssh-keygen -Y verify -f allowed_signers -I t0d0r -n file \\
       -s stopan-X.Y.Z.tar.gz.sig < stopan-X.Y.Z.tar.gz
     gh attestation verify stopan-X.Y.Z.tar.gz --repo t0d0r/stopan \\
-      --signer-workflow t0d0r/stopan/.github/workflows/release.yml
+      --signer-workflow t0d0r/stopan/.github/workflows/release-build.yml
     ```
 
     Report vulnerabilities privately, as SECURITY.md describes, never in a
