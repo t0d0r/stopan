@@ -515,6 +515,14 @@
   404 (test/controllers/ticket_deletion_test.rb). In integration
   tests a request that ends in 404 does not store a new sign-in, so
   the test signs in with a page that loads first.
+- Mailbox fetching takes only mail for the organization's
+  `mailbox_address` (specs/organization-mail.md "Fetching"):
+  `MailboxCheck#search_keys` searches `UNSEEN OR OR TO a CC a HEADER
+  Delivered-To a`, for the run and for "Check the mailbox". Other
+  mail is neither fetched nor marked seen, so installations that read
+  one account under different +addresses no longer take each other's
+  mail. The fake IMAP server of test/models/mailbox_check_test.rb
+  filters like a server. Not yet tried against a real IMAP server.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

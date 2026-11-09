@@ -77,10 +77,21 @@ in-process job queue as today.
 
 - When automatic fetching is on, every few minutes (below) the app checks
   each organization with the mailbox enabled: IMAP login, select the
-  folder, search `UNSEEN`, take at most 50 messages per check (oldest
+  folder, search the unseen messages addressed to the organization's
+  `mailbox_address` (below), take at most 50 per check (oldest
   first), process each and mark it `\Seen`. A message that fails to
   process is marked `\Seen` too and its error logged, so one bad message
   does not block the queue; the organization's `imap_last_error` shows it.
+- **Only mail for this mailbox address** (2026-11-09: two installations
+  reading one account under different +addresses took each other's
+  mail). The search is `UNSEEN OR OR TO <address> CC <address> HEADER
+  Delivered-To <address>`: the address in `To`, in `Cc`, or in the
+  `Delivered-To` line the mail server adds (mail sent as Bcc). Other
+  messages are neither fetched nor marked, so they stay unseen for
+  whoever reads them. IMAP matches part of a header and ignores case,
+  so `support@acme.example` also matches `it-support@acme.example`;
+  plus addresses do not match each other (`support+dev@` is not part of
+  `support+live@`). "Check the mailbox" counts the same messages.
 - **On /admin/settings** (operator, 2026-10-27: "make it an option in
   settings"), panel "Mailboxes" (`#mailboxes`): a check box "Fetch new
   mail from the organizations' mailboxes automatically"

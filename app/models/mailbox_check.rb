@@ -1,8 +1,9 @@
 require "net/imap"
 
 # One check of an organization's IMAP mailbox (specs/organization-mail.md
-# "Fetching"): unseen messages, oldest first, at most BATCH, each turned
-# into a ticket or reply and marked seen, even when it fails.
+# "Fetching"): unseen messages addressed to the organization's mailbox
+# address, oldest first, at most BATCH, each turned into a ticket or reply
+# and marked seen, even when it fails.
 class MailboxCheck
   BATCH = 50
   TIMEOUT = 30
@@ -27,7 +28,7 @@ class MailboxCheck
       error = nil
       connect do |imap|
         imap.select(organization.imap_folder)
-        imap.uid_search([ "UNSEEN" ]).sort.first(BATCH).each do |uid|
+        imap.uid_search(search_keys).sort.first(BATCH).each do |uid|
           raw = imap.uid_fetch(uid, "BODY.PEEK[]")&.first&.attr&.fetch("BODY[]", nil)
           MailboxMessage.new(organization, raw).process
           count += 1
@@ -52,11 +53,22 @@ class MailboxCheck
   def probe
     connect do |imap|
       imap.examine(organization.imap_folder)
-      imap.uid_search([ "UNSEEN" ]).size
+      imap.uid_search(search_keys).size
     end
   end
 
   private
+
+  # Unseen mail with the mailbox address in To, Cc or Delivered-To (Bcc),
+  # so installations that read one account under different +addresses
+  # each take only their own. The server matches part of the header,
+  # ignoring case.
+  def search_keys
+    address = organization.mailbox_address.to_s
+    return [ "UNSEEN" ] if address.empty?
+
+    [ "UNSEEN", "OR", "OR", "TO", address, "CC", address, "HEADER", "Delivered-To", address ]
+  end
 
   def connect
     ssl = organization.imap_ssl? ? { verify_mode: OpenSSL::SSL::VERIFY_PEER } : false

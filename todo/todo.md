@@ -222,7 +222,7 @@ approved "go in this order", all done 2026-10-27):
 ## Shared mailbox between environments (2026-10-28)
 
 - [x] customer replies on #1009 missing: a development copy polled the same Gmail account and folder, marked the replies \Seen and made its own tickets of them; the replies were marked unseen and fetched by production (session note)
-- [ ] take only messages addressed to the organization's `mailbox_address` (IMAP `UNSEEN TO`), so two installations with different +addresses on one account do not take each other's mail (specs/organization-mail.md "Fetching")
+- [x] take only messages addressed to the organization's `mailbox_address` (IMAP `UNSEEN` with the address in To, Cc or Delivered-To), so two installations with different +addresses on one account do not take each other's mail (specs/organization-mail.md "Fetching")
 
 ## Email language per organization (2026-10-28, specs/organization-mail.md "Settings")
 
