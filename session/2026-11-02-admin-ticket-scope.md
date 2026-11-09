@@ -458,6 +458,12 @@
 - Scorecard after a manual run at 315f9e7: 6.3. Signed-Releases,
   Pinned-Dependencies (the reusable workflow called by path counts as
   pinned), Token-Permissions and Dangerous-Workflow stay 10.
+- The release notes of v0.1.1 and v0.1.0 now end with the Security
+  Note that `bin/release-notes` writes, with both verify commands
+  (`ssh-keygen -Y verify`, `gh attestation verify --signer-workflow`
+  naming `release-build.yml`). The v0.1.0 note says that the archive
+  is signed but the tag is not. The rest of the notes and the files
+  are unchanged; v0.1.1 stays the latest release.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -523,9 +529,6 @@
 
 ## Open
 
-- The release notes of v0.1.0 and v0.1.1 predate their files; their
-  Security Note does not show the verify commands. Later releases get
-  them from `bin/release-notes`.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the

@@ -353,6 +353,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] SLSA provenance on v0.1.0 and v0.1.1 with `make release-files`; Scorecard Signed-Releases 10, total 6.3 (specs/release.md "Signed release files")
 - [x] SLSA Build Level 3: build and attestation in the reusable workflow `.github/workflows/release-build.yml`, the build job without the OIDC token, a separate provenance job; `--signer-workflow` names it (specs/release.md "Release build")
 - [x] Level 3 provenance on v0.1.0 and v0.1.1 with `make release-files`; archives and signatures unchanged, Scorecard Signed-Releases 10, total 6.3 (specs/release.md "Signed release files")
+- [x] verify commands in the release notes of v0.1.0 and v0.1.1 (specs/release.md "Signed release files")
 - [x] Heroicons 2.2.0 replace the own icons, and icons on buttons, flash messages, panels, menu sections, account menu and timeline lines (specs/ui.md "Icons")
 - [x] form fields: one base style, selects with a chevron, check boxes and radios, errors under the field (FieldFormBuilder), file drop zone, leading icons, joined input and button groups (specs/ui.md "Form fields")
 - [ ] form fields, open: check the 5-file / 10 MB limits before sending; join the Google setup copy fields and the public link field; move FieldFormBuilder to app/form_builders after a dev container restart (specs/ui.md "Form fields")

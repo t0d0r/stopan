@@ -278,7 +278,9 @@ release build, no longer on the maintainer's machine.
   for both again: the archives and their signatures stayed byte for
   byte the same, and only the provenance was replaced, now signed by
   `release-build.yml`. Their release notes were written before the
-  files, so their Security Note does not show the verify commands.
+  files; on 2026-11-09 their Security Note was replaced with the one
+  `bin/release-notes` writes, which shows the verify commands. For
+  v0.1.0 it says that the archive is signed but the tag is not.
 - **The release notes say how to verify** (their Security Note).
 
 ## Release notes (`bin/release-notes [FROM] [TO]`)
