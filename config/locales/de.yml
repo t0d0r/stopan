@@ -33,6 +33,10 @@ de:
         zero: "Keine Dateien ausgewählt"
         one: "1 Datei ausgewählt"
         other: "%{count} Dateien ausgewählt"
+      too_big: "%{name} ist größer als %{size} MB und wurde nicht hinzugefügt."
+      too_many:
+        one: "Höchstens %{count} Datei; %{name} wurde nicht hinzugefügt."
+        other: "Höchstens %{count} Dateien; %{name} wurde nicht hinzugefügt."
 
     account_page:
       nickname_hint: "Wird in der Menüleiste statt Ihres Namens angezeigt. Optional."

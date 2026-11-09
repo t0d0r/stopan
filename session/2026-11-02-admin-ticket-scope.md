@@ -473,6 +473,29 @@
   which matches the root-only password file. No organizations or
   tickets; the public checks and g0no pass. The image is still
   v0.1.1.
+- Form field follow-ups (specs/ui.md "Form fields" and "Joined
+  groups", attachments.md "Limits"). The file drop zone leaves out
+  a file over 10 MB and any file past the fifth, and names each one
+  in a red `role="alert"` box under the list; the limits
+  (`data-max-files`, `data-max-size`) and the messages come from
+  `Attachable` and the locales. The values to copy in the Google
+  setup wizard and a new API token are joined to their Copy buttons.
+  The public request link joins its field, "Copy link" and "Open"
+  in one row; in the organization's details panel and on phones the
+  field keeps the top row and the two buttons are joined under it.
+  `FieldFormBuilder` moved to `app/form_builders/`. Files:
+  `application.js` (`setUpDropzone`), `application.css`,
+  `_file_drop`, `_copy_field`, `_public_link`, the account page, the
+  three locales, `test/integration/form_fields_test.rb`. Checked in
+  headless Chrome: the real `setUpDropzone` on the rendered partial
+  with real files (10 checks: size, count, duplicates, remove,
+  several lines), and screenshots of the joined controls at 1280
+  and 390 px.
+- The development container was restarted (`make
+  docker-dev-restart`). It had run since before the Rails 8.1.4.1
+  update, so new `bin/rails` commands in it failed on missing gems;
+  the restart installed them, and the server loads
+  `app/form_builders`.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -542,8 +565,8 @@
   has the seeded email and the password from the root-only file, and
   organizations, people and the settings in `/admin/settings` have
   to be entered again.
-- Form fields: the file count and size limits are checked only on the server, and chosen
-  files are lost when the form comes back with errors, as before.
+- Form fields: chosen files are lost when the form comes back with
+  errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
   digest is updated by hand until Dependabot is set up.
 - A super administrator who works an organization's tickets adds

@@ -1,8 +1,12 @@
 <%# File drop zone (specs/ui.md "Form fields"). The real file input stays in
     the form and keeps its label; application.js shows the area, adds
-    dropped files and lists the chosen ones. Without it the plain input
-    shows. Locals: f (the form builder; the attribute is :files), hint_id. %>
+    dropped files, lists the chosen ones and leaves out files that would
+    break the limits of Attachable. Without it the plain input shows. Locals: f (the form builder; the attribute is :files), hint_id. %>
 <div class="dropzone" data-dropzone
+     data-max-files="<%= Attachable::MAX_FILES %>"
+     data-max-size="<%= Attachable::MAX_SIZE %>"
+     data-too-big="<%= t("ui.dropzone.too_big", name: "%{name}", size: Attachable::MAX_SIZE / 1.megabyte) %>"
+     data-too-many="<%= t("ui.dropzone.too_many", count: Attachable::MAX_FILES, name: "%{name}") %>"
      data-remove-label="<%= t("ui.dropzone.remove", name: "%{name}") %>"
      data-chosen-zero="<%= t("ui.dropzone.chosen.zero") %>"
      data-chosen-one="<%= t("ui.dropzone.chosen.one") %>"
@@ -15,6 +19,7 @@
                            aria: { describedby: hint_id } %>
   <ul class="dropzone__list" aria-label="<%= t("ui.dropzone.list") %>" data-dropzone-list hidden></ul>
   <p class="sr-only" aria-live="polite" data-dropzone-status></p>
+  <div class="dropzone__errors" role="alert" data-dropzone-errors></div>
   <template data-dropzone-item>
     <li class="dropzone__file">
       <%= icon :clip, size: 14 %>

@@ -152,18 +152,33 @@ function setUpPasswordField(field) {
 // files. The area is its label (a click opens the picker) and takes dropped
 // files; the list shows each chosen file with a remove button. The input's
 // files are rebuilt with DataTransfer, so the form sends exactly the listed
-// files and pageIsBusy still sees them. Without DataTransfer the plain
-// input stays as it is.
+// files and pageIsBusy still sees them. A file over the size limit, or
+// one more than the count limit, is left out and named in the alert box
+// under the list; the server checks the same limits again. Without
+// DataTransfer the plain input stays as it is.
 function setUpDropzone(zone) {
   const input = zone.querySelector("[data-dropzone-input]");
   const area = zone.querySelector("[data-dropzone-area]");
   const list = zone.querySelector("[data-dropzone-list]");
   const status = zone.querySelector("[data-dropzone-status]");
   const template = zone.querySelector("template[data-dropzone-item]");
+  const errors = zone.querySelector("[data-dropzone-errors]");
   if (!input || !area || !list || !status || !template) return;
   try { new DataTransfer(); } catch { return; }
 
   let files = Array.from(input.files);
+  const maxFiles = Number(zone.dataset.maxFiles) || Infinity;
+  const maxSize = Number(zone.dataset.maxSize) || Infinity;
+  const named = (text, file) => (text || "").replace("%{name}", () => file.name);
+  // Replaces the lines of the alert box; an empty list clears it.
+  const refuse = (lines) => {
+    errors?.replaceChildren(...lines.map((line) => {
+      const item = document.createElement("p");
+      item.className = "field-error";
+      item.textContent = line;
+      return item;
+    }));
+  };
   const key = (file) => [file.name, file.size, file.lastModified].join("/");
   const language = document.documentElement.lang || undefined;
   const format = (value, unit, digits) => {
@@ -207,18 +222,29 @@ function setUpDropzone(zone) {
   };
   const add = (more) => {
     const known = new Set(files.map(key));
+    const refused = [];
     Array.from(more).forEach((file) => {
       if (known.has(key(file))) return;
+      if (file.size > maxSize) {
+        refused.push(named(zone.dataset.tooBig, file));
+        return;
+      }
+      if (files.length >= maxFiles) {
+        refused.push(named(zone.dataset.tooMany, file));
+        return;
+      }
       known.add(key(file));
       files.push(file);
     });
     write();
     render(true);
+    refuse(refused);
   };
   function remove(index) {
     files.splice(index, 1);
     write();
     render(true);
+    refuse([]);
     const buttons = list.querySelectorAll(".dropzone__remove");
     (buttons[index] || buttons[index - 1] || input).focus();
   }

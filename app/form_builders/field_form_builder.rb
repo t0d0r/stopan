@@ -1,6 +1,7 @@
 # The default form builder (specs/ui.md "Form fields"), set in
-# ApplicationController. It lives with the helpers (not a helper module:
-# only *_helper.rb files are views' helpers). A field whose
+# ApplicationController. Rails autoloads app/form_builders like any
+# directory under app/; a running server picks up a new one only after a
+# restart. A field whose
 # attribute has errors gets aria-invalid and its messages right under it,
 # linked with aria-describedby, so every model form shows them without
 # changes to the form. The role="alert" box at the top stays

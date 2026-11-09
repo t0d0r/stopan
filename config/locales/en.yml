@@ -30,6 +30,10 @@ en:
         zero: "No files chosen"
         one: "1 file chosen"
         other: "%{count} files chosen"
+      too_big: "%{name} is larger than %{size} MB and was not added."
+      too_many:
+        one: "At most %{count} file; %{name} was not added."
+        other: "At most %{count} files; %{name} was not added."
 
     account_page:
       nickname_hint: "Shown in the menu bar instead of your name. Optional."

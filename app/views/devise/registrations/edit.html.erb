@@ -144,7 +144,7 @@
       <% if (plain = flash[:api_token]) %>
         <div class="callout api-tokens__new" role="status">
           <p><strong><%= t("ui.api_tokens.copy_now") %></strong></p>
-          <div class="sharing__link">
+          <div class="sharing__link input-group">
             <%= text_field_tag "new-api-token", plain, readonly: true, class: "field-input", data: { select_on_focus: true },
                                "aria-label": t("ui.api_tokens.new_token") %>
             <button type="button" class="btn" data-copy="new-api-token" data-copied-label="<%= t("ui.share.copied") %>">

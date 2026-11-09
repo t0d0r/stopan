@@ -18,6 +18,10 @@ class FormFieldsTest < ActionDispatch::IntegrationTest
     end
     assert_select "[data-dropzone][data-remove-label=?]", "Remove %{name}"
     assert_select "[data-dropzone][data-chosen-other=?]", "%{count} files chosen"
+    assert_select "[data-dropzone][data-max-files=?][data-max-size=?]", Attachable::MAX_FILES.to_s, Attachable::MAX_SIZE.to_s
+    assert_select "[data-dropzone][data-too-big=?]", "%{name} is larger than 10 MB and was not added."
+    assert_select "[data-dropzone][data-too-many=?]", "At most 5 files; %{name} was not added."
+    assert_select "[data-dropzone] .dropzone__errors[role=alert][data-dropzone-errors]:not([hidden])", text: ""
     assert_select "##{hint_id}.field-hint", /Up to 5 files, 10 MB each/
     assert_select "label[for=?]", id, minimum: 2
   end
@@ -42,6 +46,8 @@ class FormFieldsTest < ActionDispatch::IntegrationTest
     get new_ticket_url, headers: { "Accept-Language" => "de" }
     assert_select ".dropzone__choose", "wählen Sie Dateien aus"
     assert_select "[data-dropzone][data-remove-label=?]", "%{name} entfernen"
+    assert_select "[data-dropzone][data-too-big=?]", "%{name} ist größer als 10 MB und wurde nicht hinzugefügt."
+    assert_select "[data-dropzone][data-too-many=?]", "Höchstens 5 Dateien; %{name} wurde nicht hinzugefügt."
   end
 
   test "the Cc email and the colleague select are joined to their Add buttons" do
@@ -67,6 +73,34 @@ class FormFieldsTest < ActionDispatch::IntegrationTest
       assert_select "> button.btn[data-copy=share-url]", /Copy link/
     end
   end
+
+test "the public request link joins its field, Copy link and Open in one control" do
+  org = organizations(:acme)
+  org.update!(public_form: true)
+  sign_in users(:admin)
+  [ [ admin_organization_url(org), "public-form-url" ], [ edit_admin_organization_url(org), "public-form-url-edit" ] ].each do |url, id|
+    get url
+    assert_select ".public-link.input-group" do
+      assert_select "> label.sr-only[for=?]", id
+      assert_select "> input.field-input[readonly][id=?] + button.btn[data-copy=?] + a.btn[target=_blank]", id, id
+    end
+  end
+end
+
+test "the values to copy in the Google setup wizard are joined to their Copy buttons" do
+  AppSetting.current.update_columns(google_client_id: nil, google_client_secret: nil)
+  sign_in users(:admin)
+  get admin_google_setup_url(step: "project")
+  assert_select ".wizard-copy .sharing__link.input-group", minimum: 2
+  assert_select ".wizard-copy .input-group > input#wizard-app-name.field-input[readonly] + button.btn[data-copy=wizard-app-name]"
+end
+
+test "a new API token is joined to its Copy button" do
+  sign_in users(:boris)
+  post api_tokens_url, params: { api_token: { name: "Monitoring", read_only: "1", expires_in_days: "30" } }
+  follow_redirect!
+  assert_select ".api-tokens__new .sharing__link.input-group > input#new-api-token.field-input[readonly] + button.btn[data-copy=new-api-token]"
+end
 
   test "search fields have a leading icon" do
     sign_in users(:agent)

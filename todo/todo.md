@@ -356,7 +356,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] verify commands in the release notes of v0.1.0 and v0.1.1 (specs/release.md "Signed release files")
 - [x] Heroicons 2.2.0 replace the own icons, and icons on buttons, flash messages, panels, menu sections, account menu and timeline lines (specs/ui.md "Icons")
 - [x] form fields: one base style, selects with a chevron, check boxes and radios, errors under the field (FieldFormBuilder), file drop zone, leading icons, joined input and button groups (specs/ui.md "Form fields")
-- [ ] form fields, open: check the 5-file / 10 MB limits before sending; join the Google setup copy fields and the public link field; move FieldFormBuilder to app/form_builders after a dev container restart (specs/ui.md "Form fields")
+- [x] form fields, open: the drop zone leaves out files past the 5-file / 10 MB limits before sending; the Google setup copy fields, a new API token and the public link joined to their buttons; FieldFormBuilder in app/form_builders, dev container restarted (specs/ui.md "Form fields")
 - [x] production: deployed fd2638b (icons and form fields), no migrations (specs/deploy.md)
 - [x] composer: the status select above the send button, one column as wide as the wider of the two; full width on phones (specs/timeline.md "Composer")
 - [x] searchable selects (combobox over the real select) for the new ticket requester and the queue assignee and organization filters (specs/ui.md "Searchable selects")

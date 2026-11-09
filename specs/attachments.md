@@ -15,6 +15,9 @@ reply or internal note (to the comment). Storage is Active Storage
   are refused.
 - A refused file makes the whole ticket or comment invalid (422 with a
   message naming the file); nothing is saved, no comment and no blob.
+- The file drop zone checks the count and the size in the browser
+  too, before sending (ui.md "Form fields"). The server's check stays
+  the rule; without JavaScript it is the only one.
 
 ## Request size
 
@@ -39,9 +42,10 @@ that is larger than any allowed upload before reading it:
 - The default must stay at least `MAX_FILES` x `MAX_SIZE` plus 2 MiB;
   `test/config/puma_test.rb` fails otherwise, so changing the
   attachment limits means changing this one too.
-- The browser shows the server's plain 413 answer; there is no check in
-  the browser before sending. A body this large is far beyond what the
-  forms accept anyway (10 MB per file).
+- The browser shows the server's plain 413 answer. A body this large
+  is far beyond what the forms accept anyway (10 MB per file), and the
+  drop zone already keeps the chosen files within the attachment
+  limits, so only a form sent without JavaScript can reach it.
 - Apache in front of the container must allow at least the same size
   (deploy.md "Request size").
 

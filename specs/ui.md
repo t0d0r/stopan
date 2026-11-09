@@ -487,7 +487,8 @@ in both looks and both themes.
   stays. Fields of a model form also show their own messages under
   them (`.field-error`, in red, linked from the field with
   `aria-describedby`), added by the default form builder
-  (`FieldFormBuilder`), so the forms themselves do not change.
+  (`FieldFormBuilder`, in `app/form_builders/`), so the forms
+  themselves do not change.
 - **Buttons are as high as the fields** (`--field-height`, 36 px, 44 px
   on phones), beside a field or not (2026-11-03: "Update ticket" and the
   Save buttons were 30 px next to 36 px fields). Rows of dense tables
@@ -503,10 +504,20 @@ in both looks and both themes.
 - **Joined groups** (`.input-group`): a field and the button that acts
   on it share one border, with square corners where they meet: "Add a
   colleague" and the Cc email field with their "Add" buttons in the
-  People panel (followers.md). The share link and "Copy link" are
-  joined top to bottom (`.input-group--stacked`): the field keeps its
-  own row in the narrow side column and the button sits under it, as
-  wide as the field (sharing.md "Managing the link").
+  People panel (followers.md); the values to copy in the Google setup
+  wizard (mail-oauth.md) and a new API token (api.md) with their
+  "Copy" buttons. The share link and "Copy link" are joined top to
+  bottom (`.input-group--stacked`): the field keeps its own row in the
+  narrow side column and the button sits under it, as wide as the
+  field (sharing.md "Managing the link").
+  - **The public request link** (public-form.md, 2026-11-09: its field
+    was cut short between two stretched buttons) joins the field,
+    "Copy link" and "Open" in one control. On the organization form
+    they share one row, the field taking the room the buttons leave.
+    In the organization's narrow details panel, and on phones (760px
+    and less), the field keeps the top row so the address stays
+    readable, and the two buttons share the row under it, each as wide
+    as its text plus an equal share of the rest, still joined to it.
 - **File drop zone** (composer and new ticket): a dashed area with the
   clip icon and "Drop files here or choose files", the limits hint
   under it. The real `<input type="file" multiple>` stays in the form,
@@ -524,10 +535,24 @@ in both looks and both themes.
   files as work in progress. A polite live region says how many files
   are chosen. After a remove the focus moves to the next remove button
   (the previous one after the last), or to the input when the list is
-  empty. The server checks the limits
-  as before. Without JavaScript, or in a browser without
+  empty. Without JavaScript, or in a browser without
   `DataTransfer`, the plain file input shows instead, its button styled
   like `.btn`.
+  - **Limits before sending** (2026-11-09: a sixth file or a file over
+    10 MB was refused only after the whole form had been sent). The
+    zone gets the limits from `Attachable` (`data-max-files`,
+    `data-max-size`, in bytes) and adds no file that would break
+    them: a file larger than `MAX_SIZE` is left out, and once
+    `MAX_FILES` files are listed no more are added. Files are taken
+    in the order the picker or the drop gives them.
+  - **Each file left out** gets a line in red under the list, naming
+    it: "report.pdf is larger than 10 MB and was not added." or "At
+    most 5 files; report.pdf was not added.". The lines are in a
+    `role="alert"` box, so a screen reader reads them at once. They
+    stay until the next choice, drop or remove, which replaces them.
+  - **The server** still checks the count, the size and the type
+    (attachments.md); the type is checked only there, from the
+    file's bytes.
 - **Searchable selects** (`select[data-combobox]`, 2026-11-03: a native
   list is not fit for choosing among many people). A select whose list
   can grow long becomes a text field with a list that narrows as you

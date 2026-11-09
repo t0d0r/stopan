@@ -1119,6 +1119,22 @@ input[type="search"].field-input {
   display: none;
 }
 
+/* Files left out for the limits (ui.md "Form fields"). The alert box
+   stays rendered so screen readers announce new lines; while empty it
+   is taken out of the flex flow, so it adds no gap. */
+.dropzone__errors:empty {
+  position: absolute;
+}
+
+.dropzone__errors > .field-error {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.dropzone__errors > .field-error + .field-error {
+  margin-top: 2px;
+}
+
 .dropzone__file {
   display: flex;
   align-items: center;
@@ -1316,6 +1332,12 @@ input[type="search"].field-input {
   margin-left: -1px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+/* A button with another one after it is square on that side too. */
+.input-group > .btn:has(+ .btn) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 /* The focused part draws its ring over its neighbour. */
@@ -4699,14 +4721,64 @@ turbo-frame {
   color: #1f7a33;
 }
 
-.public-link {
+/* The public request link: field, Copy link and Open joined in one row
+   (ui.md "Joined groups"). In the organization's details panel and on
+   phones the address keeps the top row and the two buttons share the
+   row under it, still joined. */
+.public-link .field-input {
+  flex: 1 1 16em;
+}
+
+.org-details .public-link {
   flex-wrap: wrap;
 }
 
-/* The address keeps a readable width; in a narrow panel it takes its own
-   row and the buttons wrap under it. */
-.public-link .field-input {
-  flex: 1 1 16em;
+.org-details .public-link > .field-input {
+  flex-basis: 100%;
+  border-radius: 6px 6px 0 0;
+}
+
+.org-details .public-link > .btn {
+  flex: 1 1 auto;
+  margin: -1px 0 0 -1px;
+  border-radius: 0;
+}
+
+.org-details .public-link > .field-input + .btn {
+  margin-left: 0;
+  border-bottom-left-radius: 6px;
+}
+
+.org-details .public-link > .btn:last-child {
+  border-bottom-right-radius: 6px;
+}
+
+@media (max-width: 760px) {
+  .public-link {
+    flex-wrap: wrap;
+  }
+
+  .public-link > .field-input {
+    flex-basis: 100%;
+    border-radius: 6px 6px 0 0;
+  }
+
+  /* As specific as .sharing__link.input-group > .btn, which keeps the
+     buttons at their own width in one row. */
+  .input-group.public-link > .btn {
+    flex: 1 1 auto;
+    margin: -1px 0 0 -1px;
+    border-radius: 0;
+  }
+
+  .public-link > .field-input + .btn {
+    margin-left: 0;
+    border-bottom-left-radius: 6px;
+  }
+
+  .public-link > .btn:last-child {
+    border-bottom-right-radius: 6px;
+  }
 }
 
 /* Organization details: room above each section after the first. */
@@ -4823,15 +4895,6 @@ turbo-frame {
 
 .org-mail__google {
   margin-top: 10px;
-}
-
-/* The address on its own row, Copy and Open sharing the next one. */
-.org-details .public-link .field-input {
-  flex-basis: 100%;
-}
-
-.org-details .public-link .btn {
-  flex: 1 1 0;
 }
 
 .org-details__actions {
@@ -6780,14 +6843,6 @@ turbo-frame {
 
 .wizard-copy {
   margin-top: 10px;
-}
-
-.wizard-copy .sharing__link {
-  flex-wrap: wrap;
-}
-
-.wizard-copy .field-input {
-  flex: 1 1 16em;
 }
 
 .wizard-copy__label {
