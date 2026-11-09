@@ -140,7 +140,14 @@ in-process job queue as today.
    (tags stripped, line breaks kept). For replies, quoted text is cut off
    at the first line that starts with `>`, or at a line like "On ...
    wrote:" / "На ... написа:" followed by quotes, or at
-   `-----Original Message-----`. Spaces at line ends are removed and more
+   `-----Original Message-----`, or where an earlier message starts
+   that is quoted without `>` (2026-11-09: Outlook's replies kept the
+   whole earlier message): the header block or separator that "Display
+   of mail" below shows as an earlier message, with a rule line right
+   before it (Outlook's line of underscores). A forward inside a reply
+   is kept: a "Forwarded message" separator, and the header block
+   right after it, are not cut, since the sender sent them on purpose.
+   Both use one detection (`MailQuote`). Spaces at line ends are removed and more
    than one empty line in a row becomes one (operator, 2026-10-27). Cut
    to 20,000 characters. An empty text becomes "(no text)". Addresses
    are shown as short links (markdown.md "Plain text links").

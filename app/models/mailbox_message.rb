@@ -174,10 +174,12 @@ class MailboxMessage
   end
 
   # Cuts the quoted earlier mail: from a "On ... wrote:" or "Original
-  # Message" line, or from the first ">" line (with its attribution line).
+  # Message" line, from an earlier message quoted without ">" (Outlook's
+  # header block, MailQuote; a forward stays), or from the first ">" line
+  # (with its attribution line).
   def without_quotes(text)
     lines = text.split("\n")
-    cut = lines.index { |line| line.match?(QUOTE_HEADER) }
+    cut = [ lines.index { |line| line.match?(QUOTE_HEADER) }, MailQuote.start(lines, keep_forwards: true) ].compact.min
     quote = lines.index { |line| line.start_with?(">") }
     if quote && (cut.nil? || quote < cut)
       attribution = lines[0...quote].rindex { |line| line.strip.present? }

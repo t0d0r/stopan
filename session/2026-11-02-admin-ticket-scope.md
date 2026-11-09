@@ -523,6 +523,17 @@
   one account under different +addresses no longer take each other's
   mail. The fake IMAP server of test/models/mailbox_check_test.rb
   filters like a server. Not yet tried against a real IMAP server.
+- Outlook replies by mail (specs/organization-mail.md "Processing a
+  message"): the stored text kept the earlier message, which Outlook
+  quotes under a header block (From, Sent, To, Subject) without `>`.
+  The detection of that block moved from `TicketsHelper` into
+  `MailQuote` (app/models/mail_quote.rb); the ticket page still shows
+  such a block as a collapsible earlier message, and
+  `MailboxMessage#without_quotes` now cuts replies there too, with the
+  rule line before it. A forwarded-message separator and the header
+  block right after it are not cut. Tests: English, German and
+  Bulgarian Outlook replies; a forward inside a reply; a lone "From:"
+  line in the text.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

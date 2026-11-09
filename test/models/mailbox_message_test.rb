@@ -50,6 +50,31 @@ class MailboxMessageTest < ActiveSupport::TestCase
     assert_equal users(:anna), comment.author
   end
 
+  test "replies from Outlook lose the earlier message under its header block, in English, German and Bulgarian" do
+    ticket = tickets(:printer)
+    {
+      "Thanks, it works now." => "\n\n________________________________\nFrom: Service desk <support@acme.example>\nSent: Monday, October 26, 2026 10:00\n" \
+                                 "To: Anna <anna@example.com>\nSubject: [Stopan #1001] Printer\n\nPlease try a new roll.",
+      "Danke, geht wieder." => "\n\nVon: Service desk <support@acme.example>\nGesendet: Montag, 26. Oktober 2026 10:00\nAn: Anna\n" \
+                               "Betreff: AW: Printer\n\nBitte eine neue Rolle.",
+      "Благодаря, вече работи." => "\n\nОт: Service desk <support@acme.example>\nИзпратено: понеделник, 26 октомври 2026 10:00\n" \
+                                   "До: Anna\nТема: Printer\n\nМоля, опитайте с нова ролка."
+    }.each do |own, quoted|
+      raw = email(from: users(:anna).email, subject: "Re: [Stopan ##{ticket.number}] Printer", body: own + quoted) { it.charset = "UTF-8" }
+      assert_equal :reply, process(raw)
+      assert_equal own, ticket.comments.last.body
+    end
+  end
+
+  test "a forward inside a reply stays, and a From line in the text alone is no quote" do
+    ticket = tickets(:printer)
+    body = "See the supplier's answer below.\nFrom: the shop at the corner, as promised.\n\n" \
+           "---------- Forwarded message ---------\nFrom: Supplier <s@example.com>\nDate: Mon, 26 Oct 2026\n" \
+           "Subject: Toner\nTo: anna@example.com\n\nThe toner ships tomorrow."
+    assert_equal :reply, process(email(from: users(:anna).email, subject: "Re: [Stopan ##{ticket.number}] Printer", body: body))
+    assert_equal body, ticket.comments.last.body
+  end
+
   test "a reply is also matched by References" do
     ticket = tickets(:printer)
     raw = email(from: users(:anna).email, subject: "Re: printer", body: "Thanks!",

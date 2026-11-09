@@ -49,15 +49,14 @@ module TicketsHelper
     simple_format(link_addresses(text.to_s), { class: "ticket-text__p" }, sanitize: false)
   end
 
-  MAIL_RULE = /\A\s*([-_=*])\1{2,}\s*\z/
+  MAIL_RULE = MailQuote::RULE
   MAIL_SIGNATURE = /\A--\s?\z/
   # The header block of an earlier message quoted without ">" (Outlook,
-  # forwards): a From line with a date and a subject line before the next
-  # empty line (specs/organization-mail.md "Display of mail").
-  MAIL_QUOTED_FROM = /\A\s*\*?(from|von|от|de|van|da)\s*:\*?\s*\S/i
-  MAIL_QUOTED_DATE = /\A\s*\*?(sent|date|gesendet|datum|изпратено|дата|envoyé|verzonden|inviato)\s*:/i
-  MAIL_QUOTED_SUBJECT = /\A\s*\*?(subject|betreff|тема|objet|onderwerp|oggetto)\s*:/i
-  MAIL_QUOTED_SEPARATOR = /\A\s*(-{2,}\s*(original message|forwarded message|ursprüngliche nachricht|weitergeleitete nachricht|оригинално съобщение|препратено съобщение)\s*-{2,}|begin forwarded message:)\s*\z/i
+  # forwards), found by MailQuote (specs/organization-mail.md "Display of
+  # mail").
+  MAIL_QUOTED_FROM = MailQuote::FROM
+  MAIL_QUOTED_DATE = MailQuote::DATE
+  MAIL_QUOTED_SEPARATOR = MailQuote::SEPARATOR
   MAIL_QUOTE_COLORS = 3
 
   # A message that came in by mail, laid out as mail: rules, nested quote
@@ -90,23 +89,10 @@ module TicketsHelper
 
   # Where the earlier message starts: its separator or header block, with
   # a rule line right before it.
-  def mail_quoted_start(lines)
-    at = lines.each_index.find do |index|
-      lines[index].match?(MAIL_QUOTED_SEPARATOR) || mail_quoted_header_size(lines, index).positive?
-    end
-    return unless at
-
-    before = lines.first(at).rindex { |line| line.strip.present? }
-    before && lines[before].match?(MAIL_RULE) ? before : at
-  end
+  def mail_quoted_start(lines) = MailQuote.start(lines)
 
   # The number of header lines at index, or 0 when no header block starts there.
-  def mail_quoted_header_size(lines, index)
-    return 0 unless lines[index].match?(MAIL_QUOTED_FROM)
-
-    block = lines[index..].take_while(&:present?).first(10)
-    block.any? { |line| line.match?(MAIL_QUOTED_DATE) } && block.any? { |line| line.match?(MAIL_QUOTED_SUBJECT) } ? block.size : 0
-  end
+  def mail_quoted_header_size(lines, index) = MailQuote.header_size(lines, index)
 
   # The earlier message: a summary line, its headers and its own levels.
   # Emails show it open (not every mail program has <details>).
