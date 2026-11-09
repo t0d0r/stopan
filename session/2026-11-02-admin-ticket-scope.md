@@ -616,8 +616,16 @@
 
 ## Next step
 
-The release work is done. Continue with the open items in todo: the
-form field items and the follower items.
+Production runs v0.1.1 on an empty database. The changes since
+(file limits in the drop zone and joined copy fields, the new ticket
+busy fix, the mail view and files of deleted tickets for
+administrators, mailbox fetching by address, Outlook replies) are
+committed but not deployed; the mailbox filter has not met a real
+IMAP server yet. The open todo items left are larger or need the
+operator: headers of mail replies (organization-mail.md "Mail
+details"), the Google reconnect warning on the admin dashboard, the
+follower items marked later, bundled fonts for Omarchy, and the
+operator steps after the reset.
 
 ## Security Note
 
