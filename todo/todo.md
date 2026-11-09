@@ -364,7 +364,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] STOPAN wordmark (traced, currentColor SVG) in place of the name in the menu bar (specs/ui.md "Logo")
 - [x] every button as high as the fields, except .btn--small (specs/ui.md "Form fields")
 - [x] production: deployed fa54a8b (composer layout, searchable selects, code copy, wordmark, button heights), no migrations (specs/deploy.md)
-- [ ] /tickets/new counts as busy for the live refresh as soon as it loads (the requester's organization script changes the select)
+- [x] /tickets/new busy for the live refresh: idle on a plain load; after a failed submit the script's pick of the requester's only organization counted as a change, now it becomes the starting value (specs/tickets.md "Creating")
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")

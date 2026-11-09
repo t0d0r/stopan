@@ -116,6 +116,12 @@ were closed.
   organization select is disabled and its hint says to choose the
   requester first. Without JavaScript every organization is listed; the
   server check above always decides.
+- **What the page picks as it loads is not work in progress**
+  (2026-11-09). When the form comes back with errors, the script
+  selects the chosen requester's only organization if the server did
+  not; that choice becomes the select's starting value, so the busy
+  check of the live refresh (timeline.md) does not count it as a
+  change. Only what the user changes afterwards does.
 - After create: redirect to the ticket with "Ticket #1001 was created."
 - A `created` event is written in the same transaction (timeline.md).
 

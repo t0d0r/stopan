@@ -413,6 +413,10 @@ function setUpRequesterOrganizations(requester) {
   };
   requester.addEventListener("change", update);
   update();
+  // What the page picks as it loads (the requester's only organization,
+  // after the form came back with errors) is not the user's work in
+  // progress: it becomes the starting value that pageIsBusy compares with.
+  Array.from(organization.options).forEach((option) => { option.defaultSelected = option.selected; });
 }
 
 // "Copy link" buttons copy the value of the field they name; the field

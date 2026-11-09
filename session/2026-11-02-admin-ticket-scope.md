@@ -496,6 +496,16 @@
   update, so new `bin/rails` commands in it failed on missing gems;
   the restart installed them, and the server loads
   `app/form_builders`.
+- New ticket form and the busy check (specs/tickets.md "Creating").
+  On a plain load `/tickets/new` was already idle. When the form came
+  back with errors, the requester script selected the requester's only
+  organization, which `pageIsBusy` counted as a change. The script now
+  makes its own pick the select's starting value
+  (`setUpRequesterOrganizations`). Checked in dev with headless Chrome:
+  after a failed submit the page is idle, a change by the user makes
+  it busy, and putting the value back makes it idle again. The page
+  subscribes to no refresh stream today, so this matters once it
+  does.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
