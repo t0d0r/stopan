@@ -710,6 +710,57 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Database reset (2026-11-09)
+
+Production starts again from an empty database. Nothing is deleted:
+every entry of `~stopan/storage` (the SQLite database with its `-wal`
+and `-shm` files, and the directories of uploaded files) is moved to
+`~stopan/backups/reset-2026-11-09/` (700, files 600). The image
+(v0.1.1) is not changed.
+
+1. As `stopan`: stop `stopan.service` and check that no container
+   runs.
+2. Create the backup directory and move every entry of `~/storage`
+   into it. `~/storage` stays, empty, owned by `stopan`, mode 700.
+3. Check the moved database with `PRAGMA integrity_check`; it reads
+   no rows and prints only the result.
+4. Start `stopan.service`. The entrypoint's `db:prepare` creates the
+   database from `db/schema.rb`, and `db:seed` creates the
+   administrator from `ADMIN_*` in `stopan.env` (auth.md "Admin
+   user"). Its password is in `/root/stopan/admin-password.txt`
+   (root, 600), which must match `ADMIN_PASSWORD`; it is never
+   printed.
+5. Check: `/up` 200 on loopback and through Apache; the database has
+   one user, the administrator, whose password is `ADMIN_PASSWORD`,
+   and no organizations or tickets; the container is healthy; g0no
+   `/up` 200.
+
+The reset drops what lived in the old database and storage: users,
+organizations and memberships, tickets with their messages and files,
+share links, API tokens, and the settings saved in `/admin/settings`
+and on the organizations (mail accounts, DeepL key, site theme).
+They are entered again by hand. Old sessions do not carry over: a
+Devise session holds the password salt of its user, and the new
+administrator has a new salt.
+
+To go back: stop the service, move the new entries out of
+`~/storage`, move the entries of the backup directory back, and
+start the service.
+
+Done 2026-11-09:
+
+- The backup directory holds `production.sqlite3` and the eight
+  directories of uploaded files, 5.9 MB. The service checkpointed the
+  WAL when it stopped, so no `-wal` or `-shm` file was left;
+  `integrity_check` is `ok`. After the stop the unit showed `failed`;
+  `systemctl --user reset-failed stopan` cleared it before the start.
+- After the start: one user, `admin`, whose password is
+  `ADMIN_PASSWORD`, and the password file matches it; no organizations
+  or tickets; no migration pending. `/up` 200 on loopback and through
+  Apache; `http://` -> 301; `/users/sign_up` -> sign-in; HSTS, CSP,
+  `X-Frame-Options`, `nosniff` and a secure, HttpOnly session cookie;
+  only `127.0.0.1:3183` listens; g0no `/up` 200.
+
 ## Update 2026-11-06 (v0.1.1, revision 3a4f4c5)
 
 The first signed release (release.md "Signed tags"), deployed from its

@@ -464,6 +464,15 @@
   naming `release-build.yml`). The v0.1.0 note says that the archive
   is signed but the tag is not. The rest of the notes and the files
   are unchanged; v0.1.1 stays the latest release.
+- Production database reset (specs/deploy.md "Database reset
+  (2026-11-09)"). The service was stopped, every entry of
+  `~stopan/storage` (the database and the upload directories,
+  5.9 MB) moved to `~stopan/backups/reset-2026-11-09/` (700, files
+  600; `integrity_check` ok), and the service started again on an
+  empty database. The seed created `admin` with `ADMIN_PASSWORD`,
+  which matches the root-only password file. No organizations or
+  tickets; the public checks and g0no pass. The image is still
+  v0.1.1.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -529,6 +538,10 @@
 
 ## Open
 
+- Production starts from an empty database: the administrator still
+  has the seeded email and the password from the root-only file, and
+  organizations, people and the settings in `/admin/settings` have
+  to be entered again.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
