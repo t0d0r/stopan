@@ -442,8 +442,22 @@
   `release-provenance`). `bin/release` downloads both artifacts and
   requires the provenance to be signed by `release-build.yml`. The
   release notes name it in the verify command. The pin test allows a
-  workflow of this repository called by path. actionlint passes. Not
-  yet run on GitHub.
+  workflow of this repository called by path. actionlint passes.
+- The Level 3 build ran on GitHub for v0.1.1 and v0.1.0 through `make
+  release-files`. Both jobs passed with their reduced permissions; the
+  provenance job needs no `contents: read`. The v0.1.1 run verified the
+  tag's signature; the v0.1.0 run skipped it as the one unsigned tag.
+  The archives and their signatures stayed byte for byte the same
+  (same SHA-256 as before); only the `.intoto.jsonl` files were
+  replaced. Checked from the release downloads: `ssh-keygen -Y verify`
+  prints a good signature; `gh attestation verify` with
+  `--signer-workflow` naming `release-build.yml` passes (SLSA v1,
+  GitHub-hosted runner, caller `release.yml`, source `main` at
+  315f9e7), naming `release.yml` now fails; the unpacked archives
+  equal `git archive` of the tags; a changed archive is rejected.
+- Scorecard after a manual run at 315f9e7: 6.3. Signed-Releases,
+  Pinned-Dependencies (the reusable workflow called by path counts as
+  pinned), Token-Permissions and Dangerous-Workflow stay 10.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -509,9 +523,9 @@
 
 ## Open
 
-- The Level 3 build has not run on GitHub yet. v0.1.0 and v0.1.1 still
-  carry the Level 2 provenance, signed by `release.yml`; `make
-  release-files` gives them provenance signed by `release-build.yml`.
+- The release notes of v0.1.0 and v0.1.1 predate their files; their
+  Security Note does not show the verify commands. Later releases get
+  them from `bin/release-notes`.
 - Form fields: the file count and size limits are checked only on the server, and chosen
   files are lost when the form comes back with errors, as before.
 - Pinned base images no longer pick up Debian fixes on their own; the
@@ -525,11 +539,8 @@
 
 ## Next step
 
-Push the Level 3 build, then `make release-files VERSION=0.1.1` and
-`VERSION=0.1.0`; check the downloads with the verify commands in
-specs/release.md (`--signer-workflow` naming `release-build.yml`) and
-rerun Scorecard. Other open items in todo: the form field items and
-the follower items.
+The release work is done. Continue with the open items in todo: the
+form field items and the follower items.
 
 ## Security Note
 

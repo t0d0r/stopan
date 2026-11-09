@@ -274,7 +274,11 @@ release build, no longer on the maintainer's machine.
   provenance and a new signature (2026-11-07). The rebuilt archives
   hold the same files, but their bytes and checksums changed, since
   the gzip layer comes from another machine. After that, Scorecard's
-  Signed-Releases check was 10.
+  Signed-Releases check was 10. On 2026-11-09 the Level 3 build ran
+  for both again: the archives and their signatures stayed byte for
+  byte the same, and only the provenance was replaced, now signed by
+  `release-build.yml`. Their release notes were written before the
+  files, so their Security Note does not show the verify commands.
 - **The release notes say how to verify** (their Security Note).
 
 ## Release notes (`bin/release-notes [FROM] [TO]`)
