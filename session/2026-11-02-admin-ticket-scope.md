@@ -506,6 +506,15 @@
   it busy, and putting the value back makes it idle again. The page
   subscribes to no refresh stream today, so this matters once it
   does.
+- Deleted tickets under review (specs/tickets.md "Deleting"): the
+  mail view, the files and their previews answered 404 for the
+  administrator who opened the read-only page. `find_ticket_for_page`
+  moved to `ApplicationController`, and `TicketMailsController` and
+  `AttachmentsController` use it; everything that changes a ticket
+  still uses `find_visible_ticket`. Agents and requesters still get
+  404 (test/controllers/ticket_deletion_test.rb). In integration
+  tests a request that ends in 404 does not store a new sign-in, so
+  the test signs in with a page that loads first.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),

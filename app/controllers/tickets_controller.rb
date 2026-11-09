@@ -111,15 +111,6 @@ class TicketsController < ApplicationController
     @ticket = find_visible_ticket(params[:id])
   end
 
-  # Administrators may also open a deleted ticket of their organizations,
-  # read-only, to review and restore it (specs/tickets.md "Deleting",
-  # specs/org-admins.md).
-  def find_ticket_for_page(number)
-    return find_visible_ticket(number) unless current_user.admin_area?
-
-    Ticket.visible_to(current_user).or(AdminScope.new(current_user).deleted_tickets).find_by!(number: number.to_s)
-  end
-
   # Requesters choose only the text, the organization and files; the server
   # sets everything else (specs/roles.md, strong parameters per role).
   def ticket_params

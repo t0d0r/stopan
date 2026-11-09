@@ -117,4 +117,15 @@ class ApplicationController < ActionController::Base
   def find_visible_ticket(number)
     Ticket.visible_to(current_user).find_by!(number: number.to_s)
   end
+
+  # The ticket page and what it shows (the mail view, files and their
+  # previews). Administrators may also open a deleted ticket of their
+  # organizations there, read-only, to review and restore it
+  # (specs/tickets.md "Deleting", specs/org-admins.md). Everything that
+  # changes a ticket uses find_visible_ticket.
+  def find_ticket_for_page(number)
+    return find_visible_ticket(number) unless current_user.admin_area?
+
+    Ticket.visible_to(current_user).or(AdminScope.new(current_user).deleted_tickets).find_by!(number: number.to_s)
+  end
 end

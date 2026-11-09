@@ -78,6 +78,39 @@ class TicketDeletionTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
 
+test "administrators reviewing a deleted ticket open its mail view and files; others get 404" do
+    @ticket.update_column(:mail_html, "<p>The printer jams.</p>")
+    @ticket.files.attach(io: StringIO.new("toner log"), filename: "toner.txt", content_type: "text/plain")
+    file = @ticket.files.first
+    @ticket.soft_delete!(actor: users(:agent))
+
+    sign_in users(:admin)
+    get ticket_url(@ticket)
+    assert_select "iframe.mail-frame[src=?]", ticket_mail_path(@ticket)
+    assert_select "a[href=?]", ticket_attachment_path(@ticket, file)
+    get ticket_mail_url(@ticket)
+    assert_response :success
+    assert_includes response.body, "The printer jams."
+    get ticket_attachment_url(@ticket, file)
+    assert_response :success
+    assert_equal "toner log", response.body
+    get preview_ticket_attachment_url(@ticket, file)
+    assert_response :success
+
+    [ users(:agent), users(:anna) ].each do |user|
+      sign_in user
+      # A request that ends in 404 does not store the new session, so sign
+      # in with a page that loads first.
+      get root_url
+      get ticket_mail_url(@ticket)
+      assert_response :not_found
+      get ticket_attachment_url(@ticket, file)
+      assert_response :not_found
+      get preview_ticket_attachment_url(@ticket, file)
+      assert_response :not_found
+    end
+  end
+
   test "bulk delete with a confirmation, and the API" do
     sign_in users(:agent)
     get tickets_url

@@ -234,7 +234,7 @@ approved "go in this order", all done 2026-10-27):
 
 - [x] `>` quotes nest by level with a colour per level; earlier messages quoted without `>` (Outlook header blocks, forward separators) become collapsible sections, closed below the message's own text
 - [x] the copy box copies closed sections too, without their summary lines
-- [ ] the HTML view of the mail of a deleted ticket fails for administrators (`TicketMailsController#show` uses `find_visible_ticket`, which skips deleted tickets) (specs/tickets.md "Deleting")
+- [x] the HTML view of the mail of a deleted ticket fails for administrators; its files and previews did too. They now load the ticket like the page (`find_ticket_for_page`) (specs/tickets.md "Deleting")
 - [ ] replies from Outlook still keep the quoted earlier message in the stored text (`MailboxMessage#without_quotes` knows only "On ... wrote:", "Original Message" and `>`); it is now shown collapsed
 
 ## Side column fixes (2026-10-28)

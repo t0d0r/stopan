@@ -6,7 +6,7 @@ class TicketMailsController < ApplicationController
   content_security_policy false
 
   def show
-    ticket = find_visible_ticket(params[:ticket_id])
+    ticket = find_ticket_for_page(params[:ticket_id])
     raise ActiveRecord::RecordNotFound if ticket.mail_html.blank?
 
     images = params[:images] == "1" ? " https: http:" : ""

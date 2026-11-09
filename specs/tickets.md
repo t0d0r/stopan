@@ -194,8 +194,15 @@ removed from the database, so the audit history stays complete.
   deleted it and when), with "Open" and "Restore". "Open" shows the
   ticket page read-only with a pink banner "Deleted by Maria, 3 hours
   ago" and a "Restore" button; nothing else can be changed while it is
-  deleted (no replies, edits, status, sharing, translations). Other
-  users get 404 for it. "Restore" clears the deletion, records the event
+  deleted (no replies, edits, status, sharing, translations). What the
+  page shows opens as on any ticket page, so the review is complete:
+  the HTML view of the mail it came from (organization-mail.md "HTML
+  view") and the files of the ticket and its messages, with their
+  previews (2026-11-09: these answered 404 on the review page). The
+  page and these parts load the ticket through the same lookup
+  (`find_ticket_for_page`); everything that changes a ticket still uses
+  `Ticket.visible_to` and stays 404. Other users get 404 for the page,
+  the mail view and the files. "Restore" clears the deletion, records the event
   and opens the ticket; it comes back exactly as it was (status,
   assignee, timeline), without its old share link.
 - API: administrators get `GET /api/v1/deleted_tickets` and
