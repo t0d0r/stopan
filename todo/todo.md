@@ -180,7 +180,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] timeline order: oldest or newest first, site default in /admin/settings and per browser on the account page; newest first puts the composer on top (operator, 2026-10-27; specs/timeline.md "Order of the timeline")
 - [x] mobile rules from Apple / Material / WCAG: 44px targets, 16px fields, no sideways scrolling, no hover-only content (specs/mobile.md)
 - [x] production: deployed 8730df2 (omarchy theme, phone menu bar), after a database backup
-- [ ] admin dashboard warning for organizations whose Google account needs reconnecting (specs/mail-oauth.md "Failure")
+- [x] admin dashboard warning for organizations whose Google account needs reconnecting, live (specs/admin.md "Google accounts that need reconnecting", specs/mail-oauth.md "Failure")
 - [ ] Google Workspace mail accounts, phase 4: production OAuth client and first mailbox (specs/mail-oauth.md, specs/deploy.md)
 - [ ] Microsoft 365 mail accounts, the same phases, after Google (specs/mail-oauth.md)
 - [ ] reports later: CSV export, custom date ranges, business hours (specs/reports.md "Later")

@@ -11,6 +11,29 @@ Stat tiles: unsolved tickets, unassigned unsolved tickets, tickets solved
 in the last 7 days, organizations, agents (agents + admins), requesters.
 Links to the user and organization lists.
 
+### Google accounts that need reconnecting
+
+2026-11-10 (mail-oauth.md "Failure"). Google stops accepting an
+organization's refresh token when the password changes or access is
+taken back, and testing apps lose it after 7 days. The mailbox then
+stops being checked, which nobody notices from the ticket list.
+
+- When one or more organizations with `mail_auth: google` have their
+  connection marked `needs_reconnect`, the dashboard shows a warning
+  above the stat tiles, one line per organization, ordered by name:
+  "Acme: the Google account support@acme.example needs reconnecting.
+  New mail is not fetched and nothing is sent from that account until
+  then." The organization's name links to its page, where "Reconnect
+  with Google" is.
+- A red band like the deleted-ticket banner (tickets.md "Deleting"),
+  `role="status"`, with dark text on a light background in every
+  theme. Nothing shows while every account is connected.
+- The warning appears and goes away live (see "Live updates"):
+  `MailConnection` tells the `[:admin]` stream when it is created,
+  changed or deleted, and when a refused refresh token marks it.
+- Organization administrators do not see the dashboard. They see
+  "Needs reconnecting" on their organization's Mail panel, as before.
+
 ## Users - `/admin/users`
 
 | route | behaviour |
@@ -134,10 +157,12 @@ open admin page (dashboard, users, organizations, their forms) reloads
 itself within about a second when its data may have changed, keeping its
 URL and scroll position:
 
-- **Stream `[:admin]`**, told after a user, organization or membership is
-  created, changed or deleted (sign-ins and lockouts change users too, so
-  "last sign-in" stays current) and after every ticket event (the
-  dashboard's counts, busiest organizations and shared tickets).
+- **Stream `[:admin]`**, told after a user, organization, membership or
+  Google mail connection is created, changed or deleted (sign-ins and
+  lockouts change users too, so "last sign-in" stays current), when a
+  Google connection is marked for reconnecting, and after every ticket
+  event (the dashboard's counts, busiest organizations and shared
+  tickets).
 - `AdminChannel` accepts it only for administrators.
 - Signal only (`<turbo-stream action="refresh">`, debounced per stream);
   the page is fetched again over HTTP with the admin check.

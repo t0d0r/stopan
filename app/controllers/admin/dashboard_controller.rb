@@ -16,6 +16,10 @@ module Admin
       @shared_tickets = Ticket.visible_to(current_user).shared.order(shared_at: :desc).to_a
       @busiest = Organization.joins(:tickets).merge(Ticket.unsolved).group(:id).order(Arel.sql("count(tickets.id) DESC"))
                              .limit(5).select("organizations.*, count(tickets.id) AS unsolved_count")
+      # specs/admin.md "Google accounts that need reconnecting".
+      @needs_reconnect = Organization.where(mail_auth: "google").joins(:mail_connection)
+                                     .merge(MailConnection.where(status: "needs_reconnect"))
+                                     .includes(:mail_connection).order(:name).to_a
     end
   end
 end

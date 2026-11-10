@@ -646,6 +646,7 @@ en:
       no_users: "No users match."
       no_members: "No members yet. Requesters need a membership to open tickets."
       no_organizations_yet: "No organizations yet."
+      needs_reconnect_html: "%{organization}: the Google account %{email} needs reconnecting. New mail is not fetched and nothing is sent from that account until then."
       stats:
         unsolved: "unsolved tickets"
         unassigned: "unassigned"

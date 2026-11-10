@@ -1764,6 +1764,31 @@ input[type="search"].field-input {
   color: #2b2a26;
 }
 
+/* Google accounts that need reconnecting, on the admin dashboard; the
+   same light band as the deleted-ticket banner in every theme. */
+.desk > .callout.mail-warning {
+  margin: 0 0 16px;
+  border-left-color: var(--danger);
+  background: #fcd4e6;
+  color: #2b2a26;
+}
+
+.mail-warning__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mail-warning__list li + li {
+  margin-top: 6px;
+}
+
+.mail-warning__list a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .auth__hint {
   margin: -8px 0 16px;
   color: var(--ink-soft);

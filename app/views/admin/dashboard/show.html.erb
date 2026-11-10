@@ -4,6 +4,18 @@
   <%= render "admin/tabs" %>
 </div>
 
+<% if @needs_reconnect.any? %>
+  <%# specs/admin.md "Google accounts that need reconnecting". %>
+  <div class="callout mail-warning" role="status">
+    <ul class="mail-warning__list">
+      <% @needs_reconnect.each do |organization| %>
+        <li><%= t("ui.admin.needs_reconnect_html", organization: link_to(organization.name, admin_organization_path(organization)),
+                  email: organization.mail_connection.email) %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <div class="stats">
   <%= link_to tickets_path(view: "unsolved"), class: "sticky sticky--pink stat" do %>
     <span class="stat__value"><%= @stats[:unsolved] %></span><span class="stat__label"><%= t("ui.admin.stats.unsolved") %></span>

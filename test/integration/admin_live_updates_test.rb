@@ -29,4 +29,22 @@ class AdminLiveUpdatesTest < ActionDispatch::IntegrationTest
     ticket_change = admin_refreshes { tickets(:printer).apply_changes!({ priority: "urgent" }, actor: users(:agent)) }
     assert_equal [ "refresh" ], ticket_change
   end
+
+  test "a Google connection refreshes the admin pages when it changes or Google refuses its token" do
+    connection = nil
+    assert_equal [ "refresh" ], admin_refreshes {
+      connection = organizations(:acme).create_mail_connection!(provider: "google", email: "support@acme.example",
+                                                                refresh_token: "refresh-1", connected_at: Time.current)
+    }
+
+    refusing = Object.new
+    def refusing.refresh(_token) = raise(GoogleOauth::InvalidGrant, "invalid_grant")
+    MailConnection.oauth_client = refusing
+    MailConnection::TOKENS.clear
+    signals = admin_refreshes { assert_raises(GoogleOauth::InvalidGrant) { connection.access_token } }
+    assert_equal [ "refresh" ], signals
+    assert_equal "needs_reconnect", connection.reload.status
+  ensure
+    MailConnection.oauth_client = nil
+  end
 end

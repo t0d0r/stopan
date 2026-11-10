@@ -73,6 +73,9 @@ first, Internal, outgoing also through the account".
   `smtp_ready?`/`imap_ready?` are false then: the poller skips the
   mailbox and mail goes through the global SMTP. SMTP uses
   `authentication: :xoauth2`, IMAP `authenticate("XOAUTH2", ...)`.
+- The admin dashboard lists every organization whose Google account
+  needs reconnecting, live (admin.md "Google accounts that need
+  reconnecting").
 
 Today an organization's mail (organization-mail.md) signs in to SMTP and
 IMAP with a username and password. Google (Gmail, Google Workspace) and

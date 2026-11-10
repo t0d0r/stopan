@@ -649,6 +649,7 @@ de:
       no_users: "Keine passenden Benutzer."
       no_members: "Noch keine Mitglieder. Anfragesteller brauchen eine Mitgliedschaft, um Tickets zu eröffnen."
       no_organizations_yet: "Noch keine Organisationen."
+      needs_reconnect_html: "%{organization}: Das Google-Konto %{email} muss neu verbunden werden. Bis dahin wird keine neue Mail abgerufen und über dieses Konto nichts gesendet."
       stats:
         unsolved: "ungelöste Tickets"
         unassigned: "nicht zugewiesen"

@@ -3,6 +3,8 @@
 # token (encrypted). Access tokens are kept in memory until shortly
 # before they expire.
 class MailConnection < ApplicationRecord
+  include RefreshesAdminPages
+
   PROVIDERS = %w[google].freeze
   STATUSES = %w[connected needs_reconnect].freeze
   TOKENS = Concurrent::Map.new
@@ -38,6 +40,8 @@ class MailConnection < ApplicationRecord
   rescue GoogleOauth::InvalidGrant => e
     update_columns(status: "needs_reconnect", last_error: e.message, updated_at: Time.current)
     forget_token
+    # update_columns skips the commit callback; the dashboard warns about it.
+    RefreshesAdminPages.broadcast
     raise
   end
 

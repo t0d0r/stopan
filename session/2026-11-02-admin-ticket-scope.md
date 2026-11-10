@@ -538,6 +538,19 @@
   with no migrations, on the empty database from the reset; every
   check passed (specs/deploy.md "Update 2026-11-10 (revision
   98a5e93)"). Images kept: 98a5e93, 3a4f4c5 (v0.1.1), 0f74129.
+- Admin dashboard warning for Google accounts that need reconnecting
+  (specs/admin.md "Google accounts that need reconnecting"). Above the
+  stat tiles, one line per organization with `mail_auth: google` whose
+  connection is `needs_reconnect`, ordered by name, with the account
+  and a link to the organization page; a light red band like the
+  deleted-ticket banner, `role="status"`. `MailConnection` now tells
+  the `[:admin]` stream on commit, and `access_token` tells it after
+  marking the connection with `update_columns`, which skips callbacks;
+  the live update test fails without that. Files: the dashboard
+  controller and view, `mail_connection.rb`, `application.css`, the
+  three locales, test/controllers/admin/dashboard_controller_test.rb,
+  test/integration/admin_live_updates_test.rb. Checked in dev at 1280
+  and 390 px with two temporary connections, removed afterwards.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -626,11 +639,12 @@ limits in the drop zone, the joined copy fields, the new ticket busy
 fix, the mail view and files of deleted tickets for administrators,
 mailbox fetching by address and Outlook replies. The mailbox filter
 meets a real IMAP server once a mailbox is set up again after the
-reset. The open todo items left are larger or need the
-operator: headers of mail replies (organization-mail.md "Mail
-details"), the Google reconnect warning on the admin dashboard, the
-follower items marked later, bundled fonts for Omarchy, and the
-operator steps after the reset.
+reset. The dashboard warning for Google accounts that need
+reconnecting is committed and not deployed. The open todo items left
+are larger or need the operator: headers of mail replies
+(organization-mail.md "Mail details"), the follower items marked
+later, bundled fonts for Omarchy, and the operator steps after the
+reset.
 
 ## Security Note
 
