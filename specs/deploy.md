@@ -710,6 +710,39 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-10 (revision 98a5e93)
+
+`main` after v0.1.1, not a release; the empty database from the reset
+below stays. Since v0.1.1:
+
+- the file drop zone checks the count and size limits before sending;
+- copy fields are joined to their buttons;
+- the new ticket page's own organization pick is not counted as busy;
+- administrators open the mail view and files of a deleted ticket;
+- mailbox fetching takes only mail for the organization's address;
+- Outlook replies lose the earlier message.
+
+There were no migrations and `Gemfile.lock` did not change, so no
+database copy was made.
+
+- Checked:
+  - the container is healthy and runs the image tagged 98a5e93;
+  - no migration pending; one user and no organizations or tickets;
+    the app reports Rails 8.1.4.1;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401;
+  - signed out, `/search`, `/presence`, `/admin` and `/users/sign_up`
+    -> 302 to sign-in;
+  - `/cable` 101;
+  - HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure, HttpOnly
+    session cookie; the stylesheet is served gzip;
+  - the stylesheet has the drop zone error box and the public link
+    rules, and the script has the file limits;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: 98a5e93, 3a4f4c5, 0f74129.
+- Rollback: tag `localhost/stopan:3a4f4c5` (v0.1.1) as `latest` and
+  restart. The schema is the same, so the database needs no change.
+
 ## Database reset (2026-11-09)
 
 Production starts again from an empty database. Nothing is deleted:

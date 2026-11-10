@@ -368,6 +368,8 @@ approved "go in this order", all done 2026-10-27):
 - [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")
+- [x] production: deployed 98a5e93 (`main` after v0.1.1: file limits, joined copy fields, deleted ticket mail and files, mailbox address filter, Outlook replies), no migrations (specs/deploy.md "Update 2026-11-10 (revision 98a5e93)")
+- [ ] once a mailbox is set up again in production, check that "Check the mailbox" and the run take only mail for its address (specs/organization-mail.md "Fetching")
 
 ## Later (specs/roadmap.md)
 

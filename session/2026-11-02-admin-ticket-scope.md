@@ -534,6 +534,10 @@
   block right after it are not cut. Tests: English, German and
   Bulgarian Outlook replies; a forward inside a reply; a lone "From:"
   line in the text.
+- 2026-11-10: `main` pushed and deployed at 98a5e93 (not a release),
+  with no migrations, on the empty database from the reset; every
+  check passed (specs/deploy.md "Update 2026-11-10 (revision
+  98a5e93)"). Images kept: 98a5e93, 3a4f4c5 (v0.1.1), 0f74129.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -616,12 +620,13 @@
 
 ## Next step
 
-Production runs v0.1.1 on an empty database. The changes since
-(file limits in the drop zone and joined copy fields, the new ticket
-busy fix, the mail view and files of deleted tickets for
-administrators, mailbox fetching by address, Outlook replies) are
-committed but not deployed; the mailbox filter has not met a real
-IMAP server yet. The open todo items left are larger or need the
+Production runs 98a5e93 (`main` after v0.1.1) on an empty database.
+The changes since v0.1.1 are not in a release yet. They are the file
+limits in the drop zone, the joined copy fields, the new ticket busy
+fix, the mail view and files of deleted tickets for administrators,
+mailbox fetching by address and Outlook replies. The mailbox filter
+meets a real IMAP server once a mailbox is set up again after the
+reset. The open todo items left are larger or need the
 operator: headers of mail replies (organization-mail.md "Mail
 details"), the Google reconnect warning on the admin dashboard, the
 follower items marked later, bundled fonts for Omarchy, and the
