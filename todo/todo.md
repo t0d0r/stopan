@@ -137,7 +137,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] production: deployed 8961aaa (Google accounts for organization mail), after a database backup (specs/deploy.md)
 - [x] phone menu bar in three rows: icon and tools, section pills on their own row, search (specs/ui.md "Menu bar")
 - [x] themes: notes (Stickies) and omarchy (omamobile.org look, Tokyo Night / Catppuccin Latte), chosen on the account page (specs/ui.md "Themes")
-- [ ] themes later: bundle JetBrains Mono and Geist (OFL) so omarchy does not depend on the system's fonts (specs/ui.md "Themes")
+- [x] themes later: bundle JetBrains Mono and Geist (OFL) so omarchy does not depend on the system's fonts (specs/ui.md "Themes")
 - [x] site-wide default theme in /admin/settings; users may still pick their own (operator, 2026-10-27; specs/ui.md "Themes")
 - [x] Google mail setup as a step-by-step wizard instead of manual settings (operator, 2026-10-27; specs/mail-oauth.md "Setup wizard")
 - [x] wizard path for Gmail with an app password, no Google Cloud (operator, 2026-10-27; specs/mail-oauth.md "App password path")

@@ -6190,6 +6190,49 @@ turbo-frame {
    colours become tints of the surface in the palette's hue, so they keep
    their meaning. These rules come last so they win over the notes look. */
 
+/* Bundled faces (OFL 1.1, vendor/fonts/), served from this site, so the
+   CSP's font-src 'self' holds. A browser downloads a face only when a
+   page uses it, so the notes look loads none. */
+@font-face {
+  font-family: "Geist";
+  src: url("Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("JetBrainsMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("JetBrainsMono-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root[data-look="omarchy"] {
   --om-bg: #eff1f5;
   --om-deep: #e5e7eb;

@@ -677,10 +677,34 @@ https://omamobile.org/".
   with its title strip a stronger tint, so the colour still tells the
   kind while the page stays flat and dark or light as chosen. Text on
   them uses the theme's text colours.
-- Fonts: the CSP allows no font files from other sites, so the theme
-  names JetBrains Mono and Geist first and falls back to the system's
-  monospace (`ui-monospace`, SF Mono, Menlo, Consolas) and sans-serif
-  faces.
+- Fonts (bundled 2026-11-10): JetBrains Mono for the monospace parts and
+  Geist for the body, so the theme looks the same on every computer, not
+  only where the faces are installed. The CSP allows no font files from
+  other sites (`font-src 'self'`), so both are served from Stopan
+  itself and the CSP does not change.
+  - **Geist 1.8.2** (Vercel), the variable `Geist-Variable.woff2`,
+    weights 100-900, latin and Cyrillic. Taken from the npm package
+    `geist` 1.8.2, checked against the registry's sha512 before
+    copying. 1.8.2 was the newest release older than two weeks; 1.9.x
+    came out days before.
+  - **JetBrains Mono 2.304** (JetBrains), the static web fonts Regular,
+    Medium, SemiBold and Bold (`JetBrainsMono-*.woff2`), from the
+    project's GitHub release `JetBrainsMono-2.304.zip`, sha256
+    `6f6376c6ed2960ea8a963cd7387ec9d76e3f629125bc33d1fdcd7eb7012f7bbf`.
+    Heavier weights (800) use Bold.
+  - Both use the SIL Open Font License 1.1. The texts are in
+    `vendor/fonts/geist/LICENSE.txt` and
+    `vendor/fonts/jetbrains-mono/OFL.txt`, and the README names them.
+  - The files are in `app/assets/fonts/`. Propshaft serves them with a
+    digest in the name, through `@font-face` rules with
+    `font-display: swap`.
+  - A browser downloads a face only when a page uses it, so Notes pages
+    load no font file. The system's monospace (`ui-monospace`, SF Mono,
+    Menlo, Consolas) and sans-serif faces stay as fallbacks while the
+    files load.
+  - Checked by test/config/fonts_test.rb: the stylesheet points at every
+    face by its digested path and at no other site, and both licence
+    texts are present.
 - **Site default** (operator, 2026-10-27: "themes configurable for the
   whole site in settings, and users may change them if they want"): an
   administrator picks the theme for everyone on `/admin/settings`

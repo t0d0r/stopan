@@ -563,6 +563,18 @@
   test/controllers/mail_headers_test.rb. Checked in dev at 1280 and
   390 px with a temporary reply, deleted afterwards with its event
   and notification; the dev container's database is migrated.
+- The Omarchy theme's fonts are bundled (specs/ui.md "Themes").
+  Geist 1.8.2 comes from the npm package `geist`, checked against the
+  registry's sha512; it is the newest release older than two weeks.
+  JetBrains Mono 2.304 comes from the official GitHub release zip,
+  sha256 recorded in the spec. The five woff2 files (one Geist
+  variable, four JetBrains Mono weights, about 440 KB) are in
+  `app/assets/fonts/`, the OFL texts in `vendor/fonts/`, named in the
+  README, with `@font-face` rules in `application.css`. The CSP is
+  unchanged. Checked in dev with headless Chrome: the Notes look loads
+  no font file; the Omarchy look loads all five, and Geist draws
+  Cyrillic. The dev server needed a restart to see the new
+  `app/assets/fonts` directory. Test: test/config/fonts_test.rb.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -653,10 +665,10 @@ mailbox fetching by address and Outlook replies. The mailbox filter
 meets a real IMAP server once a mailbox is set up again after the
 reset. The dashboard warning for Google accounts that need
 reconnecting and the headers of mail replies are committed and not
-deployed; the reply headers bring a migration, so the deploy makes a
-database copy first. The open todo items left are larger or need the
-operator: the follower items marked later, bundled fonts for Omarchy,
-and the operator steps after the reset.
+deployed, and so are the bundled Omarchy fonts. The reply headers
+bring a migration, so the deploy makes a database copy first. The open
+todo items left are larger or need the operator: the follower items
+marked later, and the operator steps after the reset.
 
 ## Security Note
 

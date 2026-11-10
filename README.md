@@ -176,6 +176,12 @@ own licenses.
 The icons are Heroicons 2.2.0 by Tailwind Labs, MIT License
 (`vendor/heroicons/LICENSE`), copied into `app/helpers/icons_helper.rb`.
 
+The Omarchy theme bundles two fonts in `app/assets/fonts/`, both under the
+SIL Open Font License 1.1:
+
+- Geist 1.8.2 by Vercel (`vendor/fonts/geist/LICENSE.txt`);
+- JetBrains Mono 2.304 by JetBrains (`vendor/fonts/jetbrains-mono/OFL.txt`).
+
 ## Security Note
 
 Ticket text and attachments are customer data: keep `storage/` backed up and
