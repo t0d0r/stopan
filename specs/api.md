@@ -128,7 +128,8 @@ other browser preferences, creating tokens.
   `share_url` when shared and the user may share), `mail_headers` (staff)
   and `next_statuses` (staff).
 - **Comment:** `id, body, internal, markdown, source, author,
-  created_at, edited_at, files`.
+  created_at, edited_at, files`, and `mail_headers` (staff) on a reply
+  that came in by mail (organization-mail.md "Mail details").
 - **Event:** `id, action, from, to, internal, actor, created_at,
   comment` (for replies and notes).
 - **File:** `id, filename, content_type, byte_size, url` (the API

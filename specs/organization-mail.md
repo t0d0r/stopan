@@ -234,7 +234,26 @@ start with the important things from the mail headers".
   on phones the date goes under the sender and the details stack.
 - Not on shared pages, not for requesters and not in emails: the headers
   name other recipients.
-- Replies that come in by mail keep no headers yet (todo).
+
+Replies by mail (2026-11-10). Staff need the same facts for a reply, for
+example who else was copied or which address the sender wrote from:
+
+- A reply that comes in by mail (a requester's, a Cc's or a staff
+  member's, "Processing a message" step 3) keeps the same fields, with
+  the same limits, in `comments.mail_headers` (JSON). Its `subject` is
+  the reply's own, with `Re:`. Replies written in Stopan, and replies
+  from before, have none and show nothing.
+- On the ticket page, **staff only**, such a reply ends with a closed
+  "Mail details" disclosure (`<details>`) after its text and files. It
+  lists the same fields as the request's "Details": From, To, Cc,
+  Reply-To (only when different from From), the full date with the
+  sender's UTC offset, Subject and Message-ID. There is no avatar or
+  sender line: the reply's title strip already names the author and
+  says "by email". Kept closed, so a thread of mail replies reads as a
+  conversation.
+- The API gives staff `mail_headers` on such comments (api.md).
+- Same limits as the request: not on shared pages, not for requesters,
+  not in emails, and the copy box copies only the reply's text.
 
 ### HTML view
 

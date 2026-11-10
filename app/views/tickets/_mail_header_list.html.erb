@@ -1,0 +1,30 @@
+<%# The fields of a mail's headers as a list, for the request's "Details"
+    and a reply's "Mail details" (specs/organization-mail.md "Mail details").
+    Staff only. Locals: headers, and optionally sent (the parsed date). %>
+<% sent = local_assigns.fetch(:sent) { mail_header_time(headers["date"]) } %>
+<dl class="mail-headers__list">
+  <dt><%= t("ui.mail_headers.from") %></dt>
+  <dd><%= Array(headers["from"]).join(", ") %></dd>
+  <% %w[to cc].each do |field| %>
+    <% if headers[field].present? %>
+      <dt><%= t("ui.mail_headers.#{field}") %></dt>
+      <dd><%= headers[field].join(", ") %></dd>
+    <% end %>
+  <% end %>
+  <% if headers["reply_to"].present? && !Array(headers["from"]).include?(headers["reply_to"]) %>
+    <dt><%= t("ui.mail_headers.reply_to") %></dt>
+    <dd><%= headers["reply_to"] %></dd>
+  <% end %>
+  <% if sent %>
+    <dt><%= t("ui.mail_headers.date") %></dt>
+    <dd><%= l(sent, format: :long) %> (UTC<%= sent.strftime("%:z") %>)</dd>
+  <% end %>
+  <% if headers["subject"].present? %>
+    <dt><%= t("ui.mail_headers.subject") %></dt>
+    <dd><%= headers["subject"] %></dd>
+  <% end %>
+  <% if headers["message_id"].present? %>
+    <dt><%= t("ui.mail_headers.message_id") %></dt>
+    <dd class="mail-headers__id"><%= headers["message_id"] %></dd>
+  <% end %>
+</dl>

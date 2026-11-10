@@ -174,7 +174,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] production: deployed 50475d3 (documentation only) after a database backup (specs/deploy.md)
 - [x] admin: flush all tickets of an organization after typing its name, keeping its settings; numbers never reused (operator, 2026-10-27; specs/admin.md "Flush all tickets of an organization")
 - [x] requester email on the ticket page and the profile copies on click instead of opening the mail program (operator, 2026-10-27; specs/ui.md "Emails copy on click")
-- [ ] mail replies: keep their headers too (specs/organization-mail.md "Mail details")
+- [x] mail replies: keep their headers too, shown to staff under "Mail details" and in the API (specs/organization-mail.md "Mail details")
 - [x] requesters see only their own tickets; "My organizations" tab, organization list stream and colleague notice removed (operator, 2026-10-27; specs/roles.md)
 - [x] long original request collapses with "Show the whole request" (operator, 2026-10-27; specs/timeline.md "Long requests collapse")
 - [x] timeline order: oldest or newest first, site default in /admin/settings and per browser on the account page; newest first puts the composer on top (operator, 2026-10-27; specs/timeline.md "Order of the timeline")

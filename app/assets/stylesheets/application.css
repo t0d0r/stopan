@@ -3950,6 +3950,33 @@ turbo-frame {
   }
 }
 
+/* A reply that came in by mail: its headers behind "Mail details",
+   closed, after the text and files (specs/organization-mail.md "Mail
+   details"). */
+.mail-details {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.mail-details summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: var(--accent);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mail-details .mail-headers__list {
+  margin-left: 0;
+}
+
+@media (max-width: 760px) {
+  .mail-details summary {
+    min-height: 44px;
+  }
+}
+
 /* The mail as HTML in a sealed frame, with tabs to the text
    (specs/organization-mail.md "HTML view"). */
 .mail-view__tabs {

@@ -58,12 +58,14 @@ module ApiRepresentation
   end
 
   def comment_json(ticket, comment)
-    {
+    json = {
       id: comment.id, body: comment.body, internal: comment.internal?, markdown: comment.markdown?,
       source: comment.source, author: user_json(comment.author), created_at: time_json(comment.created_at),
       edited_at: time_json(comment.edited_at),
       files: comment.files.attachments.map { |file| file_json(ticket, file) }
     }
+    json[:mail_headers] = comment.mail_headers if current_user.staff? && comment.mail_headers.present?
+    json
   end
 
   def file_json(ticket, attachment)

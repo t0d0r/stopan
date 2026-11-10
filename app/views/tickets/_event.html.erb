@@ -23,6 +23,13 @@
             <% end %>
           </ul>
         <% end %>
+        <%# Staff only, never on shared pages (specs/organization-mail.md "Mail details"). %>
+        <% if !shared && current_user&.staff? && comment.mail_headers.present? %>
+          <details class="mail-details">
+            <summary><%= t("ui.mail_headers.title") %></summary>
+            <%= render "tickets/mail_header_list", headers: comment.mail_headers %>
+          </details>
+        <% end %>
       </div>
     </article>
   </li>

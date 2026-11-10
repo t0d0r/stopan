@@ -74,7 +74,8 @@ class MailboxMessage
 
   def reply(ticket, user)
     files, rejected = attachments
-    comment = ticket.add_comment(author: user, body: body_text(reply: true, rejected: rejected), files: files, source: "email")
+    comment = ticket.add_comment(author: user, body: body_text(reply: true, rejected: rejected), files: files, source: "email",
+                                 mail_headers: mail_headers)
     raise ActiveRecord::RecordInvalid, comment unless comment.persisted?
 
     :reply
@@ -111,8 +112,8 @@ class MailboxMessage
   HEADER_LIMIT = 300
   ADDRESS_LIMIT = 20
 
-  # The important headers for staff (specs/organization-mail.md "Mail
-  # details"); empty ones are left out.
+  # The important headers for staff, of a new ticket or a reply
+  # (specs/organization-mail.md "Mail details"); empty ones are left out.
   def mail_headers
     {
       "from" => addresses(:from), "to" => addresses(:to), "cc" => addresses(:cc),

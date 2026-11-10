@@ -551,6 +551,18 @@
   three locales, test/controllers/admin/dashboard_controller_test.rb,
   test/integration/admin_live_updates_test.rb. Checked in dev at 1280
   and 390 px with two temporary connections, removed afterwards.
+- Replies by mail keep their headers (specs/organization-mail.md
+  "Mail details"). Migration `20261110090000` adds
+  `comments.mail_headers` (JSON), filled by `MailboxMessage#reply`
+  with the fields and limits of a new ticket's headers. Staff see a
+  closed "Mail details" disclosure at the end of such a reply; the
+  list of fields is now the partial `tickets/_mail_header_list`,
+  shared with the request's "Details". The API gives staff
+  `mail_headers` on such comments (specs/api.md). Requesters, shared
+  pages and emails get none. Tests in
+  test/controllers/mail_headers_test.rb. Checked in dev at 1280 and
+  390 px with a temporary reply, deleted afterwards with its event
+  and notification; the dev container's database is migrated.
 - Scorecard after these changes: 5.1 (from 3.8). Pinned-Dependencies,
   License and Security-Policy are now 10; GitHub detects the license as
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
@@ -640,11 +652,11 @@ fix, the mail view and files of deleted tickets for administrators,
 mailbox fetching by address and Outlook replies. The mailbox filter
 meets a real IMAP server once a mailbox is set up again after the
 reset. The dashboard warning for Google accounts that need
-reconnecting is committed and not deployed. The open todo items left
-are larger or need the operator: headers of mail replies
-(organization-mail.md "Mail details"), the follower items marked
-later, bundled fonts for Omarchy, and the operator steps after the
-reset.
+reconnecting and the headers of mail replies are committed and not
+deployed; the reply headers bring a migration, so the deploy makes a
+database copy first. The open todo items left are larger or need the
+operator: the follower items marked later, bundled fonts for Omarchy,
+and the operator steps after the reset.
 
 ## Security Note
 
