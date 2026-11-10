@@ -667,8 +667,11 @@ reset. The dashboard warning for Google accounts that need
 reconnecting and the headers of mail replies are committed and not
 deployed, and so are the bundled Omarchy fonts. The reply headers
 bring a migration, so the deploy makes a database copy first. The open
-todo items left are larger or need the operator: the follower items
-marked later, and the operator steps after the reset.
+todo items left are larger or need the operator. The follower items
+marked later are under followers.md "Not in this phase" and each needs
+a decision first: requesters adding Cc, a Cc leaving, people outside
+the organization, followers in the API. The operator steps after the
+reset remain.
 
 ## Security Note
 
