@@ -710,6 +710,35 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 87769cd)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since b482106: people in Cc leave a ticket from the People panel
+or from the link in their email, followers stop following from theirs,
+and the API has the followers (followers.md "Leaving", "In the API").
+
+There were no migrations and `Gemfile.lock` did not change, so no
+database copy was made.
+
+- Checked:
+  - the container is healthy and runs the image tagged 87769cd;
+  - schema 20261110090000, no migration pending; one user and no
+    organizations or tickets; the app reports Rails 8.1.4.1;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401;
+  - the new routes answer: a made-up `/leave/<token>` is 404 without
+    sign-in, and `POST /api/v1/tickets/:number/followers` without a
+    token is 401;
+  - signed out, `/search`, `/presence`, `/admin` and `/users/sign_up`
+    -> 302 to sign-in;
+  - `/cable` 101;
+  - HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure, HttpOnly
+    session cookie; the stylesheet is served gzip;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: 87769cd, b482106, 98a5e93.
+- Rollback: tag `localhost/stopan:b482106` as `latest` and restart. The
+  schema is the same, so the database needs no change.
+
 ## Update 2026-11-11 (revision b482106)
 
 `main` after v0.1.1, not a release, on the empty database from the

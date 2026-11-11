@@ -367,6 +367,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] /tickets/new busy for the live refresh: idle on a plain load; after a failed submit the script's pick of the requester's only organization counted as a change, now it becomes the starting value (specs/tickets.md "Creating")
 - [x] a person in Cc leaves: "Leave Cc" on the People panel, and a link at the end of every follower's and Cc's email to a confirmation page without sign-in (specs/followers.md "Leaving")
 - [x] followers in the API: `followers` and `cc_suggestions` in the ticket, `POST` and `DELETE /api/v1/tickets/:number/followers` (specs/followers.md "In the API", specs/api.md)
+- [x] production: deployed 87769cd (leaving a ticket, followers in the API), no migrations (specs/deploy.md "Update 2026-11-12 (revision 87769cd)")
 - [ ] later: requesters adding Cc themselves, people outside the organization (specs/followers.md "Not in this phase")
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")

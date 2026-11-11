@@ -611,6 +611,10 @@
   Chrome as a temporary Cc: the panel button, its confirmation, and
   the leave page at 390 px; the temporary user and its rows were
   removed afterwards.
+- 2026-11-12: `main` pushed and deployed at 87769cd (not a release),
+  with no migrations; every check passed, the new routes included
+  (specs/deploy.md "Update 2026-11-12 (revision 87769cd)"). Images
+  kept: 87769cd, b482106, 98a5e93.
 
 ## Decisions
 
@@ -688,14 +692,14 @@
 
 ## Next step
 
-Production runs b482106 (`main` after v0.1.1) on an empty database.
+Production runs 87769cd (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
 fetching by address, Outlook replies, the dashboard warning for Google
 accounts that need reconnecting, the headers of mail replies and the
-bundled Omarchy fonts. Leaving a ticket and followers in the API are
-committed and not deployed; they bring no migration. The mailbox
+bundled Omarchy fonts, leaving a ticket and followers in the API. The
+mailbox
 filter meets a real IMAP server once a mailbox is set up again after
 the reset. Two follower items stay under followers.md "Not in this
 phase" and each needs a decision first: requesters adding Cc
