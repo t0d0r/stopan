@@ -710,6 +710,45 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-11 (revision b482106)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since 98a5e93:
+
+- the admin dashboard warns about Google accounts that need
+  reconnecting (admin.md);
+- replies by mail keep their headers, which staff open under "Mail
+  details" (migration `AddMailHeadersToComments`, additive;
+  organization-mail.md "Mail details");
+- the Omarchy theme's fonts, Geist and JetBrains Mono, are served from
+  the app itself (ui.md "Themes").
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-98a5e93.sqlite3` (mode 600; 1 user, no
+  organizations or tickets, schema 20261102120100).
+- Checked:
+  - the container is healthy and runs the image tagged b482106;
+  - the migration ran: schema 20261110090000, `comments.mail_headers`
+    present, none pending; one user and no organizations or tickets;
+    the app reports Rails 8.1.4.1;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401;
+  - signed out, `/search`, `/presence`, `/admin` and `/users/sign_up`
+    -> 302 to sign-in;
+  - `/cable` 101;
+  - HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure, HttpOnly
+    session cookie; the stylesheet is served gzip;
+  - the stylesheet has the dashboard warning, the "Mail details" rules
+    and five `@font-face` rules with `font-display: swap`; each of the
+    five fonts answers 200 as `font/woff2` from the app's own digested
+    path, and the stylesheet names no external font;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: b482106, 98a5e93, 3a4f4c5.
+- Rollback: tag `localhost/stopan:98a5e93` as `latest` and restart. The
+  extra `comments.mail_headers` column does not disturb the older code;
+  for the old schema too, put the copy above back in place of
+  `~/storage/production.sqlite3` with the service stopped.
+
 ## Update 2026-11-10 (revision 98a5e93)
 
 `main` after v0.1.1, not a release; the empty database from the reset

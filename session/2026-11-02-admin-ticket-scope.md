@@ -580,6 +580,12 @@
   BSD 2-Clause. Still 0: Maintained (repository younger than 90 days),
   Code-Review, Branch-Protection, SAST, Dependency-Update-Tool, Fuzzing,
   CII-Best-Practices.
+- 2026-11-11: `main` pushed and deployed at b482106 (not a release):
+  the dashboard warning, the headers of mail replies and the bundled
+  fonts. A `VACUUM INTO` copy of the database came first because of
+  the migration `20261110090000`; the migration ran and every check
+  passed (specs/deploy.md "Update 2026-11-11 (revision b482106)").
+  Images kept: b482106, 98a5e93, 3a4f4c5 (v0.1.1).
 
 ## Decisions
 
@@ -657,16 +663,14 @@
 
 ## Next step
 
-Production runs 98a5e93 (`main` after v0.1.1) on an empty database.
+Production runs b482106 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet. They are the file
 limits in the drop zone, the joined copy fields, the new ticket busy
 fix, the mail view and files of deleted tickets for administrators,
-mailbox fetching by address and Outlook replies. The mailbox filter
-meets a real IMAP server once a mailbox is set up again after the
-reset. The dashboard warning for Google accounts that need
-reconnecting and the headers of mail replies are committed and not
-deployed, and so are the bundled Omarchy fonts. The reply headers
-bring a migration, so the deploy makes a database copy first. The open
+mailbox fetching by address, Outlook replies, the dashboard warning
+for Google accounts that need reconnecting, the headers of mail
+replies and the bundled Omarchy fonts. The mailbox filter meets a real
+IMAP server once a mailbox is set up again after the reset. The open
 todo items left are larger or need the operator. The follower items
 marked later are under followers.md "Not in this phase" and each needs
 a decision first: requesters adding Cc, a Cc leaving, people outside
