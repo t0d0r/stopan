@@ -355,6 +355,7 @@ de:
       follower_self_removed: "%{actor} folgt nicht mehr"
       follower_removed: "%{actor} hat %{name} als Folgenden entfernt"
       cc_removed: "%{actor} hat %{name} aus der Kopie entfernt"
+      cc_left: "%{actor} hat die Kopie verlassen"
       the_requester: "den Anfragesteller"
       mail_switched_on: "%{actor} hat E-Mails an den Anfragesteller eingeschaltet"
       mail_switched_off: "%{actor} hat E-Mails an den Anfragesteller ausgeschaltet"
@@ -399,6 +400,9 @@ de:
       add_to_cc: "In Kopie setzen"
       add_to_cc_label: "%{email} in Kopie setzen"
       cc_tag: "Kopie"
+      leave_cc: "Kopie verlassen"
+      leave_title: "Die Kopie verlassen?"
+      leave_body: "Sie erhalten keine E-Mails mehr zu diesem Ticket, und es verschwindet aus „Meine Tickets“."
       refused:
         invalid: "Das ist keine gültige E-Mail-Adresse."
         staff: "Die Adresse gehört zum Team: füge die Person als Folgende hinzu."
@@ -721,6 +725,13 @@ de:
       missing_hint: "Prüfen Sie die Adresse, oder kontaktieren Sie die Organisation auf anderem Weg."
       address: "Öffentliche Anfrageseite"
       open: "Öffnen"
+    leave:
+      title: "Ticket %{reference}"
+      cc_intro: "Sie sind bei Ticket %{reference} in Kopie. Wenn Sie die Kopie verlassen, erhalten Sie keine E-Mails mehr dazu und können es nicht mehr öffnen."
+      follower_intro: "Sie folgen Ticket %{reference}. Wenn Sie nicht mehr folgen, erhalten Sie keine E-Mails mehr dazu, außer es ist Ihnen zugewiesen."
+      invalid_title: "Dieser Link ist nicht mehr gültig"
+      invalid_hint: "Sie sind nicht mehr bei diesem Ticket, oder der Link ist unvollständig."
+
     magic:
       request_title: "Anmeldelink per E-Mail anfordern"
       request_intro: "Anfragesteller können sich statt mit einem Passwort mit einem einmaligen Link anmelden. Geben Sie Ihre E-Mail-Adresse ein, und wir senden Ihnen einen Link."
@@ -1105,6 +1116,9 @@ de:
       reply_by_email_staff: "Eine Antwort auf diese E-Mail wird dem Ticket als öffentliche Antwort hinzugefügt, die der Anfragende sieht; interne Notizen schreiben Sie auf der Ticketseite."
       no_reply: "Antworten auf diese E-Mail werden nicht gelesen; bitte antworten Sie auf der Ticketseite."
       unsubscribe: "Um diese E-Mails abzubestellen, ändern Sie die Einstellung auf Ihrer Kontoseite:"
+      leave:
+        follower: "Um diesem Ticket nicht mehr zu folgen:"
+        cc: "Um die Kopie zu verlassen und diese E-Mails abzubestellen:"
 
   flash:
     ticket_created: "Ticket %{reference} wurde erstellt."
@@ -1131,6 +1145,8 @@ de:
     cc_removed: "%{name} wurde aus der Kopie entfernt."
     following: "Du folgst diesem Ticket."
     not_following: "Du folgst diesem Ticket nicht mehr."
+    cc_left: "Sie sind bei %{reference} nicht mehr in Kopie."
+    unfollowed: "Sie folgen %{reference} nicht mehr."
     follower_added: "%{name} folgt jetzt diesem Ticket."
     follower_removed: "%{name} folgt diesem Ticket nicht mehr."
     org_admin_granted: "%{name} ist jetzt Administrator von %{organization}."

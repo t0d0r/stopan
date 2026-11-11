@@ -6,6 +6,10 @@ class TicketFollower < ApplicationRecord
   belongs_to :added_by, class_name: "User", optional: true
 
   validates :user_id, uniqueness: { scope: :ticket_id }
+
+  # The link in the email to leave the ticket (specs/followers.md
+  # "Leaving"): no expiry; it stops working once the row is gone.
+  generates_token_for :leave
   validate :user_may_follow
 
   scope :staff, -> { joins(:user).merge(User.staff) }

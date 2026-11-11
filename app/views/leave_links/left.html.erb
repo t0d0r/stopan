@@ -1,0 +1,7 @@
+<% content_for :title, t("ui.leave.title", reference: @ticket.reference) %>
+<div class="sticky sticky--yellow auth">
+  <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
+  <div class="auth__body">
+    <h2><%= t(@cc ? "flash.cc_left" : "flash.unfollowed", reference: @ticket.reference) %></h2>
+  </div>
+</div>

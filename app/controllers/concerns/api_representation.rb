@@ -43,10 +43,27 @@ module ApiRepresentation
       json[:mail_headers] = ticket.mail_headers
       json[:next_statuses] = ticket.next_statuses
     end
+    json[:followers] = followers_json(ticket)
+    json[:cc_suggestions] = ticket.cc_suggestions if current_user.staff? && policy.update?
     events = TicketEvent.visible_to(current_user).where(ticket: ticket)
                         .includes(:actor, comment: [ :author, { files_attachments: :blob } ]).order(:created_at, :id)
     json[:timeline] = events.map { |event| event_json(ticket, event) }
     json
+  end
+
+  # Staff get every row; the requester and Cc only the Cc names, as the
+  # People panel shows them (specs/followers.md "In the API").
+  def followers_json(ticket)
+    followers = ticket.ticket_followers.includes(:user, :added_by).order(:created_at, :id).to_a
+    followers = followers.select(&:cc?) unless current_user.staff?
+    followers.map { |follower| follower_json(follower) }
+  end
+
+  def follower_json(follower)
+    json = { id: follower.id, kind: follower.cc? ? "cc" : "staff", user: user_json(follower.user) }
+    return json unless current_user.staff?
+
+    json.merge(added_by: user_json(follower.added_by), created_at: time_json(follower.created_at))
   end
 
   def event_json(ticket, event)

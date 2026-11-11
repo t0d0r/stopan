@@ -1,5 +1,6 @@
 <%# Staff followers and people in Cc (specs/followers.md "The panel"). Staff
-    see and manage both; the requester and Cc see the Cc names only. %>
+    see and manage both; the requester and Cc see the Cc names only, and a
+    person in Cc may leave. %>
 <% staff = current_user.staff? %>
 <% manage = staff && policy.update? %>
 <% cc = ticket.cc_users.to_a %>
@@ -72,6 +73,15 @@
         </ul>
       <% elsif staff %>
         <p class="field-hint"><%= t("ui.followers.no_cc") %></p>
+      <% end %>
+      <%# A person in Cc leaves (specs/followers.md "Leaving"). %>
+      <% mine_cc = ticket.ticket_followers.find_by(user_id: current_user.id) unless staff %>
+      <% if mine_cc %>
+        <%= button_to ticket_follower_path(ticket, mine_cc), method: :delete, class: "btn btn--block",
+                      form: { data: confirm_data(title: t("ui.followers.leave_title"), body: t("ui.followers.leave_body"),
+                                                 button: t("ui.followers.leave_cc")) } do %>
+          <%= icon :eye_off %> <%= t("ui.followers.leave_cc") %>
+        <% end %>
       <% end %>
       <% if manage %>
         <%= form_with url: ticket_followers_path(ticket), class: "followers__add input-group" do %>

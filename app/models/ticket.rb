@@ -208,18 +208,28 @@ class Ticket < ApplicationRecord
     add_follower(user, actor: actor, kind: "staff")
   end
 
+  # A staff member of the organization by id, themselves or a colleague, as
+  # the panel and the API add them. Returns the follower, or nil with the
+  # reason in errors when they are on the ticket already.
+  def add_staff_follower!(user_id, actor:)
+    user = Ticket.assignable_staff(organization_id).find(user_id)
+    return follower_refused(:taken) if ticket_followers.exists?(user_id: user.id)
+
+    follow!(user, actor: actor)
+  end
+
   # Someone from the customer side in Cc, found or created by address like
   # an email to the mailbox would (specs/followers.md "Adding to Cc by
   # email"). Returns the follower, or nil with the reason in errors.
   def add_cc!(email, actor:)
     address = email.to_s.strip.downcase
-    return cc_refused(:invalid) unless address.match?(URI::MailTo::EMAIL_REGEXP)
+    return follower_refused(:invalid) unless address.match?(URI::MailTo::EMAIL_REGEXP)
 
     user = User.find_by("lower(email) = ?", address)
-    return cc_refused(:staff) if user&.staff?
-    return cc_refused(:deactivated) if user&.deactivated?
-    return cc_refused(:requester) if user && user.id == requester_id
-    return cc_refused(:taken) if user && ticket_followers.exists?(user_id: user.id)
+    return follower_refused(:staff) if user&.staff?
+    return follower_refused(:deactivated) if user&.deactivated?
+    return follower_refused(:requester) if user && user.id == requester_id
+    return follower_refused(:taken) if user && ticket_followers.exists?(user_id: user.id)
 
     transaction do
       user ||= User.create!(name: address.split("@").first.first(100), email: address, password: SecureRandom.base58(32),
@@ -240,6 +250,12 @@ class Ticket < ApplicationRecord
     known = User.where("lower(email) IN (?)", addresses)
     taken = known.where(id: ticket_followers.select(:user_id)).or(known.staff).pluck(:email).map(&:downcase)
     (addresses - own - taken).select { |address| address.match?(URI::MailTo::EMAIL_REGEXP) }.first(10)
+  end
+
+  # The person takes themself off the ticket: on the panel, by the link in
+  # their email or through the API (specs/followers.md "Leaving").
+  def leave!(follower)
+    remove_follower!(follower, actor: follower.user)
   end
 
   def remove_follower!(follower, actor:)
@@ -424,7 +440,7 @@ class Ticket < ApplicationRecord
     end
   end
 
-  def cc_refused(reason)
+  def follower_refused(reason)
     errors.add(:base, I18n.t("ui.followers.refused.#{reason}"))
     nil
   end

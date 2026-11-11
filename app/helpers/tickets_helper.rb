@@ -273,10 +273,12 @@ module TicketsHelper
   end
 
   # "Maria follows the ticket", "... added Petar as a follower", "... added
-  # Ivan to Cc" and the removals (specs/followers.md "Events").
+  # Ivan to Cc", the removals and "Ivan left Cc" (specs/followers.md "Events").
   def follower_sentence(event, actor)
     removed = event.action == "follower_removed"
-    if event.from_value == "cc"
+    if event.from_value == "cc" && removed && event.actor_id.to_s == event.to_value
+      t("ui.timeline.cc_left", actor: actor)
+    elsif event.from_value == "cc"
       t(removed ? "ui.timeline.cc_removed" : "ui.timeline.cc_added", actor: actor, name: assignee_name(event.to_value))
     elsif event.actor_id.to_s == event.to_value
       t(removed ? "ui.timeline.follower_self_removed" : "ui.timeline.follower_self", actor: actor)

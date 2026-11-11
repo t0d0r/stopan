@@ -365,7 +365,9 @@ approved "go in this order", all done 2026-10-27):
 - [x] every button as high as the fields, except .btn--small (specs/ui.md "Form fields")
 - [x] production: deployed fa54a8b (composer layout, searchable selects, code copy, wordmark, button heights), no migrations (specs/deploy.md)
 - [x] /tickets/new busy for the live refresh: idle on a plain load; after a failed submit the script's pick of the requester's only organization counted as a change, now it becomes the starting value (specs/tickets.md "Creating")
-- [ ] later: requesters adding Cc, a Cc leaving, people outside the organization, followers in the API
+- [x] a person in Cc leaves: "Leave Cc" on the People panel, and a link at the end of every follower's and Cc's email to a confirmation page without sign-in (specs/followers.md "Leaving")
+- [x] followers in the API: `followers` and `cc_suggestions` in the ticket, `POST` and `DELETE /api/v1/tickets/:number/followers` (specs/followers.md "In the API", specs/api.md)
+- [ ] later: requesters adding Cc themselves, people outside the organization (specs/followers.md "Not in this phase")
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")
 - [x] production: deployed 98a5e93 (`main` after v0.1.1: file limits, joined copy fields, deleted ticket mail and files, mailbox address filter, Outlook replies), no migrations (specs/deploy.md "Update 2026-11-10 (revision 98a5e93)")

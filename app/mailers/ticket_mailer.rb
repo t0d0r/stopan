@@ -33,6 +33,7 @@ class TicketMailer < ApplicationMailer
     @comment = @events.find(&:comment_event?)&.comment
     @status_event = @events.find { |event| event.action == "status_changed" }
     @reason = notification_reason
+    @leave_url = leave_url
     @share_link = @ticket.share_link_for(@recipient)
     @ticket_link = @share_link ? shared_ticket_url(@ticket.share_token) : ticket_url(@ticket)
 
@@ -102,6 +103,14 @@ class TicketMailer < ApplicationMailer
     elsif @ticket.ticket_followers.exists?(user_id: @recipient.id) then @recipient.staff? ? "follower" : "cc"
     else "subscriber"
     end
+  end
+
+  # Followers and Cc may leave from the email (specs/followers.md "Leaving").
+  def leave_url
+    return unless @reason.in?(%w[follower cc])
+
+    follower = @ticket.ticket_followers.find_by(user_id: @recipient.id)
+    leave_link_url(follower.generate_token_for(:leave)) if follower
   end
 
   # The requester and Cc get the customer's wording (specs/followers.md).

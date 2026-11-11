@@ -352,6 +352,7 @@ en:
       follower_self_removed: "%{actor} stopped following"
       follower_removed: "%{actor} removed %{name} as a follower"
       cc_removed: "%{actor} removed %{name} from Cc"
+      cc_left: "%{actor} left Cc"
       the_requester: "the requester"
       mail_switched_on: "%{actor} turned emails to the requester on"
       mail_switched_off: "%{actor} turned emails to the requester off"
@@ -396,6 +397,9 @@ en:
       add_to_cc: "Add to Cc"
       add_to_cc_label: "Add %{email} to Cc"
       cc_tag: "Cc"
+      leave_cc: "Leave Cc"
+      leave_title: "Leave the copy (Cc)?"
+      leave_body: "You will no longer get emails about this ticket, and it leaves My tickets."
       refused:
         invalid: "That is not a valid email address."
         staff: "That address belongs to staff: add them as a follower."
@@ -718,6 +722,13 @@ en:
       missing_hint: "Check the address, or contact the organization another way."
       address: "Public request page"
       open: "Open"
+    leave:
+      title: "Ticket %{reference}"
+      cc_intro: "You are in copy (Cc) on ticket %{reference}. If you leave, you no longer get its emails and can no longer open it."
+      follower_intro: "You follow ticket %{reference}. If you stop, you no longer get its emails, unless it is assigned to you."
+      invalid_title: "This link is no longer valid"
+      invalid_hint: "You are no longer on this ticket, or the link is incomplete."
+
     magic:
       request_title: "Email me a sign-in link"
       request_intro: "Requesters can sign in with a one-time link instead of a password. Enter your email address and we send you a link."
@@ -1102,6 +1113,9 @@ en:
       reply_by_email_staff: "A reply to this email is added to the ticket as a public reply that the requester sees; write internal notes on the ticket page."
       no_reply: "Replies to this email are not read; please answer on the ticket page."
       unsubscribe: "To stop these emails, change the setting on your account page:"
+      leave:
+        follower: "To stop following this ticket:"
+        cc: "To leave the copy (Cc) and stop these emails:"
 
   flash:
     ticket_created: "Ticket %{reference} was created."
@@ -1128,6 +1142,8 @@ en:
     cc_removed: "%{name} was removed from Cc."
     following: "You follow this ticket."
     not_following: "You no longer follow this ticket."
+    cc_left: "You are no longer in copy on %{reference}."
+    unfollowed: "You no longer follow %{reference}."
     follower_added: "%{name} now follows this ticket."
     follower_removed: "%{name} no longer follows this ticket."
     org_admin_granted: "%{name} is now an administrator of %{organization}."

@@ -95,6 +95,10 @@ Rails.application.routes.draw do
   post "support/:slug" => "public_requests#create"
   get "support/:slug/thanks" => "public_requests#thanks", as: :public_request_thanks
 
+  # Leaving a ticket from the link in an email (specs/followers.md "Leaving").
+  get "leave/:token" => "leave_links#show", as: :leave_link
+  post "leave/:token" => "leave_links#create"
+
   # One-time sign-in links (specs/public-form.md "Magic sign-in links").
   resources :magic_links, only: %i[new create], path: "magic"
   get "magic/:token" => "magic_links#show", as: :magic_link
@@ -125,6 +129,7 @@ Rails.application.routes.draw do
           post :restore, on: :member
         end
         resource :share, only: %i[create destroy]
+        resources :followers, only: %i[create destroy]
         resources :translations, only: :create
       end
       resources :notifications, only: :index do

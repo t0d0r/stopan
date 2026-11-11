@@ -1,0 +1,12 @@
+<%# The confirmation behind the link in the email (specs/followers.md "Leaving"). %>
+<% content_for :title, t("ui.leave.title", reference: @ticket.reference) %>
+<div class="sticky sticky--yellow auth">
+  <div class="sticky__bar"><span class="sticky__caption">Stopan</span></div>
+  <div class="auth__body">
+    <h2><%= t("ui.leave.title", reference: @ticket.reference) %></h2>
+    <p><%= t(@cc ? "ui.leave.cc_intro" : "ui.leave.follower_intro", reference: @ticket.reference) %></p>
+    <%= button_to leave_link_path(params[:token]), class: "btn btn--primary btn--block", data: { turbo: false } do %>
+      <%= icon :eye_off %> <%= t(@cc ? "ui.followers.leave_cc" : "ui.followers.unfollow") %>
+    <% end %>
+  </div>
+</div>

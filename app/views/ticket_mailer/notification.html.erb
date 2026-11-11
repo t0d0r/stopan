@@ -42,4 +42,7 @@
   <% if @reason == "subscriber" %>
     <%= t("mailer.ticket.unsubscribe") %> <%= link_to edit_user_registration_url, edit_user_registration_url %>
   <% end %>
+  <% if @leave_url %>
+    <%= t("mailer.ticket.leave.#{@reason}") %> <%= link_to @leave_url, @leave_url %>
+  <% end %>
 </p>

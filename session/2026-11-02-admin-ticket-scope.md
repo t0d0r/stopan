@@ -586,6 +586,31 @@
   the migration `20261110090000`; the migration ran and every check
   passed (specs/deploy.md "Update 2026-11-11 (revision b482106)").
   Images kept: b482106, 98a5e93, 3a4f4c5 (v0.1.1).
+- Leaving a ticket (specs/followers.md "Leaving"). A person in Cc sees
+  "Leave Cc" on the People panel, with a confirmation, and lands on My
+  tickets. Every email sent to someone as a follower or as Cc ends
+  with a link to `/leave/<token>`: a page without sign-in that shows
+  only the ticket number and one button, so opening the link changes
+  nothing. The token is `TicketFollower#generate_token_for(:leave)`,
+  bound to the row and without an expiry; it stops working once the
+  person is off the ticket. The page speaks the language of the
+  person's emails. The event reads "Ivan Petrov left Cc". Files:
+  LeaveLinksController and its three views, TicketFollowersController,
+  `Ticket#leave!`, the mailer and both email templates, the People
+  panel, `follower_sentence`, the three locales.
+- Followers in the API (specs/followers.md "In the API", api.md). The
+  ticket has `followers` (staff get every row with `added_by` and
+  `created_at`, customers only the Cc rows) and `cc_suggestions` for
+  staff who may update it. `POST` adds a colleague by `user_id` or a
+  Cc by `email`, `DELETE` removes one, or lets a person in Cc leave.
+  The panel and the API share `Ticket#add_staff_follower!`;
+  `cc_refused` is now `follower_refused`. Tests:
+  test/controllers/leave_links_controller_test.rb,
+  test/integration/api_followers_test.rb, and a leaving test in
+  test/integration/cc_access_test.rb. Checked in dev with headless
+  Chrome as a temporary Cc: the panel button, its confirmation, and
+  the leave page at 390 px; the temporary user and its rows were
+  removed afterwards.
 
 ## Decisions
 
@@ -664,18 +689,19 @@
 ## Next step
 
 Production runs b482106 (`main` after v0.1.1) on an empty database.
-The changes since v0.1.1 are not in a release yet. They are the file
-limits in the drop zone, the joined copy fields, the new ticket busy
-fix, the mail view and files of deleted tickets for administrators,
-mailbox fetching by address, Outlook replies, the dashboard warning
-for Google accounts that need reconnecting, the headers of mail
-replies and the bundled Omarchy fonts. The mailbox filter meets a real
-IMAP server once a mailbox is set up again after the reset. The open
-todo items left are larger or need the operator. The follower items
-marked later are under followers.md "Not in this phase" and each needs
-a decision first: requesters adding Cc, a Cc leaving, people outside
-the organization, followers in the API. The operator steps after the
-reset remain.
+The changes since v0.1.1 are not in a release yet: the file limits in
+the drop zone, the joined copy fields, the new ticket busy fix, the
+mail view and files of deleted tickets for administrators, mailbox
+fetching by address, Outlook replies, the dashboard warning for Google
+accounts that need reconnecting, the headers of mail replies and the
+bundled Omarchy fonts. Leaving a ticket and followers in the API are
+committed and not deployed; they bring no migration. The mailbox
+filter meets a real IMAP server once a mailbox is set up again after
+the reset. Two follower items stay under followers.md "Not in this
+phase" and each needs a decision first: requesters adding Cc
+themselves, and people outside the organization. The other open todo
+items are larger or need the operator, and the operator steps after
+the reset remain.
 
 ## Security Note
 

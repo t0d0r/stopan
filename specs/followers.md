@@ -175,7 +175,7 @@ them.
 | action | values | shown as |
 |--------|--------|----------|
 | `follower_added` | from `staff` or `cc`, to the user id | "Maria follows the ticket" (themselves), "Maria added Petar as a follower", "Maria added Ivan Petrov to Cc" |
-| `follower_removed` | the same | "Maria stopped following", "Maria removed Petar as a follower", "Maria removed Ivan Petrov from Cc" |
+| `follower_removed` | the same | "Maria stopped following", "Maria removed Petar as a follower", "Maria removed Ivan Petrov from Cc", "Ivan Petrov left Cc" (they left themselves, "Leaving") |
 
 Like the mail events, these events notify nobody.
 
@@ -188,12 +188,82 @@ Like the mail events, these events notify nobody.
 - Both are for staff who may update the ticket. Anyone else gets a 403;
   a hidden ticket is a 404. Both answer with a redirect to the panel and
   a flash.
+- The one exception: a person in Cc may `DELETE` their own row
+  ("Leaving"); they land on "My tickets".
+- `GET /leave/:token` and `POST /leave/:token`: the link in the email,
+  without sign-in ("Leaving").
+
+## Leaving (2026-11-11)
+
+People take themselves off a ticket. Staff could already stop following
+on the panel; now a person in Cc can leave, and both can do it from an
+email.
+
+**Reason:** most people in Cc never sign in, because their emails open
+the shared page. The email is where they want to stop.
+
+- **On the ticket page:** a person in Cc sees a "Leave Cc" button under
+  the Cc names. It asks first: "You will no longer get emails about this
+  ticket, and it leaves My tickets." Afterwards they are on "My tickets"
+  with "You are no longer in copy on #1012.", because they no longer see
+  the ticket.
+- **In the email:** every email sent to someone because they follow the
+  ticket or are in Cc ends with a link, after the line that says why
+  they get it:
+  - followers: "To stop following this ticket: <link>";
+  - Cc: "To leave the copy (Cc) and stop these emails: <link>".
+  The requester, the assignee and subscribers get no such link. The
+  requester cannot leave their own ticket, the assignee changes with the
+  assignment, and subscribers have the setting on their account page.
+- **The link** is `/leave/<token>` and needs no sign-in.
+  - Opening it shows the ticket's number and one button, "Leave Cc" or
+    "Stop following". Only the `POST` of that button takes the person
+    off, so mail scanners that open links change nothing.
+  - The token is `TicketFollower#generate_token_for(:leave)`: signed,
+    without an expiry, and bound to the row. It stops working once the
+    person is off the ticket. Adding them again makes a new row with a
+    new token.
+  - An unknown or used token shows "This link is no longer valid." with
+    a 404.
+  - Afterwards: "You are no longer in copy on #1012." or "You no longer
+    follow #1012." The page shows nothing else of the ticket.
+- **Event:** `follower_removed` with the person themself as the actor:
+  "Ivan Petrov left Cc", or "Maria stopped following" as before.
+  Internal, and it notifies nobody, like every follower event.
+- Leaving ends the access at once, as a removal by staff does: the
+  ticket, its files, and the shared page opened with the person's own
+  address. The membership of the organization stays.
+- Anyone who has the email can use its link. The most they can do is
+  take that one person off the ticket, which staff see in the history
+  and can undo.
+
+## In the API (2026-11-11)
+
+The panel's actions, with the same rules and model methods (api.md):
+
+- `GET /api/v1/tickets/:number` has `followers`:
+  - staff get every row as `{id, kind, user, added_by, created_at}`,
+    where `kind` is `staff` or `cc`;
+  - the requester and the people in Cc get only the Cc rows as `{id,
+    kind, user}`: names, and no email but their own, as the panel shows
+    them;
+  - staff who may update the ticket also get `cc_suggestions`, the
+    addresses the panel suggests.
+- `POST /api/v1/tickets/:number/followers` with `user_id` (staff of the
+  ticket's organization: themselves or a colleague) or `email` (Cc, by
+  the rules of "Adding to Cc by email"). It answers 201 with
+  `{follower}`. A refused address, or someone already on the ticket,
+  is a 422 with the reason. A `user_id` that is not staff of the
+  organization is a 404.
+- `DELETE /api/v1/tickets/:number/followers/:id` answers 204. It is for
+  staff who may update the ticket, and for a person in Cc on their own
+  row (leaving).
+- Anyone else gets a 403, and a hidden ticket is a 404.
 
 ## Not in this phase
 
-- Requesters adding colleagues to Cc themselves, and a Cc leaving.
+- Requesters adding colleagues to Cc themselves.
 - People outside the organization (the share link remains for them).
-- Followers in the API.
 - Digests.
 - Taking Cc from the headers of later email replies.
 
@@ -214,7 +284,17 @@ Like the mail events, these events notify nobody.
   - a Cc sees the ticket in My tickets and can reply;
   - a Cc cannot mark it done, edit the request or share;
   - a Cc loses access when removed;
-  - a Cc's email reply becomes a public reply.
+  - a Cc's email reply becomes a public reply;
+  - a Cc leaves from the panel and lands on My tickets, without access.
+- `test/controllers/leave_links_controller_test.rb`:
+  - the link is in the emails of followers and Cc only;
+  - opening it changes nothing, the button takes the person off;
+  - a used or unknown token is a 404;
+  - the event says who left.
+- `test/integration/api_followers_test.rb`:
+  - `followers` for staff and for customers;
+  - adding a colleague and a Cc, a refused address, removing;
+  - a requester gets 403, a Cc may leave on their own row only.
 - Notifier tests:
   - followers and Cc are emailed per their scope;
   - the switch covers Cc;

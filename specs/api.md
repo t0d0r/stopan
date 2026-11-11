@@ -91,6 +91,8 @@ Everyone (within their rights):
 | `POST /api/v1/tickets/:number/revisions/:id/restore` | staff |
 | `POST /api/v1/tickets/:number/share` | `password` (optional); returns the link |
 | `DELETE /api/v1/tickets/:number/share` | stop sharing |
+| `POST /api/v1/tickets/:number/followers` | staff who may update it: `user_id` (staff follower) or `email` (Cc); 201 (followers.md "In the API") |
+| `DELETE /api/v1/tickets/:number/followers/:id` | staff who may update it, or a person in Cc on their own row (leaving); 204 |
 | `POST /api/v1/tickets/:number/translations` | staff, when translation is on: `message` (`description` or `comment-<id>`), `language` (default the user's); returns the text |
 | `GET /api/v1/notifications` | own notifications, newest first, 50 a page |
 | `POST /api/v1/notifications/:id/read`, `POST /api/v1/notifications/read_all` | mark read |
@@ -125,8 +127,12 @@ other browser preferences, creating tokens.
   markdown, stage {id, name}, organization {id, name}, requester,
   assignee, created_at, updated_at, done_at, edited_at, url` (the page);
   in `show` also `description, files, timeline, shared` (and
-  `share_url` when shared and the user may share), `mail_headers` (staff)
-  and `next_statuses` (staff).
+  `share_url` when shared and the user may share), `mail_headers` (staff),
+  `next_statuses` (staff), `followers`, and `cc_suggestions` (staff who
+  may update it).
+- **Follower:** `id, kind` (`staff` or `cc`), `user`, and for staff
+  also `added_by, created_at`. The requester and Cc get only the Cc
+  rows (followers.md "In the API").
 - **Comment:** `id, body, internal, markdown, source, author,
   created_at, edited_at, files`, and `mail_headers` (staff) on a reply
   that came in by mail (organization-mail.md "Mail details").

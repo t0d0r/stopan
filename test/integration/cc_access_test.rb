@@ -50,6 +50,22 @@ class CcAccessTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "a Cc leaves from the panel and lands on My tickets, without access" do
+    follower = @ticket.ticket_followers.find_by(user: users(:boris))
+    get ticket_url(@ticket)
+    assert_select "#followers form[action=?][data-confirm] button", ticket_follower_path(@ticket, follower), text: /Leave Cc/
+
+    delete ticket_follower_url(@ticket, follower)
+    assert_redirected_to tickets_url
+    assert_equal "You are no longer in copy on #{@ticket.reference}.", flash[:notice]
+    assert_not @ticket.cc?(users(:boris))
+    assert_equal users(:boris).id, @ticket.events.where(action: "follower_removed").last.actor_id
+    follow_redirect!
+    assert_response :success
+    get ticket_url(@ticket)
+    assert_response :not_found
+  end
+
   test "the shared page opens with the Cc's own address" do
     @ticket.share!(actor: nil, password: "anna@example.com")
     sign_out :user

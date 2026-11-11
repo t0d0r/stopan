@@ -311,8 +311,9 @@ notifications, live.
   recipient's email address as password instead (sharing.md "Link in
   the requester's emails").
 - **Footer:** why the recipient gets the email (requester / assignee /
-  subscribed to new tickets) and where to answer; subscribers get a link
-  to their account page to turn it off.
+  follower / Cc / subscribed to new tickets) and where to answer;
+  subscribers get a link to their account page to turn it off, and
+  followers and Cc a link to leave the ticket (followers.md "Leaving").
 - **Where to answer** (2026-10-28): when the ticket's organization has
   its mailbox on with a mailbox address, the email's Reply-To is that
   mailbox (organization-mail.md "Outgoing mail") and a reply by email
