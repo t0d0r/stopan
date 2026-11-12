@@ -27,7 +27,8 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".panel-columns > .panel-columns__column", 3
     assert_select ".panel-columns__column:nth-child(1) > section", 3
     assert_select ".panel-columns__column:nth-child(2) > #mailboxes + #translation"
-    assert_select ".panel-columns__column:nth-child(3) > #google:only-child"
+    assert_select ".panel-columns__column:nth-child(3) > #google + #sla-targets"
+    assert_select ".panel-columns__column:nth-child(3) > section", 2
     # Stages take the whole width under the columns, one stage per row.
     assert_select ".panel-columns + section#stages.stages-panel"
   end

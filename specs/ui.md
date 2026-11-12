@@ -350,8 +350,8 @@ has a ready icon for each new need.
   keeps its panels together. Not CSS multi-column (`column-width`):
   Safari splits panels across its columns under the text size `zoom`.
   Admin settings: Look, Auto-postpone, Ticket page | Mailboxes,
-  Translation | Google, so the page fits 1440x900 at the normal text
-  size without scrolling. Stages (board.md) is a panel of its own under
+  Translation | Google, SLA targets (2026-11-12, sla.md), so the page
+  fits 1440x900 at the normal text size without scrolling. Stages (board.md) is a panel of its own under
   the columns, as wide as the desk (2026-10-28: "horizontal, the whole
   width, without others"): each stage on one row (name, at most 28em,
   colour, swatch, Save, up, down, Delete at the right end), the new stage

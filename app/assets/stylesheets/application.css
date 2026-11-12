@@ -7048,3 +7048,50 @@ turbo-frame {
 .webhooks__new {
   margin-bottom: 12px;
 }
+
+/* SLA targets for staff (specs/sla.md): two lines on the ticket page,
+   a badge in the queue, a small table in the settings. */
+.sla {
+  margin-top: 14px;
+}
+
+.sla__state--overdue,
+.sla__state--late {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.sla__state--soon {
+  font-weight: 600;
+}
+
+.sla-badge {
+  margin-right: 5px;
+  vertical-align: -2px;
+}
+
+.sla-badge--overdue,
+.ticket-link .sla-badge--overdue .icon {
+  color: var(--danger);
+}
+
+.sla-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sla-table th {
+  padding: 4px 6px 4px 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.sla-table td {
+  padding: 3px 6px 3px 0;
+}
+
+.sla-table .field-input {
+  width: 100%;
+  min-width: 0;
+}

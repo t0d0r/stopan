@@ -64,6 +64,27 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_not Webhook.exists?(webhook.id)
   end
 
+  test "SLA targets in the settings and the ticket's state, for staff only" do
+    body = api(:patch, api_v1_settings_url, user: :admin,
+               params: { settings: { sla_targets: { urgent: { first_response: 60, resolution: 480 } } } })
+    assert_response :success
+    assert_equal({ "first_response" => 60, "resolution" => 480 }, body.dig("settings", "sla_targets", "urgent"))
+    api(:patch, api_v1_settings_url, user: :admin, params: { settings: { sla_targets: { urgent: { first_response: "soon" } } } })
+    assert_response :unprocessable_content
+
+    ticket = tickets(:printer)
+    ticket.update_columns(priority: "urgent", status: "open", created_at: 3.hours.ago, first_response_at: nil)
+    body = api(:get, api_v1_ticket_url(ticket), user: :agent)["ticket"]
+    assert_equal "overdue", body.dig("sla", "first_response", "state")
+    assert_equal 60, body.dig("sla", "first_response", "target_minutes")
+    assert_equal "running", body.dig("sla", "resolution", "state")
+    assert body.key?("first_response_at")
+
+    body = api(:get, api_v1_ticket_url(ticket), user: :anna)["ticket"]
+    assert_not body.key?("sla")
+    assert_not body.key?("first_response_at")
+  end
+
   test "an administrator sets and clears the organization administrator mark through the API" do
     membership = Membership.find_by!(user: users(:agent), organization: organizations(:acme))
     body = api(:patch, api_v1_membership_url(membership), user: :admin, params: { membership: { admin: true } })

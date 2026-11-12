@@ -30,6 +30,8 @@
         </div>
         <%= f.submit t("ui.ticket.update"), class: "btn btn--primary btn--block" %>
       <% end %>
+      <%# specs/sla.md: for staff only. %>
+      <%= sla_lines(ticket) if current_user.staff? %>
     <% else %>
       <dl class="facts">
         <dt><%= t("ui.fields.status") %></dt>

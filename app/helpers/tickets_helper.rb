@@ -348,6 +348,58 @@ module TicketsHelper
     end
   end
 
+  # The SLA targets, read once per page (specs/sla.md).
+  def sla_for(ticket)
+    @sla_targets ||= AppSetting.current.sla_targets
+    Sla.new(ticket, targets: @sla_targets)
+  end
+
+  # "due in 2 h", "overdue by 3 h", "answered in 35 min", ...
+  def sla_text(mark)
+    time = report_duration(mark.seconds)
+    case mark.state
+    when "met" then t("ui.sla.states.met.#{mark.kind}", time: time)
+    when "late" then t("ui.sla.states.late.#{mark.kind}", time: report_duration(mark.at - ticket_created(mark)), late: time)
+    when "waiting" then t("ui.sla.states.waiting")
+    when "overdue" then t("ui.sla.states.overdue", time: time)
+    else t("ui.sla.states.due", time: time)
+    end
+  end
+
+  # When the mark's ticket was created: its due time less its target.
+  def ticket_created(mark)
+    mark.due_at - mark.target_minutes.minutes
+  end
+
+  # The two lines of the Properties panel, for staff, or nothing without
+  # a target for the ticket's priority.
+  def sla_lines(ticket)
+    marks = sla_for(ticket).marks
+    return if marks.empty?
+
+    tag.dl(class: "facts sla") do
+      safe_join(marks.map do |mark|
+        tag.dt(t("ui.sla.kinds.#{mark.kind}")) +
+          tag.dd(class: [ "sla__state", "sla__state--#{mark.state}" ]) do
+            safe_join([ (icon(:warning, size: 12) if mark.warning?), sla_text(mark) ].compact, " ")
+          end
+      end)
+    end
+  end
+
+  # A small mark before the subject in the queue: a warning triangle
+  # when a target is overdue, a clock when one is due soon. The row
+  # stays one line; the words are in the label and the title.
+  def sla_badge(ticket)
+    mark = sla_for(ticket).alert
+    return unless mark
+
+    detail = "#{t("ui.sla.kinds.#{mark.kind}")}: #{sla_text(mark)}"
+    tag.span(class: "sla-badge sla-badge--#{mark.state}", title: detail) do
+      icon(mark.state == "overdue" ? :warning : :clock, size: 13, label: "#{t("ui.sla.badges.#{mark.state}")}. #{detail}")
+    end
+  end
+
   # "Moves to Not now in 3 days" for staff on the ticket page.
   # A pending ticket about to be marked done says that instead
   # (specs/board.md "Automatic done").

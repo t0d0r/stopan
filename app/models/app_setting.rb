@@ -25,6 +25,7 @@ class AppSetting < ApplicationRecord
                                allow_blank: true
   validate :google_client_needs_secret
   validate :translation_needs_a_key
+  validate :sla_targets_valid
 
   before_validation do
     self.deepl_api_key = nil if ActiveModel::Type::Boolean.new.cast(remove_deepl_api_key)
@@ -40,6 +41,30 @@ class AppSetting < ApplicationRecord
     deepl_api_key.presence || ENV["DEEPL_API_KEY"].presence
   end
 
+  # Target in minutes for a priority and kind (specs/sla.md), or nil.
+  def sla_minutes(priority, kind)
+    value = sla_targets.dig(priority.to_s, kind.to_s).to_i
+    value if value.positive?
+  end
+
+  # The same in hours, as the settings form shows it.
+  def sla_hours(priority, kind)
+    minutes = sla_minutes(priority, kind)
+    minutes && (minutes % 60).zero? ? minutes / 60 : minutes&.fdiv(60)
+  end
+
+  # From the form: {"urgent" => {"first_response" => "1.5", ...}, ...} in
+  # hours. Blank and 0 mean no target; anything that is not a number is
+  # kept as it is for the validation to refuse.
+  def sla_hours=(hours)
+    self.sla_targets = Ticket::PRIORITIES.to_h do |priority|
+      [ priority, Sla::KINDS.to_h do |kind|
+        value = hours.to_h.dig(priority, kind).to_s.strip.tr(",", ".")
+        [ kind, value.empty? ? 0 : (Float(value, exception: false)&.then { |number| (number * 60).round } || value) ]
+      end ]
+    end
+  end
+
   def google_ready?
     google_client_id.present? && google_client_secret.present?
   end
@@ -48,6 +73,16 @@ class AppSetting < ApplicationRecord
 
   def google_client_needs_secret
     errors.add(:google_client_secret, :blank) if google_client_id.present? && google_client_secret.blank?
+  end
+
+  # Whole minutes from 0 to a year, for known priorities and kinds only.
+  def sla_targets_valid
+    targets = sla_targets
+    valid = targets.is_a?(Hash) && (targets.keys - Ticket::PRIORITIES).empty? && targets.values.all? do |kinds|
+      kinds.is_a?(Hash) && (kinds.keys - Sla::KINDS).empty? &&
+        kinds.values.all? { |minutes| minutes.is_a?(Integer) && minutes.between?(0, Sla::MAX_MINUTES) }
+    end
+    errors.add(:sla_targets, :invalid) unless valid
   end
 
   def translation_needs_a_key

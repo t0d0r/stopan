@@ -23,7 +23,8 @@ module Admin
     # (specs/translation.md). The Google client is set in the wizard
     # (Admin::GoogleSetupController).
     def setting_params
-      params.expect(app_setting: [ :auto_postpone_days, :auto_done_days, :default_look, :mailbox_polling, :mailbox_poll_seconds, :timeline_order, :translation_enabled, :deepl_api_key, :remove_deepl_api_key ])
+      params.expect(app_setting: [ :auto_postpone_days, :auto_done_days, :default_look, :mailbox_polling, :mailbox_poll_seconds, :timeline_order, :translation_enabled, :deepl_api_key, :remove_deepl_api_key,
+                                     sla_hours: Ticket::PRIORITIES.index_with { Sla::KINDS } ])
             .tap { |permitted| permitted.delete(:deepl_api_key) if permitted[:deepl_api_key].blank? }
     end
   end

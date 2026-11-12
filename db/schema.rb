@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_140000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -67,6 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_130000) do
     t.string "timeline_order", default: "oldest_first", null: false
     t.integer "last_ticket_number", default: 0, null: false
     t.integer "auto_done_days", default: 0, null: false
+    t.json "sla_targets", default: {}, null: false
   end
 
   create_table "comments", force: :cascade do |t|
@@ -246,6 +247,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_130000) do
     t.datetime "share_expires_at"
     t.integer "share_views", default: 0, null: false
     t.datetime "share_last_viewed_at"
+    t.datetime "first_response_at"
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
     t.index ["deleted_at"], name: "index_tickets_on_deleted_at"
     t.index ["deleted_by_id"], name: "index_tickets_on_deleted_by_id"

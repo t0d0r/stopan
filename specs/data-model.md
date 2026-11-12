@@ -156,6 +156,12 @@ The standard three tables. Blobs are served only by
 The database holds personal data (names, emails, ticket text). Back up and
 store `storage/` accordingly; it is ignored by git.
 
+## SLA (2026-11-12)
+
+`app_settings.sla_targets` (JSON, minutes per priority and kind) and
+`tickets.first_response_at` (datetime, the first public staff reply),
+sla.md.
+
 ## comments.mail_html (2026-11-12)
 
 Text, NULL: the cleaned HTML of a reply that came in by mail

@@ -774,8 +774,28 @@
   the OpenAPI document is served (61 operations) and every check
   passed (specs/deploy.md "Update 2026-11-12 (revision d9d7207)").
   Images kept: d9d7207, 97c3f7d, d0db217.
+- 2026-11-12: SLA targets (specs/sla.md). First-response and
+  resolution times per priority, in minutes in
+  `app_settings.sla_targets` (JSON, empty at first, so nothing shows
+  until set), entered in hours on /admin/settings. New
+  `tickets.first_response_at`, set by the first public staff reply
+  and filled by the migration (20261112140000) for existing tickets.
+  `Sla` gives each target a state (met, late, overdue, soon, running,
+  waiting). Staff see two lines in the Properties panel and a small
+  mark before the subject in the queue (triangle overdue, clock due
+  soon); pending and postponed tickets do not warn. The ticket JSON
+  has `sla` and `first_response_at` for staff, the settings API
+  `sla_targets`. Tests: test/models/sla_test.rb,
+  first_response_test.rb, test/controllers/sla_pages_test.rb, the API
+  test. Not deployed yet.
 
 ## Decisions
+
+- SLA, 2026-11-12: calendar time and no stopped clock; a pending or
+  postponed ticket shows "waiting" instead of a warning, because
+  stopping the clock needs a history of pauses. The queue shows an
+  icon, not a word, so rows stay one line. Requesters never see
+  targets.
 
 - Webhooks, 2026-11-12: public replies and new tickets only, with
   text but without email addresses, so nothing internal or personal
@@ -898,7 +918,8 @@ admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
 reports and the view count of share links are deployed; the view
 count meets a real link once production has tickets. The OpenAPI
-description, the webhooks and the HTML of mail replies are deployed. A webhook has
+description, the webhooks and the HTML of mail replies are deployed. The SLA targets are committed
+but not deployed; they have a migration, so copy the database first. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

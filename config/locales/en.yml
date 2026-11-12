@@ -548,6 +548,9 @@ en:
         to_members: "Send a message to the members"
       settings:
         title: "Settings"
+        sla_caption: "SLA"
+        sla_title: "SLA targets"
+        sla_hint: "Hours from the ticket's creation; 0.25 is 15 minutes. Empty means no target. Staff see when an answer or a solution is due or late; customers never do."
         postpone_caption: "Not now"
         postpone_title: "Automatic postponing"
         postpone_days: "Postpone tickets after this many days without activity"
@@ -844,6 +847,23 @@ en:
         other: "and %{count} requesters"
       viewers: "Also viewing now:"
 
+    sla:
+      kinds:
+        first_response: "First response"
+        resolution: "Resolution"
+      states:
+        met:
+          first_response: "answered in %{time}"
+          resolution: "done in %{time}"
+        late:
+          first_response: "answered in %{time}, %{late} late"
+          resolution: "done in %{time}, %{late} late"
+        waiting: "waiting for the customer"
+        overdue: "overdue by %{time}"
+        due: "due in %{time}"
+      badges:
+        overdue: "Overdue"
+        soon: "Due soon"
     webhooks:
       title: "Webhooks"
       intro: "Stopan calls these addresses when a ticket is opened or publicly answered in this organization. Internal notes and email addresses are never sent."
@@ -1385,6 +1405,7 @@ en:
         mailbox_poll_seconds: "How often"
         auto_postpone_days: "Days without activity"
         auto_done_days: "Days until pending tickets are done"
+        sla_targets: "SLA targets"
         deepl_api_key: "DeepL API key"
       webhook:
         url: "Address"

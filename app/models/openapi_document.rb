@@ -171,11 +171,18 @@ module OpenapiDocument
       share_last_viewed_at: time,
       mail_headers: { type: %w[object null], description: "Staff only: headers of the mail the ticket came from." },
       next_statuses: { type: "array", items: STATUS, description: "Staff only." },
+      first_response_at: time("Staff only: the first public reply by staff."),
+      sla: { type: "object", description: "Staff only: where the ticket stands against its targets; each null without a target.",
+             properties: { first_response: { anyOf: [ ref("SlaMark"), { type: "null" } ] },
+                           resolution: { anyOf: [ ref("SlaMark"), { type: "null" } ] } } },
       followers: list("Follower"),
       cc_suggestions: { type: "array", items: str, description: "Staff who may update it: addresses from the mail." },
       cc_candidates: { type: "array", items: NAMED, description: "The requester: colleagues who can be put in Cc." },
       timeline: list("Event")
     } } ] },
+    SlaMark: { type: "object", properties: {
+      state: str(nil, enum: %w[met late overdue soon running waiting]), due_at: time, target_minutes: int
+    } },
     Follower: { type: "object", properties: { id: int, kind: str(nil, enum: %w[staff cc]), user: ref("User"),
                                               added_by: nullable("User"), created_at: time } },
     Comment: { type: "object", properties: {
@@ -219,7 +226,8 @@ module OpenapiDocument
                              last_error: { type: %w[string null] }, last_sent_at: time, created_at: time } },
     Settings: { type: "object", properties: {
       auto_postpone_days: int, auto_done_days: int, default_look: str, mailbox_polling: bool, mailbox_poll_seconds: int,
-      timeline_order: str, translation_enabled: bool, deepl_api_key_set: bool, google_ready: bool
+      timeline_order: str, translation_enabled: bool, deepl_api_key_set: bool, google_ready: bool,
+      sla_targets: { type: "object", description: "Minutes per priority: {urgent: {first_response, resolution}, ...}; 0 is no target." }
     } },
     Report: { type: "object", description: "The numbers of the reports page.", properties: {
       period: str, unit: str(nil, enum: %w[day week month]), organization: nullable("Organization"), from: time, to: time,
@@ -384,7 +392,8 @@ module OpenapiDocument
       { returns: wrap(:settings, ref("Settings")),
         body: { settings: { type: "object", properties: {
           auto_postpone_days: int, auto_done_days: int, default_look: str, mailbox_polling: bool, mailbox_poll_seconds: int,
-          timeline_order: str, translation_enabled: bool, deepl_api_key: str("Write-only.")
+          timeline_order: str, translation_enabled: bool, deepl_api_key: str("Write-only."),
+          sla_targets: { type: "object", description: "Minutes per priority and kind; 0 is no target." }
         } } } } ],
     [ "post", "/messages", "Admin", "Send a message to users' notifications",
       { status: 201, body: { message: { type: "object", properties: { recipients: str, text: str } } }, returns: { type: "object", properties: { delivered: int } } } ],

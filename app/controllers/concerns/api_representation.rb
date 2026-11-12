@@ -47,6 +47,8 @@ module ApiRepresentation
     if current_user.staff?
       json[:mail_headers] = ticket.mail_headers
       json[:next_statuses] = ticket.next_statuses
+      json[:first_response_at] = time_json(ticket.first_response_at)
+      json[:sla] = sla_json(ticket)
     end
     json[:followers] = followers_json(ticket)
     json[:cc_suggestions] = ticket.cc_suggestions if current_user.staff? && policy.update?
@@ -55,6 +57,14 @@ module ApiRepresentation
                         .includes(:actor, comment: [ :author, { files_attachments: :blob } ]).order(:created_at, :id)
     json[:timeline] = events.map { |event| event_json(ticket, event) }
     json
+  end
+
+  # Where the ticket stands against its targets, for staff (specs/sla.md).
+  def sla_json(ticket)
+    sla = Sla.new(ticket)
+    { first_response: sla.first_response, resolution: sla.resolution }.transform_values do |mark|
+      mark && { state: mark.state, due_at: time_json(mark.due_at), target_minutes: mark.target_minutes }
+    end
   end
 
   # Staff get every row; the requester and Cc only the Cc names, as the

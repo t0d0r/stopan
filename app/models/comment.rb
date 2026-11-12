@@ -18,6 +18,7 @@ class Comment < ApplicationRecord
   validate :only_staff_write_internal_notes
 
   after_create :record_event
+  after_create :mark_first_response
 
   def self.visible_to(user)
     return none unless user
@@ -33,6 +34,14 @@ class Comment < ApplicationRecord
   end
 
   private
+
+  # The first public reply by staff, for the SLA (specs/sla.md).
+  def mark_first_response
+    return if internal? || !author.staff?
+
+    Ticket.where(id: ticket_id, first_response_at: nil).update_all(first_response_at: created_at)
+    ticket.first_response_at ||= created_at
+  end
 
   def only_staff_write_internal_notes
     errors.add(:internal, :staff_only) if internal? && !author&.staff?

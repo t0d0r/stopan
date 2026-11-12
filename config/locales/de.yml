@@ -551,6 +551,9 @@ de:
         to_members: "Nachricht an die Mitglieder senden"
       settings:
         title: "Einstellungen"
+        sla_caption: "SLA"
+        sla_title: "SLA-Ziele"
+        sla_hint: "Stunden ab Erstellung des Tickets; 0.25 sind 15 Minuten. Leer bedeutet kein Ziel. Das Team sieht, wann eine Antwort oder Lösung fällig oder verspätet ist; Kunden sehen es nie."
         postpone_caption: "Später"
         postpone_title: "Automatisches Zurückstellen"
         postpone_days: "Tickets nach so vielen Tagen ohne Aktivität zurückstellen"
@@ -847,6 +850,23 @@ de:
         other: "und %{count} Anfragesteller"
       viewers: "Ebenfalls geöffnet von:"
 
+    sla:
+      kinds:
+        first_response: "Erste Antwort"
+        resolution: "Lösung"
+      states:
+        met:
+          first_response: "beantwortet nach %{time}"
+          resolution: "erledigt nach %{time}"
+        late:
+          first_response: "beantwortet nach %{time}, %{late} zu spät"
+          resolution: "erledigt nach %{time}, %{late} zu spät"
+        waiting: "wartet auf den Kunden"
+        overdue: "überfällig seit %{time}"
+        due: "fällig in %{time}"
+      badges:
+        overdue: "Überfällig"
+        soon: "Bald fällig"
     webhooks:
       title: "Webhooks"
       intro: "Stopan ruft diese Adressen auf, wenn in dieser Organisation ein Ticket eröffnet oder öffentlich beantwortet wird. Interne Notizen und E-Mail-Adressen werden nie gesendet."
@@ -1390,6 +1410,7 @@ de:
         mailbox_poll_seconds: "Wie oft"
         auto_postpone_days: "Tage ohne Aktivität"
         auto_done_days: "Tage bis erledigt für wartende Tickets"
+        sla_targets: "SLA-Ziele"
         deepl_api_key: "DeepL-API-Schlüssel"
       webhook:
         url: "Adresse"

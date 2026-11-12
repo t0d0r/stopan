@@ -551,6 +551,9 @@ bg:
         to_members: "Изпрати съобщение до членовете"
       settings:
         title: "Настройки"
+        sla_caption: "SLA"
+        sla_title: "SLA срокове"
+        sla_hint: "Часове от създаването на заявката; 0.25 е 15 минути. Празно поле означава без срок. Екипът вижда кога отговор или решение наближава срока или закъснява; клиентите никога не го виждат."
         postpone_caption: "Отложени"
         postpone_title: "Автоматично отлагане"
         postpone_days: "Отлагай заявките след толкова дни без активност"
@@ -847,6 +850,23 @@ bg:
         other: "и %{count} заявители"
       viewers: "В момента я гледат и:"
 
+    sla:
+      kinds:
+        first_response: "Първи отговор"
+        resolution: "Решаване"
+      states:
+        met:
+          first_response: "отговорено за %{time}"
+          resolution: "готова за %{time}"
+        late:
+          first_response: "отговорено за %{time}, закъснение %{late}"
+          resolution: "готова за %{time}, закъснение %{late}"
+        waiting: "чака клиента"
+        overdue: "просрочено с %{time}"
+        due: "срок след %{time}"
+      badges:
+        overdue: "Просрочена"
+        soon: "Скоро изтича"
     webhooks:
       title: "Webhooks"
       intro: "Stopan вика тези адреси, когато в тази организация се отвори заявка или се напише публичен отговор. Вътрешни бележки и имейл адреси никога не се изпращат."
@@ -1390,6 +1410,7 @@ bg:
         mailbox_poll_seconds: "Колко често"
         auto_postpone_days: "Дни без активност"
         auto_done_days: "Дни до готово за чакащите заявки"
+        sla_targets: "SLA срокове"
         deepl_api_key: "API ключ за DeepL"
       webhook:
         url: "Адрес"
