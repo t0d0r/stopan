@@ -710,6 +710,31 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision c802739)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since 34f3e79: the requester of a ticket adds colleagues of the
+organization to Cc (followers.md "The requester adds colleagues").
+
+There were no migrations and `Gemfile.lock` did not change, so no
+database copy was made.
+
+- Checked:
+  - the container is healthy and runs the image tagged c802739;
+  - schema 20261112090000, no migration pending; one user and no
+    organizations or tickets; the app reports Rails 8.1.4.1;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401, and the followers endpoint without a token 401;
+  - signed out, `/search`, `/presence`, `/admin` and `/users/sign_up`
+    -> 302 to sign-in;
+  - `/cable` 101;
+  - HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure, HttpOnly
+    session cookie; the stylesheet is served gzip;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: c802739, 34f3e79, 0ae905e.
+- Rollback: tag `localhost/stopan:34f3e79` as `latest` and restart. The
+  schema is the same, so the database needs no change.
+
 ## Update 2026-11-12 (revision 34f3e79)
 
 `main` after v0.1.1, not a release, on the empty database from the

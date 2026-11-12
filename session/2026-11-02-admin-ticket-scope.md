@@ -660,6 +660,10 @@
   from the requester and gives them `cc_candidates`. Tests:
   test/controllers/requester_cc_test.rb. Checked in dev as a temporary
   requester, removed afterwards.
+- 2026-11-12: `main` pushed and deployed at c802739 (not a release),
+  with no migrations; every check passed (specs/deploy.md "Update
+  2026-11-12 (revision c802739)"). Images kept: c802739, 34f3e79,
+  0ae905e.
 
 ## Decisions
 
@@ -742,7 +746,7 @@
 
 ## Next step
 
-Production runs 34f3e79 (`main` after v0.1.1) on an empty database.
+Production runs c802739 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -752,8 +756,8 @@ bundled Omarchy fonts, leaving a ticket, followers in the API and the
 CSV export of the reports, and automatic done, which stays off until
 an administrator sets its days. The mailbox
 filter meets a real IMAP server once a mailbox is set up again after
-the reset. The requester adding colleagues to Cc is committed and not
-deployed; it brings no migration. The followers work is complete. The
+the reset. The followers work is complete and deployed, the requester adding
+colleagues to Cc included. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 
