@@ -7385,3 +7385,48 @@ turbo-frame {
 .org-form .field-row--secret .check-field {
   margin: 4px 0 0;
 }
+
+/* Several cards at once on the board (specs/board.md): a check box in
+   the card's strip, a ring on ticked cards, a bar above the board and a
+   tag at the pointer while a group is dragged. */
+.board-card__check {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.board-card.is-selected {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.board-bulk {
+  margin: 0 0 10px;
+}
+
+.board-bulk[hidden] {
+  display: none;
+}
+
+.board-drag-tag {
+  position: fixed;
+  top: -200px;
+  left: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font: 600 13px var(--font);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  /* A touch target around the small box (mobile.md rule 1). */
+  .board-card__check {
+    width: 22px;
+    height: 22px;
+  }
+}

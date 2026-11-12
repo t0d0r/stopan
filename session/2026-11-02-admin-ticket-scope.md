@@ -868,6 +868,16 @@
   TLS hung beside the port, fields of one row at different heights).
   It fits 1280x900; the earlier note of 1280x800 was wrong. Not
   deployed yet.
+- 2026-11-12: several cards move at once on the board (specs/board.md
+  "Several cards at once"). Each card has a check box
+  (`numbers[]`, form `board-bulk`); ticked cards get a ring, and
+  Shift+click ticks a range through the generic handler. Dragging a
+  ticked card moves every ticked card, one request each through the
+  existing `move` route, with a tag at the pointer; cards that may not
+  move there stay and a notice counts them. A bar above the board
+  moves the ticked cards without dragging through `PATCH
+  /tickets/bulk`, whose `return_to` now accepts the board. Browser
+  tests in test/system/board_test.rb. Not deployed yet.
 
 ## Decisions
 

@@ -1583,24 +1583,63 @@ function setUpBoard(board) {
     return (column.dataset.stage || "") !== (card.dataset.stage || "");
   };
 
+  // Ticked cards move together (specs/board.md "Several cards at once").
+  const bar = document.querySelector("[data-board-bulk]");
+  const checks = () => [...board.querySelectorAll("[data-board-check]")];
+  const ticked = () => checks().filter((box) => box.checked).map((box) => box.closest("[data-board-card]"));
+  const showSelection = () => {
+    const cards = ticked();
+    checks().forEach((box) => box.closest("[data-board-card]").classList.toggle("is-selected", box.checked));
+    if (!bar) return;
+    bar.hidden = cards.length === 0;
+    const label = cards.length === 1 ? bar.dataset.selectedOne : bar.dataset.selectedOther;
+    bar.querySelector("[data-board-count]").textContent = label.replace("%{count}", cards.length);
+  };
+  const clearSelection = () => {
+    checks().forEach((box) => { box.checked = false; });
+    showSelection();
+  };
+  board.addEventListener("change", (event) => { if (event.target.matches("[data-board-check]")) showSelection(); }, { signal: pageSignal });
+  bar?.querySelector("[data-board-clear]").addEventListener("click", clearSelection, { signal: pageSignal });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && ticked().length && !document.querySelector("dialog[open]")) clearSelection();
+  }, { signal: pageSignal });
+  showSelection();
+
+  // The cards being dragged: every ticked card when the dragged one is
+  // ticked, else that card alone.
   let dragged = null;
+  let group = [];
+  let tag = null;
   const clear = () => {
     board.classList.remove("is-dragging-card");
     columns.forEach((column) => column.classList.remove("is-droppable", "is-refused", "is-over"));
-    dragged?.classList.remove("is-dragging");
+    group.forEach((card) => card.classList.remove("is-dragging"));
+    tag?.remove();
+    tag = null;
     dragged = null;
+    group = [];
   };
   board.addEventListener("dragstart", (event) => {
     const card = event.target.closest?.("[data-board-card]");
     if (!card) return;
     dragged = card;
-    card.classList.add("is-dragging");
+    group = card.querySelector("[data-board-check]")?.checked ? ticked() : [ card ];
+    group.forEach((one) => one.classList.add("is-dragging"));
     event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", card.dataset.ticket);
+    event.dataTransfer.setData("text/plain", group.map((one) => one.dataset.ticket).join(" "));
+    if (group.length > 1) {
+      // The pointer carries a tag with the number of tickets.
+      tag = document.createElement("div");
+      tag.className = "board-drag-tag";
+      tag.textContent = board.dataset.dragCount.replace("%{count}", group.length);
+      document.body.append(tag);
+      event.dataTransfer.setDragImage(tag, 12, 12);
+    }
     board.classList.add("is-dragging-card");
     columns.forEach((column) => {
-      const ok = droppable(card, column);
-      const home = column.dataset.status === card.dataset.status && (column.dataset.stage || "") === (card.dataset.stage || "");
+      const ok = group.some((one) => droppable(one, column));
+      const home = group.every((one) => column.dataset.status === one.dataset.status && (column.dataset.stage || "") === (one.dataset.stage || ""));
       column.classList.toggle("is-droppable", ok);
       column.classList.toggle("is-refused", !ok && !home);
     });
@@ -1615,12 +1654,23 @@ function setUpBoard(board) {
     column.addEventListener("dragleave", (event) => {
       if (!column.contains(event.relatedTarget)) column.classList.remove("is-over");
     }, { signal: pageSignal });
-    column.addEventListener("drop", (event) => {
+    column.addEventListener("drop", async (event) => {
       if (!dragged || !column.classList.contains("is-droppable")) return;
       event.preventDefault();
-      const card = dragged;
+      const cards = group;
       clear();
-      moveCard(card, column);
+      const movable = cards.filter((card) => droppable(card, column));
+      let moved = 0;
+      // One after another, so the cards land in order and the counts stay right.
+      for (const card of movable) {
+        if (await moveCard(card, column, cards.length === 1)) moved += 1;
+      }
+      if (cards.length > 1) {
+        clearSelection();
+        if (moved < cards.length) {
+          showAlert(board.dataset.someRefused.replace("%{count}", cards.length - moved).replace("%{total}", cards.length));
+        }
+      }
     }, { signal: pageSignal });
   });
 
@@ -1630,7 +1680,9 @@ function setUpBoard(board) {
     });
   };
 
-  async function moveCard(card, column) {
+  // Moves one card; true when the server took it. A single card says why
+  // it failed; a group reports once, after all of them.
+  async function moveCard(card, column, announce = true) {
     const from = card.closest("[data-board-column]");
     const status = column.dataset.status;
     const stage = column.dataset.stage || "";
@@ -1648,8 +1700,8 @@ function setUpBoard(board) {
     } catch {}
     if (!response?.ok) {
       const reason = response ? await response.text() : "";
-      showAlert(board.dataset.moveFailed.replace("%{error}", reason || response?.status || "-"));
-      return;
+      if (announce) showAlert(board.dataset.moveFailed.replace("%{error}", reason || response?.status || "-"));
+      return false;
     }
     // The card goes to its place: golden (urgent) cards on top.
     const list = column.querySelector("[data-board-cards]");
@@ -1662,6 +1714,7 @@ function setUpBoard(board) {
     card.dataset.allowed = (transitions[status] || []).join(" ");
     count(from, -1);
     count(column, 1);
+    return true;
   }
 }
 

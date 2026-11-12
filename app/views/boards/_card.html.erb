@@ -6,6 +6,9 @@
          data-stage="<%= ticket.stage_id %>" data-allowed="<%= allowed.join(" ") %>" data-move-url="<%= move_ticket_path(ticket) %>">
   <%= postpone_stamp(ticket) %>
   <div class="board-card__strip">
+    <%# Ticked cards move together (specs/board.md "Several cards at once"). %>
+    <input type="checkbox" class="board-card__check" name="numbers[]" value="<%= ticket.number %>" form="board-bulk" data-board-check
+           aria-label="<%= t("ui.board.select_card", reference: ticket.reference) %>">
     <span class="board-card__number"><%= ticket.reference %></span>
     <span class="board-card__sep" aria-hidden="true">|</span>
     <span class="board-card__org"><%= ticket.organization.name %></span>

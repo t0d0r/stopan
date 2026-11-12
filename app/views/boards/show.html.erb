@@ -12,7 +12,22 @@
   <%= render "tickets/view_switch", current: :board %>
 </div>
 
-<div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>">
+<%# Shown while cards are ticked (specs/board.md "Several cards at once"). %>
+<%= form_with url: bulk_tickets_path, method: :patch, id: "board-bulk", class: "bulk-bar board-bulk", hidden: true,
+              data: { board_bulk: true, selected_one: t("ui.bulk.selected.one"), selected_other: t("ui.bulk.selected.other") } do %>
+  <%= hidden_field_tag :return_to, request.fullpath, id: nil %>
+  <p class="bulk-bar__count" data-board-count aria-live="polite"></p>
+  <div class="bulk-bar__fields">
+    <%= label_tag "board_bulk_status", t("ui.board.move_to"), class: "sr-only" %>
+    <%= select_tag "changes[status]", options_for_select(Ticket::STATUSES.map { |status| [ status_name(status), status ] }),
+                   include_blank: t("ui.board.move_to"), id: "board_bulk_status", class: "select", required: true %>
+    <%= submit_tag t("ui.board.move"), name: nil, class: "btn btn--primary" %>
+    <button type="button" class="btn" data-board-clear><%= t("ui.bulk.clear") %></button>
+  </div>
+<% end %>
+
+<div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>"
+     data-drag-count="<%= t("ui.board.drag_count") %>" data-some-refused="<%= t("ui.board.some_refused") %>">
   <% @board.columns.each do |column| %>
     <% color = column.stage ? column.stage.color : TicketsHelper::STATUS_COLORS.fetch(column.status, "gray") %>
     <% name = column.stage ? "#{status_name(column.status)} / #{column.stage.name}" : status_name(column.status) %>

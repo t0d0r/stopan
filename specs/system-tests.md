@@ -36,13 +36,15 @@ browser, so they never run the app's JavaScript. These few do.
 | mail view | the HTML and Text tabs appear, switch the panes, and the frame grows to its content |
 | shared page | a password link asks for the password, opens, and counts one view |
 | bulk delete | on the search results: selected rows, and the whole list ("Select all N"), through the confirm dialog |
+| board | ticked cards are ringed and counted, Shift+click ticks a range, Escape clears; dragging a ticked card moves all ticked cards; an unticked card moves alone; cards that may not move stay and are counted; the bar moves without dragging |
 | shift+click | a range of ticket rows is ticked and cleared and the bar counts them; the member picker's range skips rows its search hides |
 
 ## Not covered
 
 Live updates over Action Cable (the test cable adapter does not reach
-a browser), drag and drop on the board, file uploads in the drop
-zone, phones. Candidates for later.
+a browser), file uploads in the drop zone, phones. Drag and drop on
+the board is tested with the events a browser fires, not with a real
+pointer. Candidates for later.
 
 ## Production image
 

@@ -90,9 +90,36 @@ statuses.
   ticket changed meanwhile) the card goes back and a pink notice says
   why. The move is an ordinary status change: a timeline event,
   notifications and live refresh for everyone else.
+- **Several cards at once** (2026-11-12: "let me move several tickets
+  on the board"):
+  - Every card has a small check box at its top left, beside the
+    number ("Select #1042"). Ticked cards get a blue ring.
+    Shift+click on another box ticks every card in between, in the
+    order of the board (ui.md "Check box lists"); Escape clears the
+    selection.
+  - **Dragging a ticked card drags all ticked cards.** The pointer
+    carries a tag with their number ("3 tickets"). A column takes the
+    drop when at least one of them may move there. On the drop each
+    card that may move is moved, one request each, as a single card
+    is; the others stay where they are, and a notice says how many
+    were not moved ("2 of 5 tickets could not be moved there."). The
+    selection is cleared after the drop. Dragging a card that is not
+    ticked moves only that card, as before.
+  - **Without dragging:** while cards are ticked, a bar above the
+    board shows how many ("3 selected"), a "Move to" list of the
+    statuses, "Move" and "Clear". "Move" sends the ticked numbers to
+    the queue's bulk action (`PATCH /tickets/bulk`, queues.md "Bulk
+    actions"), which comes back to the board with its notice and the
+    skipped tickets and their reasons. Stages are chosen by dragging
+    or by a card's own Move menu.
+  - The selection lives in the page: a live refresh keeps it (the
+    board waits while cards are ticked, as it does for an open Move
+    menu), a reload forgets it.
 - **Without dragging** (keyboard, touch, no JavaScript): every card has a
   small "Move" menu (a `<details>` with one button per allowed status);
   it posts to the same route and comes back to the board with a notice.
+- The bulk action's `return_to` may be the board (`/tickets/board`
+  with its filters) as well as a list or the search page.
 - `move` answers 204 for `fetch` requests and redirects back to the board
   (the `Referer` when it is the board, else the board) for forms; errors
   are 422 with the message as text for `fetch`, an alert for forms. Staff

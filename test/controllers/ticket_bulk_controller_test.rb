@@ -73,4 +73,14 @@ class TicketBulkControllerTest < ActionDispatch::IntegrationTest
                                    headers: { "Authorization" => "Bearer #{requester}" }, as: :json
     assert_response :forbidden
   end
+
+  test "the bulk action comes back to the board when it was sent from there" do
+    sign_in users(:agent)
+    patch bulk_tickets_url, params: { numbers: [ tickets(:printer).number ], changes: { priority: "high" }, return_to: "/tickets/board?q=printer" }
+    assert_redirected_to "/tickets/board?q=printer"
+    patch bulk_tickets_url, params: { numbers: [ tickets(:printer).number ], changes: { priority: "low" }, return_to: "/tickets/boardroom" }
+    assert_redirected_to tickets_url
+    patch bulk_tickets_url, params: { numbers: [ tickets(:printer).number ], changes: { priority: "high" }, return_to: "//evil.example/tickets/board" }
+    assert_redirected_to tickets_url
+  end
 end
