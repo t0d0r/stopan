@@ -301,7 +301,15 @@ notifications, live.
   text is plain, 1-2,000 characters, shown with line breaks.
 - The form says how many people will receive it, and a confirm dialog
   repeats the number when it is more than one. After sending: "Message
-  sent to 12 users." and back to the page it came from.
+  sent to 12 users." and back to the page it came from. That page is
+  the admin page whose link opened the form (the Referer header, this
+  host and `/admin` paths only), kept in the session until the message
+  is sent; the form posts no address (2026-11-12). The web application
+  firewall in front of production refused a form whose field held a
+  long address (queues.md "Bulk actions"), and the users list links
+  here with its search and filters. A `return_to` parameter is still
+  read when the Referer gives nothing; without either it is the users
+  list.
 - **Stored** as notifications of kind `message` without a ticket:
   `notifications.ticket_id` becomes nullable and `notifications.message`
   (text) holds the text; the sender is the actor. They follow the panel's

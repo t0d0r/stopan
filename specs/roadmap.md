@@ -24,7 +24,7 @@ before it is built. The "foundation" column says what already exists.
 | attachments | virus scanning, thumbnails | type/size allow-list, preview dialog for images, PDFs and text (attachments.md) |
 | sharing | **specified in sharing.md**; later: several links per ticket; link expiry and total views are done (sharing.md) | public timeline scope (`internal = false`), live count of open pages |
 | spam handling | admin deletion of spam tickets with an audit entry | - |
-| browser system tests | **done 2026-11-12, system-tests.md** (five tests, `make test-system`); later: live updates, board drag and drop, uploads, phones | flow tests run through Rails integration tests |
+| browser system tests | **done 2026-11-12, system-tests.md** (`make test-system`); uploads and phones added the same day (seven more tests); later: live updates, a real pointer for drag and drop | flow tests run through Rails integration tests |
 | deployment | production hosting for Stopan (container, proxy, TLS, backups) | Dockerfile and compose file |
 | security | sign-in and password reset requests are rate limited by client address (done, auth.md "Rate limits"); production still needs `TRUSTED_PROXIES` so the limit is per visitor | Devise lockable per account; gitleaks pre-commit hook (done) |
 

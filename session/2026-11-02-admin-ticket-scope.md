@@ -956,6 +956,23 @@
   has no outgoing mail server, so the composer shows its warning
   there (specs/deploy.md "Update 2026-11-12 (revision cf20643)").
   Images kept: cf20643, 6982b41, 6a2cf43.
+- Status page on phones: each value of a stacked row is led by its
+  column name (`data-label` on the cells, `app/views/admin/status/show.html.erb`,
+  `application.css`; specs/status.md "Mail in").
+- Message form: it posts no `return_to`. `new` takes the admin page
+  from the Referer and keeps it in the session; `create` goes back
+  there (`Admin::MessagesController`; `referer_path` moved to
+  `ApplicationController`; the links on the users list and the
+  organization page carry no address; specs/notifications.md
+  "Messages from administrators").
+- Browser tests: `test/system/uploads_test.rb` (drop zone: picked and
+  dropped files, removal, the size limit) and
+  `test/system/phone_test.rb` (390 px: menu button, no sideways
+  scroll on six pages, Reply bar, Status labels); 31 browser tests
+  pass (specs/system-tests.md "Covered").
+- todo: "reporting" and "live updates" of the Later list marked done,
+  since reports.md and the page refreshes are built; what remains of
+  each is its own line.
 
 ## Decisions
 

@@ -128,4 +128,14 @@ class ApplicationController < ActionController::Base
 
     Ticket.visible_to(current_user).or(AdminScope.new(current_user).deleted_tickets).find_by!(number: number.to_s)
   end
+
+  # The path and query of the page the request came from, on this host only.
+  def referer_path
+    uri = URI.parse(request.referer.to_s)
+    return unless uri.host == request.host
+
+    uri.query.present? ? "#{uri.path}?#{uri.query}" : uri.path
+  rescue URI::InvalidURIError
+    nil
+  end
 end

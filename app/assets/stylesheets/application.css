@@ -7267,6 +7267,12 @@ turbo-frame {
   .status-table td:empty {
     display: none;
   }
+
+  /* The hidden head's names come back in front of each value. */
+  .status-table td[data-label]::before {
+    content: attr(data-label) ": ";
+    color: var(--ink-soft);
+  }
 }
 
 /* Organization form (specs/ui.md "Organization form"): four groups side

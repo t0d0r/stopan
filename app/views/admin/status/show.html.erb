@@ -29,9 +29,9 @@
             <% @mailboxes.each do |organization| %>
               <tr id="<%= dom_id(organization, :mailbox) %>">
                 <th scope="row"><%= link_to organization.name, admin_organization_path(organization) %></th>
-                <td><%= organization.imap_last_checked_at ? time_ago(organization.imap_last_checked_at) : t("ui.admin.mail.never") %></td>
-                <td class="num"><%= organization.imap_messages_count %></td>
-                <td class="<%= "mail-error" if organization.imap_last_error.present? %>"><%= organization.imap_last_error.presence || t("ui.status.none") %></td>
+                <td data-label="<%= t("ui.admin.mail.last_check") %>"><%= organization.imap_last_checked_at ? time_ago(organization.imap_last_checked_at) : t("ui.admin.mail.never") %></td>
+                <td class="num" data-label="<%= t("ui.admin.mail.messages_in") %>"><%= organization.imap_messages_count %></td>
+                <td class="<%= "mail-error" if organization.imap_last_error.present? %>" data-label="<%= t("ui.admin.mail.last_error") %>"><%= organization.imap_last_error.presence || t("ui.status.none") %></td>
                 <td><%= button_to t("ui.admin.mail.check_mailbox"), mailbox_check_admin_organization_path(organization), class: "link-button status-action" if organization.imap_ready? %></td>
               </tr>
             <% end %>
@@ -58,11 +58,11 @@
           <tbody>
             <% @mail_log.each do |event| %>
               <tr class="status-row--<%= event.result %>">
-                <td><%= time_ago event.created_at %></td>
-                <td><%= event.organization.name %></td>
-                <td class="status-wrap"><%= event.sender || t("ui.status.none") %></td>
-                <td class="status-wrap"><%= event.subject || t("ui.status.none") %></td>
-                <td><%= mailbox_outcome(event) %></td>
+                <td data-label="<%= t("ui.status.when") %>"><%= time_ago event.created_at %></td>
+                <td data-label="<%= t("ui.fields.organization") %>"><%= event.organization.name %></td>
+                <td class="status-wrap" data-label="<%= t("ui.fields.from") %>"><%= event.sender || t("ui.status.none") %></td>
+                <td class="status-wrap" data-label="<%= t("ui.fields.subject") %>"><%= event.subject || t("ui.status.none") %></td>
+                <td data-label="<%= t("ui.status.mail.outcome") %>"><%= mailbox_outcome(event) %></td>
               </tr>
             <% end %>
           </tbody>
@@ -107,8 +107,8 @@
               <% failed.each do |job| %>
                 <tr>
                   <th scope="row"><%= job.name %></th>
-                  <td><%= time_ago job.at %></td>
-                  <td class="status-wrap mail-error"><%= job.error %></td>
+                  <td data-label="<%= t("ui.status.when") %>"><%= time_ago job.at %></td>
+                  <td class="status-wrap mail-error" data-label="<%= t("ui.status.error") %>"><%= job.error %></td>
                   <td class="status-actions">
                     <%= button_to t("ui.status.jobs.retry"), retry_job_admin_status_path(id: job.id), class: "link-button status-action" %>
                     <%= button_to t("ui.status.jobs.discard"), discard_job_admin_status_path(id: job.id), method: :delete,

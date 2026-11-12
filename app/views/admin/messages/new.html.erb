@@ -8,7 +8,6 @@
                   data: confirm_data(title: t("ui.admin.messages.confirm_title"), body: t("ui.admin.messages.confirm_body"),
                                      button: t("ui.admin.messages.send")).merge(message_form: true) do |f| %>
       <%= form_errors @message %>
-      <%= hidden_field_tag :return_to, @return_to %>
       <div class="field">
         <%= f.label :recipients, t("ui.admin.messages.recipients") %>
         <%= f.select :recipients, message_recipient_options(@message.recipients), { include_blank: t("ui.admin.messages.choose") },

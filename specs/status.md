@@ -17,6 +17,9 @@ reloads live with the other admin pages.
 - One row per organization with a mailbox switched on: last check,
   messages taken in so far, last error (red), and "Check the mailbox"
   (the button of the organization page).
+- On phones the rows of the tables on this page stack, and each value
+  is led by its column's name ("Last check: ...", "When: ..."), since
+  the table head is hidden there (2026-11-12).
 - **Mail log:** the last 50 messages the mailboxes took in, newest
   first: time, organization, sender, subject, and what became of it:
 

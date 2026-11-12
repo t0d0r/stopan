@@ -64,7 +64,7 @@
                   <% end %>
                 <% end %>
                 <% if user != current_user && !user.deactivated? %>
-                  <%= link_to new_admin_message_path(user_id: user.id, return_to: request.fullpath), class: "icon-action",
+                  <%= link_to new_admin_message_path(user_id: user.id), class: "icon-action",
                               title: t("ui.admin.messages.to_label", name: user.display_name),
                               aria: { label: t("ui.admin.messages.to_label", name: user.display_name) } do %>
                     <%= icon :envelope, size: 14 %>

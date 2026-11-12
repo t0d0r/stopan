@@ -34,16 +34,6 @@ class TicketBulkController < ApplicationController
     path.to_s.match?(%r{\A/(tickets|tickets/board|search)(\?|\z)}) ? path : tickets_path
   end
 
-  # The path and query of the page the request came from, on this host only.
-  def referer_path
-    uri = URI.parse(request.referer.to_s)
-    return unless uri.host == request.host
-
-    uri.query.present? ? "#{uri.path}?#{uri.query}" : uri.path
-  rescue URI::InvalidURIError
-    nil
-  end
-
   def flash_result(bulk)
     flash[:notice] = t(bulk.delete? ? "flash.bulk_deleted" : "flash.bulk_updated", count: bulk.updated.size)
     return if bulk.skipped.empty?

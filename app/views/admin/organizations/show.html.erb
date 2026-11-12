@@ -69,7 +69,7 @@
       <% end %>
       <div class="form-actions form-actions--start">
         <%= link_to t("ui.admin.messages.to_members"),
-                    new_admin_message_path(organization_id: @organization.id, return_to: admin_organization_path(@organization)), class: "btn" %>
+                    new_admin_message_path(organization_id: @organization.id), class: "btn" %>
       </div>
     </div>
   </section>

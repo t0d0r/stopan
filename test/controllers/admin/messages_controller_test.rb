@@ -9,16 +9,17 @@ class Admin::MessagesControllerTest < ActionDispatch::IntegrationTest
   setup { sign_in users(:admin) }
 
   test "a message to one user lands in their notifications, live" do
-    get new_admin_message_url(user_id: users(:anna).id, return_to: "/admin/users")
+    get new_admin_message_url(user_id: users(:anna).id), headers: { "Referer" => "http://www.example.com/admin/users?q=anna&role=requester" }
+    assert_select "input[name=return_to]", 0
+    assert_select "a.btn[href=?]", "/admin/users?q=anna&role=requester"
     assert_select "select[name='admin_message[recipients]'] option[selected][value=?][data-count='1']", "user:#{users(:anna).id}"
 
     signals = capture_turbo_stream_broadcasts([ users(:anna), :notifications ]) do
       perform_enqueued_jobs do
-        post admin_messages_url, params: { return_to: "/admin/users",
-                                           admin_message: { recipients: "user:#{users(:anna).id}", text: "Planned outage tonight.\nBack at 22:00." } }
+        post admin_messages_url, params: { admin_message: { recipients: "user:#{users(:anna).id}", text: "Planned outage tonight.\nBack at 22:00." } }
       end
     end
-    assert_redirected_to admin_users_url
+    assert_redirected_to "http://www.example.com/admin/users?q=anna&role=requester"
     assert_equal "Message sent to 1 user.", flash[:notice]
     assert_equal [ "notifications_refresh" ], signals.map { |s| s["action"] }
 
@@ -60,6 +61,15 @@ class Admin::MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_content
     post admin_messages_url, params: { return_to: "https://evil.example/x", admin_message: { recipients: "all", text: "Hi" } }
     assert_redirected_to admin_users_url
+    # A page of another site, or outside the admin area, is not kept.
+    [ "https://evil.example/admin/users", "http://www.example.com/tickets" ].each do |page|
+      get new_admin_message_url, headers: { "Referer" => page }
+      post admin_messages_url, params: { admin_message: { recipients: "all", text: "Hi" } }
+      assert_redirected_to admin_users_url
+    end
+    get new_admin_message_url(return_to: "/admin/organizations")
+    post admin_messages_url, params: { admin_message: { recipients: "all", text: "Hi" } }
+    assert_redirected_to admin_organizations_url
   end
 
   test "only admins send messages; others cannot read someone else's" do

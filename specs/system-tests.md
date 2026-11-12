@@ -39,14 +39,17 @@ browser, so they never run the app's JavaScript. These few do.
 | queue drag | a row dropped on a view tab gets that view's change; a ticked row takes the ticked rows; "All unsolved" only reopens; "All tickets" takes nothing |
 | board preview | holding the pointer over a card shows the preview with the request and the latest reply; leaving and Escape hide it; the check box shows none |
 | board | ticked cards are ringed and counted, Shift+click ticks a range, Escape clears; dragging a ticked card moves all ticked cards; an unticked card moves alone; cards that may not move stay and are counted; the bar moves without dragging |
+| uploads | files picked twice and a dropped file add up in the drop zone's list; one is removed; the reply carries the rest with their content; a file over the size limit is left out and named |
+| phones (390 px) | the menu sits behind its button and Escape closes it; the queue, board, search, reports, ticket and Status pages do not scroll sideways; the composer opens from the Reply bar and sends; the Status page's stacked rows name each value |
 | shift+click | a range of ticket rows is ticked and cleared and the bar counts them; the member picker's range skips rows its search hides |
 
 ## Not covered
 
 Live updates over Action Cable (the test cable adapter does not reach
-a browser), file uploads in the drop zone, phones. Drag and drop on
-the board is tested with the events a browser fires, not with a real
-pointer. Candidates for later.
+a browser). Drag and drop on the board, and a file dropped on the drop
+zone, are tested with the events a browser fires, not with a real
+pointer. Phones are a narrow window of desktop Chrome, not a touch
+device. Candidates for later.
 
 ## Production image
 
