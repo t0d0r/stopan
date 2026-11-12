@@ -63,7 +63,7 @@
 - [x] sharing spec (specs/sharing.md)
 - [x] share a ticket by link with an optional password; public page with only public content; admin list (specs/sharing.md)
 - [x] share link expiry: "Never", 1, 7 or 30 days in the share form and the API; expired links stop at once and the hourly timer clears them (specs/sharing.md "Expiry")
-- [ ] sharing later: total view counts (specs/roadmap.md)
+- [x] share links count their views: once per browser within 30 minutes, shown in the Sharing panel, the admin list and the API (specs/sharing.md "Total views")
 - [x] admin dashboard shows the running version (`git describe`) and its commit date, written by `bin/deploy` into `REVISION` (specs/admin.md "Version")
 - [x] in-app notification panel: bell with unread count, dropdown, notifications page (specs/notifications.md "Notification panel")
 - [x] live updates of the notification panel over Action Cable (specs/notifications.md "Live updates of the panel")

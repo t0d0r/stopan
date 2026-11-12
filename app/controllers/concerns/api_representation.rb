@@ -41,6 +41,8 @@ module ApiRepresentation
     if ticket.shared? && policy.share?
       json[:share_url] = shared_ticket_url(ticket.share_token)
       json[:share_expires_at] = time_json(ticket.share_expires_at)
+      json[:share_views] = ticket.share_views
+      json[:share_last_viewed_at] = time_json(ticket.share_last_viewed_at)
     end
     if current_user.staff?
       json[:mail_headers] = ticket.mail_headers

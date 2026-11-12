@@ -46,6 +46,23 @@ class TicketSharesControllerTest < ActionDispatch::IntegrationTest
     assert_in_delta 7.days.from_now, ticket.reload.share_expires_at, 5.seconds
   end
 
+  test "the panel and the admin list show how often the link was opened" do
+    sign_in users(:admin)
+    ticket = tickets(:printer)
+    ticket.share!(actor: users(:agent))
+    get ticket_url(ticket)
+    assert_select "#sharing .sharing__views", "Not opened yet"
+
+    ticket.count_share_view!
+    get ticket_url(ticket)
+    assert_select "#sharing .sharing__views", /Opened once, last/
+    4.times { ticket.count_share_view! }
+    get ticket_url(ticket)
+    assert_select "#sharing .sharing__views", /Opened 5 times, last/
+    get admin_root_url
+    assert_select "##{ActionView::RecordIdentifier.dom_id(ticket, :shared)} .share-list__meta", /5 views/
+  end
+
   test "an expired link leaves the panel, the lists and the admin list" do
     sign_in users(:admin)
     ticket = tickets(:printer)

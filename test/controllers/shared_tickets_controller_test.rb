@@ -30,6 +30,54 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "no-store", response.headers["Cache-Control"]
   end
 
+  test "views count once per browser within 30 minutes, and start again with a new link" do
+    ticket = tickets(:printer)
+    updated_at = ticket.updated_at
+    token = share(ticket)
+    assert_equal 0, ticket.reload.share_views
+    assert_nil ticket.share_last_viewed_at
+
+    freeze_time do
+      3.times { get shared_ticket_url(token) }
+      assert_equal 1, ticket.reload.share_views
+      assert_equal Time.current, ticket.share_last_viewed_at
+    end
+    travel 31.minutes do
+      get shared_ticket_url(token)
+      assert_equal 2, ticket.reload.share_views
+    end
+    open_session do |other|
+      other.get shared_ticket_url(token)
+      assert_equal 3, ticket.reload.share_views
+    end
+    assert_equal updated_at.to_i, ticket.updated_at.to_i
+    assert_equal 0, ticket.events.where.not(action: %w[shared created]).where(created_at: 1.minute.ago..).count
+
+    get shared_ticket_url(share(ticket))
+    assert_equal 1, ticket.reload.share_views
+    ticket.unshare!(actor: users(:agent))
+    assert_equal 0, ticket.reload.share_views
+    assert_nil ticket.share_last_viewed_at
+  end
+
+  test "a password link counts a view only once it is unlocked; files never count" do
+    ticket = tickets(:printer)
+    ticket.files.attach(io: StringIO.new("hello"), filename: "hello.txt", content_type: "text/plain")
+    token = share(ticket, password: "s3cret!")
+
+    get shared_ticket_url(token)
+    post unlock_shared_ticket_url(token), params: { password: "wrong one" }
+    assert_equal 0, ticket.reload.share_views
+
+    post unlock_shared_ticket_url(token), params: { password: "s3cret!" }
+    assert_equal 0, ticket.reload.share_views
+    follow_redirect!
+    assert_response :success
+    assert_equal 1, ticket.reload.share_views
+    get shared_ticket_file_url(token, ticket.files.first)
+    assert_equal 1, ticket.reload.share_views
+  end
+
   test "an expired link is not available, its files neither" do
     ticket = tickets(:printer)
     ticket.files.attach(io: StringIO.new("hello"), filename: "hello.txt", content_type: "text/plain")

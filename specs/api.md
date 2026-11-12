@@ -127,7 +127,8 @@ other browser preferences, creating tokens.
   markdown, stage {id, name}, organization {id, name}, requester,
   assignee, created_at, updated_at, done_at, edited_at, url` (the page);
   in `show` also `description, files, timeline, shared` (and
-  `share_url` and `share_expires_at` when shared and the user may share), `mail_headers` (staff),
+  `share_url`, `share_expires_at`, `share_views` and
+  `share_last_viewed_at` when shared and the user may share), `mail_headers` (staff),
   `next_statuses` (staff), `followers`, `cc_suggestions` (staff who
   may update it) and `cc_candidates` (`id, name`; the requester).
 - **Follower:** `id, kind` (`staff` or `cc`), `user`, and for staff

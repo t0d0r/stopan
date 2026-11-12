@@ -482,6 +482,10 @@ de:
       share_open: "Offener Link"
       share_password: "Mit Passwort"
       share_expires: "läuft ab am %{time}"
+      share_views:
+        zero: "0 Aufrufe"
+        one: "1 Aufruf"
+        other: "%{count} Aufrufe"
       title: "Verwaltung"
       sections: "Verwaltungsbereiche"
       overview: "Übersicht"
@@ -851,6 +855,11 @@ de:
         one: "Nach 1 Tag"
         other: "Nach %{count} Tagen"
       expires_at: "Läuft ab am %{time}"
+      views:
+        one: "Einmal geöffnet"
+        other: "%{count}-mal geöffnet"
+      last_viewed: "zuletzt"
+      not_viewed: "Noch nicht geöffnet"
       hint: "Jeder mit dem Link kann die Beschreibung und die öffentlichen Antworten lesen, ohne sich anzumelden. Interne Notizen werden nie angezeigt."
       password: "Passwort (optional)"
       password_hint: "Mindestens %{min} Zeichen. Ohne Passwort öffnet der Link allein die Seite."

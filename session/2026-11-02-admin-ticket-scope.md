@@ -726,6 +726,13 @@
   links, the file name and the API carry the range. Tests in
   test/models/ticket_report_test.rb and
   test/controllers/reports_controller_test.rb. Not deployed yet.
+- 2026-11-12: share links count their views (specs/sharing.md "Total
+  views"): `tickets.share_views` and `share_last_viewed_at` (migration
+  20261112110000), counted when the shared page is shown, once per
+  browser session within 30 minutes, reset by a new link. Shown in
+  the Sharing panel ("Opened 5 times, last ..."), the admin list and
+  the ticket JSON. Tests in the share controller and API tests. Not
+  deployed yet.
 
 ## Decisions
 
@@ -842,7 +849,8 @@ no data yet. The sign-in and password reset rate limits are deployed
 and count per visitor. Share link expiry and the version line on the
 admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
-reports is committed but not deployed (no migration). The
+reports and the view count of share links are committed but not
+deployed; the view count has a migration, so copy the database first. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

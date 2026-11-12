@@ -7,6 +7,9 @@ class SharedTicketsController < ApplicationController
   # Per process; enough to slow down guessing a share password.
   RATE_LIMIT_STORE = ActiveSupport::Cache::MemoryStore.new
   UNLOCKED_LIMIT = 20
+  # The same browser opening a link again this soon is the same view
+  # (specs/sharing.md "Total views").
+  VIEW_WINDOW = 30.minutes
 
   skip_before_action :authenticate_user!
   # Shared pages are public, whoever is signed in (specs/roles.md).
@@ -25,6 +28,7 @@ class SharedTicketsController < ApplicationController
              }
 
   def show
+    count_view
     @events = TicketEvent.where(ticket: @ticket, internal: false)
                          .includes(:actor, comment: [ :author, :edited_by, { files_attachments: :blob } ])
                          .order(created_at: timeline_direction, id: timeline_direction).to_a
@@ -100,6 +104,17 @@ class SharedTicketsController < ApplicationController
 
   def unlocked?
     session.dig(:unlocked_shares, @ticket.share_token) == unlock_key
+  end
+
+  def count_view
+    key = @ticket.share_digest.first(16)
+    seen = (session[:viewed_shares] || {}).to_h
+    last = seen[key].to_i
+    return if last.positive? && last > VIEW_WINDOW.ago.to_i
+
+    @ticket.count_share_view!
+    seen = seen.except(key).merge(key => Time.current.to_i)
+    session[:viewed_shares] = seen.to_a.last(UNLOCKED_LIMIT).to_h
   end
 
   def remember_unlocked

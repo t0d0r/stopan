@@ -11,6 +11,13 @@
       <% if ticket.share_expires_at %>
         <p class="sharing__status sharing__expires"><%= t("ui.share.expires_at", time: l(ticket.share_expires_at, format: :short)) %></p>
       <% end %>
+      <p class="sharing__status sharing__views">
+        <% if ticket.share_views.positive? %>
+          <%= t("ui.share.views", count: ticket.share_views) %><% if ticket.share_last_viewed_at %>, <%= t("ui.share.last_viewed") %> <%= time_ago ticket.share_last_viewed_at %><% end %>
+        <% else %>
+          <%= t("ui.share.not_viewed") %>
+        <% end %>
+      </p>
       <%= share_viewers_tag ShareViewers.count(ticket), scope: :panel %>
       <div class="sharing__link input-group input-group--stacked">
         <%= label_tag "share-url", t("ui.share.link"), class: "sr-only" %>

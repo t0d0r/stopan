@@ -141,6 +141,12 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_in_delta 30.days.from_now, Time.zone.parse(expires_at), 5.seconds
     body = api(:get, api_v1_ticket_url(ticket), token: token)["ticket"]
     assert_equal expires_at, body["share_expires_at"]
+    assert_equal 0, body["share_views"]
+    assert_nil body["share_last_viewed_at"]
+    ticket.count_share_view!
+    body = api(:get, api_v1_ticket_url(ticket), token: token)["ticket"]
+    assert_equal 1, body["share_views"]
+    assert body["share_last_viewed_at"].present?
     post api_v1_ticket_share_url(ticket), params: { expires_in_days: 2 }, headers: auth(token), as: :json
     assert_response :unprocessable_content
     travel 31.days do

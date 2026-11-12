@@ -97,6 +97,7 @@
             <p class="share-list__meta">
               <%= ticket.share_password? ? t("ui.admin.share_password") : t("ui.admin.share_open") %>
               <span aria-hidden="true">&middot;</span> <%= time_ago ticket.shared_at %>
+              <span aria-hidden="true">&middot;</span> <%= t("ui.admin.share_views", count: ticket.share_views) %>
               <% if ticket.share_expires_at %>
                 <span aria-hidden="true">&middot;</span> <%= t("ui.admin.share_expires", time: l(ticket.share_expires_at, format: :short)) %>
               <% end %>

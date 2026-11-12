@@ -167,7 +167,8 @@ class Ticket < ApplicationRecord
     old_token = share_token
     transaction do
       update_columns(share_token: SecureRandom.base58(32), share_password_digest: share_password_digest,
-                     shared_at: Time.current, share_expires_at: days&.days&.from_now)
+                     shared_at: Time.current, share_expires_at: days&.days&.from_now,
+                     share_views: 0, share_last_viewed_at: nil)
       events.create!(action: "shared", actor: actor, internal: true, to_value: ("password" if password),
                      detail: days&.to_s)
     end
@@ -368,10 +369,18 @@ class Ticket < ApplicationRecord
     true
   end
 
+  # One more view of the shared page (specs/sharing.md "Total views"):
+  # counted in the database, so two at once are not lost, and without
+  # touching updated_at.
+  def count_share_view!
+    Ticket.where(id: id).update_all([ "share_views = share_views + 1, share_last_viewed_at = ?", Time.current ])
+  end
+
   def clear_share!(action, actor)
     old_token = share_token
     transaction do
-      update_columns(share_token: nil, share_password_digest: nil, shared_at: nil, share_expires_at: nil)
+      update_columns(share_token: nil, share_password_digest: nil, shared_at: nil, share_expires_at: nil,
+                     share_views: 0, share_last_viewed_at: nil)
       events.create!(action: action, actor: actor, internal: true)
     end
     refresh_shared_page(old_token)

@@ -105,6 +105,32 @@ Why fixed choices and not a date field: three choices cover "today's
 call", "this week" and "this month", need no date picker on a phone and
 cannot be set in the past.
 
+## Total views (2026-11-12)
+
+"Who is viewing now" (below) says whether a link is open at this
+moment. The total says whether it was ever used, before someone stops
+or replaces it.
+
+- Columns `tickets.share_views` (integer, 0) and
+  `share_last_viewed_at`. They belong to the current link: a new link
+  starts from zero, and stopping or expiry clears them.
+- **A view** is the shared page shown to a browser: an open link, or a
+  password link after its password. The same browser opening the same
+  link again within 30 minutes is the same view (the session keeps the
+  time per link, at most 20 links), so reloads and the page's own live
+  refreshes do not count. The password form, a wrong password, files
+  and previews do not count. A browser without cookies counts every
+  time.
+- Everyone counts, signed in or not, the person who made the link
+  included: the page does not use accounts.
+- The count is written without touching `updated_at`, with no event.
+- **Shown** to who may share: the Sharing panel says "Opened 5 times,
+  last 2 hours ago" or "Not opened yet"; the admin list adds "5
+  views". They show the number as the page was loaded, not live.
+- **API:** the ticket JSON has `share_views` and
+  `share_last_viewed_at` next to `share_url`.
+- Names of viewers are still not kept: visitors are not signed in.
+
 ## Managing the link (ticket page)
 
 A "Sharing" panel in the side column, for users allowed to share:
@@ -288,7 +314,7 @@ organizations the administrator is a member of (roles.md).
 
 ## Not in this phase
 
-Total view counts (history), names of viewers,
+Names of viewers,
 sharing internal content, several links per ticket. Recorded in
 specs/roadmap.md.
 
@@ -308,6 +334,10 @@ choices and a refused value, an expired link is not shared anywhere
 (page, files, channel scope, API, panel), the clean-up clears it once
 with one event and leaves unexpired and endless links alone, an
 automatic link has no expiry and is made anew after an expired one.
+Total views in the same controller tests: counted once per browser
+within 30 minutes and again after, not on the password form or a wrong
+password, counted after unlocking, reset by a new link, shown in the
+panel, the admin list and the API.
 `test/models/share_viewers_test.rb` and
 `test/channels/shared_ticket_channel_test.rb`: counting per link, join
 and leave broadcasts to the share and page streams, the indicator on both

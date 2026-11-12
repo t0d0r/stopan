@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_110000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -243,6 +243,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_100000) do
     t.integer "deleted_by_id"
     t.boolean "email_requester", default: true, null: false
     t.datetime "share_expires_at"
+    t.integer "share_views", default: 0, null: false
+    t.datetime "share_last_viewed_at"
     t.index ["assignee_id"], name: "index_tickets_on_assignee_id"
     t.index ["deleted_at"], name: "index_tickets_on_deleted_at"
     t.index ["deleted_by_id"], name: "index_tickets_on_deleted_by_id"

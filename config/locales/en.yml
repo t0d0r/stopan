@@ -479,6 +479,10 @@ en:
       share_open: "Open link"
       share_password: "With password"
       share_expires: "expires %{time}"
+      share_views:
+        zero: "0 views"
+        one: "1 view"
+        other: "%{count} views"
       title: "Admin"
       sections: "Admin sections"
       overview: "Overview"
@@ -848,6 +852,11 @@ en:
         one: "After 1 day"
         other: "After %{count} days"
       expires_at: "Expires %{time}"
+      views:
+        one: "Opened once"
+        other: "Opened %{count} times"
+      last_viewed: "last"
+      not_viewed: "Not opened yet"
       hint: "Anyone with the link can read the description and the public replies, without signing in. Internal notes are never shown."
       password: "Password (optional)"
       password_hint: "At least %{min} characters. Without one, the link alone opens the page."
