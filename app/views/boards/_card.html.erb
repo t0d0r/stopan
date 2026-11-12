@@ -3,7 +3,8 @@
 <% allowed = Ticket::TRANSITIONS.fetch(ticket.status, []) %>
 <article class="board-card<%= " is-golden" if ticket.priority == "urgent" %>" id="<%= dom_id(ticket, :card) %>" draggable="true"
          data-board-card data-ticket="<%= ticket.number %>" data-status="<%= ticket.status %>" data-priority="<%= ticket.priority %>"
-         data-stage="<%= ticket.stage_id %>" data-allowed="<%= allowed.join(" ") %>" data-move-url="<%= move_ticket_path(ticket) %>">
+         data-stage="<%= ticket.stage_id %>" data-allowed="<%= allowed.join(" ") %>" data-move-url="<%= move_ticket_path(ticket) %>"
+         data-preview-url="<%= preview_ticket_path(ticket) %>">
   <%= postpone_stamp(ticket) %>
   <div class="board-card__strip">
     <%# Ticked cards move together (specs/board.md "Several cards at once"). %>

@@ -88,4 +88,35 @@ class BoardTest < ApplicationSystemTestCase
     assert_text "2 tickets changed."
     assert_equal %w[pending pending new new], @tickets.map { |ticket| ticket.reload.status }
   end
+
+  test "holding the pointer over a card shows a preview; leaving and Escape hide it" do
+    @tickets[1].update_columns(description: "The wombat sleeps all day.")
+    @tickets[1].add_comment(author: users(:agent), body: "We will wake it.")
+    assert_no_selector "#card-preview", visible: :visible
+
+    card(@tickets[1]).find(".board-card__title").hover
+    assert_selector "#card-preview", text: "The wombat sleeps all day."
+    within("#card-preview") do
+      assert_text "Wombat 1"
+      assert_text "Latest reply by"
+      assert_text "We will wake it."
+      assert_text "1 reply"
+    end
+    assert_equal "card-preview", card(@tickets[1]).find(".board-card__title a")["aria-describedby"]
+
+    find("h1", visible: :all)  # anything else
+    find(".board-header").hover
+    assert_no_selector "#card-preview", visible: :visible
+
+    card(@tickets[2]).find(".board-card__title").hover
+    assert_selector "#card-preview", text: "Wombat 2"
+    find("body").send_keys(:escape)
+    assert_no_selector "#card-preview", visible: :visible
+  end
+
+  test "the check box and a started drag do not show a preview" do
+    card(@tickets[0]).find("[data-board-check]").hover
+    sleep 0.8
+    assert_no_selector "#card-preview", visible: :visible
+  end
 end

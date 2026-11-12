@@ -79,6 +79,45 @@ statuses.
   recent activity (or the order chosen with the Sort filter).
 - A shared ticket shows the link icon after the subject.
 
+## Preview on hover (2026-11-12)
+
+"A mini preview of the content when I hold the mouse over a card."
+A card shows only the subject; to see what a ticket is about one had
+to open it.
+
+- Holding the pointer over a card for half a second, or moving the
+  keyboard focus to its subject link, shows a small panel beside the
+  card: number and subject, status and priority, the start of the
+  description (plain text, at most 600 characters, line breaks kept)
+  and the latest message when there is one: who wrote it, when,
+  whether it is an internal note, and its first 300 characters. It
+  ends with how many replies and notes the ticket has and how many
+  files.
+- The panel sits to the right of the card, or to the left when there
+  is no room, at most 380px wide and never beyond the window. It goes
+  away when the pointer leaves the card, on Escape, on scroll, when a
+  drag starts, a Move menu opens or a card is ticked. It never takes
+  the pointer, so it cannot be clicked: the card stays the way to the
+  ticket.
+- The content is fetched when first needed, not sent with the board:
+  `GET /tickets/:number/preview`, an HTML fragment without the page
+  layout, `Cache-Control: private, no-store`, for staff only (403 for
+  requesters; 404 outside `Ticket.visible_to`). The browser keeps the
+  answer for that card until the board reloads. Opening a preview
+  marks nothing as read.
+- The text is the stored text, escaped: no Markdown rendering, no
+  mail HTML, no links, no images.
+- Touch screens have no hover, so they get no panel; nothing is lost,
+  the ticket page has it all (mobile.md "no hover-only content": the
+  preview is a shortcut, not the only place).
+- Screen readers: the panel has `role="tooltip"` and the subject link
+  names it with `aria-describedby` while it is shown.
+
+`test/controllers/ticket_previews_test.rb` (the fragment, internal
+notes marked, cut text, escaped HTML, counts, 403 and 404, nothing
+marked read) and `test/system/board_test.rb` (shown on hover and on
+focus, hidden on leave and Escape).
+
 ## Moving cards
 
 - **Drag and drop** a card onto another column (expanded or collapsed):

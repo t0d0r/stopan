@@ -1674,6 +1674,81 @@ function setUpBoard(board) {
     }, { signal: pageSignal });
   });
 
+  // A small panel with the start of the ticket while a card is hovered or
+  // its subject link has the focus (specs/board.md "Preview on hover").
+  const preview = document.querySelector("[data-card-preview]");
+  if (preview) {
+    const fetched = new Map();
+    let timer = null;
+    let shownFor = null;
+    const hide = () => {
+      clearTimeout(timer);
+      timer = null;
+      if (!shownFor) return;
+      shownFor.querySelector(".board-card__title a")?.removeAttribute("aria-describedby");
+      shownFor = null;
+      preview.hidden = true;
+    };
+    const place = (card) => {
+      const box = card.getBoundingClientRect();
+      const zoom = pageZoom();
+      const width = Math.min(380, window.innerWidth / zoom - 24);
+      preview.style.width = `${width}px`;
+      const right = box.right / zoom + 10;
+      const left = right + width <= window.innerWidth / zoom - 8 ? right : Math.max(8, box.left / zoom - width - 10);
+      preview.style.left = `${left}px`;
+      preview.style.top = "0px";
+      const height = preview.offsetHeight;
+      preview.style.top = `${Math.max(8, Math.min(box.top / zoom, window.innerHeight / zoom - height - 8))}px`;
+    };
+    const show = async (card) => {
+      if (dragged || board.querySelector("details[open]")) return;
+      const url = card.dataset.previewUrl;
+      if (!fetched.has(url)) {
+        fetched.set(url, fetch(url, { credentials: "same-origin", headers: { Accept: "text/html" } })
+          .then((response) => (response.ok ? response.text() : ""))
+          .catch(() => ""));
+      }
+      const html = await fetched.get(url);
+      // The pointer may have left, or moved to another card, meanwhile.
+      if (!html || waitingFor !== card) return;
+      preview.innerHTML = html;
+      preview.hidden = false;
+      shownFor = card;
+      card.querySelector(".board-card__title a")?.setAttribute("aria-describedby", preview.id);
+      place(card);
+    };
+    let waitingFor = null;
+    const wait = (card) => {
+      if (waitingFor === card) return;
+      hide();
+      waitingFor = card;
+      timer = setTimeout(() => show(card), 500);
+    };
+    const leave = () => { waitingFor = null; hide(); };
+    board.addEventListener("mouseover", (event) => {
+      const card = event.target.closest("[data-board-card]");
+      // The check box and the Move menu have their own job.
+      if (!card || event.target.closest("[data-board-check], .board-card__move")) return leave();
+      wait(card);
+    }, { signal: pageSignal });
+    board.addEventListener("mouseout", (event) => {
+      const card = event.target.closest("[data-board-card]");
+      if (card && !card.contains(event.relatedTarget)) leave();
+    }, { signal: pageSignal });
+    board.addEventListener("focusin", (event) => {
+      const link = event.target.closest(".board-card__title a");
+      if (link && link.matches(":focus-visible")) wait(link.closest("[data-board-card]"));
+    }, { signal: pageSignal });
+    board.addEventListener("focusout", leave, { signal: pageSignal });
+    board.addEventListener("dragstart", leave, { signal: pageSignal });
+    board.addEventListener("change", leave, { signal: pageSignal });
+    board.addEventListener("toggle", leave, { capture: true, signal: pageSignal });
+    board.addEventListener("scroll", leave, { capture: true, passive: true, signal: pageSignal });
+    window.addEventListener("scroll", leave, { passive: true, signal: pageSignal });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") leave(); }, { signal: pageSignal });
+  }
+
   const count = (column, change) => {
     column.querySelectorAll("[data-column-count]").forEach((element) => {
       element.textContent = Number(element.textContent) + change;

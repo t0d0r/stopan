@@ -1,7 +1,7 @@
 class TicketsController < ApplicationController
   include TicketTimeline
 
-  before_action :set_ticket, only: %i[update resolve assign move destroy]
+  before_action :set_ticket, only: %i[update resolve assign move destroy preview]
 
   def index
     @filter = TicketFilter.new(current_user, params)
@@ -66,6 +66,19 @@ class TicketsController < ApplicationController
         redirect_back_or_to board_path, allow_other_host: false, **flash
       end
     end
+  end
+
+  # A small fragment for the board's hover panel (specs/board.md "Preview
+  # on hover"): the start of the request and the latest message. Reading
+  # it marks nothing as read.
+  def preview
+    authorize! current_user.staff?
+    comments = Comment.visible_to(current_user).where(ticket: @ticket)
+    @latest = comments.includes(:author).order(:created_at, :id).last
+    @counts = { replies: comments.where(internal: false).count, notes: comments.where(internal: true).count,
+                files: @ticket.files.attachments.size }
+    response.headers["Cache-Control"] = "private, no-store"
+    render partial: "tickets/preview", locals: { ticket: @ticket, latest: @latest, counts: @counts }
   end
 
   # Soft delete (specs/tickets.md "Deleting"): gone for everyone; only

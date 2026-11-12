@@ -1,0 +1,24 @@
+<%# The board's hover panel (specs/board.md "Preview on hover"): plain,
+    escaped text only. Locals: ticket, latest (a comment or nil), counts. %>
+<article class="card-preview__content">
+  <header class="card-preview__head">
+    <span class="card-preview__number"><%= ticket.reference %></span>
+    <%= status_pill ticket.status %> <%= priority_pill ticket.priority %>
+  </header>
+  <h3 class="card-preview__subject"><%= ticket.subject %></h3>
+  <p class="card-preview__text"><%= ticket.description.to_s.strip.truncate(600, omission: "...") %></p>
+  <% if latest %>
+    <section class="card-preview__latest<%= " card-preview__latest--internal" if latest.internal? %>">
+      <p class="card-preview__by">
+        <%= latest.internal? ? t("ui.board.preview.note") : t("ui.board.preview.reply") %>
+        <strong><%= latest.author.display_name %></strong>, <%= t("ui.ago", time: time_ago_in_words(latest.created_at)) %>
+      </p>
+      <p class="card-preview__text"><%= latest.body.to_s.strip.truncate(300, omission: "...") %></p>
+    </section>
+  <% end %>
+  <p class="card-preview__counts">
+    <%= t("ui.board.preview.replies", count: counts[:replies]) %> &middot;
+    <%= t("ui.board.preview.notes", count: counts[:notes]) %> &middot;
+    <%= t("ui.board.preview.files", count: counts[:files]) %>
+  </p>
+</article>

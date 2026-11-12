@@ -25,6 +25,9 @@
   </div>
 <% end %>
 
+<%# Filled and placed by the script while a card is hovered (specs/board.md "Preview on hover"). %>
+<div class="card-preview" id="card-preview" role="tooltip" hidden data-card-preview></div>
+
 <div class="board" data-board data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-move-failed="<%= t("ui.board.move_failed") %>"
      data-drag-count="<%= t("ui.board.drag_count") %>" data-some-refused="<%= t("ui.board.some_refused") %>">
   <% @board.columns.each do |column| %>

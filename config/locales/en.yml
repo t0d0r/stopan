@@ -721,6 +721,21 @@ en:
       move_to: "Move to"
       drag_count: "%{count} tickets"
       some_refused: "%{count} of %{total} tickets could not be moved there."
+      preview:
+        reply: "Latest reply by"
+        note: "Latest internal note by"
+        replies:
+          zero: "no replies"
+          one: "1 reply"
+          other: "%{count} replies"
+        notes:
+          zero: "no notes"
+          one: "1 note"
+          other: "%{count} notes"
+        files:
+          zero: "no files"
+          one: "1 file"
+          other: "%{count} files"
       no_stage: "No stage"
       stamp_top: "Not now in"
       stamp_top_today: "Not now"

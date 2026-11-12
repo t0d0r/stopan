@@ -899,6 +899,18 @@
   stylesheet carry the changes, and a bulk request in the new shape
   passes the firewall (specs/deploy.md "Update 2026-11-12 (revision
   6a2cf43)"). Images kept: 6a2cf43, 49503f1, 35cdfbf.
+- 2026-11-12: the board shows a small preview when the pointer rests
+  on a card for half a second, or its subject link has the keyboard
+  focus (specs/board.md "Preview on hover"): number, subject, status,
+  priority, the first 600 characters of the description, the latest
+  message with its author and whether it is an internal note, and
+  the counts of replies, notes and files. Fetched on demand from
+  `GET /tickets/:number/preview` (staff only, a fragment, no-store,
+  plain escaped text) and kept per card until the board reloads. The
+  panel never takes the pointer and goes away on leave, Escape,
+  scroll, drag, a Move menu or a ticked box. Tests:
+  test/controllers/ticket_previews_test.rb and two browser tests.
+  Not deployed yet.
 
 ## Decisions
 

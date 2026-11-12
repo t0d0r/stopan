@@ -724,6 +724,21 @@ de:
       move_to: "Verschieben nach"
       drag_count: "%{count} Tickets"
       some_refused: "%{count} von %{total} Tickets konnten dort nicht hin verschoben werden."
+      preview:
+        reply: "Letzte Antwort von"
+        note: "Letzte interne Notiz von"
+        replies:
+          zero: "keine Antworten"
+          one: "1 Antwort"
+          other: "%{count} Antworten"
+        notes:
+          zero: "keine Notizen"
+          one: "1 Notiz"
+          other: "%{count} Notizen"
+        files:
+          zero: "keine Dateien"
+          one: "1 Datei"
+          other: "%{count} Dateien"
       no_stage: "Keine Phase"
       stamp_top: "Später in"
       stamp_top_today: "Später"

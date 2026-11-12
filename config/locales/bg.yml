@@ -724,6 +724,21 @@ bg:
       move_to: "Премести в"
       drag_count: "%{count} заявки"
       some_refused: "%{count} от %{total} заявки не могат да се преместят там."
+      preview:
+        reply: "Последен отговор от"
+        note: "Последна вътрешна бележка от"
+        replies:
+          zero: "без отговори"
+          one: "1 отговор"
+          other: "%{count} отговора"
+        notes:
+          zero: "без бележки"
+          one: "1 бележка"
+          other: "%{count} бележки"
+        files:
+          zero: "без файлове"
+          one: "1 файл"
+          other: "%{count} файла"
       no_stage: "Без етап"
       stamp_top: "Отлага се след"
       stamp_top_today: "Отлага се"

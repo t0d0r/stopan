@@ -30,6 +30,8 @@ Rails.application.routes.draw do
       patch :resolve
       patch :assign
       patch :move
+      # The board's hover preview (specs/board.md "Preview on hover").
+      get :preview
     end
     resources :comments, only: %i[create edit update] do
       patch :markdown, on: :member
