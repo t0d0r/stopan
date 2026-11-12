@@ -306,7 +306,20 @@ has a ready icon for each new need.
   - Wide screens do not change: no toggles, no Reply bar, panels and
     composer always shown.
 - **Admin:** stat tiles, grey sticky panels with tables, forms in a narrow
-  sticky. On an organization's page the purple details panel is the
+  sticky.
+  - **Organization form** (2026-11-12: "make this screen fit on one
+    page"; it was one narrow column about three screens tall). The new
+    and edit forms are one wide sticky with four groups side by side:
+    name, notes and the mail language | the public request page |
+    outgoing mail (SMTP) | the mailbox (IMAP). The page grows up to
+    1560px for this form, whatever the width switch says, so each
+    column has room for two short fields in a row (server and port,
+    user and password). It fits 1280x800 and larger without scrolling
+    at the normal text size. The columns are a grid of at least 236px
+    each, so a narrower window gets three, two and, on phones, one
+    column, in the same order as before. The text areas start two or
+    three rows tall and grow with their text. One form and one Save,
+    as before. On an organization's page the purple details panel is the
   right column (3 : 2 with the members, at least 300px; one column under
   900px). Since 2026-10-28 (operator: "too cluttered, hard to read") it
   reads top to bottom as: two tiles with the unsolved and all ticket

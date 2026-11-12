@@ -840,6 +840,14 @@
   as automatic, all recorded in the mail log (specs/deploy.md "Update
   2026-11-12 (revision 35cdfbf)"). Images kept: 35cdfbf, 19cab54,
   44e58c9.
+- 2026-11-12: the organization form (new and edit) is one wide panel
+  with four groups side by side instead of one narrow column about
+  three screens tall (specs/ui.md "Organization form"): general and
+  mail language, public page, SMTP, IMAP. The page grows to 1560px
+  for it; it fits 1280x800 without scrolling and falls to fewer
+  columns on narrower windows. `_mail_fields` now holds the SMTP and
+  IMAP columns, `_mail_general` the intro and language. Not deployed
+  yet.
 
 ## Decisions
 
@@ -984,7 +992,8 @@ and empty, so nothing shows until an administrator sets them; the
 image is built without the test group. The "Overdue" view of the
 queue and the SLA panel of the reports are deployed and show once a
 target is set. The Status page is deployed and its
-mail log holds the first real messages. A webhook has
+mail log holds the first real messages. The four-column organization
+form is committed but not deployed (no migration). A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

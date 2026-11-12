@@ -1,45 +1,54 @@
 <%= form_with model: [ :admin, organization ], class: "stack-form" do |f| %>
   <%= form_errors organization %>
-  <div class="field">
-    <%= f.label :name, t("ui.fields.name") %>
-    <%= f.text_field :name, class: "field-input", required: true, maxlength: 120, aria: { invalid: invalid?(organization, :name) } %>
-  </div>
-  <div class="field">
-    <%= f.label :notes, t("ui.fields.notes") %>
-    <%= f.text_area :notes, class: "field-input", rows: 4, maxlength: 5_000, data: { autogrow: true }, aria: { describedby: "notes-hint" } %>
-    <small class="field-hint" id="notes-hint"><%= t("ui.admin.notes_hint") %></small>
-  </div>
-  <fieldset class="mail-settings__part" id="public-form-settings">
-    <legend><%= t("ui.admin.public_form.title") %></legend>
-    <label class="check-field"><%= f.check_box :public_form %> <%= t("ui.admin.public_form.enabled") %></label>
-    <div class="field">
-      <%= f.label :slug %>
-      <%= f.text_field :slug, class: "field-input", maxlength: 60, pattern: "[a-z0-9][a-z0-9-]*[a-z0-9]",
-                       aria: { invalid: invalid?(organization, :slug), describedby: "slug-hint" } %>
-      <small class="field-hint" id="slug-hint"><%= t("ui.admin.public_form.slug_hint_short") %></small>
-    </div>
-    <% if organization.persisted? && organization.slug_in_database.present? %>
+  <%# Four groups side by side on a wide screen, so the form fits one
+      screen (specs/ui.md "Organization form"). %>
+  <div class="org-form">
+    <div class="org-form__column" id="org-general">
       <div class="field">
-        <span class="field-label"><%= t("ui.public_request.address") %></span>
-        <%= render "admin/organizations/public_link", organization: Organization.new(slug: organization.slug_in_database), id: "public-form-url-edit" %>
-        <% unless organization.public_form_in_database %>
-          <small class="field-hint"><%= t("ui.admin.public_form.off_hint") %></small>
-        <% end %>
+        <%= f.label :name, t("ui.fields.name") %>
+        <%= f.text_field :name, class: "field-input", required: true, maxlength: 120, aria: { invalid: invalid?(organization, :name) } %>
       </div>
-    <% end %>
-    <div class="field">
-      <%= f.label :public_allowed_senders %>
-      <%= f.text_area :public_allowed_senders, class: "field-input", rows: 4, data: { autogrow: true },
-                      placeholder: "anna@acme.example\n@acme.example",
-                      aria: { invalid: invalid?(organization, :public_allowed_senders), describedby: "senders-hint" } %>
-      <small class="field-hint" id="senders-hint"><%= t("ui.admin.public_form.senders_hint") %></small>
+      <div class="field">
+        <%= f.label :notes, t("ui.fields.notes") %>
+        <%= f.text_area :notes, class: "field-input", rows: 3, maxlength: 5_000, data: { autogrow: true }, aria: { describedby: "notes-hint" } %>
+        <small class="field-hint" id="notes-hint"><%= t("ui.admin.notes_hint") %></small>
+      </div>
+      <%= render "admin/organizations/mail_general", f: f, organization: organization %>
     </div>
-    <div class="field">
-      <%= f.label :public_intro %>
-      <%= f.text_area :public_intro, class: "field-input", rows: 3, maxlength: 1_000, data: { autogrow: true } %>
+    <div class="org-form__column">
+      <fieldset class="mail-settings__part" id="public-form-settings">
+        <legend><%= t("ui.admin.public_form.title") %></legend>
+        <label class="check-field"><%= f.check_box :public_form %> <%= t("ui.admin.public_form.enabled") %></label>
+        <div class="field">
+          <%= f.label :slug %>
+          <%= f.text_field :slug, class: "field-input", maxlength: 60, pattern: "[a-z0-9][a-z0-9-]*[a-z0-9]",
+                           aria: { invalid: invalid?(organization, :slug), describedby: "slug-hint" } %>
+          <small class="field-hint" id="slug-hint"><%= t("ui.admin.public_form.slug_hint_short") %></small>
+        </div>
+        <% if organization.persisted? && organization.slug_in_database.present? %>
+          <div class="field">
+            <span class="field-label"><%= t("ui.public_request.address") %></span>
+            <%= render "admin/organizations/public_link", organization: Organization.new(slug: organization.slug_in_database), id: "public-form-url-edit" %>
+            <% unless organization.public_form_in_database %>
+              <small class="field-hint"><%= t("ui.admin.public_form.off_hint") %></small>
+            <% end %>
+          </div>
+        <% end %>
+        <div class="field">
+          <%= f.label :public_allowed_senders %>
+          <%= f.text_area :public_allowed_senders, class: "field-input", rows: 2, data: { autogrow: true },
+                          placeholder: "anna@acme.example\n@acme.example",
+                          aria: { invalid: invalid?(organization, :public_allowed_senders), describedby: "senders-hint" } %>
+          <small class="field-hint" id="senders-hint"><%= t("ui.admin.public_form.senders_hint") %></small>
+        </div>
+        <div class="field">
+          <%= f.label :public_intro %>
+          <%= f.text_area :public_intro, class: "field-input", rows: 2, maxlength: 1_000, data: { autogrow: true } %>
+        </div>
+      </fieldset>
     </div>
-  </fieldset>
-  <%= render "admin/organizations/mail_fields", f: f, organization: organization %>
+    <%= render "admin/organizations/mail_fields", f: f, organization: organization %>
+  </div>
   <div class="form-actions">
     <%= link_to t("ui.cancel"), organization.persisted? ? admin_organization_path(organization) : admin_organizations_path, class: "btn" %>
     <%= f.submit t("ui.save"), class: "btn btn--primary" %>

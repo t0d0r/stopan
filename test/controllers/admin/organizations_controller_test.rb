@@ -177,4 +177,18 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     get edit_admin_organization_url(org)
     assert_select "#public-form-settings .field-hint", /The page is off/
   end
+
+  test "the form is one wide panel with four groups side by side (specs/ui.md \"Organization form\")" do
+    sign_in users(:admin)
+    [ edit_admin_organization_url(organizations(:acme)), new_admin_organization_url ].each do |url|
+      get url
+      assert_select "section.panel--form.panel--form-wide form .org-form > .org-form__column", 4
+      assert_select ".org-form__column:nth-child(1) input[name='organization[name]']"
+      assert_select ".org-form__column:nth-child(1) #mail-settings select[name='organization[mail_locale]']"
+      assert_select ".org-form__column:nth-child(2) > fieldset#public-form-settings"
+      assert_select ".org-form__column:nth-child(3) > fieldset#smtp-settings input[name='organization[smtp_address]']"
+      assert_select ".org-form__column:nth-child(4) > fieldset#imap-settings input[name='organization[mailbox_address]']"
+      assert_select "form > .form-actions input[type=submit]", 1
+    end
+  end
 end

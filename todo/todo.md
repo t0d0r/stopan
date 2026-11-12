@@ -386,6 +386,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed 19cab54 (Overdue view of the queue, SLA panel of the reports); no migration (specs/deploy.md "Update 2026-11-12 (revision 19cab54)")
 - [x] production: deployed 35cdfbf (Status page), database copied first; the mailbox took in real mail and the log recorded it (specs/deploy.md "Update 2026-11-12 (revision 35cdfbf)")
 - [x] Status page for super administrators (`/admin/status`): mail log with why a mail became no ticket, job queue with failed and recent jobs, failing webhooks, warning on the dashboard (specs/status.md)
+- [x] organization form in four columns on a wide page, so it fits one screen from 1280x800 (specs/ui.md "Organization form")
 - [ ] status page later: labels for the stacked mailbox row on phones; outgoing mail results per ticket are already in the ticket history
 - [ ] operator: set the SLA targets in /admin/settings when wanted; they are empty, so nothing shows (specs/sla.md)
 - [ ] production: once an organization exists, add a webhook to a real receiver and check a delivery and its signature (specs/webhooks.md)

@@ -7268,3 +7268,50 @@ turbo-frame {
     display: none;
   }
 }
+
+/* Organization form (specs/ui.md "Organization form"): four groups side
+   by side on a wide screen so it fits one screen; fewer columns as the
+   window narrows, one on phones. */
+.panel--form.panel--form-wide {
+  max-width: none;
+}
+
+/* The page itself grows for this form, whatever the width switch says,
+   so four columns have room for two fields in a row. */
+.desk:has(.panel--form-wide) {
+  max-width: 1560px;
+}
+
+.org-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(236px, 1fr));
+  gap: 4px 20px;
+  align-items: start;
+}
+
+.org-form__column {
+  min-width: 0;
+}
+
+.org-form .mail-settings,
+.org-form .mail-settings__part {
+  margin-top: 0;
+}
+
+.org-form .mail-settings__part {
+  margin-bottom: 12px;
+}
+
+/* Two short fields share a row inside a column (server and port). */
+.org-form .field-row {
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 0 10px;
+}
+
+.org-form .mail-settings__part {
+  padding: 10px 12px 2px;
+}
+
+.org-form .field-hint {
+  margin-bottom: 6px;
+}
