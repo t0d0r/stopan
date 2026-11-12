@@ -61,6 +61,7 @@ Unique index on the pair.
 | share_token | string, unique index, NULL when not shared (sharing.md) |
 | share_password_digest | string, bcrypt, NULL for an open link |
 | shared_at | datetime |
+| share_expires_at | datetime, NULL when the link never expires (sharing.md "Expiry") |
 | edited_at, edited_by_id | last edit of subject or description (FK users, nullable; timeline.md "Editing") |
 | markdown | boolean, default false: the description is Markdown (markdown.md) |
 | source | `app` (default), `web_form` or `email` (organization-mail.md, public-form.md) |

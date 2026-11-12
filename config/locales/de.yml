@@ -372,6 +372,10 @@ de:
       shared: "%{actor} hat das Ticket per Link geteilt"
       shared_password: "%{actor} hat das Ticket per Link mit Passwort geteilt"
       unshared: "%{actor} hat das Teilen des Tickets beendet"
+      share_expires:
+        one: "(läuft nach 1 Tag ab)"
+        other: "(läuft nach %{count} Tagen ab)"
+      share_expired: "Der Freigabelink ist abgelaufen"
       run:
         summary:
           one: "%{count} Ereignis: %{kinds}"
@@ -473,6 +477,7 @@ de:
       no_shared_tickets: "Kein Ticket ist per Link geteilt."
       share_open: "Offener Link"
       share_password: "Mit Passwort"
+      share_expires: "läuft ab am %{time}"
       title: "Verwaltung"
       sections: "Verwaltungsbereiche"
       overview: "Übersicht"
@@ -836,6 +841,12 @@ de:
 
     share:
       title: "Teilen"
+      expires: "Läuft ab"
+      expires_never: "Nie"
+      expires_days:
+        one: "Nach 1 Tag"
+        other: "Nach %{count} Tagen"
+      expires_at: "Läuft ab am %{time}"
       hint: "Jeder mit dem Link kann die Beschreibung und die öffentlichen Antworten lesen, ohne sich anzumelden. Interne Notizen werden nie angezeigt."
       password: "Passwort (optional)"
       password_hint: "Mindestens %{min} Zeichen. Ohne Passwort öffnet der Link allein die Seite."
@@ -1293,6 +1304,7 @@ de:
       ticket:
         subject: "Betreff"
         share_password: "Freigabepasswort"
+        share_expires_at: "Ablauf"
         description: "Beschreibung"
         status: "Status"
         priority: "Priorität"

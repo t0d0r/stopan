@@ -696,8 +696,23 @@
   the sign-in limit was checked to count per visitor (specs/deploy.md
   "Update 2026-11-12 (revision ec72cc5)"). Images kept: ec72cc5,
   10b393b, c802739.
+- 2026-11-12: share links may expire (specs/sharing.md "Expiry"):
+  "Never" (default), 1, 7 or 30 days in the share form and as
+  `expires_in_days` in the API. New column `tickets.share_expires_at`
+  (migration 20261112100000). `Ticket#shared?` and `Ticket.shared`
+  leave expired links out, so the page, files, channel, lists, admin
+  list and API drop them at once; `ShareExpiry.run` on the hourly
+  timer (and `stopan:close_pending`) clears them with an internal
+  `share_expired` event and refreshes open pages. Automatic customer
+  links never expire. Tests: test/models/share_expiry_test.rb and
+  additions to the share controller and API tests. Not deployed yet.
 
 ## Decisions
+
+- Share expiry, 2026-11-12: fixed choices (1, 7, 30 days) instead of
+  a date field, and "Never" stays the default, so existing behaviour
+  does not change; automatic links in customer emails never expire,
+  because sent emails point to them.
 
 - Sign-in limit, 2026-11-12: it runs as a prepended callback, before
   Devise's `require_no_authentication`, which already checks the
@@ -804,7 +819,8 @@ colleagues to Cc included. The durable job queue is deployed and checked on the
 server. A live page refresh through the queue was checked in the
 production image locally, not on the server, where the database has
 no data yet. The sign-in and password reset rate limits are deployed
-and count per visitor. The
+and count per visitor. Share link expiry is committed but not
+deployed; its deploy has a migration, so copy the database first. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

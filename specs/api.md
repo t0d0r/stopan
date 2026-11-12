@@ -89,7 +89,7 @@ Everyone (within their rights):
 | `GET /api/v1/tickets/:number/attachments/:id` | the file, as a download |
 | `GET /api/v1/tickets/:number/revisions` | staff: earlier versions of the request and comments |
 | `POST /api/v1/tickets/:number/revisions/:id/restore` | staff |
-| `POST /api/v1/tickets/:number/share` | `password` (optional); returns the link |
+| `POST /api/v1/tickets/:number/share` | `password` (optional), `expires_in_days` (optional: 1, 7 or 30); returns the link and `expires_at` |
 | `DELETE /api/v1/tickets/:number/share` | stop sharing |
 | `POST /api/v1/tickets/:number/followers` | staff who may update it: `user_id` (staff follower) or `email` (Cc); the requester: `user_id` of a colleague for Cc; 201 (followers.md "In the API") |
 | `DELETE /api/v1/tickets/:number/followers/:id` | staff who may update it, a person in Cc on their own row (leaving), or the requester on a row they added; 204 |
@@ -127,7 +127,7 @@ other browser preferences, creating tokens.
   markdown, stage {id, name}, organization {id, name}, requester,
   assignee, created_at, updated_at, done_at, edited_at, url` (the page);
   in `show` also `description, files, timeline, shared` (and
-  `share_url` when shared and the user may share), `mail_headers` (staff),
+  `share_url` and `share_expires_at` when shared and the user may share), `mail_headers` (staff),
   `next_statuses` (staff), `followers`, `cc_suggestions` (staff who
   may update it) and `cc_candidates` (`id, name`; the requester).
 - **Follower:** `id, kind` (`staff` or `cc`), `user`, and for staff

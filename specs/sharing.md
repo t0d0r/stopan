@@ -60,6 +60,51 @@ validations: false`, NULL for an open link) and `shared_at`.
   ("Maria shared the ticket by link with a password"). These events send
   no email (notifications.md lists the kinds that do).
 
+## Expiry (2026-11-12)
+
+A link may stop on its own, so a link made for one occasion does not
+stay open for years.
+
+- The share form has "Expires": "Never" (the default, as before),
+  "After 1 day", "After 7 days", "After 30 days"
+  (`Ticket::SHARE_EXPIRY_DAYS = [1, 7, 30]`, param `share_expires_in`
+  in days). Any other value is refused with an error and nothing
+  changes.
+- Column `tickets.share_expires_at` (datetime, NULL = never).
+  `Ticket#share!(actor:, password: nil, expires_in_days: nil)` sets it
+  to now plus the days; the `shared` event keeps the days in `detail`
+  and the timeline adds "(expires after 7 days)".
+- **From that moment the ticket is not shared**, checked on every
+  request, not only by the timer: `Ticket#shared?` and the
+  `Ticket.shared` scope leave expired links out, so the shared page
+  and its files answer "Link not available" (404, as for a stopped
+  link), the channel refuses the subscription, the lists and the board
+  lose the link icon, the admin list and the API (`shared: false`)
+  drop it, and the Sharing panel offers a new link.
+- **Clean-up:** the hourly timer (`ShareExpiry.run`, with
+  `AutoPostpone` and `AutoDone`, also `bin/rails stopan:close_pending`)
+  clears the columns of expired links and writes an internal
+  `share_expired` event without an actor ("The share link expired").
+  It refreshes the old link's stream, so a page that was still open
+  shows "Link not available". Until then an open page stays as it was
+  loaded; a reload or a file download is refused at once.
+- **Automatic links** in the customer's emails (below) never expire:
+  the emails already sent point to them. When a link with an expiry
+  runs out, the next email to the customer makes a new automatic one,
+  as for a ticket with no link.
+- Replacing a link sets the expiry anew from the form (so "Never"
+  removes it); there is no way to change the expiry and keep the link.
+- **Shown:** the Sharing panel says "Expires <date and time>" under the
+  status; the admin list adds "expires <date>".
+- **API:** `POST /api/v1/tickets/:number/share` takes
+  `expires_in_days` (1, 7 or 30; 422 otherwise) and returns
+  `expires_at`; the ticket JSON has `share_expires_at` next to
+  `share_url` for who may share.
+
+Why fixed choices and not a date field: three choices cover "today's
+call", "this week" and "this month", need no date picker on a phone and
+cannot be set in the past.
+
 ## Managing the link (ticket page)
 
 A "Sharing" panel in the side column, for users allowed to share:
@@ -243,7 +288,7 @@ organizations the administrator is a member of (roles.md).
 
 ## Not in this phase
 
-Link expiry dates, total view counts (history), names of viewers,
+Total view counts (history), names of viewers,
 sharing internal content, several links per ticket. Recorded in
 specs/roadmap.md.
 
@@ -258,6 +303,11 @@ unknown tokens (404), no internal note text, internal events or emails on
 the shared page, files of internal notes and of other tickets not
 reachable, who may share (requester own ticket only, 403 otherwise), the
 admin list and the private headers.
+`test/models/share_expiry_test.rb` and the same controller tests: the
+choices and a refused value, an expired link is not shared anywhere
+(page, files, channel scope, API, panel), the clean-up clears it once
+with one event and leaves unexpired and endless links alone, an
+automatic link has no expiry and is made anew after an expired one.
 `test/models/share_viewers_test.rb` and
 `test/channels/shared_ticket_channel_test.rb`: counting per link, join
 and leave broadcasts to the share and page streams, the indicator on both
@@ -267,8 +317,8 @@ pages.
 
 Anyone who has an open link can read the ticket's public conversation and
 download its files, without signing in; treat links like passwords, prefer
-a password for sensitive tickets, and stop sharing when the link is no
-longer needed. The token appears in the request path, so it is in server
+a password for sensitive tickets, give the link an expiry, and stop
+sharing when the link is no longer needed. The token appears in the request path, so it is in server
 access logs (Rails filters it only from the parameter log). The rate limit
 is per process and resets on restart. Serve the app over HTTPS so links and
 share passwords are not sent in clear text. The viewer count reveals only

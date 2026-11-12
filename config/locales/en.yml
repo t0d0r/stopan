@@ -369,6 +369,10 @@ en:
       shared: "%{actor} shared the ticket by link"
       shared_password: "%{actor} shared the ticket by link with a password"
       unshared: "%{actor} stopped sharing the ticket"
+      share_expires:
+        one: "(expires after 1 day)"
+        other: "(expires after %{count} days)"
+      share_expired: "The share link expired"
       run:
         summary:
           one: "%{count} event: %{kinds}"
@@ -470,6 +474,7 @@ en:
       no_shared_tickets: "No ticket is shared by link."
       share_open: "Open link"
       share_password: "With password"
+      share_expires: "expires %{time}"
       title: "Admin"
       sections: "Admin sections"
       overview: "Overview"
@@ -833,6 +838,12 @@ en:
 
     share:
       title: "Sharing"
+      expires: "Expires"
+      expires_never: "Never"
+      expires_days:
+        one: "After 1 day"
+        other: "After %{count} days"
+      expires_at: "Expires %{time}"
       hint: "Anyone with the link can read the description and the public replies, without signing in. Internal notes are never shown."
       password: "Password (optional)"
       password_hint: "At least %{min} characters. Without one, the link alone opens the page."
@@ -1288,6 +1299,7 @@ en:
       ticket:
         subject: "Subject"
         share_password: "Share password"
+        share_expires_at: "Expiry"
         description: "Description"
         status: "Status"
         priority: "Priority"

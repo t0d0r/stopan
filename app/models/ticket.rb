@@ -24,6 +24,8 @@ class Ticket < ApplicationRecord
   # Where a ticket came from (specs/public-form.md, organization-mail.md).
   SOURCES = %w[app web_form email].freeze
   SHARE_PASSWORD_LENGTH = 6..72
+  # Days a share link may be given (specs/sharing.md "Expiry").
+  SHARE_EXPIRY_DAYS = [ 1, 7, 30 ].freeze
   # Fields whose changes are written to the timeline, and whether the
   # requester may see them (specs/timeline.md).
   TRACKED = { "status" => false, "priority" => true, "assignee_id" => true, "stage_id" => true }.freeze
@@ -44,7 +46,12 @@ class Ticket < ApplicationRecord
   # The share password is optional (specs/sharing.md).
   has_secure_password :share_password, validations: false, reset_token: false
 
-  scope :shared, -> { where.not(share_token: nil) }
+  # An expired link is not shared, whether or not the timer cleared it
+  # yet (specs/sharing.md "Expiry").
+  scope :shared, -> {
+    where.not(share_token: nil).where("tickets.share_expires_at IS NULL OR tickets.share_expires_at > ?", Time.current)
+  }
+  scope :share_expired, -> { where.not(share_token: nil).where(share_expires_at: ..Time.current) }
   # Soft-deleted tickets (specs/tickets.md "Deleting"), for administrators only.
   scope :deleted, -> { where.not(deleted_at: nil) }
 
@@ -128,7 +135,11 @@ class Ticket < ApplicationRecord
   end
 
   def shared?
-    share_token.present?
+    share_token.present? && !share_expired?
+  end
+
+  def share_expired?
+    share_expires_at.present? && share_expires_at <= Time.current
   end
 
   def share_password?
@@ -138,8 +149,14 @@ class Ticket < ApplicationRecord
   # Makes a new share link, so sharing again revokes the old one
   # (specs/sharing.md). The columns are written without touching updated_at:
   # sharing is not activity on the ticket. Returns false for a bad password.
-  def share!(actor:, password: nil)
+  def share!(actor:, password: nil, expires_in_days: nil)
     password = password.presence
+    days = expires_in_days.presence&.to_s
+    if days && !SHARE_EXPIRY_DAYS.map(&:to_s).include?(days)
+      errors.add(:share_expires_at, :inclusion)
+      return false
+    end
+    days = days&.to_i
     if password && !SHARE_PASSWORD_LENGTH.cover?(password.length)
       errors.add(:share_password, password.length < SHARE_PASSWORD_LENGTH.min ? :too_short : :too_long,
                  count: password.length < SHARE_PASSWORD_LENGTH.min ? SHARE_PASSWORD_LENGTH.min : SHARE_PASSWORD_LENGTH.max)
@@ -150,8 +167,9 @@ class Ticket < ApplicationRecord
     old_token = share_token
     transaction do
       update_columns(share_token: SecureRandom.base58(32), share_password_digest: share_password_digest,
-                     shared_at: Time.current)
-      events.create!(action: "shared", actor: actor, internal: true, to_value: ("password" if password))
+                     shared_at: Time.current, share_expires_at: days&.days&.from_now)
+      events.create!(action: "shared", actor: actor, internal: true, to_value: ("password" if password),
+                     detail: days&.to_s)
     end
     refresh_shared_page(old_token)
     true
@@ -338,10 +356,23 @@ class Ticket < ApplicationRecord
   def unshare!(actor:)
     return unless shared?
 
+    clear_share!("unshared", actor)
+  end
+
+  # The link's time ran out (ShareExpiry): cleared like a stopped link,
+  # without an actor. True when it was cleared.
+  def expire_share!
+    return false unless share_token.present? && share_expired?
+
+    clear_share!("share_expired", nil)
+    true
+  end
+
+  def clear_share!(action, actor)
     old_token = share_token
     transaction do
-      update_columns(share_token: nil, share_password_digest: nil, shared_at: nil)
-      events.create!(action: "unshared", actor: actor, internal: true)
+      update_columns(share_token: nil, share_password_digest: nil, shared_at: nil, share_expires_at: nil)
+      events.create!(action: action, actor: actor, internal: true)
     end
     refresh_shared_page(old_token)
   end

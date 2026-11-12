@@ -3,7 +3,8 @@ class TicketSharesController < ApplicationController
   before_action :set_ticket
 
   def create
-    if @ticket.share!(actor: current_user, password: params[:share_password])
+    if @ticket.share!(actor: current_user, password: params[:share_password],
+                      expires_in_days: params[:share_expires_in])
       redirect_to ticket_path(@ticket, anchor: "sharing"), notice: t("flash.share_created")
     else
       redirect_to ticket_path(@ticket, anchor: "sharing"), alert: @ticket.errors.full_messages.to_sentence

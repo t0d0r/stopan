@@ -1,7 +1,7 @@
 # One entry of a ticket's audit history. Rows are only ever inserted
 # (specs/timeline.md); `internal` rows are hidden from requesters.
 class TicketEvent < ApplicationRecord
-  ACTIONS = %w[created replied noted status_changed priority_changed assignee_changed shared unshared stage_changed deleted restored
+  ACTIONS = %w[created replied noted status_changed priority_changed assignee_changed shared unshared share_expired stage_changed deleted restored
                mail_switched mail_sent mail_skipped mail_failed follower_added follower_removed].freeze
   # The record of emails to the customer side (specs/notifications.md
   # "Emails to the requester") and who follows (specs/followers.md): they

@@ -5,9 +5,12 @@ module Api
       before_action :set_ticket
 
       def create
-        return render_invalid(@ticket) unless @ticket.share!(actor: current_user, password: params[:password].presence)
+        shared = @ticket.share!(actor: current_user, password: params[:password].presence,
+                                expires_in_days: params[:expires_in_days])
+        return render_invalid(@ticket) unless shared
 
-        render json: { shared: true, share_url: shared_ticket_url(@ticket.share_token), password: @ticket.share_password? },
+        render json: { shared: true, share_url: shared_ticket_url(@ticket.share_token), password: @ticket.share_password?,
+                       expires_at: time_json(@ticket.share_expires_at) },
                status: :created
       end
 

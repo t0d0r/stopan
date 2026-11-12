@@ -33,6 +33,7 @@ module AutoPostpone
       # Done first: a pending ticket meets the shorter period (specs/board.md).
       Rails.application.executor.wrap do
         AutoDone.run
+        ShareExpiry.run
         run
       end
     rescue StandardError => e

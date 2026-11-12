@@ -6,5 +6,13 @@
                            minlength: Ticket::SHARE_PASSWORD_LENGTH.min, maxlength: Ticket::SHARE_PASSWORD_LENGTH.max %>
     <small class="field-hint"><%= t("ui.share.password_hint", min: Ticket::SHARE_PASSWORD_LENGTH.min) %></small>
   </div>
+  <div class="field">
+    <% expires_id = "share_expires_in_#{ticket.shared? ? 'new' : 'first'}" %>
+    <%= label_tag expires_id, t("ui.share.expires") %>
+    <%= select_tag :share_expires_in,
+                   options_for_select([ [ t("ui.share.expires_never"), "" ] ] +
+                                      Ticket::SHARE_EXPIRY_DAYS.map { |days| [ t("ui.share.expires_days", count: days), days ] }),
+                   id: expires_id, class: "field-input" %>
+  </div>
   <%= submit_tag submit, class: "btn btn--primary btn--block", name: nil %>
 <% end %>

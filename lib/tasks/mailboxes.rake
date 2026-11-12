@@ -14,6 +14,7 @@ namespace :stopan do
   desc "Mark pending tickets without activity for the set number of days done (specs/board.md)"
   task close_pending: :environment do
     puts "#{AutoDone.run} ticket(s) marked done"
+    puts "#{ShareExpiry.run} expired share link(s) cleared"
   end
 
   desc "Postpone tickets without activity for the set number of days (specs/board.md)"

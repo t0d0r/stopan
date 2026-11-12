@@ -25,6 +25,47 @@ class TicketSharesControllerTest < ActionDispatch::IntegrationTest
     assert_not ticket.reload.shared?
   end
 
+  test "the form offers the expiry choices and the panel shows the expiry" do
+    sign_in users(:agent)
+    ticket = tickets(:printer)
+    get ticket_url(ticket)
+    assert_select "#sharing select[name=share_expires_in] option", 4
+    assert_select "#sharing select[name=share_expires_in] option[selected]", 0
+    assert_select "#sharing label[for=share_expires_in_first]", "Expires"
+
+    post ticket_share_url(ticket), params: { share_expires_in: "7" }
+    assert_redirected_to ticket_url(ticket, anchor: "sharing")
+    assert_in_delta 7.days.from_now, ticket.reload.share_expires_at, 5.seconds
+    follow_redirect!
+    assert_select "#sharing .sharing__expires", /Expires/
+    assert_select ".timeline", /shared the ticket by link \(expires after 7 days\)/
+
+    post ticket_share_url(ticket), params: { share_expires_in: "400" }
+    assert_redirected_to ticket_url(ticket, anchor: "sharing")
+    assert_match "Expiry", flash[:alert]
+    assert_in_delta 7.days.from_now, ticket.reload.share_expires_at, 5.seconds
+  end
+
+  test "an expired link leaves the panel, the lists and the admin list" do
+    sign_in users(:admin)
+    ticket = tickets(:printer)
+    ticket.share!(actor: users(:agent), expires_in_days: 1)
+    get admin_root_url
+    assert_select "##{ActionView::RecordIdentifier.dom_id(ticket, :shared)} .share-list__meta", /expires/
+
+    travel 2.days do
+      get ticket_url(ticket)
+      assert_select "#sharing #share-url", 0
+      assert_select "#sharing select#share_expires_in_first"
+      get admin_root_url
+      assert_select "##{ActionView::RecordIdentifier.dom_id(ticket, :shared)}", 0
+
+      ShareExpiry.run
+      get ticket_url(ticket)
+      assert_select ".timeline", /The share link expired/
+    end
+  end
+
   test "a too short password changes nothing" do
     sign_in users(:agent)
     post ticket_share_url(tickets(:vpn)), params: { share_password: "abc" }

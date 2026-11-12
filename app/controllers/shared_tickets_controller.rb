@@ -78,7 +78,7 @@ class SharedTicketsController < ApplicationController
   end
 
   def set_ticket
-    @ticket = Ticket.find_by(share_token: params[:token].to_s) if params[:token].present?
+    @ticket = Ticket.shared.find_by(share_token: params[:token].to_s) if params[:token].present?
     render :missing, status: :not_found unless @ticket
   end
 

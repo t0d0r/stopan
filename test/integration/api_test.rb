@@ -135,6 +135,20 @@ class ApiTest < ActionDispatch::IntegrationTest
     delete api_v1_ticket_share_url(ticket), headers: auth(token)
     assert_not ticket.reload.shared?
 
+    post api_v1_ticket_share_url(ticket), params: { expires_in_days: 30 }, headers: auth(token), as: :json
+    assert_response :created
+    expires_at = response.parsed_body["expires_at"]
+    assert_in_delta 30.days.from_now, Time.zone.parse(expires_at), 5.seconds
+    body = api(:get, api_v1_ticket_url(ticket), token: token)["ticket"]
+    assert_equal expires_at, body["share_expires_at"]
+    post api_v1_ticket_share_url(ticket), params: { expires_in_days: 2 }, headers: auth(token), as: :json
+    assert_response :unprocessable_content
+    travel 31.days do
+      body = api(:get, api_v1_ticket_url(ticket), token: token)["ticket"]
+      assert_equal false, body["shared"]
+      assert_nil body["share_url"]
+    end
+
     api(:get, api_v1_ticket_url(tickets(:vpn)), token: token)
     assert_response :success
     api(:get, api_v1_reports_url(period: "7d"), token: token)

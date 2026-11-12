@@ -30,6 +30,30 @@ class SharedTicketsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "no-store", response.headers["Cache-Control"]
   end
 
+  test "an expired link is not available, its files neither" do
+    ticket = tickets(:printer)
+    ticket.files.attach(io: StringIO.new("hello"), filename: "hello.txt", content_type: "text/plain")
+    ticket.share!(actor: users(:agent), expires_in_days: 1)
+    token = ticket.share_token
+    file = ticket.files.first
+
+    travel 23.hours do
+      get shared_ticket_url(token)
+      assert_response :success
+      get shared_ticket_file_url(token, file)
+      assert_response :success
+    end
+    travel 1.day + 1.minute do
+      get shared_ticket_url(token)
+      assert_response :not_found
+      assert_select "h1", "Link not available"
+      get shared_ticket_file_url(token, file)
+      assert_response :not_found
+      post unlock_shared_ticket_url(token), params: { password: "x" }
+      assert_response :not_found
+    end
+  end
+
   test "unknown, replaced and stopped links are not available" do
     old = share
     current = share

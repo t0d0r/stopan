@@ -38,7 +38,10 @@ module ApiRepresentation
     json[:description] = ticket.description
     json[:files] = ticket.files.attachments.map { |file| file_json(ticket, file) }
     json[:shared] = ticket.shared?
-    json[:share_url] = shared_ticket_url(ticket.share_token) if ticket.shared? && policy.share?
+    if ticket.shared? && policy.share?
+      json[:share_url] = shared_ticket_url(ticket.share_token)
+      json[:share_expires_at] = time_json(ticket.share_expires_at)
+    end
     if current_user.staff?
       json[:mail_headers] = ticket.mail_headers
       json[:next_statuses] = ticket.next_statuses

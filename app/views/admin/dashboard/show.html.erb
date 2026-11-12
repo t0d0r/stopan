@@ -97,6 +97,9 @@
             <p class="share-list__meta">
               <%= ticket.share_password? ? t("ui.admin.share_password") : t("ui.admin.share_open") %>
               <span aria-hidden="true">&middot;</span> <%= time_ago ticket.shared_at %>
+              <% if ticket.share_expires_at %>
+                <span aria-hidden="true">&middot;</span> <%= t("ui.admin.share_expires", time: l(ticket.share_expires_at, format: :short)) %>
+              <% end %>
             </p>
             <%= button_to t("ui.share.stop"), ticket_share_path(ticket), method: :delete, class: "link-button btn--danger share-list__stop",
                           form_class: "share-list__action",

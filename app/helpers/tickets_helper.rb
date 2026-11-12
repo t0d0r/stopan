@@ -242,8 +242,10 @@ module TicketsHelper
       to = event.to_value.present? ? assignee_name(event.to_value) : nil
       to ? t("ui.timeline.assigned", actor: actor, to: to) : t("ui.timeline.unassigned", actor: actor)
     when "shared"
-      event.to_value == "password" ? t("ui.timeline.shared_password", actor: actor) : t("ui.timeline.shared", actor: actor)
+      sentence = event.to_value == "password" ? t("ui.timeline.shared_password", actor: actor) : t("ui.timeline.shared", actor: actor)
+      event.detail.present? ? "#{sentence} #{t('ui.timeline.share_expires', count: event.detail.to_i)}" : sentence
     when "unshared" then t("ui.timeline.unshared", actor: actor)
+    when "share_expired" then t("ui.timeline.share_expired")
     when "deleted" then t("ui.timeline.deleted", actor: actor)
     when "restored" then t("ui.timeline.restored", actor: actor)
     when "stage_changed"
@@ -294,7 +296,7 @@ module TicketsHelper
 
   def event_icon(event)
     { "created" => :spark, "status_changed" => :status, "priority_changed" => :flag,
-      "assignee_changed" => :assignee, "shared" => :link, "unshared" => :link_off, "stage_changed" => :board,
+      "assignee_changed" => :assignee, "shared" => :link, "unshared" => :link_off, "share_expired" => :link_off, "stage_changed" => :board,
       "deleted" => :trash, "restored" => :restore, "mail_switched" => :envelope, "mail_sent" => :envelope,
       "mail_skipped" => :envelope, "mail_failed" => :warning, "follower_added" => :eye,
       "follower_removed" => :eye }.fetch(event.action, :spark)
@@ -305,7 +307,7 @@ module TicketsHelper
   KEPT_EVENTS = %w[created status_changed mail_failed deleted restored].freeze
   FOLD_MIN = 3
   FOLD_KINDS = { "mail" => %w[mail_sent mail_skipped mail_switched], "people" => %w[follower_added follower_removed],
-                 "sharing" => %w[shared unshared] }.freeze
+                 "sharing" => %w[shared unshared share_expired] }.freeze
 
   # The timeline as a list of entries: an event, or an array of events
   # for a run that folds into one line.
