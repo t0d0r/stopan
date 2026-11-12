@@ -55,4 +55,24 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     get api_v1_person_url(outsider), headers: { "Authorization" => "Bearer #{token}" }
     assert_response :not_found
   end
+
+  test "the requester's name in a list row narrows that list to them, keeping the other filters" do
+    anna = users(:anna)
+    row = "##{ActionView::RecordIdentifier.dom_id(tickets(:printer))}"
+    sign_in users(:agent)
+
+    get tickets_url(view: "all", priority: tickets(:printer).priority, sort: "created")
+    assert_select "#{row} td.col-requester a.requester-filter[href=?][title=?]",
+                  tickets_path(view: "all", priority: tickets(:printer).priority, requester: anna.id, sort: "created"),
+                  "Only tickets of #{anna.display_name}", anna.display_name
+
+    get tickets_url(view: "all", requester: anna.id)
+    assert_select "#{row} td.col-requester a", 0
+    assert_select "#{row} td.col-requester", /#{anna.display_name}/
+    assert_select ".chip", /Requester: #{anna.display_name}/
+
+    get search_url(q: tickets(:printer).subject.split.first, page: 1)
+    assert_select "#{row} td.col-requester a.requester-filter[href=?]",
+                  search_path(view: "all", requester: anna.id, q: tickets(:printer).subject.split.first)
+  end
 end

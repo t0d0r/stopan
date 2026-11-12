@@ -32,7 +32,15 @@
             <td class="text col-subject">
               <%= link_to ticket_path(ticket), class: "ticket-link" do %><%= sla_badge(ticket) %><%= ticket.subject %><% if ticket.shared? %> <%= icon :link, size: 12, label: t("ui.share.shared_by_link") %><% end %><% end %>
             </td>
-            <td class="text col-requester"><%= ticket.requester.display_name %></td>
+            <td class="text col-requester">
+              <%# A click narrows this list to the requester's tickets (specs/people.md "Queue filter"). %>
+              <% if filter.requester_id == ticket.requester_id %>
+                <%= ticket.requester.display_name %>
+              <% else %>
+                <%= link_to ticket.requester.display_name, public_send(list_path, filter.params_with(requester: ticket.requester_id, page: nil)),
+                            class: "requester-filter", title: t("ui.people.filter_by", name: ticket.requester.display_name) %>
+              <% end %>
+            </td>
             <td class="text col-org"><%= ticket.organization.name %></td>
             <td><%= status_pill ticket.status %><% if ticket.stage %> <span class="stage-tag">&middot; <%= ticket.stage.name %></span><% end %></td>
             <td class="col-priority"><%= priority_pill ticket.priority %></td>

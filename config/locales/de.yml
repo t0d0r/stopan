@@ -275,6 +275,7 @@ de:
       no_tickets: "Keine Tickets dieser Person, die Sie sehen können."
       requester_chip: "Anfragende Person: %{name}"
       remove_requester: "Filter nach anfragender Person entfernen"
+      filter_by: "Nur Tickets von %{name}"
     search:
       title: "Suche"
       caption: "Suche"

@@ -918,6 +918,10 @@
   the date that stands at the top right of the ticket page: when the
   mail was sent (its own clock time, as there), else when the ticket
   was opened. Not deployed yet.
+- 2026-11-12: in the rows of the queue and of the search results the
+  requester's name is a link that adds the requester filter to the
+  list as it is (specs/people.md "Queue filter"); plain text while
+  the list is already narrowed to them. Not deployed yet.
 
 ## Decisions
 

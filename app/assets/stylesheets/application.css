@@ -7536,3 +7536,15 @@ turbo-frame {
   font-size: 12px;
   white-space: nowrap;
 }
+
+/* The requester's name in a list row narrows the list to them
+   (specs/people.md "Queue filter"). */
+.requester-filter {
+  color: inherit;
+}
+
+.requester-filter:hover,
+.requester-filter:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+}

@@ -275,6 +275,7 @@ bg:
       no_tickets: "Няма заявки от този човек, които да виждате."
       requester_chip: "Заявител: %{name}"
       remove_requester: "Махни филтъра по заявител"
+      filter_by: "Само заявките на %{name}"
     search:
       title: "Търсене"
       caption: "Търсене"

@@ -39,6 +39,14 @@ requester. It shows as a removable chip "Requester: Name" in the filter
 bar, is kept by the other filters, the search and the bulk bar's "whole
 list", and counts as a filter for "Clear filters".
 
+Since 2026-11-12 ("a click on the requester should filter by them")
+the requester's name in a row of the queue or of the search results
+is a link that adds this filter to the list as it is: the same view,
+the other filters, the search text and the sort stay, the page goes
+back to the first. Its tooltip says "Only tickets of Ivan Petrov".
+While the list is already narrowed to that requester the name is
+plain text, and the chip removes the filter.
+
 ## Security Note
 
 The profile shows only what the viewer may already see: tickets come

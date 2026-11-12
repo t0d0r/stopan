@@ -272,6 +272,7 @@ en:
       no_tickets: "No tickets from this person that you can see."
       requester_chip: "Requester: %{name}"
       remove_requester: "Remove the requester filter"
+      filter_by: "Only tickets of %{name}"
     search:
       title: "Search"
       caption: "Search"
