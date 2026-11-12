@@ -710,6 +710,35 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 34f3e79)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since 0ae905e: pending tickets without activity are marked done
+after the days set by administrators (migration
+`AddAutoDoneDaysToAppSettings`, additive; board.md "Automatic done").
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-0ae905e.sqlite3` (mode 600; 1 user, no
+  organizations or tickets, schema 20261110090000).
+- Checked:
+  - the container is healthy and runs the image tagged 34f3e79;
+  - the migration ran: schema 20261112090000, none pending,
+    `auto_done_days` is 0 (off) and `auto_postpone_days` still 30; one
+    user and no organizations or tickets; the app reports Rails
+    8.1.4.1;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` and `/api/v1/settings` 401;
+  - signed out, `/search`, `/presence`, `/admin`, `/admin/settings` and
+    `/users/sign_up` -> 302 to sign-in;
+  - `/cable` 101;
+  - HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure, HttpOnly
+    session cookie; the stylesheet is served gzip;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: 34f3e79, 0ae905e, 87769cd.
+- Rollback: tag `localhost/stopan:0ae905e` as `latest` and restart. The
+  extra `app_settings.auto_done_days` column does not disturb the older
+  code.
+
 ## Update 2026-11-12 (revision 0ae905e)
 
 `main` after v0.1.1, not a release, on the empty database from the

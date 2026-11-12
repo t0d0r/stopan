@@ -644,6 +644,11 @@
   in the settings API. Tests: test/models/auto_done_test.rb and the
   settings controller test. Checked the panel in dev at 1280 and 390
   px.
+- 2026-11-12: `main` pushed and deployed at 34f3e79 (not a release),
+  after a `VACUUM INTO` copy of the database for the migration
+  `20261112090000`; the migration ran, automatic done is off (0), and
+  every check passed (specs/deploy.md "Update 2026-11-12 (revision
+  34f3e79)"). Images kept: 34f3e79, 0ae905e, 87769cd.
 
 ## Decisions
 
@@ -726,16 +731,15 @@
 
 ## Next step
 
-Production runs 0ae905e (`main` after v0.1.1) on an empty database.
+Production runs 34f3e79 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
 fetching by address, Outlook replies, the dashboard warning for Google
 accounts that need reconnecting, the headers of mail replies and the
 bundled Omarchy fonts, leaving a ticket, followers in the API and the
-CSV export of the reports. Automatic done is committed and not
-deployed; it brings a migration, so the deploy makes a database copy
-first. The mailbox
+CSV export of the reports, and automatic done, which stays off until
+an administrator sets its days. The mailbox
 filter meets a real IMAP server once a mailbox is set up again after
 the reset. The next item is requesters adding colleagues to Cc among
 the members of the ticket's organization (followers.md "Not in this
