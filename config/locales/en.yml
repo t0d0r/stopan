@@ -473,6 +473,10 @@ en:
         one: "1 ticket shared by link"
         other: "%{count} tickets shared by link"
       no_shared_tickets: "No ticket is shared by link."
+      member_tickets:
+        zero: "No tickets opened by %{name}"
+        one: "1 ticket opened by %{name}"
+        other: "%{count} tickets opened by %{name}"
       build:
         development: "Stopan, development version"
         version: "Stopan %{version}"

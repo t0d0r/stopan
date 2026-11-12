@@ -7430,3 +7430,29 @@ turbo-frame {
     height: 22px;
   }
 }
+
+/* The tickets a member opened, in the member list of an organization
+   (specs/admin.md "Member's tickets"). */
+.member-tickets {
+  white-space: nowrap;
+}
+
+.member-tickets__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.member-tickets__link:hover {
+  border-color: var(--accent);
+}
+
+.member-tickets__none {
+  padding: 0 10px;
+  color: var(--ink-soft);
+}

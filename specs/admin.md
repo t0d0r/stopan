@@ -105,6 +105,20 @@ Rules:
 
 Destructive actions ask in the confirm dialog, naming what will be lost.
 
+### Member's tickets (2026-11-12)
+
+"A quick button or filter that shows all tickets of the requester,
+with their number." In the member list of an organization's page each
+row has, after the email, the number of tickets that member opened in
+this organization (deleted ones not counted). A number above zero is
+a link with a small tray icon to the queue showing exactly those:
+`/tickets?view=all&requester=<id>&organization=<id>` (people.md "Queue
+filter"), where the chip "Requester: Name" can be removed again. Zero
+is plain grey text. The label for screen readers and the tooltip say
+"12 tickets opened by Ivan Petrov". The queue shows only what the
+viewer may see, so an administrator who is not a member of the
+organization sees the number but an empty list (roles.md).
+
 ### Adding members
 
 Operator, 2026-10-27: "not a popup but something with a better

@@ -476,6 +476,10 @@ bg:
         one: "1 заявка, споделена с връзка"
         other: "%{count} заявки, споделени с връзка"
       no_shared_tickets: "Няма заявки, споделени с връзка."
+      member_tickets:
+        zero: "Няма заявки, отворени от %{name}"
+        one: "1 заявка, отворена от %{name}"
+        other: "%{count} заявки, отворени от %{name}"
       build:
         development: "Stopan, версия за разработка"
         version: "Stopan %{version}"

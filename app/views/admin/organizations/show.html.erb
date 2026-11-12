@@ -23,6 +23,17 @@
                     <% end %>
                   </td>
                   <td class="text"><%= membership.user.email %></td>
+                  <td class="num member-tickets">
+                    <%# How many tickets the member opened here, as a link to them in the queue (specs/admin.md "Member's tickets"). %>
+                    <% requested = @requested_counts.fetch(membership.user_id, 0) %>
+                    <% label = t("ui.admin.member_tickets", count: requested, name: membership.user.display_name) %>
+                    <% if requested.positive? %>
+                      <%= link_to tickets_path(view: "all", requester: membership.user_id, organization: @organization.id),
+                                  class: "member-tickets__link", title: label, "aria-label": label do %><%= icon :inbox, size: 12 %> <%= requested %><% end %>
+                    <% else %>
+                      <span class="member-tickets__none" title="<%= label %>" aria-label="<%= label %>">0</span>
+                    <% end %>
+                  </td>
                   <td>
                     <span class="role-pill role-pill--<%= membership.user.role %>"><%= role_label(membership.user) %></span>
                     <% if membership.admin? %><span class="role-pill role-pill--org-admin"><%= t("ui.admin.org_admin") %></span><% end %>

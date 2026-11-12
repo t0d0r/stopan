@@ -878,6 +878,12 @@
   moves the ticked cards without dragging through `PATCH
   /tickets/bulk`, whose `return_to` now accepts the board. Browser
   tests in test/system/board_test.rb. Not deployed yet.
+- 2026-11-12: the member list of an organization's page shows, per
+  member, how many tickets they opened in that organization, as a
+  link to the queue filtered by requester and organization
+  (specs/admin.md "Member's tickets"); zero is plain text. Counted in
+  one grouped query in `Admin::OrganizationsController#show`. Not
+  deployed yet; not looked at on a phone.
 
 ## Decisions
 

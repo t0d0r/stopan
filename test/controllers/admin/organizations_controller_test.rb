@@ -198,4 +198,31 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
       assert_select "form > .form-actions input[type=submit]", 1
     end
   end
+
+  test "each member row counts the tickets they opened here and links to them in the queue" do
+    org = organizations(:acme)
+    anna = users(:anna)
+    count = org.tickets.where(requester: anna, deleted_at: nil).count
+    assert_operator count, :>=, 1
+    org.tickets.where(requester: anna).first.soft_delete!(actor: users(:agent))
+    quiet = User.create!(name: "Quiet Member", email: "quiet@example.com", password: "password12", role: "requester")
+    Membership.create!(user: quiet, organization: org)
+
+    sign_in users(:admin)
+    get admin_organization_url(org)
+    row = "##{ActionView::RecordIdentifier.dom_id(Membership.find_by!(user: anna, organization: org))}"
+    if count > 1
+      assert_select "#{row} a.member-tickets__link[href=?][aria-label=?]", tickets_path(view: "all", requester: anna.id, organization: org.id),
+                    "#{count - 1} #{count - 1 == 1 ? 'ticket' : 'tickets'} opened by #{anna.display_name}", /#{count - 1}/
+    else
+      assert_select "#{row} .member-tickets__none", "0"
+    end
+    quiet_row = "##{ActionView::RecordIdentifier.dom_id(Membership.find_by!(user: quiet, organization: org))}"
+    assert_select "#{quiet_row} a.member-tickets__link", 0
+    assert_select "#{quiet_row} .member-tickets__none[aria-label=?]", "No tickets opened by Quiet Member", "0"
+
+    get tickets_url(view: "all", requester: anna.id, organization: org.id)
+    assert_response :success
+    assert_select "tr.ticket-row", [ count - 1, 25 ].min
+  end
 end

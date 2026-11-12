@@ -21,6 +21,8 @@ module Admin
       @manageable_ids = admin_scope.manageable_users.where(id: @memberships.map(&:user_id)).pluck(:id).to_set
       @ticket_count = @organization.tickets.count
       @unsolved_count = @organization.tickets.unsolved.count
+      # Tickets each member opened here, for the link to them (specs/admin.md "Member's tickets").
+      @requested_counts = @organization.tickets.where(deleted_at: nil).group(:requester_id).count
     end
 
     def new

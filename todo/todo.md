@@ -391,6 +391,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] shift+click selects a range in check box lists: ticket rows, member picker, a user's organizations (specs/ui.md "Check box lists")
 - [x] organization form: set rows inside the columns, so fields stay level and the link's buttons stay joined (specs/ui.md "Organization form")
 - [x] board: tick several cards and drag them together, or move them with the bar above the board (specs/board.md "Several cards at once")
+- [x] organization page: each member row shows how many tickets they opened there, as a link to them in the queue (specs/admin.md "Member's tickets")
 - [~] deleting from the Search page reported as not working in production; not reproduced in Chrome in four browser tests (agent, super administrator, whole list, after an in-page search) or on the development data. Needs the browser and what the page showed
 - [ ] status page later: labels for the stacked mailbox row on phones; outgoing mail results per ticket are already in the ticket history
 - [ ] operator: set the SLA targets in /admin/settings when wanted; they are empty, so nothing shows (specs/sla.md)

@@ -476,6 +476,10 @@ de:
         one: "1 Ticket per Link geteilt"
         other: "%{count} Tickets per Link geteilt"
       no_shared_tickets: "Kein Ticket ist per Link geteilt."
+      member_tickets:
+        zero: "Keine Tickets von %{name} eröffnet"
+        one: "1 Ticket von %{name} eröffnet"
+        other: "%{count} Tickets von %{name} eröffnet"
       build:
         development: "Stopan, Entwicklungsversion"
         version: "Stopan %{version}"
