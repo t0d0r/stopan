@@ -710,6 +710,41 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 10b393b)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since c802739: the durable job queue, Solid Queue 1.7.0 inside
+Puma as threads (notifications.md "Delivery"). `Gemfile.lock` changed
+(solid_queue, fugit, et-orbi, raabro). The main database's schema did
+not change; the entrypoint's `db:prepare` created the second database
+file, `~stopan/storage/production_queue.sqlite3`.
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-c802739.sqlite3` (mode 600; 1 user, no
+  organizations or tickets, schema 20261112090000).
+- Checked:
+  - the container is healthy and runs the image tagged 10b393b, using
+    about 130 MB of memory;
+  - schema 20261112090000, none pending; one user and no organizations
+    or tickets; the app reports Rails 8.1.4.1;
+  - the job queue: Active Job uses `solid_queue`, emails go through
+    `MailDeliveryJob`; the supervisor in async mode, a dispatcher and a
+    worker are registered, all in one process; an email queued from a
+    console was taken within seconds, with nothing left waiting and
+    nothing failed;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401;
+  - signed out, `/search`, `/presence`, `/admin` and `/users/sign_up`
+    -> 302 to sign-in;
+  - `/cable` 101;
+  - HSTS, CSP, `X-Frame-Options`, `nosniff` and a secure, HttpOnly
+    session cookie; the stylesheet is served gzip;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: 10b393b, c802739, 34f3e79.
+- Rollback: tag `localhost/stopan:c802739` as `latest` and restart. The
+  older code ignores the queue database file; jobs waiting in it at
+  that moment are not sent.
+
 ## Update 2026-11-12 (revision c802739)
 
 `main` after v0.1.1, not a release, on the empty database from the

@@ -677,6 +677,11 @@
   `bin/docker-check` now checks the queue through a restart. Tests:
   test/jobs/mail_delivery_job_test.rb. A change made in the browser
   reached an open `/cable` subscription in the production image.
+- 2026-11-12: `main` pushed and deployed at 10b393b (not a release),
+  after a `VACUUM INTO` copy of the database. On the server the queue
+  runs in one process, an email queued from a console was taken, and
+  every other check passed (specs/deploy.md "Update 2026-11-12
+  (revision 10b393b)"). Images kept: 10b393b, c802739, 34f3e79.
 
 ## Decisions
 
@@ -764,7 +769,7 @@
 
 ## Next step
 
-Production runs c802739 (`main` after v0.1.1) on an empty database.
+Production runs 10b393b (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -775,11 +780,10 @@ CSV export of the reports, and automatic done, which stays off until
 an administrator sets its days. The mailbox
 filter meets a real IMAP server once a mailbox is set up again after
 the reset. The followers work is complete and deployed, the requester adding
-colleagues to Cc included. The durable job queue is committed and not
-deployed: it adds a gem and a second database file that the entrypoint
-creates, and the main database's schema does not change. After its
-deploy, check on the server that the queue's supervisor, dispatcher
-and worker run in one process and that `/cable` still answers 101. The
+colleagues to Cc included. The durable job queue is deployed and checked on the
+server. A live page refresh through the queue was checked in the
+production image locally, not on the server, where the database has
+no data yet. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

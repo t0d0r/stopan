@@ -373,6 +373,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed 34f3e79 (automatic done, off by default), one additive migration, database copied first (specs/deploy.md "Update 2026-11-12 (revision 34f3e79)")
 - [x] the requester adds colleagues to Cc on their own ticket, only among members of the ticket's organization, and removes the ones they added; in the API too (specs/followers.md "The requester adds colleagues")
 - [x] production: deployed c802739 (the requester adds colleagues to Cc), no migrations (specs/deploy.md "Update 2026-11-12 (revision c802739)")
+- [x] production: deployed 10b393b (durable job queue), database copied first, the queue checked on the server (specs/deploy.md "Update 2026-11-12 (revision 10b393b)")
 - [x] decided: people outside the organization never go in Cc; the share link remains for them (specs/followers.md "Not in this phase")
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")
