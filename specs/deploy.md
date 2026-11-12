@@ -169,7 +169,9 @@ As root on the server unless noted:
 ## Deploy (`make deploy`)
 
 `DEPLOY_HOST=<ssh host> make deploy` runs `bin/deploy`: `git archive HEAD`
-into `~stopan/src`, then as `stopan` (`sudo runuser -l stopan`):
+into `~stopan/src`, writes the version and commit date into
+`~stopan/src/REVISION` (admin.md "Version"), then as `stopan`
+(`sudo runuser -l stopan`):
 `podman build --format docker` (OCI would drop the `HEALTHCHECK`), tags
 `localhost/stopan:<rev>` and `:latest`, `systemctl --user daemon-reload`
 and `restart stopan`, waits up to two minutes for `/up`, keeps the three
@@ -710,6 +712,39 @@ requesters (organization-mail.md "Settings", notifications.md
   headers; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
+
+## Update 2026-11-12 (revision d0db217)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since ec72cc5: share links that expire (sharing.md "Expiry")
+and the running version on the admin dashboard (admin.md "Version").
+One migration: `tickets.share_expires_at` (20261112100000).
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-ec72cc5.sqlite3` (mode 600; 1 user, no
+  organizations or tickets, schema 20261112090000).
+- `bin/deploy` now writes `REVISION` into the shipped tree; the image
+  holds `v0.1.1-35-gd0db217` and the commit date, and the app reads
+  them (`BuildInfo`).
+- Checked:
+  - the container is healthy and runs the image tagged d0db217;
+  - schema 20261112100000, none pending; the new column is there; one
+    user and no organizations or tickets;
+  - the app reports version v0.1.1-35-gd0db217 of 2026-11-12; the
+    sign-in page does not show it; the dashboard itself was not opened
+    (it needs the administrator's sign-in);
+  - the share clean-up runs and finds nothing; an unknown share link
+    answers 404;
+  - the job queue: supervisor in async mode, dispatcher and worker
+    registered, nothing failed;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; signed out, `/admin` -> 302; `/cable` 101; the
+    security headers are present;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: d0db217, ec72cc5, 10b393b.
+- Rollback: tag `localhost/stopan:ec72cc5` as `latest` and restart.
+  The older code ignores the new column, so the database may stay;
+  links given an expiry meanwhile would then never expire.
 
 ## Update 2026-11-12 (revision ec72cc5)
 

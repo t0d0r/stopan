@@ -712,6 +712,11 @@
   the shipped tree (ignored by git); `BuildInfo` reads it at boot and
   the page says "development version" without it. Tests:
   test/models/build_info_test.rb and the dashboard test.
+- 2026-11-12: `main` pushed and deployed at d0db217 (not a release),
+  after a `VACUUM INTO` copy of the database. The migration ran, the
+  app reports version v0.1.1-35-gd0db217, and every other check
+  passed (specs/deploy.md "Update 2026-11-12 (revision d0db217)").
+  Images kept: d0db217, ec72cc5, 10b393b.
 
 ## Decisions
 
@@ -810,7 +815,7 @@
 
 ## Next step
 
-Production runs ec72cc5 (`main` after v0.1.1) on an empty database.
+Production runs d0db217 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -825,8 +830,9 @@ colleagues to Cc included. The durable job queue is deployed and checked on the
 server. A live page refresh through the queue was checked in the
 production image locally, not on the server, where the database has
 no data yet. The sign-in and password reset rate limits are deployed
-and count per visitor. Share link expiry is committed but not
-deployed; its deploy has a migration, so copy the database first. The
+and count per visitor. Share link expiry and the version line on the
+admin dashboard are deployed; the dashboard line itself is still to be
+looked at in production after signing in. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 
