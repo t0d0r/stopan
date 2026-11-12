@@ -143,6 +143,11 @@ same.
   line shows.
 - The history keeps recording each email that was not sent, with the
   reason, as before.
+- **Development** writes emails to files (`tmp/mails`) instead of
+  sending them, unless the organization has its own SMTP. There the
+  composer says so: "Development: emails to x@example.com are written
+  to tmp/mails and do not leave this computer." The history records
+  them as emails, since the files are the emails.
 
 ### The record in the history
 

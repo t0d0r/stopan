@@ -949,6 +949,10 @@
   global one) decides; without a server the composer shows a warning
   and, for who administers the organization, a link to its SMTP
   settings. Not deployed yet.
+- 2026-11-12: in development, where emails are written to
+  `tmp/mails`, the composer says that they do not leave the computer
+  (`Organization#mail_kept_in_files?`); it used to promise an email
+  there too. Not deployed yet.
 
 ## Decisions
 

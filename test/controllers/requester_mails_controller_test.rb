@@ -107,4 +107,20 @@ class RequesterMailsControllerTest < ActionDispatch::IntegrationTest
   ensure
     Rails.configuration.x.global_smtp = nil
   end
+
+  test "where emails are written to files the composer says they do not leave" do
+    ticket = tickets(:printer)
+    method = ActionMailer::Base.delivery_method
+    ActionMailer::Base.delivery_method = :file
+    sign_in users(:agent)
+    get ticket_url(ticket)
+    assert_select "#composer .composer__mail-on", /Development: emails to anna@example.com are written to tmp\/mails/
+    assert_select "#composer .composer__mail-on", text: /will get public replies/, count: 0
+
+    ticket.organization.update!(smtp_enabled: true, smtp_address: "smtp.acme.example", smtp_port: 587, mail_from: "desk@acme.example")
+    get ticket_url(ticket)
+    assert_select "#composer .composer__mail-on", /will get public replies/
+  ensure
+    ActionMailer::Base.delivery_method = method
+  end
 end

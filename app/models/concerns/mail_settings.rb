@@ -53,6 +53,13 @@ module MailSettings
     smtp_ready? || Rails.configuration.x.global_smtp != false
   end
 
+  # Development writes emails to files instead of sending them
+  # (config/environments/development.rb); an organization's own SMTP
+  # still sends for real.
+  def mail_kept_in_files?
+    !smtp_ready? && ActionMailer::Base.delivery_method == :file
+  end
+
   def imap_ready?
     imap_enabled? && (!google_mail? || mail_connection&.connected? || false)
   end

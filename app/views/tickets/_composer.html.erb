@@ -49,7 +49,10 @@
             <span class="toggle__label"><%= t("ui.composer.email_requester") %></span>
           </label>
           <p class="composer__mail-hint" id="requester-mail-hint" aria-live="polite">
-            <% if ticket.organization.sends_mail? %>
+            <% if ticket.organization.mail_kept_in_files? %>
+              <%# Development: nothing leaves, the emails are files to look at. %>
+              <span class="composer__mail-on"><%= icon :envelope, size: 13 %> <%= t("ui.composer.email_files", email: ticket.customer_emails.to_sentence) %></span>
+            <% elsif ticket.organization.sends_mail? %>
               <span class="composer__mail-on"><%= icon :envelope, size: 13 %> <%= t("ui.composer.email_on", email: ticket.customer_emails.to_sentence) %></span>
             <% else %>
               <%# No server to send through: say so instead of promising an email
