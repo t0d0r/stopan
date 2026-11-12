@@ -35,6 +35,13 @@
                                aria: { describedby: "postpone-hint", invalid: invalid?(@setting, :auto_postpone_days) } %>
             <small class="field-hint" id="postpone-hint"><%= t("ui.admin.settings.postpone_hint") %></small>
           </div>
+          <%# specs/board.md "Automatic done". %>
+          <div class="field">
+            <%= f.label :auto_done_days, t("ui.admin.settings.done_days") %>
+            <%= f.number_field :auto_done_days, class: "field-input", min: 0, max: 3650, required: true,
+                               aria: { describedby: "auto-done-hint", invalid: invalid?(@setting, :auto_done_days) } %>
+            <small class="field-hint" id="auto-done-hint"><%= t("ui.admin.settings.done_hint") %></small>
+          </div>
           <div class="form-actions"><%= f.submit t("ui.save"), class: "btn btn--primary" %></div>
         <% end %>
       </div>

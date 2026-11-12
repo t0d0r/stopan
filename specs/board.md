@@ -138,6 +138,35 @@ a "Not now" status, automatic postponing with a stamp, sub-columns).
   in less than a day. Staff also see "Moves to Not now in 3 days" under
   the status on the ticket page.
 
+### Automatic done (2026-11-12)
+
+roadmap.md had "auto-close resolved tickets after N days". Since
+`resolved` and `closed` became `done` (tickets.md), the ticket that
+waits to be closed is the `pending` one: staff answered and the
+requester never came back.
+
+- Administrators set the number of days in `/admin/settings`, in the
+  same panel as postponing ("Mark pending tickets done after this many
+  days without activity"). The default is 0, which turns it off, so
+  nothing closes until an administrator asks for it. The setting is
+  `app_settings.auto_done_days` (0 to 3650).
+- Once an hour, before the postponing, every `pending` ticket whose last
+  activity (`updated_at`) is older than N days becomes `done`: one
+  transaction per ticket, a status event without an actor, public like
+  every status change. `bin/rails stopan:close_pending` does it by hand.
+- **Notifications** are those of any change to Done: the requester and
+  the people in Cc get the email, which says that a reply opens the
+  ticket again (notifications.md). **Reason:** unlike "Not now", the
+  ticket leaves the requester's open list, so they must be told.
+- A reply by the requester opens the ticket again, as always.
+- **With postponing on too**, a pending ticket meets the shorter of the
+  two periods first. With equal periods it is marked done.
+- Staff see "Marked done in 3 days without activity." under the status
+  on the ticket page during the last 7 days ("today" on the last one),
+  in place of the "Not now" line when done comes first. Such a card
+  shows no "Not now" stamp on the board.
+- The API has the setting as `auto_done_days` (api.md).
+
 ### Stages (sub-columns)
 
 - Administrators define stages for a status in `/admin/settings`, for
@@ -169,6 +198,8 @@ only way to the top), card background images, per-board settings.
 `test/controllers/boards_controller_test.rb` (staff only, columns and
 counts, card content, golden order, the 50-card limit for the done
 columns, filters, the Not now column, stage columns, stamps),
+`test/models/auto_done_test.rb` (only pending tickets, the event, the
+email to the requester, off at 0, the shorter period wins),
 `test/models/auto_postpone_test.rb` (who is postponed, events, no email
 to requesters, the setting, off at 0),
 `test/controllers/admin/settings_controller_test.rb` (the setting and

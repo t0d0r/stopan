@@ -370,7 +370,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] a person in Cc leaves: "Leave Cc" on the People panel, and a link at the end of every follower's and Cc's email to a confirmation page without sign-in (specs/followers.md "Leaving")
 - [x] followers in the API: `followers` and `cc_suggestions` in the ticket, `POST` and `DELETE /api/v1/tickets/:number/followers` (specs/followers.md "In the API", specs/api.md)
 - [x] production: deployed 87769cd (leaving a ticket, followers in the API), no migrations (specs/deploy.md "Update 2026-11-12 (revision 87769cd)")
-- [ ] later: requesters adding Cc themselves, people outside the organization (specs/followers.md "Not in this phase")
+- [ ] requesters add colleagues to Cc on their own ticket, only among members of the ticket's organization (decided 2026-11-12; specs/followers.md "Not in this phase")
+- [x] decided: people outside the organization never go in Cc; the share link remains for them (specs/followers.md "Not in this phase")
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")
 - [x] production: deployed 98a5e93 (`main` after v0.1.1: file limits, joined copy fields, deleted ticket mail and files, mailbox address filter, Outlook replies), no migrations (specs/deploy.md "Update 2026-11-10 (revision 98a5e93)")
@@ -381,7 +382,7 @@ approved "go in this order", all done 2026-10-27):
 
 - [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)
 - [ ] email ingestion with Action Mailbox (specs/roadmap.md)
-- [ ] auto-close resolved tickets after N days (specs/roadmap.md)
+- [x] automatic done: pending tickets without activity for N days are marked done, off by default (`app_settings.auto_done_days`; specs/board.md "Automatic done")
 - [ ] SLAs per priority (specs/roadmap.md)
 - [ ] live ticket and queue updates over Turbo Streams (specs/roadmap.md)
 - [ ] agent groups and organization-wide requester visibility (specs/roadmap.md)

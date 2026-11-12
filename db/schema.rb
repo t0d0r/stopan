@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_10_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -66,6 +66,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_090000) do
     t.integer "mailbox_poll_seconds", default: 120, null: false
     t.string "timeline_order", default: "oldest_first", null: false
     t.integer "last_ticket_number", default: 0, null: false
+    t.integer "auto_done_days", default: 0, null: false
   end
 
   create_table "comments", force: :cascade do |t|

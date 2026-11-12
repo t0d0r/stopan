@@ -537,6 +537,8 @@ en:
         postpone_title: "Automatic postponing"
         postpone_days: "Postpone tickets after this many days without activity"
         postpone_hint: "New, in progress and pending tickets nobody touched for this long move to Not now, once an hour. 0 turns it off. Cards due within a week show a stamp on the board."
+        done_days: "Mark pending tickets done after this many days without activity"
+        done_hint: "Pending tickets the requester never answered are marked done, once an hour, and the requester is told by email. A reply opens the ticket again. 0 turns it off."
         mailbox_caption: "Mailboxes"
         mailbox_title: "Fetching mail"
         mailbox_polling: "Fetch new mail from the organizations' mailboxes automatically"
@@ -707,6 +709,10 @@ en:
         one: "Moves to Not now in 1 day without activity."
         other: "Moves to Not now in %{count} days without activity."
       note_today: "Moves to Not now today without activity."
+      done_note_days:
+        one: "Marked done in 1 day without activity."
+        other: "Marked done in %{count} days without activity."
+      done_note_today: "Marked done today without activity."
     public_request:
       title: "Contact %{name} support"
       intro: "Describe your question or problem. We reply by email; you do not need an account."
@@ -1312,6 +1318,7 @@ en:
         timeline_order: "Order of replies and events"
         mailbox_poll_seconds: "How often"
         auto_postpone_days: "Days without activity"
+        auto_done_days: "Days until pending tickets are done"
         deepl_api_key: "DeepL API key"
       stage:
         name: "Name"

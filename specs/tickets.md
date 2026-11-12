@@ -57,6 +57,9 @@ actor:
 
 - A requester's public reply on a `pending`, `done` or `postponed`
   ticket sets it to `open`.
+- **Automatic done** (board.md): a `pending` ticket without activity
+  for the number of days set by administrators becomes `done`, recorded
+  as a status event without an actor. Off by default.
 - **Automatic postponing** (board.md): a `new`, `open` or `pending`
   ticket without activity (`updated_at`) for the number of days set by
   administrators becomes `postponed`, recorded as a status event without

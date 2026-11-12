@@ -631,8 +631,26 @@
   with no migrations; every check passed (specs/deploy.md "Update
   2026-11-12 (revision 0ae905e)"). Images kept: 0ae905e, 87769cd,
   b482106.
+- Automatic done (specs/board.md "Automatic done"). The roadmap's
+  "auto-close resolved tickets" now means the `pending` ticket, since
+  resolved and closed became done. Migration `20261112090000` adds
+  `app_settings.auto_done_days` (default 0, off). `AutoDone.run` marks
+  pending tickets without activity for that many days done, without an
+  actor, hourly before `AutoPostpone` and by `bin/rails
+  stopan:close_pending`; the requester gets the usual email of a
+  change to Done. The ticket page says "Marked done in N days" when
+  that comes before postponing, and such a card has no "Not now"
+  stamp. The setting is in the postponing panel of /admin/settings and
+  in the settings API. Tests: test/models/auto_done_test.rb and the
+  settings controller test. Checked the panel in dev at 1280 and 390
+  px.
 
 ## Decisions
+
+- Followers, 2026-11-12: people outside the organization never go in
+  Cc, the share link remains for them; requesters will add colleagues
+  to Cc only among members of the ticket's organization (not built
+  yet). Access to tickets stays tied to the membership.
 
 - **Provenance from `actions/attest-build-provenance`, not the SLSA
   generator.** The generator must be referenced by a version tag and its
@@ -715,13 +733,14 @@ mail view and files of deleted tickets for administrators, mailbox
 fetching by address, Outlook replies, the dashboard warning for Google
 accounts that need reconnecting, the headers of mail replies and the
 bundled Omarchy fonts, leaving a ticket, followers in the API and the
-CSV export of the reports. The mailbox
+CSV export of the reports. Automatic done is committed and not
+deployed; it brings a migration, so the deploy makes a database copy
+first. The mailbox
 filter meets a real IMAP server once a mailbox is set up again after
-the reset. Two follower items stay under followers.md "Not in this
-phase" and each needs a decision first: requesters adding Cc
-themselves, and people outside the organization. The other open todo
-items are larger or need the operator, and the operator steps after
-the reset remain.
+the reset. The next item is requesters adding colleagues to Cc among
+the members of the ticket's organization (followers.md "Not in this
+phase", decided). The other open todo items are larger or need the
+operator, and the operator steps after the reset remain.
 
 ## Security Note
 

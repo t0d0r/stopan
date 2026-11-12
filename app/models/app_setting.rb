@@ -16,7 +16,7 @@ class AppSetting < ApplicationRecord
 
   normalizes :deepl_api_key, :google_client_id, :google_client_secret, with: ->(value) { value.strip.presence }
 
-  validates :auto_postpone_days, numericality: { only_integer: true, in: 0..3650 }
+  validates :auto_postpone_days, :auto_done_days, numericality: { only_integer: true, in: 0..3650 }
   validates :default_look, inclusion: { in: LOOKS }
   validates :mailbox_poll_seconds, inclusion: { in: MAILBOX_POLL_SECONDS }
   validates :timeline_order, inclusion: { in: TIMELINE_ORDERS }

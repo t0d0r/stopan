@@ -9,6 +9,10 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     patch admin_settings_url, params: { app_setting: { auto_postpone_days: 14 } }
     assert_redirected_to admin_settings_url
     assert_equal 14, AppSetting.current.auto_postpone_days
+    get admin_settings_url
+    assert_select "input[name='app_setting[auto_done_days]'][value='0']"
+    patch admin_settings_url, params: { app_setting: { auto_done_days: 21 } }
+    assert_equal 21, AppSetting.current.auto_done_days
     patch admin_settings_url, params: { app_setting: { auto_postpone_days: -1 } }
     assert_response :unprocessable_content
 

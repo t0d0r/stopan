@@ -1,6 +1,6 @@
 # Moves tickets without activity for the set number of days to "Not now"
 # (specs/board.md "Automatic postponing"), as a status change without an
-# actor. Run hourly from the web process and by bin/rails
+# actor. Run hourly from the web process, after AutoDone, and by bin/rails
 # stopan:postpone_inactive.
 module AutoPostpone
   STATUSES = %w[new open pending].freeze
@@ -30,7 +30,11 @@ module AutoPostpone
 
   def self.start(interval: 1.hour)
     @task ||= Concurrent::TimerTask.new(execution_interval: interval.to_i) do
-      Rails.application.executor.wrap { run }
+      # Done first: a pending ticket meets the shorter period (specs/board.md).
+      Rails.application.executor.wrap do
+        AutoDone.run
+        run
+      end
     rescue StandardError => e
       Rails.logger.error("Auto postpone: #{e.class}: #{e.message}")
     end.tap(&:execute)

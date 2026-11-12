@@ -540,6 +540,8 @@ de:
         postpone_title: "Automatisches Zurückstellen"
         postpone_days: "Tickets nach so vielen Tagen ohne Aktivität zurückstellen"
         postpone_hint: "Tickets mit dem Status Neu, In Bearbeitung oder Wartet auf Antwort, die so lange niemand bearbeitet hat, wechseln einmal pro Stunde zu Später. 0 schaltet dies aus. Karten, die innerhalb einer Woche fällig werden, zeigen auf dem Board einen Stempel."
+        done_days: "Wartende Tickets nach so vielen Tagen ohne Aktivität als erledigt markieren"
+        done_hint: "Wartende Tickets, auf die der Anfragende nicht geantwortet hat, werden einmal pro Stunde als erledigt markiert, und der Anfragende erhält eine E-Mail. Eine Antwort öffnet das Ticket wieder. 0 schaltet dies aus."
         mailbox_caption: "Postfächer"
         mailbox_title: "E-Mail abrufen"
         mailbox_polling: "Neue E-Mails aus den Postfächern der Organisationen automatisch abrufen"
@@ -710,6 +712,10 @@ de:
         one: "Wechselt in 1 Tag ohne Aktivität zu Später."
         other: "Wechselt in %{count} Tagen ohne Aktivität zu Später."
       note_today: "Wechselt heute ohne Aktivität zu Später."
+      done_note_days:
+        one: "Wird in 1 Tag ohne Aktivität als erledigt markiert."
+        other: "Wird in %{count} Tagen ohne Aktivität als erledigt markiert."
+      done_note_today: "Wird heute ohne Aktivität als erledigt markiert."
     public_request:
       title: "Support von %{name} kontaktieren"
       intro: "Beschreiben Sie Ihre Frage oder Ihr Problem. Wir antworten per E-Mail; Sie brauchen kein Konto."
@@ -1317,6 +1323,7 @@ de:
         timeline_order: "Reihenfolge von Antworten und Ereignissen"
         mailbox_poll_seconds: "Wie oft"
         auto_postpone_days: "Tage ohne Aktivität"
+        auto_done_days: "Tage bis erledigt für wartende Tickets"
         deepl_api_key: "DeepL-API-Schlüssel"
       stage:
         name: "Name"

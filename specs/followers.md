@@ -262,8 +262,15 @@ The panel's actions, with the same rules and model methods (api.md):
 
 ## Not in this phase
 
-- Requesters adding colleagues to Cc themselves.
-- People outside the organization (the share link remains for them).
+- Requesters adding colleagues to Cc themselves. Decided 2026-11-12:
+  a requester will pick only among people who are already members of
+  the ticket's organization; no address is typed and no account is
+  made. **Reason:** a requester must not be able to give an outsider
+  access. Not built yet (todo).
+- People outside the organization. Decided 2026-11-12: never in Cc; the
+  share link remains for them. **Reason:** access to tickets stays tied
+  to the membership, with the share link as the one deliberate
+  exception.
 - Digests.
 - Taking Cc from the headers of later email replies.
 

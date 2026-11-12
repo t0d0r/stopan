@@ -11,6 +11,11 @@ namespace :stopan do
 end
 
 namespace :stopan do
+  desc "Mark pending tickets without activity for the set number of days done (specs/board.md)"
+  task close_pending: :environment do
+    puts "#{AutoDone.run} ticket(s) marked done"
+  end
+
   desc "Postpone tickets without activity for the set number of days (specs/board.md)"
   task postpone_inactive: :environment do
     puts "#{AutoPostpone.run} ticket(s) moved to Not now"

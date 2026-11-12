@@ -4,7 +4,7 @@ module Api
     # is write-only (specs/translation.md); the Google client is set in the
     # wizard only.
     class SettingsController < BaseController
-      FIELDS = %i[auto_postpone_days default_look mailbox_polling mailbox_poll_seconds timeline_order
+      FIELDS = %i[auto_postpone_days auto_done_days default_look mailbox_polling mailbox_poll_seconds timeline_order
                   translation_enabled deepl_api_key remove_deepl_api_key].freeze
 
       before_action :require_admin!
@@ -26,7 +26,8 @@ module Api
 
       def settings_json(setting)
         {
-          auto_postpone_days: setting.auto_postpone_days, default_look: setting.default_look,
+          auto_postpone_days: setting.auto_postpone_days, auto_done_days: setting.auto_done_days,
+          default_look: setting.default_look,
           mailbox_polling: setting.mailbox_polling, mailbox_poll_seconds: setting.mailbox_poll_seconds,
           timeline_order: setting.timeline_order, translation_enabled: setting.translation_enabled,
           deepl_api_key_set: setting.deepl_api_key.present?, google_ready: setting.google_ready?

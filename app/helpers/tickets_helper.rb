@@ -335,6 +335,7 @@ module TicketsHelper
   def postpone_stamp(ticket)
     left = AutoPostpone.days_left(ticket, postpone_days)
     return unless left && left <= AutoPostpone::STAMP_DAYS
+    return if done_first?(ticket, left)
 
     label = left.zero? ? t("ui.board.stamp_today") : t("ui.board.stamp_days", count: left)
     tag.span(class: "postpone-stamp", title: label, aria: { label: label }) do
@@ -346,11 +347,27 @@ module TicketsHelper
   end
 
   # "Moves to Not now in 3 days" for staff on the ticket page.
+  # A pending ticket about to be marked done says that instead
+  # (specs/board.md "Automatic done").
   def postpone_note(ticket)
     left = AutoPostpone.days_left(ticket, postpone_days)
+    done = AutoDone.days_left(ticket, auto_done_days)
+    if done && done <= AutoPostpone::STAMP_DAYS && done_first?(ticket, left)
+      return tag.p(done.zero? ? t("ui.board.done_note_today") : t("ui.board.done_note_days", count: done), class: "postpone-note")
+    end
     return unless left && left <= AutoPostpone::STAMP_DAYS
 
     tag.p(left.zero? ? t("ui.board.note_today") : t("ui.board.note_days", count: left), class: "postpone-note")
+  end
+
+  # Whether the ticket is marked done before, or when, it would be postponed.
+  def done_first?(ticket, postpone_left)
+    done = AutoDone.days_left(ticket, auto_done_days)
+    done.present? && (postpone_left.nil? || done <= postpone_left)
+  end
+
+  def auto_done_days
+    @auto_done_days ||= AutoDone.days
   end
 
   def postpone_days
