@@ -864,8 +864,7 @@
   Copy and Open joined under it. Symptom: after the first version the
   fields were out of place at 1440 and 1280 (Open wrapped under Copy,
   TLS hung beside the port, fields of one row at different heights).
-  It fits 1280x900; the earlier note of 1280x800 was wrong. Not
-  deployed yet.
+  It fits 1280x900; the earlier note of 1280x800 was wrong.
 - 2026-11-12: several cards move at once on the board (specs/board.md
   "Several cards at once"). Each card has a check box
   (`numbers[]`, form `board-bulk`); ticked cards get a ring, and
@@ -917,11 +916,11 @@
 - 2026-11-12: the board's preview shows, at the right of its head,
   the date that stands at the top right of the ticket page: when the
   mail was sent (its own clock time, as there), else when the ticket
-  was opened. Not deployed yet.
+  was opened.
 - 2026-11-12: in the rows of the queue and of the search results the
   requester's name is a link that adds the requester filter to the
   list as it is (specs/people.md "Queue filter"); plain text while
-  the list is already narrowed to them. Not deployed yet.
+  the list is already narrowed to them.
 - 2026-11-12: a row of the queue can be dragged onto a view tab
   (specs/queues.md "Dragging onto a view"): Assigned to me, Unassigned,
   Pending, Not now and Done make that change; All unsolved reopens
@@ -931,16 +930,15 @@
   action unchanged (`setUpViewDrops` in application.js, `VIEW_DROPS`
   in TicketsHelper). Browser tests in test/system/queue_drag_test.rb.
   Rows are draggable now, so selecting text in a row by dragging no
-  longer works there. Not deployed yet.
+  longer works there.
 - 2026-11-12: the dashed outlines of the drop tabs are drawn inside
-  the tabs; drawn outside, those of neighbouring tabs overlapped. Not
-  deployed yet.
+  the tabs; drawn outside, those of neighbouring tabs overlapped.
 - 2026-11-12: a view tab is active for a dragged row only when its
   change is allowed and would change something: a status the ticket
   may move to (`Ticket::TRANSITIONS`, sent to the page as on the
   board), an assignee other than the current one. Symptom: a done
   ticket could be dropped on Pending and was only refused afterwards
-  with a "skipped" alert. Not deployed yet.
+  with a "skipped" alert.
 - 2026-11-12: the composer no longer promises an email that cannot
   be sent (specs/notifications.md "No outgoing server"). Symptom: it
   said "x will get public replies and status changes by email" while
@@ -948,11 +946,16 @@
   mail server". `Organization#sends_mail?` (own SMTP usable, or the
   global one) decides; without a server the composer shows a warning
   and, for who administers the organization, a link to its SMTP
-  settings. Not deployed yet.
+  settings.
 - 2026-11-12: in development, where emails are written to
   `tmp/mails`, the composer says that they do not leave the computer
   (`Organization#mail_kept_in_files?`); it used to promise an email
-  there too. Not deployed yet.
+  there too.
+- 2026-11-12: `main` pushed and deployed at cf20643 (not a release),
+  without a database copy (no migration). Checks passed; production
+  has no outgoing mail server, so the composer shows its warning
+  there (specs/deploy.md "Update 2026-11-12 (revision cf20643)").
+  Images kept: cf20643, 6982b41, 6a2cf43.
 
 ## Decisions
 
@@ -1072,7 +1075,7 @@
 
 ## Next step
 
-Production runs 6982b41 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
+Production runs cf20643 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox

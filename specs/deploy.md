@@ -713,6 +713,34 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision cf20643)
+
+`main` after v0.1.1, not a release. Since 6982b41: the date in the
+board's preview, the requester filter by a click on the name
+(people.md "Queue filter"), dragging rows of the queue onto a view
+tab (queues.md "Dragging onto a view"), and the composer that says
+when no email can be sent (notifications.md "No outgoing server").
+No migration and no gem change, so no database copy was made.
+
+- Checked:
+  - the container is healthy and runs the image tagged cf20643
+    (version v0.1.1-67-gcf20643); schema 20261112150000, none pending;
+    no failed job and no mailbox error;
+  - the served script has the view drops with the check of allowed
+    changes, the served stylesheet the requester link, the preview's
+    date, the inside outline and the composer's warning;
+  - **outgoing mail:** the organization cannot send (no SMTP of its
+    own, none global), so the composer shows the warning there; mail
+    is not written to files in production;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; signed out, the queue -> 302; `/cable` 101; the
+    security headers are present; only `127.0.0.1:3183` listens; g0no
+    `/up` 200.
+- Not checked: the dragging, the requester link and the warning in a
+  browser on the server (they need a staff sign-in).
+- Images kept: cf20643, 6982b41, 6a2cf43.
+- Rollback: tag `localhost/stopan:6982b41` as `latest` and restart.
+
 ## Update 2026-11-12 (revision 6982b41)
 
 `main` after v0.1.1, not a release. Since 6a2cf43: the board's hover
