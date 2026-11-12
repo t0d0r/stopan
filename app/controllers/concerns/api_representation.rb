@@ -45,6 +45,7 @@ module ApiRepresentation
     end
     json[:followers] = followers_json(ticket)
     json[:cc_suggestions] = ticket.cc_suggestions if current_user.staff? && policy.update?
+    json[:cc_candidates] = ticket.cc_candidates.map { |user| { id: user.id, name: user.display_name } } if policy.add_cc?
     events = TicketEvent.visible_to(current_user).where(ticket: ticket)
                         .includes(:actor, comment: [ :author, { files_attachments: :blob } ]).order(:created_at, :id)
     json[:timeline] = events.map { |event| event_json(ticket, event) }

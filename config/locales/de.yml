@@ -400,6 +400,8 @@ de:
       add_to_cc: "In Kopie setzen"
       add_to_cc_label: "%{email} in Kopie setzen"
       cc_tag: "Kopie"
+      add_cc_colleague: "Kollegen in Kopie setzen"
+      pick_colleague: "Kollegen wählen"
       leave_cc: "Kopie verlassen"
       leave_title: "Die Kopie verlassen?"
       leave_body: "Sie erhalten keine E-Mails mehr zu diesem Ticket, und es verschwindet aus „Meine Tickets“."

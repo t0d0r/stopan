@@ -4,7 +4,9 @@
 <% staff = current_user.staff? %>
 <% manage = staff && policy.update? %>
 <% cc = ticket.cc_users.to_a %>
-<% if staff || cc.any? %>
+<%# The requester adds colleagues (specs/followers.md "The requester adds colleagues"). %>
+<% candidates = policy.add_cc? ? ticket.cc_candidates.to_a : [] %>
+<% if staff || cc.any? || candidates.any? %>
   <section class="sticky sticky--green panel side-panel followers" id="followers" aria-labelledby="followers-title" data-side-panel>
     <%= side_panel_bar t("ui.followers.title"), "followers-body", icon_name: :people %>
     <div class="panel__body" id="followers-body">
@@ -61,8 +63,8 @@
                 <%= user.display_name %>
                 <% if staff %><span class="muted followers__email"><%= user.email %></span><% end %>
               </span>
-              <% if manage %>
-                <% follower = ticket.ticket_followers.find_by(user_id: user.id) %>
+              <% follower = ticket.ticket_followers.find_by(user_id: user.id) %>
+              <% if manage || policy.remove_cc?(follower) %>
                 <%= button_to ticket_follower_path(ticket, follower), method: :delete, class: "link-button",
                               aria: { label: t("ui.followers.remove_cc_label", name: user.display_name) } do %>
                   <%= icon :close, size: 12 %> <%= t("ui.followers.remove") %>
@@ -73,6 +75,14 @@
         </ul>
       <% elsif staff %>
         <p class="field-hint"><%= t("ui.followers.no_cc") %></p>
+      <% end %>
+      <% if candidates.any? %>
+        <%= form_with url: ticket_followers_path(ticket), class: "followers__add input-group" do %>
+          <%= label_tag "cc_user_id", t("ui.followers.add_cc_colleague"), class: "sr-only" %>
+          <%= select_tag :user_id, options_from_collection_for_select(candidates, :id, :display_name), id: "cc_user_id",
+                         include_blank: t("ui.followers.pick_colleague"), class: "select", required: true %>
+          <%= button_tag type: "submit", name: nil, class: "btn" do %><%= icon :user_plus %> <%= t("ui.followers.add") %><% end %>
+        <% end %>
       <% end %>
       <%# A person in Cc leaves (specs/followers.md "Leaving"). %>
       <% mine_cc = ticket.ticket_followers.find_by(user_id: current_user.id) unless staff %>

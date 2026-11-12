@@ -397,6 +397,8 @@ en:
       add_to_cc: "Add to Cc"
       add_to_cc_label: "Add %{email} to Cc"
       cc_tag: "Cc"
+      add_cc_colleague: "Add a colleague to Cc"
+      pick_colleague: "Pick a colleague"
       leave_cc: "Leave Cc"
       leave_title: "Leave the copy (Cc)?"
       leave_body: "You will no longer get emails about this ticket, and it leaves My tickets."

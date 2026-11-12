@@ -61,7 +61,8 @@ class TicketFollowersControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "a customer sees no panel without anyone in Cc" do
+  test "a customer sees no panel without anyone in Cc or anyone to add" do
+    memberships(:boris_acme).destroy
     sign_in users(:anna)
     get ticket_url(@ticket)
     assert_select "#followers", 0

@@ -371,7 +371,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] followers in the API: `followers` and `cc_suggestions` in the ticket, `POST` and `DELETE /api/v1/tickets/:number/followers` (specs/followers.md "In the API", specs/api.md)
 - [x] production: deployed 87769cd (leaving a ticket, followers in the API), no migrations (specs/deploy.md "Update 2026-11-12 (revision 87769cd)")
 - [x] production: deployed 34f3e79 (automatic done, off by default), one additive migration, database copied first (specs/deploy.md "Update 2026-11-12 (revision 34f3e79)")
-- [ ] requesters add colleagues to Cc on their own ticket, only among members of the ticket's organization (decided 2026-11-12; specs/followers.md "Not in this phase")
+- [x] the requester adds colleagues to Cc on their own ticket, only among members of the ticket's organization, and removes the ones they added; in the API too (specs/followers.md "The requester adds colleagues")
 - [x] decided: people outside the organization never go in Cc; the share link remains for them (specs/followers.md "Not in this phase")
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")

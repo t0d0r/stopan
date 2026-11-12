@@ -25,6 +25,17 @@ class TicketPolicy
     user.staff? || own? || cc?
   end
 
+  # The requester puts colleagues of the organization in Cc
+  # (specs/followers.md "The requester adds colleagues").
+  def add_cc?
+    !ticket.deleted? && !user.staff? && own?
+  end
+
+  # ... and takes back the ones they added.
+  def remove_cc?(follower)
+    add_cc? && follower.cc? && follower.added_by_id == user.id
+  end
+
   def note?
     user.staff? && !ticket.deleted?
   end

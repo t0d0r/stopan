@@ -239,6 +239,19 @@ class Ticket < ApplicationRecord
     end
   end
 
+  # Colleagues the requester may put in Cc: active requesters who are
+  # members of the organization and not on the ticket yet
+  # (specs/followers.md "The requester adds colleagues").
+  def cc_candidates
+    User.requesters.active.where(id: organization.memberships.select(:user_id))
+        .where.not(id: requester_id).where.not(id: ticket_followers.select(:user_id)).ordered
+  end
+
+  # One of them by id; anyone else is not found.
+  def add_cc_member!(user_id, actor:)
+    add_follower(cc_candidates.find(user_id), actor: actor, kind: "cc")
+  end
+
   # Addresses from the mail's To and Cc that could be put in Cc, never
   # added on their own (specs/followers.md "The panel").
   def cc_suggestions

@@ -12,7 +12,7 @@ customer.
 | what they see | what they already see as staff: everything, internal notes included | the public part only, like the requester |
 | emails and in-app notifications | like the assignee: public replies, internal notes, status changes | like the requester: public replies and status changes |
 | may reply | yes, as staff | yes, public replies, in Stopan and by email |
-| added by | themselves ("Follow"), any staff who may update the ticket, or automatically on writing a reply or note | staff who may update the ticket, by email address or from the mail's To/Cc |
+| added by | themselves ("Follow"), any staff who may update the ticket, or automatically on writing a reply or note | staff who may update the ticket, by email address or from the mail's To/Cc; the requester, among the organization's members ("The requester adds colleagues") |
 
 ## Data
 
@@ -86,7 +86,9 @@ ui.md "Ticket page on phones").
 - "Cc" with names only, when there is anyone;
 - no staff followers.
 
-**Without anyone to list**, a customer does not see the panel.
+**Without anyone to list**, a customer does not see the panel. The
+requester does see it when there is a colleague to add ("The requester
+adds colleagues").
 
 ## Adding to Cc by email
 
@@ -237,6 +239,39 @@ the shared page. The email is where they want to stop.
   take that one person off the ticket, which staff see in the history
   and can undo.
 
+## The requester adds colleagues (2026-11-12)
+
+The requester of a ticket puts colleagues in Cc themself, without
+asking staff.
+
+- **Who may add:** only the ticket's requester, while a member of its
+  organization. A person in Cc adds nobody.
+- **Whom:** only active requesters who are already members of the
+  ticket's organization (`Ticket#cc_candidates`), other than the
+  requester and the people already in Cc. No address is typed, no
+  account is made and no membership is added. **Reason:** a requester
+  must not be able to give an outsider access; access to tickets stays
+  tied to the membership.
+- **The panel:** under the Cc names the requester has a "Pick a
+  colleague" select (labelled "Add a colleague to Cc" for screen
+  readers) with the candidates' names, without email addresses, and an
+  "Add" button joined to it. The requester now sees
+  the panel whenever there is a candidate, even with nobody in Cc yet.
+  The select shows a requester the names of their organization's other
+  requesters; that is new, and it stays inside one customer.
+- **Removing:** the requester may remove a person they added themself
+  ("Remove" next to the name). People added by staff stay for staff to
+  remove. Anyone in Cc can still leave ("Leaving").
+- **Events:** the usual internal ones with the requester as actor:
+  "Anna added Boris to Cc", "Anna removed Boris from Cc". Adding sends
+  no email of its own; the colleague gets the next public reply.
+- **Routes:** the panel's own. `POST /tickets/:number/followers` with
+  `user_id` from a requester means a colleague for Cc; an `email` from
+  a requester is a 403, and a `user_id` outside the candidates a 404.
+  `DELETE` works for the requester on rows they added. The API follows
+  (`POST` and `DELETE /api/v1/tickets/:number/followers`), and the
+  ticket there has `cc_candidates` (id, name) for its requester.
+
 ## In the API (2026-11-11)
 
 The panel's actions, with the same rules and model methods (api.md):
@@ -262,11 +297,6 @@ The panel's actions, with the same rules and model methods (api.md):
 
 ## Not in this phase
 
-- Requesters adding colleagues to Cc themselves. Decided 2026-11-12:
-  a requester will pick only among people who are already members of
-  the ticket's organization; no address is typed and no account is
-  made. **Reason:** a requester must not be able to give an outsider
-  access. Not built yet (todo).
 - People outside the organization. Decided 2026-11-12: never in Cc; the
   share link remains for them. **Reason:** access to tickets stays tied
   to the membership, with the share link as the one deliberate
@@ -302,6 +332,11 @@ The panel's actions, with the same rules and model methods (api.md):
   - `followers` for staff and for customers;
   - adding a colleague and a Cc, a refused address, removing;
   - a requester gets 403, a Cc may leave on their own row only.
+- `test/controllers/requester_cc_test.rb`:
+  - the requester sees the select with members only, and adds one;
+  - an address, an outsider, staff and a second add are refused;
+  - the requester removes only people they added;
+  - a person in Cc and the API follow the same rules.
 - Notifier tests:
   - followers and Cc are emailed per their scope;
   - the switch covers Cc;

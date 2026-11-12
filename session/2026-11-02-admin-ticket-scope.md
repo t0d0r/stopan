@@ -649,13 +649,24 @@
   `20261112090000`; the migration ran, automatic done is off (0), and
   every check passed (specs/deploy.md "Update 2026-11-12 (revision
   34f3e79)"). Images kept: 34f3e79, 0ae905e, 87769cd.
+- The requester adds colleagues to Cc (specs/followers.md "The
+  requester adds colleagues"). Only the ticket's requester, and only
+  among active requesters who are members of the ticket's organization
+  (`Ticket#cc_candidates`, `Ticket#add_cc_member!`); no address is
+  typed and no account or membership is made. The People panel shows
+  the requester a select of names without addresses, also when nobody
+  is in Cc yet, and "Remove" on the people they added
+  (`TicketPolicy#add_cc?`, `#remove_cc?`). The API takes `user_id`
+  from the requester and gives them `cc_candidates`. Tests:
+  test/controllers/requester_cc_test.rb. Checked in dev as a temporary
+  requester, removed afterwards.
 
 ## Decisions
 
 - Followers, 2026-11-12: people outside the organization never go in
-  Cc, the share link remains for them; requesters will add colleagues
-  to Cc only among members of the ticket's organization (not built
-  yet). Access to tickets stays tied to the membership.
+  Cc, the share link remains for them; requesters add colleagues to Cc
+  only among members of the ticket's organization. Access to tickets
+  stays tied to the membership.
 
 - **Provenance from `actions/attest-build-provenance`, not the SLSA
   generator.** The generator must be referenced by a version tag and its
@@ -741,10 +752,10 @@ bundled Omarchy fonts, leaving a ticket, followers in the API and the
 CSV export of the reports, and automatic done, which stays off until
 an administrator sets its days. The mailbox
 filter meets a real IMAP server once a mailbox is set up again after
-the reset. The next item is requesters adding colleagues to Cc among
-the members of the ticket's organization (followers.md "Not in this
-phase", decided). The other open todo items are larger or need the
-operator, and the operator steps after the reset remain.
+the reset. The requester adding colleagues to Cc is committed and not
+deployed; it brings no migration. The followers work is complete. The
+other open todo items are larger or need the operator, and the
+operator steps after the reset remain.
 
 ## Security Note
 
