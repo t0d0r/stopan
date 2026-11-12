@@ -108,14 +108,49 @@ scripts or styles). It is not live-updated; reloading recalculates.
 Requesters 403; agents see only their organizations' numbers; the
 definitions above on known fixtures (new, done, reopened not done,
 first response by staff only and public only, medians, waiting count);
-period and organization filters and their fallbacks; buckets per period;
+period and organization filters and their fallbacks; the CSV of each
+table, its formula guard, 403 and 404; buckets per period;
 the chart has a legend, titles and a table; the burndown replays
 reopened tickets and ends at the open count now; German and Bulgarian render.
 
+## CSV export (2026-11-12)
+
+Every table of the page can be downloaded, for a spreadsheet.
+
+- `GET /reports.csv` with `table` and the page's `period` and
+  `organization`. Staff only, 403 for requesters, and the same
+  `Ticket.visible_to` numbers as the page. An unknown `table` is a 404.
+
+  | `table` | rows | columns |
+  |---|---|---|
+  | `volume` | one per day, week or month | start date, Created, Done |
+  | `burndown` | one per day, week or month | start date, Open |
+  | `statuses` | one per status and stage | Status, Stage, count |
+  | `organizations` | as "By organization" | name, New, Done, Open now, first response, resolution |
+  | `people` | as "By person" | name, role, Assigned open, Done, Public replies, Internal notes, first response |
+
+- A "Download CSV" link sits under each of the five: next to "Show as
+  table" under the two charts, and at the end of the other three
+  panels. It keeps the period and organization of the page.
+- **Format:**
+  - UTF-8 with a byte order mark, so Excel reads Cyrillic;
+  - comma separated, every field quoted, CRLF line ends;
+  - the header row is in the user's language;
+  - dates are `YYYY-MM-DD` (the start of the day, week or month);
+  - durations are whole seconds, with "(seconds)" in the header, and
+    empty when there is nothing to measure.
+- **Formulas:** a text cell that starts with `=`, `+`, `-`, `@`, a tab
+  or a carriage return gets a leading apostrophe. **Reason:** names of
+  organizations and people are typed by users, and a spreadsheet would
+  run such a cell as a formula.
+- The file is named `stopan-<table>-<period>-<YYYY-MM-DD>.csv`.
+- The encoder is the app's own few lines (`ReportCsv`), so no new gem.
+- Not in the API: `GET /api/v1/reports` already gives the same numbers
+  as JSON.
+
 ## Later
 
-CSV export, custom date ranges, business hours, SLA targets
-(roadmap.md "SLAs").
+Custom date ranges, business hours, SLA targets (roadmap.md "SLAs").
 
 ## Security Note
 

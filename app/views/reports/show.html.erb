@@ -67,6 +67,7 @@
           </li>
         <% end %>
       </ul>
+      <%= link_to reports_path(format: :csv, table: "statuses", period: report.period, organization: report.organization&.id), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
     </div>
   </section>
 
@@ -105,6 +106,7 @@
       <% else %>
         <p class="panel__empty"><%= t("ui.reports.empty") %></p>
       <% end %>
+      <%= link_to reports_path(format: :csv, table: "organizations", period: report.period, organization: report.organization&.id), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
     </div>
   </section>
 </div>
@@ -144,5 +146,6 @@
     <% else %>
       <p class="panel__empty"><%= t("ui.reports.empty") %></p>
     <% end %>
+    <%= link_to reports_path(format: :csv, table: "people", period: report.period, organization: report.organization&.id), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
   </div>
 </section>

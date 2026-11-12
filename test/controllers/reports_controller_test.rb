@@ -61,4 +61,50 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Berichte"
     assert_select ".report-legend li", /Erledigt/
   end
+
+  def csv(table, **params)
+    get reports_url(format: :csv, table: table, **params)
+    response.body.delete_prefix("\uFEFF").split("\r\n").map { |line| line[1..-2].split('","', -1) }
+  end
+
+  test "each table downloads as CSV with the page's filters" do
+    sign_in users(:agent)
+    get reports_url(period: "7d", organization: organizations(:acme).id)
+    ReportCsv::TABLES.each do |table|
+      assert_select "a.report-csv[href=?]", reports_path(format: :csv, table: table, period: "7d", organization: organizations(:acme).id)
+    end
+
+    rows = csv("volume", period: "7d")
+    assert_response :success
+    assert_equal "text/csv; charset=utf-8", response.media_type + "; charset=" + response.charset.downcase
+    assert_match(/attachment; filename="stopan-volume-7d-\d{4}-\d\d-\d\d\.csv"/, response.headers["Content-Disposition"])
+    assert response.body.start_with?("\uFEFF")
+    assert_equal %w[Day Created Done], rows.first
+    assert_equal 8, rows.size
+    assert_match(/\A\d{4}-\d\d-\d\d\z/, rows.last.first)
+
+    assert_equal %w[Month Open], csv("burndown", period: "12m").first
+    assert_equal %w[Status Stage Tickets], csv("statuses").first
+    report = TicketReport.new(users(:agent), {})
+    rows = csv("organizations")
+    assert_equal [ "Organization", "New", "Done", "Open now", "First response (seconds)", "Resolution (seconds)" ], rows.first
+    assert_equal report.organization_rows.map { |row| [ row.organization.name, row.open.to_s ] }, rows.drop(1).map { [ it[0], it[3] ] }
+    rows = csv("people")
+    assert_equal "Role", rows.first[1]
+    assert_equal report.person_rows.map { |row| row.user.display_name }, rows.drop(1).map(&:first)
+  end
+
+  test "CSV cells that look like formulas are defused; requesters and unknown tables are refused" do
+    organizations(:acme).update!(name: %(=HYPERLINK("http://x","y")))
+    sign_in users(:agent)
+    get reports_url(format: :csv, table: "organizations")
+    assert_includes response.body, %("'=HYPERLINK(""http://x"",""y"")")
+
+    get reports_url(format: :csv, table: "users")
+    assert_response :not_found
+    sign_in users(:anna)
+    get root_url
+    get reports_url(format: :csv, table: "volume")
+    assert_response :forbidden
+  end
 end

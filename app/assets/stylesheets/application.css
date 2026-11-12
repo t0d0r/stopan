@@ -6114,6 +6114,16 @@ turbo-frame {
   cursor: pointer;
 }
 
+/* "Download CSV" under each table of the reports (specs/reports.md "CSV export"). */
+.report-csv {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
 .report-columns {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
@@ -6549,7 +6559,7 @@ turbo-frame {
     min-height: 44px;
   }
 
-  :is(.view-switch__link, .report-chart__table summary, .revisions summary, .toggle) {
+  :is(.view-switch__link, .report-chart__table summary, .report-csv, .revisions summary, .toggle) {
     display: inline-flex;
     align-items: center;
     min-height: 44px;

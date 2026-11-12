@@ -183,7 +183,8 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] admin dashboard warning for organizations whose Google account needs reconnecting, live (specs/admin.md "Google accounts that need reconnecting", specs/mail-oauth.md "Failure")
 - [ ] Google Workspace mail accounts, phase 4: production OAuth client and first mailbox (specs/mail-oauth.md, specs/deploy.md)
 - [ ] Microsoft 365 mail accounts, the same phases, after Google (specs/mail-oauth.md)
-- [ ] reports later: CSV export, custom date ranges, business hours (specs/reports.md "Later")
+- [x] reports: CSV export of each table, with a guard against spreadsheet formulas (specs/reports.md "CSV export")
+- [ ] reports later: custom date ranges, business hours (specs/reports.md "Later")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
 approved "go in this order", all done 2026-10-27):

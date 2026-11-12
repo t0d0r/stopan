@@ -615,6 +615,18 @@
   with no migrations; every check passed, the new routes included
   (specs/deploy.md "Update 2026-11-12 (revision 87769cd)"). Images
   kept: 87769cd, b482106, 98a5e93.
+- CSV export of the reports (specs/reports.md "CSV export").
+  `GET /reports.csv?table=...` gives one of the five tables (volume,
+  burndown, statuses, organizations, people) for the page's period and
+  organization, with a "Download CSV" link under each. UTF-8 with a
+  byte order mark, every field quoted, dates as `YYYY-MM-DD`, durations
+  in whole seconds. A text cell that a spreadsheet would run as a
+  formula gets a leading apostrophe. The encoder is `ReportCsv`
+  (app/models/report_csv.rb), so no new gem. `forbidden` now renders
+  its HTML page for any request format; a 403 on a `.csv` request
+  failed with a missing template. Tests in
+  test/controllers/reports_controller_test.rb. Checked in dev at 1280
+  and 390 px.
 
 ## Decisions
 
@@ -699,7 +711,8 @@ mail view and files of deleted tickets for administrators, mailbox
 fetching by address, Outlook replies, the dashboard warning for Google
 accounts that need reconnecting, the headers of mail replies and the
 bundled Omarchy fonts, leaving a ticket and followers in the API. The
-mailbox
+CSV export of the reports is committed and not deployed; it brings no
+migration. The mailbox
 filter meets a real IMAP server once a mailbox is set up again after
 the reset. Two follower items stay under followers.md "Not in this
 phase" and each needs a decision first: requesters adding Cc

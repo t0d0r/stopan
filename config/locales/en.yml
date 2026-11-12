@@ -889,6 +889,12 @@ en:
         uk: "Ukrainian"
     reports:
       title: "Reports"
+      csv:
+        download: "Download CSV"
+        seconds: "%{column} (seconds)"
+        stage: "Stage"
+        count: "Tickets"
+        role: "Role"
       period: "Period"
       periods:
         7d: "Last 7 days"

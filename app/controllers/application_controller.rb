@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
   def forbidden
     return head(:forbidden) if request.format.json?
 
-    render "errors/forbidden", status: :forbidden
+    render "errors/forbidden", status: :forbidden, formats: :html
   end
 
   # Tickets outside the user's scope are "not found" (specs/roles.md).

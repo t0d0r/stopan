@@ -892,6 +892,12 @@ bg:
         uk: "украински"
     reports:
       title: "Отчети"
+      csv:
+        download: "Изтегли CSV"
+        seconds: "%{column} (секунди)"
+        stage: "Етап"
+        count: "Заявки"
+        role: "Роля"
       period: "Период"
       periods:
         7d: "Последните 7 дни"
