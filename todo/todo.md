@@ -391,6 +391,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed 6a2cf43 (Shift+click, form rows, several cards on the board, member tickets, bulk actions past the firewall); no migration (specs/deploy.md "Update 2026-11-12 (revision 6a2cf43)")
 - [x] production: deployed 6982b41 (the board's hover preview); no migration (specs/deploy.md "Update 2026-11-12 (revision 6982b41)")
 - [x] production: deployed cf20643 (preview date, requester filter by click, rows dragged onto view tabs, composer warning without an outgoing server); no migration (specs/deploy.md "Update 2026-11-12 (revision cf20643)")
+- [x] production: deployed eae75a7 (Status labels on phones, message form without `return_to`); no migration (specs/deploy.md "Update 2026-11-12 (revision eae75a7)")
+- [ ] operator: try in production a message sent from the users list with a search typed in; it should come back to the same list
 - [ ] operator: set the organization's outgoing mail (SMTP); until then requesters get no email at all, which the composer now says (specs/notifications.md "No outgoing server")
 - [x] board preview: the date from the top right of the ticket page (mail sent, else opened) in its head (specs/board.md "Preview on hover")
 - [x] queue and search rows: the requester's name is a link that narrows the list to their tickets (specs/people.md "Queue filter")

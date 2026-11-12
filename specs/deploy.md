@@ -713,6 +713,27 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision eae75a7)
+
+`main` after v0.1.1, not a release. Since cf20643: column names in
+front of the stacked values of the Status page on phones (status.md
+"Mail in"), and the message form of the admin area without a
+`return_to` field (notifications.md "Messages from administrators").
+No migration and no gem change, so no database copy was made.
+
+- Checked:
+  - the container is healthy and runs the image tagged eae75a7
+    (version v0.1.1-69-geae75a7); schema 20261112150000, none pending;
+    no failed job and no mailbox error;
+  - `/up` and the sign-in page answer 200 through Apache;
+  - the served stylesheet has the label rule of the Status tables.
+- Not checked on the server: the message form signed in (sending
+  from the users list with a search, and from an organization page).
+- Images kept: eae75a7, cf20643, 6982b41.
+- Rollback: as `stopan`, `podman tag localhost/stopan:cf20643
+  localhost/stopan:latest` and restart the service; no data change
+  to undo.
+
 ## Update 2026-11-12 (revision cf20643)
 
 `main` after v0.1.1, not a release. Since 6982b41: the date in the

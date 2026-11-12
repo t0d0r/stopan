@@ -973,6 +973,10 @@
 - todo: "reporting" and "live updates" of the Later list marked done,
   since reports.md and the page refreshes are built; what remains of
   each is its own line.
+- 2026-11-12: `main` pushed and deployed at eae75a7 (not a release),
+  without a database copy (no migration). Checks passed
+  (specs/deploy.md "Update 2026-11-12 (revision eae75a7)").
+  Images kept: eae75a7, cf20643, 6982b41.
 
 ## Decisions
 
@@ -1092,7 +1096,7 @@
 
 ## Next step
 
-Production runs cf20643 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
+Production runs eae75a7 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
