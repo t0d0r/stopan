@@ -7,6 +7,9 @@ module MailHtml
   REMOVED = %w[script iframe frame frameset object embed applet form input button textarea select option
                base meta link noscript template].freeze
   LINK_SCHEMES = %w[http https mailto].freeze
+  CID = /\Acid:([^\s"'<>]{1,250})\z/i
+  # Kinds an inline image may be served as; never SVG.
+  INLINE_TYPES = %w[image/png image/jpeg image/gif image/webp].freeze
   REMOTE_IMAGE = /<img\b[^>]*\bsrc\s*=\s*["']?\s*https?:|url\(\s*["']?\s*https?:/i
 
   # The cleaned document (the mail's styles and body), or nil when there
@@ -31,6 +34,23 @@ module MailHtml
     cleaned if cleaned.bytesize <= MAX_BYTES
   end
 
+  # Points the inline images (cid:) at the message's own files: the
+  # block gets a Content-ID and returns the address of that image, or
+  # nil. Other cid: sources are removed, so the alt text shows.
+  def self.inline_images(html)
+    return html unless html.to_s.match?(/cid:/i)
+
+    fragment = Nokogiri::HTML5.fragment(html)
+    fragment.css("img").each do |image|
+      id = image["src"].to_s.strip[CID, 1]
+      next unless id
+
+      address = yield(id)
+      address ? image["src"] = address : image.remove_attribute("src")
+    end
+    fragment.to_html
+  end
+
   def self.remote_images?(html)
     html.to_s.match?(REMOTE_IMAGE)
   end
@@ -49,7 +69,7 @@ module MailHtml
   def self.clean_image(image)
     src = image["src"].to_s.strip
     image.remove_attribute("srcset")
-    image.remove_attribute("src") unless src.match?(%r{\Ahttps?://}i) || src.match?(%r{\Adata:image/}i)
+    image.remove_attribute("src") unless src.match?(%r{\Ahttps?://}i) || src.match?(%r{\Adata:image/}i) || src.match?(CID)
   end
 
   def self.remote_or_data?(value)

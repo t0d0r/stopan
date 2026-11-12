@@ -13,7 +13,7 @@ class TicketMailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     policy = response.headers["Content-Security-Policy"]
     assert_includes policy, "default-src 'none'"
-    assert_includes policy, "img-src data:;"
+    assert_includes policy, "img-src data: http://www.example.com/tickets/#{@ticket.number}/mail/images/;"
     assert_includes policy, "frame-ancestors 'self'"
     assert_includes policy, "sandbox allow-popups allow-popups-to-escape-sandbox allow-same-origin"
     assert_not_includes policy, "allow-scripts"
@@ -23,7 +23,7 @@ class TicketMailsControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "<script"
 
     get ticket_mail_url(@ticket, images: 1)
-    assert_includes response.headers["Content-Security-Policy"], "img-src data: https: http:;"
+    assert_includes response.headers["Content-Security-Policy"], "/mail/images/ https: http:;"
   end
 
   test "only for who may see the ticket, and only when there is HTML" do

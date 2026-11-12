@@ -264,15 +264,16 @@ a newsletter is often an afterthought.
 - **Kept at intake:** for a new ticket, the mail's HTML part (or the
   whole mail when it is HTML only) is cleaned and stored in
   `tickets.mail_html`, at most 1 MB after cleaning (larger: not kept).
-  The text part stays the description, as before; replies keep no HTML
-  yet.
+  The text part stays the description, as before. Since 2026-11-12 a
+  reply that comes in by mail keeps its HTML the same way
+  (`comments.mail_html`), see "Replies and inline images" below.
 - **Cleaning** (Nokogiri, before storing): `script`, `iframe`, `frame`,
   `object`, `embed`, `applet`, `form`, `input`, `button`, `textarea`,
   `select`, `base`, `meta`, `link` and `noscript` elements are removed,
   and every `on*` attribute; links keep only `http`, `https` and
   `mailto` targets and open in a new tab with `rel="noopener noreferrer
-  nofollow"`; images keep only `http`, `https` and `data:image/` sources
-  (`cid:` inline images lose their source and show their alt text).
+  nofollow"`; images keep only `http`, `https`, `data:image/` and, since
+  2026-11-12, `cid:` sources (inline images, below).
   Styles (`style` elements and attributes) stay, so the layout survives.
 - **Shown in a sealed frame:** `GET /tickets/:number/mail` returns the
   cleaned HTML in a small document of its own (white page, the mail's
@@ -298,6 +299,39 @@ a newsletter is often an afterthought.
   links). The copy box copies the text of the view that is shown.
   Without JavaScript the frame shows at a fixed height with its own
   scroll bar and the text below it.
+
+### Replies and inline images (2026-11-12)
+
+- **Replies.** A reply by mail (from the requester, someone in Cc or
+  staff) shows the same "HTML" and "Text" tabs as the request, with its
+  own sealed frame: `GET /tickets/:number/comments/:id/mail`, for who
+  may see that reply (`Comment.visible_to`), never on shared pages. The
+  HTML is the whole mail, so it includes the quoted earlier messages
+  that the text leaves out; the text stays what notifications, the
+  API and search use, and the copy box copies the view that is shown,
+  as for the request. Mails that came in before this
+  have no HTML and show as before.
+- **Inline images** (`<img src="cid:...">`, pictures pasted into the
+  mail). At intake each stored file remembers the `Content-ID` of its
+  mail part (in the file's metadata). When the frame is rendered, a
+  `cid:` source that matches a PNG, JPEG, GIF or WebP file of that
+  same request or reply becomes
+  `/tickets/:number/mail/images/:id` (for a reply
+  `/tickets/:number/comments/:comment_id/mail/images/:id`); any other
+  `cid:` source is removed and the image shows its alt text.
+- That address serves only such a file of that message, inline, with
+  `nosniff`, to who may see the message; anything else is 404. SVG is
+  never served this way.
+- The frame's policy allows images from exactly that path
+  (`img-src data: <this site>/tickets/<number>/mail/images/`), not
+  from the whole site, so a mail cannot make the browser fetch other
+  pages of the app as images.
+- Inline images are not "remote images": they show without "Show
+  images", since they came with the mail.
+- Inline images under 10 KB are still dropped at intake as signature
+  decorations (logos, social icons), so those stay as alt text. Files
+  refused by the type or size limits are not shown either.
+- The files stay in the message's file list as before.
 
 ## Not in this phase
 

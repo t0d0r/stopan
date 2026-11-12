@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_130000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -81,6 +81,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_120000) do
     t.boolean "markdown", default: false, null: false
     t.string "source", default: "app", null: false
     t.json "mail_headers"
+    t.text "mail_html"
     t.index ["author_id"], name: "index_comments_on_author_id"
     t.index ["edited_by_id"], name: "index_comments_on_edited_by_id"
     t.index ["ticket_id", "created_at"], name: "index_comments_on_ticket_id_and_created_at"

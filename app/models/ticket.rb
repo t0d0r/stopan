@@ -467,9 +467,10 @@ class Ticket < ApplicationRecord
   # Adds a reply or internal note, and changes the status when asked or when
   # the rules in specs/tickets.md say so, all in one transaction. Returns
   # the comment; it is not persisted when something was invalid.
-  def add_comment(author:, body:, internal: false, files: [], status: nil, markdown: false, source: "app", mail_headers: nil)
+  def add_comment(author:, body:, internal: false, files: [], status: nil, markdown: false, source: "app", mail_headers: nil,
+                  mail_html: nil)
     comment = Comment.new(ticket: self, author: author, body: body, internal: internal, files: files, markdown: markdown,
-                          source: source, mail_headers: mail_headers)
+                          source: source, mail_headers: mail_headers, mail_html: mail_html)
     transaction do
       comment.save!
       new_status = status.presence || status_after(comment)

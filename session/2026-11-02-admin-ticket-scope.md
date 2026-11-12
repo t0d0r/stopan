@@ -758,6 +758,19 @@
   webhook_sender_test.rb, test/jobs/webhook_delivery_job_test.rb,
   test/controllers/admin/webhooks_controller_test.rb, the API test.
   Not deployed yet.
+- 2026-11-12: mail HTML for replies and inline images
+  (specs/organization-mail.md "Replies and inline images"). A reply by
+  mail keeps its cleaned HTML (`comments.mail_html`, migration
+  20261112130000) and shows the HTML and Text tabs with its own sealed
+  frame (`/tickets/:number/comments/:id/mail`). Files from mail keep
+  their part's Content-ID in the blob metadata; the frame rewrites
+  `cid:` sources to `.../mail/images/:id`, which serves only PNG,
+  JPEG, GIF and WebP files of that message, and its policy allows
+  images from that path only. The mail view partial takes the record
+  and the id of its text pane. Tests:
+  test/controllers/reply_mail_view_test.rb and additions to
+  mail_html_test.rb. Seen in a browser with a sample reply. Not
+  deployed yet.
 
 ## Decisions
 
@@ -882,8 +895,9 @@ admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
 reports and the view count of share links are deployed; the view
 count meets a real link once production has tickets. The OpenAPI
-description and the webhooks are committed but not deployed; the
-webhooks have a migration, so copy the database first. A webhook has
+description, the webhooks and the HTML of mail replies are committed
+but not deployed; two of them have migrations, so copy the database
+first. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

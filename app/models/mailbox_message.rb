@@ -75,7 +75,7 @@ class MailboxMessage
   def reply(ticket, user)
     files, rejected = attachments
     comment = ticket.add_comment(author: user, body: body_text(reply: true, rejected: rejected), files: files, source: "email",
-                                 mail_headers: mail_headers)
+                                 mail_headers: mail_headers, mail_html: mail_html)
     raise ActiveRecord::RecordInvalid, comment unless comment.persisted?
 
     :reply
@@ -201,11 +201,19 @@ class MailboxMessage
       name = part.filename.to_s.presence || "attachment"
       type = Marcel::MimeType.for(StringIO.new(data), name: name, declared_type: part.mime_type)
       if accepted.size < Attachable::MAX_FILES && data.bytesize <= Attachable::MAX_SIZE && Attachable::ALLOWED_TYPES.include?(type)
-        accepted << { io: StringIO.new(data), filename: name, content_type: type }
+        accepted << { io: StringIO.new(data), filename: name, content_type: type, metadata: content_id(part) }
       else
         rejected << name
       end
     end
     [ accepted, rejected ]
+  end
+
+  # The part's Content-ID, kept on the file so that an inline image of
+  # the mail's HTML finds it (specs/organization-mail.md "Replies and
+  # inline images").
+  def content_id(part)
+    id = part.content_id.to_s.delete_prefix("<").delete_suffix(">").strip
+    id.present? && id.length <= 250 ? { "content_id" => id } : {}
   end
 end

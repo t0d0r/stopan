@@ -12,7 +12,16 @@
                  markdown_path: (markdown_ticket_comment_path(ticket, comment) if editable) %>
       <div class="message__body">
         <%= turbo_frame_tag dom_id(comment, :text) do %>
-          <%= message_text comment, task_path: (task_ticket_comment_path(ticket, comment) if editable) %>
+          <% if !shared && comment.mail_html.present? %>
+            <%# A reply by mail shows its HTML first, as the request does (specs/organization-mail.md). %>
+            <%= render "tickets/mail_view", ticket: ticket, record: comment, text_pane: dom_id(comment, :mail_text),
+                       anchor: "event-#{event.id}" %>
+            <div class="mail-view__pane" id="<%= dom_id(comment, :mail_text) %>" data-mail-pane="text">
+              <%= message_text comment, task_path: (task_ticket_comment_path(ticket, comment) if editable) %>
+            </div>
+          <% else %>
+            <%= message_text comment, task_path: (task_ticket_comment_path(ticket, comment) if editable) %>
+          <% end %>
         <% end %>
         <% if !shared && translation_offered? && !ticket.deleted? %><%= render "tickets/translation", message: comment, ticket: ticket %><% end %>
         <% if !shared && policy.see_revisions? %><%= render "tickets/revisions", record: comment, ticket: ticket %><% end %>

@@ -21,7 +21,7 @@ class MailHtmlTest < ActiveSupport::TestCase
     assert_equal [ "https://example.com/page", "_blank", "noopener noreferrer nofollow" ], [ links[1]["href"], links[1]["target"], links[1]["rel"] ]
     assert_equal "mailto:a@example.com", links[2]["href"]
     images = doc.css("img")
-    assert_nil images[0]["src"]
+    assert_equal "cid:logo@x", images[0]["src"]  # an inline image, resolved when the frame is rendered
     assert_equal "Logo", images[0]["alt"]
     assert_equal "https://example.com/pixel.gif", images[1]["src"]
     assert images[2]["src"].start_with?("data:image/png")
@@ -53,5 +53,20 @@ class MailHtmlTest < ActiveSupport::TestCase
     assert_nil MailHtml.clean("<html><body>  </body></html>")
     assert_nil MailHtml.clean("<p>#{"x" * (MailHtml::MAX_BYTES + 1)}</p>")
     assert_not MailHtml.remote_images?("<p>no images</p>")
+  end
+
+  test "inline images are pointed at what the block returns, or lose their source" do
+    html = %(<p>Hi</p><img src="cid:a@x" alt="A"><img src="CID:b@x" alt="B"><img src="https://example.com/c.png"><img src="cid:bad id">)
+    asked = []
+    result = MailHtml.inline_images(html) do |id|
+      asked << id
+      "/tickets/1/mail/images/7" if id == "a@x"
+    end
+    doc = Nokogiri::HTML5.fragment(result)
+    assert_equal %w[a@x b@x], asked
+    assert_equal [ "/tickets/1/mail/images/7", nil, "https://example.com/c.png" ], doc.css("img").first(3).map { |image| image["src"] }
+    assert_equal "B", doc.css("img")[1]["alt"]
+    plain = "<p>No inline images</p>"
+    assert_same plain, MailHtml.inline_images(plain) { raise "not asked" }
   end
 end

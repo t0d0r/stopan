@@ -148,7 +148,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] mail-shaped display for messages with source email (rules, quotes, softer footer and signature) and short links for addresses in all plain text (operator, 2026-10-27; specs/organization-mail.md "Display of mail", specs/markdown.md "Plain text links")
 - [x] mail details for staff at the start of a mail ticket, Roundcube-style header (operator, 2026-10-27; specs/organization-mail.md "Mail details")
 - [x] mail HTML view like Roundcube: cleaned HTML part in a sealed frame (own CSP, sandbox), remote images blocked until "Show images", HTML/Text tabs (operator, 2026-10-27; specs/organization-mail.md "HTML view")
-- [ ] mail HTML later: inline cid: images from the attachments, HTML of replies
+- [x] mail HTML: replies by mail keep and show their HTML, and inline `cid:` images show from the message's own files (specs/organization-mail.md "Replies and inline images")
 - [x] JSON API /api/v1 with personal tokens (read-only option, expiry, revoke), same rights as the pages, admin endpoints (operator, 2026-10-27; specs/api.md)
 - [x] API: OpenAPI 3.1 description at `GET /api/v1/openapi.json`, kept complete by a test against the routes; `PATCH /api/v1/memberships/:id` got its missing action (specs/api.md "OpenAPI")
 - [x] webhooks per organization for new tickets and public replies: signed, https on public addresses only, retried, managed by super administrators on the organization page and in the API (specs/webhooks.md)

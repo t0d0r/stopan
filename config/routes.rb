@@ -49,6 +49,10 @@ Rails.application.routes.draw do
     resources :followers, only: %i[create destroy], controller: "ticket_followers"
     # The HTML of the mail a ticket came from, in a sealed frame (organization-mail.md "HTML view").
     resource :mail, only: :show, controller: "ticket_mails"
+    # Its inline images, and the same for a reply by mail ("Replies and inline images").
+    get "mail/images/:id", to: "ticket_mails#image", as: :mail_image
+    get "comments/:comment_id/mail", to: "ticket_mails#show", as: :comment_mail
+    get "comments/:comment_id/mail/images/:id", to: "ticket_mails#image", as: :comment_mail_image
     resources :translations, only: :create
     resources :attachments, only: :show do
       get :preview, on: :member

@@ -1094,7 +1094,7 @@ function setUpMailView() {
   document.querySelectorAll("[data-mail-view]").forEach((view) => {
     const tabs = view.querySelector("[data-mail-tabs]");
     const frame = view.querySelector("[data-mail-frame]");
-    const panes = { html: view.querySelector("[data-mail-pane='html']"), text: document.getElementById("mail-pane-text") };
+    const panes = { html: view.querySelector("[data-mail-pane='html']"), text: document.getElementById(view.dataset.textPane || "mail-pane-text") };
     const fit = () => {
       const root = frame.contentDocument?.documentElement;
       if (!root || frame.contentDocument.URL === "about:blank") return;
