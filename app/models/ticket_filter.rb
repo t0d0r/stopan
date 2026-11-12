@@ -3,6 +3,7 @@
 # Ticket.visible_to, and the parameters only narrow it.
 class TicketFilter
   STAFF_VIEWS = %w[unsolved mine unassigned pending postponed done all].freeze
+  OVERDUE = "overdue".freeze
   # A requester's own tickets (specs/queues.md "My tickets").
   REQUESTER_VIEWS = %w[open done all].freeze
   SORTS = %w[updated created priority].freeze
@@ -46,8 +47,12 @@ class TicketFilter
     @requester ||= User.find_by(id: requester_id) if requester_id
   end
 
+  # Staff get "overdue" after "unassigned" once any SLA target is set
+  # (specs/sla.md "Overdue view").
   def views
-    user.staff? ? STAFF_VIEWS : REQUESTER_VIEWS
+    return REQUESTER_VIEWS unless user.staff?
+
+    @views ||= Sla.any_target? ? STAFF_VIEWS.dup.insert(3, OVERDUE) : STAFF_VIEWS
   end
 
   def counts
@@ -119,6 +124,7 @@ class TicketFilter
     when "unsolved", "open" then base.unsolved
     when "mine" then base.unsolved.where(assignee_id: user.id)
     when "unassigned" then base.unsolved.where(assignee_id: nil)
+    when OVERDUE then Sla.overdue(base)
     when "pending" then base.where(status: "pending")
     when "postponed" then base.where(status: Ticket::POSTPONED)
     when "done" then base.done

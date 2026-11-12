@@ -142,6 +142,7 @@ bg:
         unsolved: "Всички нерешени"
         mine: "Възложени на мен"
         unassigned: "Неразпределени"
+        overdue: "Просрочени"
         pending: "Чакат отговор"
         postponed: "Отложени"
         done: "Готови"

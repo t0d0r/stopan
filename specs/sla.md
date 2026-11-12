@@ -69,6 +69,16 @@ the due time and one of:
   ("Overdue. First response: overdue by 3 h"), so it is not colour or
   shape alone. An icon, not a word, because the rows stay one line
   (queues.md).
+- **Overdue view** (2026-11-12): once any target is set, the queue has
+  a view "Overdue" after "Unassigned" (`view=overdue`, pink, with its
+  count): the tickets with a target overdue now, by the same rule as
+  the mark (`Sla.overdue`, in SQL): not Done, and either unanswered
+  past the first-response time, or New or In progress past the
+  resolution time. Filters,
+  search, sort, bulk actions and the API list work on it as on any
+  view. Without targets the view is not offered and `view=overdue`
+  falls back to the default view. A Pending or Not now ticket is in
+  it only while it has no staff reply.
 - Requesters, shared pages and emails never show targets.
 - **API:** the ticket JSON has `sla` for staff:
   `{first_response: {state, due_at, target_minutes}, resolution:
@@ -78,8 +88,8 @@ the due time and one of:
 ## Not in this version
 
 Business hours and holidays, stopping the clock while Pending,
-targets per organization, emails or notifications on a breach, a
-queue filter for overdue tickets, SLA numbers in the reports.
+targets per organization, emails or notifications on a breach, SLA
+numbers in the reports.
 
 ## Code
 

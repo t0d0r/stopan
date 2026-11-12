@@ -5,7 +5,7 @@ module TicketsHelper
   STATUS_COLORS = { "new" => "yellow", "open" => "pink", "pending" => "blue", "postponed" => "purple", "done" => "green" }.freeze
   PRIORITY_COLORS = { "low" => "gray", "normal" => "blue", "high" => "purple", "urgent" => "pink" }.freeze
   # Paper colour per list view (queues.md); pending and done match their statuses.
-  VIEW_COLORS = { "unsolved" => "yellow", "mine" => "purple", "unassigned" => "pink", "pending" => "blue",
+  VIEW_COLORS = { "unsolved" => "yellow", "mine" => "purple", "unassigned" => "pink", "overdue" => "pink", "pending" => "blue",
                   "done" => "green", "all" => "gray", "open" => "yellow",
                   "postponed" => "purple" }.freeze
   AVATAR_COLORS = %w[yellow blue green pink purple gray].freeze

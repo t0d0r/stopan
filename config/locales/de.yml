@@ -142,6 +142,7 @@ de:
         unsolved: "Alle ungelösten"
         mine: "Mir zugewiesen"
         unassigned: "Nicht zugewiesen"
+        overdue: "Überfällig"
         pending: "Wartet auf Antwort"
         postponed: "Später"
         done: "Erledigt"

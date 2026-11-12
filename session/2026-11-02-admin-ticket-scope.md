@@ -802,6 +802,13 @@
   image holds no test or lint gems and the app runs without them, and
   every check passed (specs/deploy.md "Update 2026-11-12 (revision
   44e58c9)"). Images kept: 44e58c9, d9d7207, 97c3f7d.
+- 2026-11-12: the queue has an "Overdue" view once any SLA target is
+  set (specs/sla.md "Overdue view"): `Sla.overdue` is the "overdue"
+  state as SQL (not Done, and unanswered past the first-response
+  time or New or In progress past the resolution time), and a test
+  checks the two agree. `TicketFilter#views` adds the view for staff,
+  so the API list and bulk actions take `view=overdue` too. Not
+  deployed yet.
 
 ## Decisions
 
@@ -937,7 +944,8 @@ reports and the view count of share links are deployed; the view
 count meets a real link once production has tickets. The OpenAPI
 description, the webhooks and the HTML of mail replies are deployed. The SLA targets are deployed
 and empty, so nothing shows until an administrator sets them; the
-image is built without the test group. A webhook has
+image is built without the test group. The "Overdue" view of the
+queue is committed but not deployed (no migration). A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

@@ -139,6 +139,7 @@ en:
         unsolved: "All unsolved"
         mine: "Assigned to me"
         unassigned: "Unassigned"
+        overdue: "Overdue"
         pending: "Pending"
         postponed: "Not now"
         done: "Done"

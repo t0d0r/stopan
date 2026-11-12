@@ -93,6 +93,35 @@ class SlaPagesTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "overdue"
   end
 
+  test "the queue offers an Overdue view once a target is set" do
+    urgent!
+    sign_in users(:agent)
+    get tickets_url
+    assert_select ".queue__views a[href=?]", tickets_path(view: "overdue"), 0
+    get tickets_url(view: "overdue")
+    assert_select ".queue__views a[aria-current=page][href=?]", tickets_path(view: "unsolved")
+
+    targets!
+    get tickets_url
+    overdue = Sla.overdue(Ticket.visible_to(users(:agent))).count
+    assert_operator overdue, :>=, 1
+    assert_select ".queue__views a[href=?]", tickets_path(view: "overdue"), /Overdue\s*#{overdue}/
+    get tickets_url(view: "overdue")
+    assert_select ".queue__views a[aria-current=page][href=?]", tickets_path(view: "overdue")
+    assert_select "tr.ticket-row", overdue
+    assert_select "tr.ticket-row .sla-badge--overdue", overdue
+    assert_select "##{ActionView::RecordIdentifier.dom_id(@ticket)} .sla-badge--overdue"
+
+    @ticket.update_columns(status: "pending", first_response_at: 170.minutes.ago)
+    get tickets_url(view: "overdue")
+    assert_select "tr.ticket-row", overdue - 1
+    assert_select "##{ActionView::RecordIdentifier.dom_id(@ticket)}", 0
+
+    sign_in users(:anna)
+    get tickets_url(view: "overdue")
+    assert_select "a[href=?]", tickets_path(view: "overdue"), 0
+  end
+
   test "the lines are translated" do
     targets!
     urgent!

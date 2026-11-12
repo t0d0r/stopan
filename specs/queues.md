@@ -22,6 +22,7 @@ sideways under 760px). The search field is in the menu bar
 | `mine` | unsolved and assigned to me | |
 | `unassigned` | unsolved and without assignee | |
 | `pending` | pending | |
+| `overdue` | not done, with an SLA target overdue; only offered when a target is set (sla.md "Overdue view") | |
 | `done` | done ("Done"; was `solved` before 2026-10-27, which now falls back to the default view) | |
 | `all` | every ticket | |
 

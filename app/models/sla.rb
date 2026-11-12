@@ -15,6 +15,31 @@ class Sla
     def warning? = %w[overdue late].include?(state)
   end
 
+  # The tickets with a target overdue now (specs/sla.md "Overdue view"):
+  # not Done, and past the first-response time without a staff reply, or
+  # past the resolution time while New or In progress. The same rule as
+  # the "overdue" state, in SQL; none without targets.
+  def self.overdue(scope, targets: AppSetting.current.sla_targets, now: Time.current)
+    conditions = Ticket::PRIORITIES.filter_map do |priority|
+      first = targets.dig(priority, "first_response").to_i
+      resolution = targets.dig(priority, "resolution").to_i
+      parts = []
+      parts << Ticket.sanitize_sql([ "(tickets.first_response_at IS NULL AND tickets.created_at < ?)", now - first.minutes ]) if first.positive?
+      if resolution.positive?
+        parts << Ticket.sanitize_sql([ "(tickets.status NOT IN (?) AND tickets.created_at < ?)", WAITING_STATUSES,
+                                       now - resolution.minutes ])
+      end
+      Ticket.sanitize_sql([ "(tickets.priority = ? AND (#{parts.join(' OR ')}))", priority ]) if parts.any?
+    end
+    return scope.none if conditions.empty?
+
+    scope.where.not(status: Ticket::DONE).where(conditions.join(" OR "))
+  end
+
+  def self.any_target?(targets = AppSetting.current.sla_targets)
+    targets.values.any? { |kinds| kinds.to_h.values.any? { |minutes| minutes.to_i.positive? } }
+  end
+
   attr_reader :ticket, :now
 
   def initialize(ticket, targets: AppSetting.current.sla_targets, now: Time.current)

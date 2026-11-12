@@ -80,6 +80,11 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_equal "running", body.dig("sla", "resolution", "state")
     assert body.key?("first_response_at")
 
+    body = api(:get, api_v1_tickets_url(view: "overdue"), user: :agent)
+    assert_equal "overdue", body["view"]
+    assert_includes body["tickets"].map { |row| row["number"] }, ticket.number
+    assert_equal Sla.overdue(Ticket.visible_to(users(:agent))).count, body["total_count"]
+
     body = api(:get, api_v1_ticket_url(ticket), user: :anna)["ticket"]
     assert_not body.key?("sla")
     assert_not body.key?("first_response_at")

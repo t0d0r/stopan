@@ -77,6 +77,30 @@ class SlaTest < ActiveSupport::TestCase
     assert_equal "overdue", sla(t).alert.state
   end
 
+  test "the overdue scope finds exactly the tickets whose state is overdue" do
+    tickets = [
+      ticket(created: 10.minutes.ago),                                                     # running
+      ticket(created: 3.hours.ago),                                                        # first response overdue
+      ticket(created: 3.hours.ago, answered: 170.minutes.ago),                             # answered, resolution running
+      ticket(created: 9.hours.ago, answered: 9.hours.ago + 5.minutes),                     # resolution overdue
+      ticket(created: 9.hours.ago, status: "pending"),                                     # waiting, but never answered
+      ticket(created: 9.hours.ago, status: "postponed", answered: 8.hours.ago - 30.minutes), # waiting, answered
+      ticket(created: 9.hours.ago, status: "done", done: 1.hour.ago),                      # late, but closed
+      ticket(created: 3.hours.ago, priority: "normal"),                                    # no first-response target
+      ticket(created: 3.days.ago, priority: "normal", answered: 2.days.ago),               # resolution overdue
+      ticket(created: 30.days.ago, priority: "low")                                        # no targets
+    ]
+    expected = tickets.select { |t| sla(t).marks.any? { |mark| mark.state == "overdue" } }
+    assert_equal [ 1, 3, 4, 8 ], expected.map { |t| tickets.index(t) }
+    found = Sla.overdue(Ticket.where(id: tickets.map(&:id)), targets: TARGETS)
+    assert_equal expected.map(&:id).sort, found.pluck(:id).sort
+
+    assert_empty Sla.overdue(Ticket.all, targets: {})
+    assert_empty Sla.overdue(Ticket.all, targets: { "urgent" => { "first_response" => 0, "resolution" => 0 } })
+    assert_not Sla.any_target?({})
+    assert Sla.any_target?(TARGETS)
+  end
+
   test "settings keep targets in minutes and refuse what is not a time" do
     setting = AppSetting.current
     setting.sla_hours = { "urgent" => { "first_response" => "0.25", "resolution" => "8" }, "high" => { "first_response" => "1,5" } }
