@@ -736,6 +736,14 @@
   after a `VACUUM INTO` copy of the database. The migration ran and
   every check passed (specs/deploy.md "Update 2026-11-12 (revision
   97c3f7d)"). Images kept: 97c3f7d, d0db217, ec72cc5.
+- 2026-11-12: the API describes itself: `GET /api/v1/openapi.json`
+  serves an OpenAPI 3.1 document without a token (specs/api.md
+  "OpenAPI"), built by `OpenapiDocument` with the enum values from the
+  models. test/models/openapi_document_test.rb compares it with the
+  routes both ways. Found on the way: the route `PATCH
+  /api/v1/memberships/:id` had no action; it now sets the organization
+  administrator mark (`membership[admin]`), and memberships in the API
+  answers carry `admin`. Not deployed yet.
 
 ## Decisions
 
@@ -853,7 +861,8 @@ and count per visitor. Share link expiry and the version line on the
 admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
 reports and the view count of share links are deployed; the view
-count meets a real link once production has tickets. The
+count meets a real link once production has tickets. The OpenAPI
+description is committed but not deployed (no migration). The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

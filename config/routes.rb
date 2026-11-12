@@ -115,6 +115,8 @@ Rails.application.routes.draw do
   # The JSON API with personal tokens (specs/api.md).
   namespace :api do
     namespace :v1 do
+      # The description of the API itself, without a token (specs/api.md "OpenAPI").
+      get "openapi.json", to: "openapi#show", as: :openapi, format: false
       resource :me, only: %i[show update], controller: "me"
       resources :tokens, only: %i[index destroy]
       patch "tickets/bulk", to: "tickets_bulk#update", as: :bulk_tickets

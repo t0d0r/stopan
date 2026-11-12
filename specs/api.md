@@ -109,7 +109,8 @@ Administrators only (403 for others):
 | `GET/POST /api/v1/organizations`, `GET/PATCH/DELETE /api/v1/organizations/:id` | as /admin/organizations, mail settings included; passwords write-only, never returned |
 | `POST /api/v1/organizations/:id/mail_test`, `POST /api/v1/organizations/:id/mailbox_check` | the two test buttons |
 | `POST /api/v1/organizations/:id/flush` | `confirm_name` (the exact name): removes all the organization's tickets for good, keeps its settings (admin.md "Flush all tickets of an organization") |
-| `POST /api/v1/organizations/:id/memberships` (`user_id`), `DELETE /api/v1/memberships/:id` | members |
+| `POST /api/v1/organizations/:id/memberships` (`membership[user_id]`, or `user_ids[]` for several), `DELETE /api/v1/memberships/:id` | members |
+| `PATCH /api/v1/memberships/:id` | `membership[admin]`: the organization administrator mark of an agent (org-admins.md); 2026-11-12, the route existed without an action |
 | `GET/PATCH /api/v1/settings` | `auto_postpone_days, auto_done_days, default_look, mailbox_polling, mailbox_poll_seconds, timeline_order, translation_enabled, deepl_api_key` (write-only; `deepl_api_key_set` tells whether one is stored) |
 | `POST/PATCH/DELETE /api/v1/stages[/:id]`, `POST /api/v1/stages/:id/move` (`direction` up/down) | board stages |
 | `POST /api/v1/messages` | `recipients`, `text`: a message to users' notifications |
@@ -118,6 +119,29 @@ Administrators only (403 for others):
 Not in the API, as they need a browser: signing in and passwords
 (Devise), the Google connection and wizard, impersonation, themes and
 other browser preferences, creating tokens.
+
+## OpenAPI (2026-11-12)
+
+A machine-readable description, so a client or a tool (Swagger UI,
+Postman, a code generator) does not have to be written from this page.
+
+- `GET /api/v1/openapi.json`: an OpenAPI 3.1 document, JSON. It needs
+  no token, because it describes the API and holds no data; it may be
+  cached for an hour.
+- It lists every endpoint above with its summary, path and query
+  parameters, request body, the shape of the answer and the error
+  answers (401, 403, 429 everywhere; 404 where the path names a
+  record; 400 and 422 where there is a body), the bearer token as the
+  security scheme, and schemas for the representations below.
+- Built in the app (`OpenapiDocument`), not written by hand as a
+  file, so the status, priority, source and role values come from the
+  models.
+- **Kept complete by a test:** `test/models/openapi_document_test.rb`
+  compares the document with the routes under `/api/v1` both ways (a
+  route without an operation fails, and so does an operation without
+  a route), and checks that operation ids are unique, every `$ref`
+  resolves and every path parameter is declared.
+- No page in the app renders it; paste the address into a viewer.
 
 ## Representations
 

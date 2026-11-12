@@ -18,6 +18,35 @@ class ApiTest < ActionDispatch::IntegrationTest
     response.parsed_body
   end
 
+  test "the OpenAPI description is served without a token and matches the document" do
+    get api_v1_openapi_url
+    assert_response :success
+    assert_equal "application/json", response.media_type
+    assert_match(/max-age=3600/, response.headers["Cache-Control"])
+    assert_equal OpenapiDocument.to_h, response.parsed_body
+    assert response.parsed_body["paths"].key?("/api/v1/tickets/{number}")
+
+    post api_v1_openapi_url
+    assert_response :not_found
+  end
+
+  test "an administrator sets and clears the organization administrator mark through the API" do
+    membership = Membership.find_by!(user: users(:agent), organization: organizations(:acme))
+    body = api(:patch, api_v1_membership_url(membership), user: :admin, params: { membership: { admin: true } })
+    assert_response :success
+    assert_equal true, body.dig("membership", "admin")
+    assert membership.reload.admin?
+    api(:patch, api_v1_membership_url(membership), user: :admin, params: { membership: { admin: false } })
+    assert_not membership.reload.admin?
+
+    requester = Membership.find_by!(user: users(:anna))
+    api(:patch, api_v1_membership_url(requester), user: :admin, params: { membership: { admin: true } })
+    assert_response :unprocessable_content
+    api(:patch, api_v1_membership_url(membership), user: :agent, params: { membership: { admin: true } })
+    assert_response :forbidden
+    assert_not membership.reload.admin?
+  end
+
   test "no, wrong, expired, revoked or deactivated tokens are 401; the token is stored only as a digest" do
     get api_v1_me_url
     assert_response :unauthorized

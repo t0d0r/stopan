@@ -11,19 +11,34 @@ module Api
         if params[:user_ids].present?
           users = User.where(id: Array(params[:user_ids]).first(500)).to_a
           memberships = users.map { |user| organization.memberships.find_or_create_by!(user: user) }
-          return render json: { memberships: memberships.map { |membership| { id: membership.id, user: user_json(membership.user) } } },
+          return render json: { memberships: memberships.map { |membership| { id: membership.id, admin: membership.admin?, user: user_json(membership.user) } } },
                         status: :created
         end
 
         user = User.find(params.expect(membership: [ :user_id ])[:user_id])
         membership = organization.memberships.find_or_create_by!(user: user)
-        render json: { membership: { id: membership.id, organization: organization_json(organization), user: user_json(user) } },
-               status: :created
+        render json: { membership: membership_json(membership) }, status: :created
+      end
+
+      # The organization administrator mark, for agents only
+      # (specs/org-admins.md).
+      def update
+        membership = Membership.find(params[:id])
+        return render_invalid(membership) unless membership.update(admin: flag(params.expect(membership: [ :admin ])[:admin]))
+
+        render json: { membership: membership_json(membership) }
       end
 
       def destroy
         Membership.find(params[:id]).destroy!
         head :no_content
+      end
+
+      private
+
+      def membership_json(membership)
+        { id: membership.id, admin: membership.admin?, organization: organization_json(membership.organization),
+          user: user_json(membership.user) }
       end
     end
   end

@@ -122,7 +122,7 @@ module ApiRepresentation
       imap_password_set: organization.imap_password.present?, imap_folder: organization.imap_folder,
       mailbox_address: organization.mailbox_address, imap_last_checked_at: time_json(organization.imap_last_checked_at),
       imap_last_error: organization.imap_last_error,
-      members: organization.memberships.includes(:user).map { |membership| { membership_id: membership.id, user: user_json(membership.user) } }
+      members: organization.memberships.includes(:user).map { |membership| { membership_id: membership.id, admin: membership.admin?, user: user_json(membership.user) } }
     )
   end
 
