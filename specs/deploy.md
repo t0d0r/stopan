@@ -713,6 +713,37 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 35cdfbf)
+
+`main` after v0.1.1, not a release. Production now has one
+organization with a mailbox. Since 19cab54: the Status page
+(status.md). One migration: `mailbox_events` (20261112150000).
+Finished jobs are kept 2 days from here on.
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-19cab54.sqlite3` (mode 600; 1 user, 1
+  organization, no tickets, schema 20261112140000).
+- Checked:
+  - the container is healthy and runs the image tagged 35cdfbf; the
+    app reports version v0.1.1-50-g35cdfbf;
+  - schema 20261112150000, none pending;
+  - the queue reader works on the real queue: all counts read, no
+    failed jobs;
+  - **mail in, for the first time with real mail:** the mailbox was
+    checked without an error, took in the four unread messages that
+    waited, and the mail log recorded each: two became tickets (one
+    new requester was created) and two were skipped as automatic
+    mail. Nothing was left unread;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; signed out, `/admin/status` -> 302; `/cable`
+    101; the security headers are present;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Not checked: the page itself in a browser on the server (it needs
+  the administrator's sign-in).
+- Images kept: 35cdfbf, 19cab54, 44e58c9.
+- Rollback: tag `localhost/stopan:19cab54` as `latest` and restart.
+  The older code ignores the new table; tickets made meanwhile stay.
+
 ## Update 2026-11-12 (revision 19cab54)
 
 `main` after v0.1.1, not a release, on the empty database from the

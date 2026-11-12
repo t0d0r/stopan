@@ -832,7 +832,14 @@
   queue through `QueueStatus` in the production image. Symptom that
   led here: production took in one mail and opened no ticket, with no
   way to see why from the app; a mail from a staff member's own
-  address is ignored by design. Not deployed yet.
+  address is ignored by design.
+- 2026-11-12: `main` pushed and deployed at 35cdfbf (not a release),
+  after a `VACUUM INTO` copy of the database. Production has its
+  first organization with a mailbox; after the deploy the mailbox took
+  in four waiting messages, two became tickets and two were skipped
+  as automatic, all recorded in the mail log (specs/deploy.md "Update
+  2026-11-12 (revision 35cdfbf)"). Images kept: 35cdfbf, 19cab54,
+  44e58c9.
 
 ## Decisions
 
@@ -952,7 +959,7 @@
 
 ## Next step
 
-Production runs 19cab54 (`main` after v0.1.1) on an empty database.
+Production runs 35cdfbf (`main` after v0.1.1); it has its first organization, mailbox and tickets.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -976,8 +983,8 @@ description, the webhooks and the HTML of mail replies are deployed. The SLA tar
 and empty, so nothing shows until an administrator sets them; the
 image is built without the test group. The "Overdue" view of the
 queue and the SLA panel of the reports are deployed and show once a
-target is set. The Status page is committed but not
-deployed; it has a migration, so copy the database first. A webhook has
+target is set. The Status page is deployed and its
+mail log holds the first real messages. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the
