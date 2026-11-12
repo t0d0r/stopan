@@ -85,7 +85,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [x] magic sign-in links and "email me a sign-in link"; choosing a first password (specs/public-form.md)
 - [x] public request page per organization with accounts by email and abuse limits (specs/public-form.md)
 - [x] IMAP mailbox per organization: poller, new tickets and replies from mail (specs/organization-mail.md)
-- [ ] operator: set TRUSTED_PROXIES in production when the public forms are used (specs/deploy.md); mail fetching is now a setting
+- [x] TRUSTED_PROXIES set in production on 2026-11-12 (specs/deploy.md); mail fetching is now a setting
 - [x] admins can impersonate a user, with a clear banner and a way back (specs/admin.md "Impersonation")
 - [x] flash messages slide in from the right to the centre band and sweep out to the left (specs/ui.md)
 - [x] who works on the ticket next to the status in the request note, also for requesters and shared pages (specs/ui.md, specs/sharing.md)
@@ -374,6 +374,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] the requester adds colleagues to Cc on their own ticket, only among members of the ticket's organization, and removes the ones they added; in the API too (specs/followers.md "The requester adds colleagues")
 - [x] production: deployed c802739 (the requester adds colleagues to Cc), no migrations (specs/deploy.md "Update 2026-11-12 (revision c802739)")
 - [x] production: deployed 10b393b (durable job queue), database copied first, the queue checked on the server (specs/deploy.md "Update 2026-11-12 (revision 10b393b)")
+- [x] production: deployed ec72cc5 (sign-in and password reset rate limits) and set `TRUSTED_PROXIES`; the limit checked to be per visitor (specs/deploy.md "Update 2026-11-12 (revision ec72cc5)")
 - [x] decided: people outside the organization never go in Cc; the share link remains for them (specs/followers.md "Not in this phase")
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")
@@ -384,7 +385,7 @@ approved "go in this order", all done 2026-10-27):
 ## Later (specs/roadmap.md)
 
 - [x] rate limit sign-in (20 per 5 minutes per address) and password reset requests (5 per 10 minutes per address and per email) (specs/auth.md "Rate limits")
-- [ ] operator: set `TRUSTED_PROXIES` in production so the sign-in limit is per visitor; without it the app sees the server's address for everyone and the limit is shared (specs/auth.md "Rate limits", specs/deploy.md)
+- [x] `TRUSTED_PROXIES` set in production, so the sign-in limit is per visitor (specs/deploy.md "Update 2026-11-12 (revision ec72cc5)")
 - [ ] email ingestion with Action Mailbox (specs/roadmap.md)
 - [x] automatic done: pending tickets without activity for N days are marked done, off by default (`app_settings.auto_done_days`; specs/board.md "Automatic done")
 - [ ] SLAs per priority (specs/roadmap.md)

@@ -434,7 +434,8 @@ Fix:
   HTTP/1.1 (curl over HTTP/2 gets 404, as HTTP/2 has no Upgrade); g0no
   `/up` 200.
 - Still not set in `stopan.env`: SMTP, `TRUSTED_PROXIES`,
-  `MAILBOX_POLLING` (todo).
+  `MAILBOX_POLLING` (todo). `TRUSTED_PROXIES` was set on 2026-11-12
+  (revision ec72cc5).
 - Rollback of this release: the database must go back with the image,
   because the Done migration rewrote statuses. As `stopan`: stop the
   service, tag `localhost/stopan:fa69269` as `latest`, restore
@@ -709,6 +710,37 @@ requesters (organization-mail.md "Settings", notifications.md
   headers; g0no `/up` 200.
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
+
+## Update 2026-11-12 (revision ec72cc5)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since 10b393b: the rate limits on sign-in and password reset
+requests (auth.md "Rate limits"). No migration and no gem change, so
+no database copy was made.
+
+- Settings: `TRUSTED_PROXIES=<the server's own address>` added to
+  `~stopan/stopan.env` (mode 600), so `request.remote_ip` is the
+  visitor's and the limits count per visitor. The file as it was is
+  kept beside it as `stopan.env.bak-ec72cc5` (mode 600).
+- Checked:
+  - the container is healthy and runs the image tagged ec72cc5;
+    `TRUSTED_PROXIES` is set inside it;
+  - schema 20261112090000, none pending; one user and no organizations
+    or tickets; no locked account;
+  - the sign-in limit is per visitor: after 22 sign-in posts from the
+    server itself its next post is refused (302 back to sign-in),
+    while a post from another address at the same time is still
+    looked at (422, no form token);
+  - the job queue: supervisor in async mode, dispatcher and worker
+    registered, nothing failed;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; signed out, `/tickets` -> 302; the sign-in page
+    200; `/cable` 101; the security headers are present;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Images kept: ec72cc5, 10b393b, c802739.
+- Rollback: tag `localhost/stopan:10b393b` as `latest` and restart;
+  `TRUSTED_PROXIES` may stay, the older code uses it for the public
+  forms only.
 
 ## Update 2026-11-12 (revision 10b393b)
 

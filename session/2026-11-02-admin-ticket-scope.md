@@ -689,7 +689,13 @@
   `Users::PasswordsController`, routed in `devise_for`; locale key
   `flash.sign_in_too_many`; test/test_helper.rb clears both counters
   before each integration test. Tests:
-  test/controllers/sign_in_rate_limit_test.rb. Not deployed yet.
+  test/controllers/sign_in_rate_limit_test.rb.
+- 2026-11-12: `main` pushed and deployed at ec72cc5 (not a release),
+  without a database copy (no migration, no gem change).
+  `TRUSTED_PROXIES` is now set in the production settings file, and
+  the sign-in limit was checked to count per visitor (specs/deploy.md
+  "Update 2026-11-12 (revision ec72cc5)"). Images kept: ec72cc5,
+  10b393b, c802739.
 
 ## Decisions
 
@@ -766,10 +772,6 @@
 
 ## Open
 
-- Production has no `TRUSTED_PROXIES`, so the app sees one address for
-  every visitor and the sign-in and reset limits are shared: guessing
-  is still limited, but one client can keep everyone from signing in
-  for a few minutes at a time until the variable is set.
 - Production starts from an empty database: the administrator still
   has the seeded email and the password from the root-only file, and
   organizations, people and the settings in `/admin/settings` have
@@ -787,7 +789,7 @@
 
 ## Next step
 
-Production runs 10b393b (`main` after v0.1.1) on an empty database.
+Production runs ec72cc5 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -801,9 +803,8 @@ the reset. The followers work is complete and deployed, the requester adding
 colleagues to Cc included. The durable job queue is deployed and checked on the
 server. A live page refresh through the queue was checked in the
 production image locally, not on the server, where the database has
-no data yet. The sign-in and password reset rate limits are
-committed but not deployed; set `TRUSTED_PROXIES` in production with
-that deploy. The
+no data yet. The sign-in and password reset rate limits are deployed
+and count per visitor. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 
