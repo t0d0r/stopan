@@ -42,6 +42,46 @@ Devise 5 with `database_authenticatable`, `registerable`, `recoverable`,
 - The legacy 2011 password pepper support from g0no was removed with the
   old migrations; `DEVISE_PEPPER` is no longer read.
 
+## Rate limits (2026-11-12)
+
+Devise's lock protects one account; these limits stop one client from
+trying many accounts or sending many reset emails.
+
+- **Sign-in:** 20 attempts (`POST /users/sign_in`) per 5 minutes per
+  client address. Over it the attempt is not looked at: the browser goes
+  back to the sign-in page with "Too many sign-in attempts. Please try
+  again in a few minutes.", nobody is signed in, the account's failed
+  attempts do not grow, and a right password is answered like a wrong
+  one. The sign-in page itself (`GET`) is never limited.
+- **Password reset requests** (`POST /users/password`): 5 per 10 minutes
+  per client address, and 5 per 10 minutes per address asked for
+  (trimmed, lower case), like the magic links (public-form.md). Over it
+  no email is sent and the forgot-password page shows "Too many
+  requests. Please try again in a few minutes.".
+- The sign-in limit runs before every other callback
+  (`Users::SessionsController`, `prepend_before_action`), because
+  Devise's first callback already checks the password. Its message
+  follows the language cookie or the browser, since no user is known
+  yet. The reset limit uses Rails `rate_limit`
+  (`Users::PasswordsController`).
+- Counters live in the memory of the one Puma process (as for the other
+  limits), so a restart clears them.
+- The limit is above the 10 failed attempts that lock an account, so a
+  person who mistypes locks only their own account, for 15 minutes.
+- **Client address:** the limits need `request.remote_ip` to be the
+  visitor's. Production without `TRUSTED_PROXIES` sees the server's own
+  address for everyone (public-form.md "Abuse protection"), so there
+  the limits are shared by all visitors: safe against guessing, but one
+  client can then keep everyone from signing in for a few minutes at a
+  time. Set `TRUSTED_PROXIES` in production (deploy.md).
+
+`test/controllers/sign_in_rate_limit_test.rb`: the 21st attempt is
+refused even with the right password and signs nobody in; the refusal
+is in the visitor's language and counts no failed attempt; another
+address still signs in; the page is not limited; reset requests are
+limited per client address and per address asked for, and send no
+email over the limit.
+
 ## Sign-up
 
 The form asks for name (optional), email and password. Controlled by

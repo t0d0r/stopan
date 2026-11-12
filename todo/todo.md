@@ -383,7 +383,8 @@ approved "go in this order", all done 2026-10-27):
 
 ## Later (specs/roadmap.md)
 
-- [ ] rate limit sign-in and password reset requests by IP; first check in production that `request.remote_ip` is the client's address through Apache -> pasta -> Thruster (otherwise the limit is global), and add `TRUSTED_PROXIES` if needed (specs/roadmap.md)
+- [x] rate limit sign-in (20 per 5 minutes per address) and password reset requests (5 per 10 minutes per address and per email) (specs/auth.md "Rate limits")
+- [ ] operator: set `TRUSTED_PROXIES` in production so the sign-in limit is per visitor; without it the app sees the server's address for everyone and the limit is shared (specs/auth.md "Rate limits", specs/deploy.md)
 - [ ] email ingestion with Action Mailbox (specs/roadmap.md)
 - [x] automatic done: pending tickets without activity for N days are marked done, off by default (`app_settings.auto_done_days`; specs/board.md "Automatic done")
 - [ ] SLAs per priority (specs/roadmap.md)

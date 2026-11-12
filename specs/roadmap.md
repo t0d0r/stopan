@@ -26,7 +26,7 @@ before it is built. The "foundation" column says what already exists.
 | spam handling | admin deletion of spam tickets with an audit entry | - |
 | browser system tests | headless Chrome tests for JS behaviour | flow tests run through Rails integration tests |
 | deployment | production hosting for Stopan (container, proxy, TLS, backups) | Dockerfile and compose file |
-| security | rate limit sign-in and password reset requests by IP (Rails `rate_limit`). Prerequisite: confirm in production that `request.remote_ip` is the client address behind Apache, pasta and Thruster; if it is a shared proxy address the limit would apply to everyone | Devise lockable per account; gitleaks pre-commit hook (done) |
+| security | sign-in and password reset requests are rate limited by client address (done, auth.md "Rate limits"); production still needs `TRUSTED_PROXIES` so the limit is per visitor | Devise lockable per account; gitleaks pre-commit hook (done) |
 
 ## Security Note
 

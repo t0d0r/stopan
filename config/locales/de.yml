@@ -1188,6 +1188,7 @@ de:
     magic_link_sent: "Falls ein Konto mit dieser Adresse existiert, haben wir einen Anmeldelink dorthin gesendet."
     magic_signed_in: "Sie sind angemeldet."
     magic_too_many: "Zu viele Anfragen. Bitte versuchen Sie es in ein paar Minuten erneut."
+    sign_in_too_many: "Zu viele Anmeldeversuche. Bitte versuchen Sie es in ein paar Minuten erneut."
     mail_test_sent: "Eine Test-E-Mail wurde an %{email} gesendet."
     mail_test_failed: "Die Test-E-Mail konnte nicht gesendet werden: %{error}"
     mail_test_disabled: "Schalten Sie zuerst den SMTP-Versand dieser Organisation ein."

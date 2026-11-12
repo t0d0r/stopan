@@ -1185,6 +1185,7 @@ en:
     magic_link_sent: "If an account exists for this address, we sent a sign-in link to it."
     magic_signed_in: "You are signed in."
     magic_too_many: "Too many requests. Please try again in a few minutes."
+    sign_in_too_many: "Too many sign-in attempts. Please try again in a few minutes."
     mail_test_sent: "A test email was sent to %{email}."
     mail_test_failed: "The test email could not be sent: %{error}"
     mail_test_disabled: "Turn on this organization's SMTP first."

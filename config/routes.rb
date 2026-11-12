@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { registrations: "users/registrations" }
+  devise_for :users, controllers: {
+    registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords"
+  }
   patch "users/notifications", to: "users/notifications#update", as: :user_notifications
   patch "users/language", to: "users/languages#update", as: :user_language
   # Personal API tokens on the account page (specs/api.md "Tokens").

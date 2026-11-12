@@ -682,8 +682,22 @@
   runs in one process, an email queued from a console was taken, and
   every other check passed (specs/deploy.md "Update 2026-11-12
   (revision 10b393b)"). Images kept: 10b393b, c802739, 34f3e79.
+- 2026-11-12: sign-in is limited to 20 attempts per 5 minutes per
+  client address, password reset requests to 5 per 10 minutes per
+  client address and per address asked for (specs/auth.md "Rate
+  limits"). New `Users::SessionsController` and
+  `Users::PasswordsController`, routed in `devise_for`; locale key
+  `flash.sign_in_too_many`; test/test_helper.rb clears both counters
+  before each integration test. Tests:
+  test/controllers/sign_in_rate_limit_test.rb. Not deployed yet.
 
 ## Decisions
+
+- Sign-in limit, 2026-11-12: it runs as a prepended callback, before
+  Devise's `require_no_authentication`, which already checks the
+  password; with a plain `rate_limit` a blocked attempt with the right
+  password was still signed in. The limit (20) stays above the 10
+  failed attempts that lock one account.
 
 - Job queue, 2026-11-12: Solid Queue in async mode inside Puma, not
   forked and not a second container, because Action Cable stays on the
@@ -752,6 +766,10 @@
 
 ## Open
 
+- Production has no `TRUSTED_PROXIES`, so the app sees one address for
+  every visitor and the sign-in and reset limits are shared: guessing
+  is still limited, but one client can keep everyone from signing in
+  for a few minutes at a time until the variable is set.
 - Production starts from an empty database: the administrator still
   has the seeded email and the password from the root-only file, and
   organizations, people and the settings in `/admin/settings` have
@@ -783,7 +801,9 @@ the reset. The followers work is complete and deployed, the requester adding
 colleagues to Cc included. The durable job queue is deployed and checked on the
 server. A live page refresh through the queue was checked in the
 production image locally, not on the server, where the database has
-no data yet. The
+no data yet. The sign-in and password reset rate limits are
+committed but not deployed; set `TRUSTED_PROXIES` in production with
+that deploy. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

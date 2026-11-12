@@ -19,4 +19,11 @@ end
 
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+
+  # Every test starts with empty sign-in and password reset counters
+  # (specs/auth.md "Rate limits"); all test requests share one address.
+  setup do
+    Users::SessionsController::RATE_LIMIT_STORE.clear
+    Users::PasswordsController::RATE_LIMIT_STORE.clear
+  end
 end
