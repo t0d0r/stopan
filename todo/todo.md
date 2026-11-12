@@ -389,6 +389,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] organization form in four columns on a wide page, so it fits one screen from 1280x800 (specs/ui.md "Organization form")
 - [x] production: deployed 49503f1 (organization form in four columns); no migration (specs/deploy.md "Update 2026-11-12 (revision 49503f1)")
 - [x] production: deployed 6a2cf43 (Shift+click, form rows, several cards on the board, member tickets, bulk actions past the firewall); no migration (specs/deploy.md "Update 2026-11-12 (revision 6a2cf43)")
+- [x] production: deployed 6982b41 (the board's hover preview); no migration (specs/deploy.md "Update 2026-11-12 (revision 6982b41)")
 - [x] board: a small preview of the ticket when the pointer rests on a card or its link has the focus (specs/board.md "Preview on hover")
 - [ ] operator: try in production a delete from the Search page with advanced fields, Shift+click in the queue, and dragging several ticked cards on the board
 - [x] shift+click selects a range in check box lists: ticket rows, member picker, a user's organizations (specs/ui.md "Check box lists")

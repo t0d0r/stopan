@@ -713,6 +713,24 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 6982b41)
+
+`main` after v0.1.1, not a release. Since 6a2cf43: the board's hover
+preview (board.md "Preview on hover"). No migration and no gem
+change, so no database copy was made.
+
+- Checked: the container is healthy and runs the image tagged
+  6982b41 (version v0.1.1-59-g6982b41); schema 20261112150000, none
+  pending; no failed job and no mailbox error; the served script and
+  stylesheet carry the preview; signed out, `/tickets/:number/preview`
+  -> 302 to sign-in; `/up` 200 on loopback and through Apache;
+  `http://` -> 301; `/api/v1/me` 401; `/cable` 101; the security
+  headers are present; only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Not checked: the preview itself in a browser on the server (it
+  needs a staff sign-in).
+- Images kept: 6982b41, 6a2cf43, 49503f1.
+- Rollback: tag `localhost/stopan:6a2cf43` as `latest` and restart.
+
 ## Update 2026-11-12 (revision 6a2cf43)
 
 `main` after v0.1.1, not a release. Since 49503f1: Shift+click ranges

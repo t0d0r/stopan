@@ -910,7 +910,10 @@
   panel never takes the pointer and goes away on leave, Escape,
   scroll, drag, a Move menu or a ticked box. Tests:
   test/controllers/ticket_previews_test.rb and two browser tests.
-  Not deployed yet.
+- 2026-11-12: `main` pushed and deployed at 6982b41 (not a release),
+  without a database copy (no migration). Checks passed
+  (specs/deploy.md "Update 2026-11-12 (revision 6982b41)"). Images
+  kept: 6982b41, 6a2cf43, 49503f1.
 
 ## Decisions
 
@@ -1030,7 +1033,7 @@
 
 ## Next step
 
-Production runs 6a2cf43 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
+Production runs 6982b41 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
