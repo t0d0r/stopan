@@ -83,6 +83,11 @@ Rails.application.routes.draw do
     end
     resources :messages, only: %i[new create]
     resource :settings, only: %i[show update]
+    # Mail taken in, the job queue and failing webhooks (specs/status.md).
+    resource :status, only: :show, controller: "status" do
+      post :retry_job
+      delete :discard_job
+    end
     # Google accounts for organization mail (specs/mail-oauth.md).
     resource :google_setup, only: %i[show update], controller: "google_setup" do
       patch :mailbox

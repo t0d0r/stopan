@@ -16,9 +16,26 @@ class MailboxMessage
   end
 
   # :skipped (automatic or own mail), :ignored (sender may not), :ticket or
-  # :reply.
+  # :reply. What became of the message is kept for the Status page
+  # (specs/status.md "Mail in").
   def process
-    return :skipped if automatic? || sender.blank? || own_address?
+    result = handle
+    MailboxEvent.record(organization, result: result, reason: @reason, sender: sender, subject: mail.subject, ticket: @ticket)
+    result
+  end
+
+  # For MailboxCheck, when processing raised.
+  def record_failure(error)
+    MailboxEvent.record(organization, result: "failed", reason: error.class.name, sender: (sender rescue nil),
+                                      subject: (mail.subject rescue nil))
+  end
+
+  private
+
+  def handle
+    return skip("automatic") if automatic?
+    return skip("no_sender") if sender.blank?
+    return skip("own_address") if own_address?
 
     user = User.find_by("lower(email) = ?", sender)
     return ignore("deactivated sender") if user&.deactivated?
@@ -33,7 +50,10 @@ class MailboxMessage
     end
   end
 
-  private
+  def skip(reason)
+    @reason = reason
+    :skipped
+  end
 
   # Auto-responders, bounces and lists, so two robots never talk forever.
   def automatic?
@@ -78,6 +98,7 @@ class MailboxMessage
                                  mail_headers: mail_headers, mail_html: mail_html)
     raise ActiveRecord::RecordInvalid, comment unless comment.persisted?
 
+    @ticket = ticket
     :reply
   end
 
@@ -96,10 +117,12 @@ class MailboxMessage
                      mail_headers: mail_headers, mail_html: mail_html)
     end
     PublicRequestMailer.with(ticket: ticket).received.deliver_later if created
+    @ticket = ticket
     :ticket
   end
 
   def ignore(reason)
+    @reason = reason.delete("'").tr(" ", "_")
     Rails.logger.info("Mailbox of organization #{organization.id}: message ignored (#{reason})")
     :ignored
   end

@@ -156,6 +156,12 @@ The standard three tables. Blobs are served only by
 The database holds personal data (names, emails, ticket text). Back up and
 store `storage/` accordingly; it is ignored by git.
 
+## mailbox_events (2026-11-12)
+
+status.md "Mail in": `organization_id`, `result`, `reason`, `sender`,
+`subject`, `ticket_id` (nullified when the ticket goes), `created_at`;
+the newest 200 per organization.
+
 ## SLA (2026-11-12)
 
 `app_settings.sla_targets` (JSON, minutes per priority and kind) and

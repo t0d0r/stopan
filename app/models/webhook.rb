@@ -25,6 +25,8 @@ class Webhook < ApplicationRecord
 
   scope :active, -> { where(active: true) }
   scope :ordered, -> { order(:created_at, :id) }
+  # Failing now, or switched off after failing (specs/status.md "Webhooks").
+  scope :problems, -> { where("webhooks.failures > 0").order(:organization_id, :id) }
 
   # Queues a delivery for each active webhook of the ticket's
   # organization that wants one of these events. Called by TicketNotifier

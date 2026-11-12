@@ -34,6 +34,7 @@ module AutoPostpone
       Rails.application.executor.wrap do
         AutoDone.run
         ShareExpiry.run
+        QueueStatus.clean
         run
       end
     rescue StandardError => e

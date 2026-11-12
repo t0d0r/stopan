@@ -1,0 +1,166 @@
+<% content_for :title, t("ui.status.title") %>
+<div class="desk__header">
+  <h1 class="desk__title"><%= t("ui.status.title") %></h1>
+  <%= render "admin/tabs" %>
+</div>
+
+<%# specs/status.md "Mail in". %>
+<section class="sticky sticky--pink panel status-panel" id="mail" aria-labelledby="status-mail-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.status.mail.caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="status-mail-title"><%= t("ui.status.mail.title") %></h2>
+    <p class="status-line">
+      <%= @setting.mailbox_polling? ? t("ui.status.mail.polling_on", minutes: @setting.mailbox_poll_seconds / 60) : t("ui.status.mail.polling_off") %>
+      <%= link_to t("ui.admin.settings.title"), admin_settings_path(anchor: "mailboxes") %>
+    </p>
+    <% if @mailboxes.any? %>
+      <div class="table-scroll">
+        <table class="status-table">
+          <thead>
+            <tr>
+              <th scope="col"><%= t("ui.fields.organization") %></th>
+              <th scope="col"><%= t("ui.admin.mail.last_check") %></th>
+              <th scope="col" class="num"><%= t("ui.admin.mail.messages_in") %></th>
+              <th scope="col"><%= t("ui.admin.mail.last_error") %></th>
+              <th scope="col"><span class="sr-only"><%= t("ui.admin.mail.check_mailbox") %></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @mailboxes.each do |organization| %>
+              <tr id="<%= dom_id(organization, :mailbox) %>">
+                <th scope="row"><%= link_to organization.name, admin_organization_path(organization) %></th>
+                <td><%= organization.imap_last_checked_at ? time_ago(organization.imap_last_checked_at) : t("ui.admin.mail.never") %></td>
+                <td class="num"><%= organization.imap_messages_count %></td>
+                <td class="<%= "mail-error" if organization.imap_last_error.present? %>"><%= organization.imap_last_error.presence || t("ui.status.none") %></td>
+                <td><%= button_to t("ui.admin.mail.check_mailbox"), mailbox_check_admin_organization_path(organization), class: "link-button status-action" if organization.imap_ready? %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.status.mail.no_mailboxes") %></p>
+    <% end %>
+
+    <h3 class="section-title status-subtitle"><%= t("ui.status.mail.log_title") %></h3>
+    <% if @mail_log.any? %>
+      <div class="table-scroll">
+        <table class="status-table" id="mail-log">
+          <thead>
+            <tr>
+              <th scope="col"><%= t("ui.status.when") %></th>
+              <th scope="col"><%= t("ui.fields.organization") %></th>
+              <th scope="col"><%= t("ui.fields.from") %></th>
+              <th scope="col"><%= t("ui.fields.subject") %></th>
+              <th scope="col"><%= t("ui.status.mail.outcome") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @mail_log.each do |event| %>
+              <tr class="status-row--<%= event.result %>">
+                <td><%= time_ago event.created_at %></td>
+                <td><%= event.organization.name %></td>
+                <td class="status-wrap"><%= event.sender || t("ui.status.none") %></td>
+                <td class="status-wrap"><%= event.subject || t("ui.status.none") %></td>
+                <td><%= mailbox_outcome(event) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.status.mail.log_empty") %></p>
+    <% end %>
+  </div>
+</section>
+
+<%# specs/status.md "Job queue". %>
+<section class="sticky sticky--blue panel status-panel" id="jobs" aria-labelledby="status-jobs-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.status.jobs.caption") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="status-jobs-title"><%= t("ui.status.jobs.title") %></h2>
+    <% if @queue %>
+      <% counts = @queue.counts %>
+      <dl class="status-counts">
+        <% counts.each do |name, count| %>
+          <div class="status-count<%= " status-count--alert" if name == :failed && count.positive? %>">
+            <dt><%= t("ui.status.jobs.counts.#{name}") %></dt>
+            <dd><%= count %></dd>
+          </div>
+        <% end %>
+      </dl>
+
+      <h3 class="section-title status-subtitle"><%= t("ui.status.jobs.failed_title") %></h3>
+      <% failed = @queue.failed %>
+      <% if failed.any? %>
+        <div class="table-scroll">
+          <table class="status-table" id="failed-jobs">
+            <thead>
+              <tr>
+                <th scope="col"><%= t("ui.status.jobs.job") %></th>
+                <th scope="col"><%= t("ui.status.when") %></th>
+                <th scope="col"><%= t("ui.status.error") %></th>
+                <th scope="col"><span class="sr-only"><%= t("ui.status.jobs.actions") %></span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% failed.each do |job| %>
+                <tr>
+                  <th scope="row"><%= job.name %></th>
+                  <td><%= time_ago job.at %></td>
+                  <td class="status-wrap mail-error"><%= job.error %></td>
+                  <td class="status-actions">
+                    <%= button_to t("ui.status.jobs.retry"), retry_job_admin_status_path(id: job.id), class: "link-button status-action" %>
+                    <%= button_to t("ui.status.jobs.discard"), discard_job_admin_status_path(id: job.id), method: :delete,
+                                  class: "link-button btn--danger",
+                                  form: { data: confirm_data(title: t("ui.status.jobs.discard_title"), body: t("ui.status.jobs.discard_body"),
+                                                             button: t("ui.status.jobs.discard")) } %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="panel__empty"><%= t("ui.status.jobs.no_failed") %></p>
+      <% end %>
+
+      <h3 class="section-title status-subtitle"><%= t("ui.status.jobs.recent_title") %></h3>
+      <% recent = @queue.recent %>
+      <% if recent.any? %>
+        <ul class="status-list" id="recent-jobs">
+          <% recent.each do |job| %>
+            <li><span class="status-list__name"><%= job.name %></span> <span class="status-list__time"><%= time_ago job.at %></span></li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="panel__empty"><%= t("ui.status.jobs.no_recent") %></p>
+      <% end %>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.status.jobs.unavailable") %></p>
+    <% end %>
+  </div>
+</section>
+
+<%# specs/status.md "Webhooks". %>
+<section class="sticky sticky--gray panel status-panel" id="webhook-problems" aria-labelledby="status-webhooks-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.webhooks.title") %></span></header>
+  <div class="panel__body">
+    <h2 class="section-title" id="status-webhooks-title"><%= t("ui.status.webhooks.title") %></h2>
+    <% if @webhooks.any? %>
+      <ul class="status-list">
+        <% @webhooks.each do |webhook| %>
+          <li id="<%= dom_id(webhook, :problem) %>">
+            <%= link_to webhook.organization.name, admin_organization_path(webhook.organization, anchor: "webhooks") %>
+            <span class="status-wrap"><%= webhook.url %></span>
+            <span class="mail-error">
+              <%= webhook.active? ? t("ui.webhooks.failed", error: webhook.last_error, count: webhook.failures) : t("ui.status.webhooks.switched_off", error: webhook.last_error) %>
+            </span>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.status.webhooks.ok") %></p>
+    <% end %>
+  </div>
+</section>

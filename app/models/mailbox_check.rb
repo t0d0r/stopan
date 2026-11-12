@@ -30,9 +30,11 @@ class MailboxCheck
         imap.select(organization.imap_folder)
         imap.uid_search(search_keys).sort.first(BATCH).each do |uid|
           raw = imap.uid_fetch(uid, "BODY.PEEK[]")&.first&.attr&.fetch("BODY[]", nil)
-          MailboxMessage.new(organization, raw).process
+          message = MailboxMessage.new(organization, raw)
+          message.process
           count += 1
         rescue StandardError => e
+          message&.record_failure(e)
           error = "#{e.class}: #{e.message}"
           Rails.logger.error("Mailbox of organization #{organization.id}: message #{uid} failed: #{error}")
         ensure

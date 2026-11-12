@@ -868,6 +868,67 @@ bg:
       badges:
         overdue: "Просрочена"
         soon: "Скоро изтича"
+    status:
+      title: "Състояние"
+      none: "-"
+      when: "Кога"
+      error: "Грешка"
+      mail:
+        caption: "Входяща поща"
+        title: "Пощенски кутии"
+        polling_on: "Кутиите се проверяват автоматично на всеки %{minutes} мин."
+        polling_off: "Автоматичното теглене е изключено; кутиите се проверяват само с бутона."
+        no_mailboxes: "Няма организация с включена пощенска кутия."
+        log_title: "Последно приети писма"
+        log_empty: "Още няма прието писмо."
+        outcome: "Какво стана с него"
+        results:
+          ticket: "Нова заявка %{reference}"
+          reply: "Отговор по %{reference}"
+          skipped: "Пропуснато: %{reason}"
+          ignored: "Игнорирано: %{reason}"
+          failed: "Неуспешно: %{error}"
+        reasons:
+          automatic: "автоматично писмо (автоотговор, върнато писмо или пощенски списък)"
+          no_sender: "без подател"
+          own_address: "собственият адрес на кутията"
+          deactivated_sender: "деактивиран подател"
+          staff_sender_without_a_ticket: "изпратено от служител без заявка, по която да отговаря; служителите не отварят заявки по пощата"
+          agent_outside_the_tickets_organization: "агент извън организацията на заявката"
+      jobs:
+        caption: "Работа на заден план"
+        title: "Опашка със задачи"
+        counts:
+          waiting: "Чакащи"
+          scheduled: "Планирани"
+          running: "Изпълняват се"
+          failed: "Неуспешни"
+          finished_day: "Завършени, 24 ч"
+        failed_title: "Неуспешни задачи"
+        job: "Задача"
+        actions: "Действия"
+        retry: "Опитай пак"
+        discard: "Изхвърли"
+        discard_title: "Да се изхвърли ли тази задача?"
+        discard_body: "Няма да се изпълни отново; писмото, което щеше да изпрати, няма да бъде изпратено."
+        no_failed: "Няма неуспешни задачи."
+        recent_title: "Наскоро завършени"
+        no_recent: "Нищо не е завършило през последните два дни."
+        unavailable: "Тук задачите се изпълняват в уеб процеса и не се пазят; опашката може да се чете само в production."
+      webhooks:
+        title: "Webhooks с грешки"
+        switched_off: "изключен след грешки: %{error}"
+        ok: "Всички webhooks се доставят."
+      attention:
+        mailboxes:
+          one: "1 пощенска кутия има грешка."
+          other: "%{count} пощенски кутии имат грешка."
+        jobs:
+          one: "1 задача на заден план е неуспешна."
+          other: "%{count} задачи на заден план са неуспешни."
+        webhooks:
+          one: "1 webhook е изключен след грешки."
+          other: "%{count} webhooks са изключени след грешки."
     webhooks:
       title: "Webhooks"
       intro: "Stopan вика тези адреси, когато в тази организация се отвори заявка или се напише публичен отговор. Вътрешни бележки и имейл адреси никога не се изпращат."
@@ -1224,6 +1285,9 @@ bg:
     ticket_assigned: "Заявка %{reference} вече е възложена на %{name}."
     ticket_unassigned: "Заявка %{reference} вече няма отговорник."
     share_created: "Връзката за споделяне е създадена."
+    job_retried: "Задачата е върната на опашката."
+    job_discarded: "Задачата е изхвърлена."
+    queue_unavailable: "Опашката със задачи не може да се чете тук."
     webhook_created: "Webhook-ът е добавен."
     webhook_on: "Webhook-ът е включен."
     webhook_off: "Webhook-ът е изключен."

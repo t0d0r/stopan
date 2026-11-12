@@ -71,15 +71,20 @@ done
 [ "$(runner 'print SolidQueue::Process.distinct.count(:pid)')" = 1 ] || fail "the job queue runs in more than one process"
 runner 'mail = AccountMailer.with(user: User.first).magic_link; mail.deliver_later; mail.deliver_later(wait: 1.hour)' >/dev/null
 i=0
-until [ "$(runner 'print [SolidQueue::Job.count, SolidQueue::FailedExecution.count].join(",")')" = "1,0" ]; do
+# Finished jobs are kept for the Status page (specs/status.md), so the
+# taken email stays as finished next to the waiting one.
+until [ "$(runner 'print [SolidQueue::Job.where(finished_at: nil).count, SolidQueue::FailedExecution.count].join(",")')" = "1,0" ]; do
   i=$((i + 1)); [ "$i" -le 20 ] || fail "the queued email was not taken, or it failed"
   sleep 1
 done
+status=$(runner 'q = QueueStatus.current; c = q.counts; print [c[:scheduled], c[:failed], c[:finished_day].positive?, q.recent.map(&:name).include?("AccountMailer magic_link"), q.failed.size].join(",")')
+[ "$status" = "1,0,true,true,0" ] || fail "the Status page does not read the queue as expected: $status"
+[ "$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" "$base/admin/status")" = 200 ] || fail "status page not reachable"
 
 echo "restart keeps the data"
 docker restart "$name" >/dev/null
 wait_up
-[ "$(runner 'print SolidQueue::Job.count')" = 1 ] || fail "the waiting job did not survive the restart"
+[ "$(runner 'print SolidQueue::Job.where(finished_at: nil).count')" = 1 ] || fail "the waiting job did not survive the restart"
 # Production logs to STDOUT, so startup warnings come before the count.
 users=$(docker exec "$name" bin/rails runner 'print User.count' 2>/dev/null | tail -n 1)
 [ "$users" = 1 ] || fail "expected 1 user after restart, found $users"

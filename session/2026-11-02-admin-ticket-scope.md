@@ -818,8 +818,29 @@
   passed; with no target set the view and the panel do not show
   (specs/deploy.md "Update 2026-11-12 (revision 19cab54)"). Images
   kept: 19cab54, 44e58c9, d9d7207.
+- 2026-11-12: Status page (specs/status.md), `/admin/status`, a tab
+  for super administrators. Mail in: fetching on or off, each mailbox
+  with its last check and error, and a log of the last 50 messages
+  with what became of each (`mailbox_events`, migration
+  20261112150000, written by `MailboxMessage#process`; newest 200 per
+  organization). Job queue: counts, failed jobs with "Try again" and
+  "Discard", recently finished jobs by plain name, never arguments
+  (`QueueStatus`, reads Solid Queue's tables in production only).
+  Finished jobs are now kept 2 days and cleared hourly. Failing
+  webhooks are listed, and the dashboard warns about mailbox errors,
+  failed jobs and switched-off webhooks. `bin/docker-check` reads the
+  queue through `QueueStatus` in the production image. Symptom that
+  led here: production took in one mail and opened no ticket, with no
+  way to see why from the app; a mail from a staff member's own
+  address is ignored by design. Not deployed yet.
 
 ## Decisions
+
+- Status page, 2026-11-12: the mail log keeps sender and subject so an
+  administrator can recognise a message, for super administrators
+  only and cut to 200 per organization; job arguments are never
+  shown. Finished jobs are kept 2 days instead of being deleted at
+  once, which the page needs to answer "was it sent".
 
 - SLA, 2026-11-12: calendar time and no stopped clock; a pending or
   postponed ticket shows "waiting" instead of a warning, because
@@ -955,7 +976,8 @@ description, the webhooks and the HTML of mail replies are deployed. The SLA tar
 and empty, so nothing shows until an administrator sets them; the
 image is built without the test group. The "Overdue" view of the
 queue and the SLA panel of the reports are deployed and show once a
-target is set. A webhook has
+target is set. The Status page is committed but not
+deployed; it has a migration, so copy the database first. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

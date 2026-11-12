@@ -384,6 +384,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed d9d7207 (OpenAPI description, webhooks, HTML of mail replies and inline images), database copied first (specs/deploy.md "Update 2026-11-12 (revision d9d7207)")
 - [x] production: deployed 44e58c9 (SLA targets, browser tests, image without the test group), database copied first (specs/deploy.md "Update 2026-11-12 (revision 44e58c9)")
 - [x] production: deployed 19cab54 (Overdue view of the queue, SLA panel of the reports); no migration (specs/deploy.md "Update 2026-11-12 (revision 19cab54)")
+- [x] Status page for super administrators (`/admin/status`): mail log with why a mail became no ticket, job queue with failed and recent jobs, failing webhooks, warning on the dashboard (specs/status.md)
+- [ ] status page later: labels for the stacked mailbox row on phones; outgoing mail results per ticket are already in the ticket history
 - [ ] operator: set the SLA targets in /admin/settings when wanted; they are empty, so nothing shows (specs/sla.md)
 - [ ] production: once an organization exists, add a webhook to a real receiver and check a delivery and its signature (specs/webhooks.md)
 - [x] decided: people outside the organization never go in Cc; the share link remains for them (specs/followers.md "Not in this phase")

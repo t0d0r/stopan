@@ -55,7 +55,9 @@ Rails.application.configure do
   # (specs/notifications.md "Delivery"). Finished ones are not kept.
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
-  config.solid_queue.preserve_finished_jobs = false
+  # Kept two days for the Status page, then cleared hourly (specs/status.md).
+  config.solid_queue.preserve_finished_jobs = true
+  config.solid_queue.clear_finished_jobs_after = 2.days
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

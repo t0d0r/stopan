@@ -868,6 +868,67 @@ de:
       badges:
         overdue: "Überfällig"
         soon: "Bald fällig"
+    status:
+      title: "Status"
+      none: "-"
+      when: "Wann"
+      error: "Fehler"
+      mail:
+        caption: "Eingehende Post"
+        title: "Postfächer"
+        polling_on: "Die Postfächer werden automatisch alle %{minutes} Min. geprüft."
+        polling_off: "Der automatische Abruf ist aus; Postfächer werden nur mit der Schaltfläche geprüft."
+        no_mailboxes: "Keine Organisation hat ein eingeschaltetes Postfach."
+        log_title: "Zuletzt abgeholte Nachrichten"
+        log_empty: "Noch keine Nachricht abgeholt."
+        outcome: "Was daraus wurde"
+        results:
+          ticket: "Neues Ticket %{reference}"
+          reply: "Antwort auf %{reference}"
+          skipped: "Übersprungen: %{reason}"
+          ignored: "Ignoriert: %{reason}"
+          failed: "Fehlgeschlagen: %{error}"
+        reasons:
+          automatic: "automatische Nachricht (Abwesenheitsnotiz, Rückläufer oder Liste)"
+          no_sender: "kein Absender"
+          own_address: "die eigene Adresse des Postfachs"
+          deactivated_sender: "deaktivierter Absender"
+          staff_sender_without_a_ticket: "von einem Mitarbeiter ohne Ticket gesendet; Mitarbeiter eröffnen keine Tickets per E-Mail"
+          agent_outside_the_tickets_organization: "Agent außerhalb der Organisation des Tickets"
+      jobs:
+        caption: "Hintergrundarbeit"
+        title: "Auftragswarteschlange"
+        counts:
+          waiting: "Wartend"
+          scheduled: "Geplant"
+          running: "Laufend"
+          failed: "Fehlgeschlagen"
+          finished_day: "Erledigt, 24 Std."
+        failed_title: "Fehlgeschlagene Aufträge"
+        job: "Auftrag"
+        actions: "Aktionen"
+        retry: "Erneut versuchen"
+        discard: "Verwerfen"
+        discard_title: "Diesen Auftrag verwerfen?"
+        discard_body: "Er läuft nicht noch einmal; eine E-Mail, die er gesendet hätte, wird nicht gesendet."
+        no_failed: "Keine fehlgeschlagenen Aufträge."
+        recent_title: "Kürzlich erledigt"
+        no_recent: "In den letzten zwei Tagen wurde nichts erledigt."
+        unavailable: "Hier laufen Aufträge im Web-Prozess und werden nicht aufbewahrt; die Warteschlange ist nur in Produktion lesbar."
+      webhooks:
+        title: "Webhooks mit Fehlern"
+        switched_off: "nach Fehlern ausgeschaltet: %{error}"
+        ok: "Alle Webhooks werden zugestellt."
+      attention:
+        mailboxes:
+          one: "1 Postfach hat einen Fehler."
+          other: "%{count} Postfächer haben einen Fehler."
+        jobs:
+          one: "1 Hintergrundauftrag ist fehlgeschlagen."
+          other: "%{count} Hintergrundaufträge sind fehlgeschlagen."
+        webhooks:
+          one: "1 Webhook wurde nach Fehlern ausgeschaltet."
+          other: "%{count} Webhooks wurden nach Fehlern ausgeschaltet."
     webhooks:
       title: "Webhooks"
       intro: "Stopan ruft diese Adressen auf, wenn in dieser Organisation ein Ticket eröffnet oder öffentlich beantwortet wird. Interne Notizen und E-Mail-Adressen werden nie gesendet."
@@ -1224,6 +1285,9 @@ de:
     ticket_assigned: "Ticket %{reference} ist jetzt %{name} zugewiesen."
     ticket_unassigned: "Ticket %{reference} ist jetzt niemandem zugewiesen."
     share_created: "Freigabelink erstellt."
+    job_retried: "Der Auftrag ist wieder eingereiht."
+    job_discarded: "Der Auftrag wurde verworfen."
+    queue_unavailable: "Die Warteschlange kann hier nicht gelesen werden."
     webhook_created: "Webhook hinzugefügt."
     webhook_on: "Webhook eingeschaltet."
     webhook_off: "Webhook ausgeschaltet."

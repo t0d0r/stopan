@@ -371,8 +371,12 @@ notifications, live.
     "Emails to the requester") and does not raise, so it is not tried
     again. **Reason:** staff see the failure on the ticket and decide;
     several attempts would leave several records.
-  - Finished jobs are deleted at once (`preserve_finished_jobs` off),
-    so the queue database holds no copy of who was emailed.
+  - Finished jobs are kept for 2 days and then cleared by the hourly
+    timer (since 2026-11-12, status.md "Job queue"; before, they were
+    deleted at once), so the Status page can show what ran. For that
+    time the queue database holds the jobs' arguments (record ids, and
+    the address of a message to an administrator); the page never
+    shows them.
   - **Development and tests** keep `:async` and `:test`. The gem is
     locked at 1.7.0, the newest release older than two weeks, with its
     checksum in `Gemfile.lock`; it brings fugit, et-orbi and raabro.

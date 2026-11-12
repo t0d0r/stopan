@@ -117,7 +117,9 @@ Builds the image, then `bin/docker-check` runs it with throwaway secrets
 - the job queue (notifications.md "Delivery") has its supervisor in
   async mode, a dispatcher and a worker, all in one process; a queued
   email is taken without failing, and one queued for later is still
-  waiting;
+  waiting; the Status page's reader (status.md) sees the taken email as
+  finished by its name and the other as scheduled, and `/admin/status`
+  answers 200;
 - after `docker restart` `/up` answers again, the database still holds
   exactly the one seeded user (seeding is idempotent, data is in the
   volume), and the waiting job is still there.

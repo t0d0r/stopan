@@ -6,6 +6,7 @@ class Organization < ApplicationRecord
   has_many :users, through: :memberships
   has_many :tickets, dependent: :restrict_with_error
   has_many :webhooks, dependent: :destroy
+  has_many :mailbox_events, dependent: :delete_all
 
   # URL name of the public request page (specs/public-form.md).
   SLUG = /\A[a-z0-9](?:[a-z0-9-]{0,58}[a-z0-9])?\z/

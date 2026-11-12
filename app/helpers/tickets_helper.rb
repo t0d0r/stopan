@@ -348,6 +348,17 @@ module TicketsHelper
     end
   end
 
+  # What became of a message a mailbox took in (specs/status.md "Mail in").
+  def mailbox_outcome(event)
+    case event.result
+    when "ticket", "reply"
+      label = t("ui.status.mail.results.#{event.result}", reference: event.ticket&.reference || "?")
+      event.ticket && !event.ticket.deleted? ? link_to(label, ticket_path(event.ticket)) : label
+    when "failed" then t("ui.status.mail.results.failed", error: event.reason)
+    else t("ui.status.mail.results.#{event.result}", reason: t("ui.status.mail.reasons.#{event.reason}", default: event.reason.to_s.tr("_", " ")))
+    end
+  end
+
   # The SLA targets, read once per page (specs/sla.md).
   def sla_for(ticket)
     @sla_targets ||= AppSetting.current.sla_targets

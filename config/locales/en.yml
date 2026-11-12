@@ -865,6 +865,67 @@ en:
       badges:
         overdue: "Overdue"
         soon: "Due soon"
+    status:
+      title: "Status"
+      none: "-"
+      when: "When"
+      error: "Error"
+      mail:
+        caption: "Mail in"
+        title: "Mailboxes"
+        polling_on: "Mailboxes are checked automatically every %{minutes} min."
+        polling_off: "Automatic fetching is off; mailboxes are checked only with the button."
+        no_mailboxes: "No organization has a mailbox switched on."
+        log_title: "Last messages taken in"
+        log_empty: "No message has been taken in yet."
+        outcome: "What became of it"
+        results:
+          ticket: "New ticket %{reference}"
+          reply: "Reply on %{reference}"
+          skipped: "Skipped: %{reason}"
+          ignored: "Ignored: %{reason}"
+          failed: "Failed: %{error}"
+        reasons:
+          automatic: "automatic mail (auto-reply, bounce or list)"
+          no_sender: "no sender"
+          own_address: "the mailbox's own address"
+          deactivated_sender: "deactivated sender"
+          staff_sender_without_a_ticket: "sent by a staff member without a ticket to answer; staff do not open tickets by mail"
+          agent_outside_the_tickets_organization: "agent outside the ticket's organization"
+      jobs:
+        caption: "Background work"
+        title: "Job queue"
+        counts:
+          waiting: "Waiting"
+          scheduled: "Scheduled"
+          running: "Running"
+          failed: "Failed"
+          finished_day: "Finished, 24 h"
+        failed_title: "Failed jobs"
+        job: "Job"
+        actions: "Actions"
+        retry: "Try again"
+        discard: "Discard"
+        discard_title: "Discard this job?"
+        discard_body: "It will not run again; an email it would have sent is not sent."
+        no_failed: "No failed jobs."
+        recent_title: "Recently finished"
+        no_recent: "Nothing finished in the last two days."
+        unavailable: "Here jobs run inside the web process and are not kept; the queue can be read only in production."
+      webhooks:
+        title: "Webhooks that fail"
+        switched_off: "switched off after failing: %{error}"
+        ok: "All webhooks deliver."
+      attention:
+        mailboxes:
+          one: "1 mailbox has an error."
+          other: "%{count} mailboxes have an error."
+        jobs:
+          one: "1 background job failed."
+          other: "%{count} background jobs failed."
+        webhooks:
+          one: "1 webhook was switched off after failing."
+          other: "%{count} webhooks were switched off after failing."
     webhooks:
       title: "Webhooks"
       intro: "Stopan calls these addresses when a ticket is opened or publicly answered in this organization. Internal notes and email addresses are never sent."
@@ -1221,6 +1282,9 @@ en:
     ticket_assigned: "Ticket %{reference} is now assigned to %{name}."
     ticket_unassigned: "Ticket %{reference} is now unassigned."
     share_created: "Share link created."
+    job_retried: "The job is queued again."
+    job_discarded: "The job was discarded."
+    queue_unavailable: "The job queue cannot be read here."
     webhook_created: "Webhook added."
     webhook_on: "Webhook switched on."
     webhook_off: "Webhook switched off."

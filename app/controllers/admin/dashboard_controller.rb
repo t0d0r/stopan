@@ -20,6 +20,10 @@ module Admin
       @needs_reconnect = Organization.where(mail_auth: "google").joins(:mail_connection)
                                      .merge(MailConnection.where(status: "needs_reconnect"))
                                      .includes(:mail_connection).order(:name).to_a
+      # specs/status.md "Also on the dashboard".
+      @attention = { mailboxes: Organization.where(imap_enabled: true).where.not(imap_last_error: [ nil, "" ]).count,
+                     jobs: QueueStatus.current&.counts&.fetch(:failed) || 0,
+                     webhooks: Webhook.where(active: false).where("failures > 0").count }.select { |_, count| count.positive? }
     end
   end
 end

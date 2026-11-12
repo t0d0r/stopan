@@ -9,5 +9,6 @@
   <%= link_to t("ui.admin.deleted.title"), admin_deleted_tickets_path, class: "tab", aria: { current: ("page" if controller_name == "deleted_tickets") } %>
   <% if current_user.admin? %>
     <%= link_to t("ui.admin.settings.title"), admin_settings_path, class: "tab", aria: { current: ("page" if controller_name == "settings") } %>
+    <%= link_to t("ui.status.title"), admin_status_path, class: "tab", aria: { current: ("page" if controller_name == "status") } %>
   <% end %>
 </nav>

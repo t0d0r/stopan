@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_150000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -109,6 +109,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_140000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_mail_connections_on_organization_id", unique: true
+  end
+
+  create_table "mailbox_events", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.string "result", null: false
+    t.string "reason"
+    t.string "sender"
+    t.string "subject"
+    t.integer "ticket_id"
+    t.datetime "created_at", null: false
+    t.index ["organization_id", "id"], name: "index_mailbox_events_on_organization_id_and_id"
+    t.index ["organization_id"], name: "index_mailbox_events_on_organization_id"
+    t.index ["ticket_id"], name: "index_mailbox_events_on_ticket_id"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -327,6 +340,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_140000) do
   add_foreign_key "impersonations", "users"
   add_foreign_key "impersonations", "users", column: "admin_id"
   add_foreign_key "mail_connections", "organizations"
+  add_foreign_key "mailbox_events", "organizations"
+  add_foreign_key "mailbox_events", "tickets", on_delete: :nullify
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "notifications", "ticket_events", column: "event_id"

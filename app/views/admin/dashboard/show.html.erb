@@ -16,6 +16,17 @@
   </div>
 <% end %>
 
+<% if @attention.any? %>
+  <%# specs/status.md "Also on the dashboard". %>
+  <div class="callout mail-warning status-warning" role="status">
+    <ul class="mail-warning__list">
+      <% @attention.each do |kind, count| %>
+        <li><%= t("ui.status.attention.#{kind}", count: count) %> <%= link_to t("ui.status.title"), admin_status_path %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <div class="stats">
   <%= link_to tickets_path(view: "unsolved"), class: "sticky sticky--pink stat" do %>
     <span class="stat__value"><%= @stats[:unsolved] %></span><span class="stat__label"><%= t("ui.admin.stats.unsolved") %></span>
