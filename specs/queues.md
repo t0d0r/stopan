@@ -205,6 +205,32 @@ they have it too.
   changed and lists up to ten skipped references with the reason.
 - Nothing chosen (all "no change") or nothing selected: nothing happens
   and the flash says so.
+- **Dragging onto a view** (2026-11-12: "when I drag onto one of the
+  headings, the ticket should go there"). A row of the queue can be
+  dragged onto one of the view tabs above the list, and the ticket
+  then belongs to that view:
+
+  | dropped on | change |
+  |---|---|
+  | Assigned to me | assignee: me |
+  | Unassigned | assignee: nobody |
+  | Pending | status Pending |
+  | Not now | status Not now |
+  | Done | status Done |
+  | All unsolved | status In progress, for rows that are Done or Not now (reopening); other rows are left alone |
+  | All tickets, Overdue | not a target |
+
+  - Dragging a ticked row drags every ticked row of the page, with a
+    tag at the pointer that says how many; a row that is not ticked
+    is dragged alone.
+  - While dragging, the tabs that take the drop are outlined and the
+    others dimmed; the one under the pointer is filled.
+  - The drop is the bulk action above with that one change, so the
+    same rules, skipped tickets with their reasons, notice and
+    return to the list apply. Nothing new on the server.
+  - Without dragging (touch, keyboard, no JavaScript) the bulk bar
+    does the same.
+  - Only in the queue; the search page has no view tabs.
 - The API has the same: `PATCH /api/v1/tickets/bulk` (api.md).
 - A selection holds back live refreshes of the list (a checked box is
   work in progress, timeline.md), so it is not lost.

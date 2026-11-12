@@ -36,6 +36,7 @@ browser, so they never run the app's JavaScript. These few do.
 | mail view | the HTML and Text tabs appear, switch the panes, and the frame grows to its content |
 | shared page | a password link asks for the password, opens, and counts one view |
 | bulk delete | on the search results: selected rows, and the whole list ("Select all N"), through the confirm dialog |
+| queue drag | a row dropped on a view tab gets that view's change; a ticked row takes the ticked rows; "All unsolved" only reopens; "All tickets" takes nothing |
 | board preview | holding the pointer over a card shows the preview with the request and the latest reply; leaving and Escape hide it; the check box shows none |
 | board | ticked cards are ringed and counted, Shift+click ticks a range, Escape clears; dragging a ticked card moves all ticked cards; an unticked card moves alone; cards that may not move stay and are counted; the bar moves without dragging |
 | shift+click | a range of ticket rows is ticked and cleared and the bar counts them; the member picker's range skips rows its search hides |

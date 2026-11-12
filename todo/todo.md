@@ -392,6 +392,7 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed 6982b41 (the board's hover preview); no migration (specs/deploy.md "Update 2026-11-12 (revision 6982b41)")
 - [x] board preview: the date from the top right of the ticket page (mail sent, else opened) in its head (specs/board.md "Preview on hover")
 - [x] queue and search rows: the requester's name is a link that narrows the list to their tickets (specs/people.md "Queue filter")
+- [x] queue: drag a row, or the ticked rows, onto a view tab to move the tickets there (specs/queues.md "Dragging onto a view")
 - [x] board: a small preview of the ticket when the pointer rests on a card or its link has the focus (specs/board.md "Preview on hover")
 - [ ] operator: try in production a delete from the Search page with advanced fields, Shift+click in the queue, and dragging several ticked cards on the board
 - [x] shift+click selects a range in check box lists: ticket rows, member picker, a user's organizations (specs/ui.md "Check box lists")

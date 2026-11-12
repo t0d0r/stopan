@@ -1182,6 +1182,71 @@ function setUpBulkActions() {
   update();
 }
 
+// A row of the queue dragged onto a view tab gets the change that puts
+// it in that view (specs/queues.md "Dragging onto a view"): the bulk
+// form is filled with that one change and sent, so the server's rules
+// and notices are the bulk action's. A ticked row takes every ticked row.
+function setUpViewDrops() {
+  const nav = document.querySelector("[data-view-drops]");
+  const form = document.querySelector("[data-bulk-form]");
+  if (!nav || !form) return;
+  const tabs = [...nav.querySelectorAll("[data-drop-field]")];
+  const boxOf = (row) => row.querySelector("[data-bulk-row]");
+  let rows = [];
+  let tag = null;
+
+  // "All unsolved" reopens: it takes only rows that are done or put aside.
+  const takes = (tab, row) => tab.dataset.dropValue !== "open" || [ "done", "postponed" ].includes(row.dataset.status);
+  const clear = () => {
+    nav.classList.remove("is-taking-rows");
+    tabs.forEach((tab) => tab.classList.remove("is-drop", "is-over"));
+    rows.forEach((row) => row.classList.remove("is-dragging"));
+    tag?.remove();
+    tag = null;
+    rows = [];
+  };
+
+  document.addEventListener("dragstart", (event) => {
+    const row = event.target.closest?.("[data-row-drag]");
+    if (!row) return;
+    const all = [...document.querySelectorAll("[data-row-drag]")];
+    rows = boxOf(row).checked ? all.filter((other) => boxOf(other).checked) : [ row ];
+    rows.forEach((one) => one.classList.add("is-dragging"));
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", rows.map((one) => boxOf(one).value).join(" "));
+    tag = document.createElement("div");
+    tag.className = "board-drag-tag";
+    tag.textContent = nav.dataset.dragCount.replace("%{count}", rows.length);
+    document.body.append(tag);
+    event.dataTransfer.setDragImage(tag, 12, 12);
+    nav.classList.add("is-taking-rows");
+    tabs.forEach((tab) => tab.classList.toggle("is-drop", rows.some((one) => takes(tab, one))));
+  }, { signal: pageSignal });
+  document.addEventListener("dragend", clear, { signal: pageSignal });
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("dragover", (event) => {
+      if (!rows.length || !tab.classList.contains("is-drop")) return;
+      event.preventDefault();
+      tab.classList.add("is-over");
+    }, { signal: pageSignal });
+    tab.addEventListener("dragleave", () => tab.classList.remove("is-over"), { signal: pageSignal });
+    tab.addEventListener("drop", (event) => {
+      if (!rows.length || !tab.classList.contains("is-drop")) return;
+      event.preventDefault();
+      const chosen = rows.filter((one) => takes(tab, one));
+      clear();
+      // Exactly the dragged rows, exactly this change.
+      document.querySelectorAll("[data-bulk-row]").forEach((box) => { box.checked = chosen.some((one) => boxOf(one) === box); });
+      form.querySelector("[data-bulk-scope]").value = "selected";
+      form.querySelectorAll("select[name^='changes[']").forEach((select) => { select.value = ""; });
+      form.querySelector(`select[name='changes[${tab.dataset.dropField}]']`).value = tab.dataset.dropValue;
+      form.hidden = false;
+      form.requestSubmit(form.querySelector("input[type=submit]"));
+    }, { signal: pageSignal });
+  });
+}
+
 // The organization flush button stays off until the exact name is typed
 // (specs/admin.md "Flush all tickets of an organization"); the server
 // checks it again.
@@ -1430,6 +1495,7 @@ function setUpPage() {
   setUpLongRequest();
   setUpEventRuns();
   setUpBulkActions();
+  setUpViewDrops();
   setUpFlushConfirm();
   setUpMemberPicker();
   document.querySelectorAll("select[data-combobox]").forEach(setUpCombobox);

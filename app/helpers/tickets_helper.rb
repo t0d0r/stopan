@@ -526,6 +526,16 @@ module TicketsHelper
     t("ui.queue.views.#{view}")
   end
 
+  # What a ticket dropped on a view tab is changed to: the bulk form's
+  # field and value, or nothing for tabs that take no drop
+  # (specs/queues.md "Dragging onto a view").
+  VIEW_DROPS = { "mine" => %w[assignee me], "unassigned" => %w[assignee none], "pending" => %w[status pending],
+                 "postponed" => %w[status postponed], "done" => %w[status done], "unsolved" => %w[status open] }.freeze
+
+  def view_drop(view)
+    VIEW_DROPS[view]
+  end
+
   def view_color(view)
     VIEW_COLORS.fetch(view, "gray")
   end

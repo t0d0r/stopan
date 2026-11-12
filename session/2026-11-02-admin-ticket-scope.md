@@ -922,6 +922,16 @@
   requester's name is a link that adds the requester filter to the
   list as it is (specs/people.md "Queue filter"); plain text while
   the list is already narrowed to them. Not deployed yet.
+- 2026-11-12: a row of the queue can be dragged onto a view tab
+  (specs/queues.md "Dragging onto a view"): Assigned to me, Unassigned,
+  Pending, Not now and Done make that change; All unsolved reopens
+  done and postponed rows; All tickets and Overdue take nothing. A
+  ticked row takes every ticked row. The drop fills the bulk form
+  with the one change and sends it, so the server side is the bulk
+  action unchanged (`setUpViewDrops` in application.js, `VIEW_DROPS`
+  in TicketsHelper). Browser tests in test/system/queue_drag_test.rb.
+  Rows are draggable now, so selecting text in a row by dragging no
+  longer works there. Not deployed yet.
 
 ## Decisions
 

@@ -3,12 +3,15 @@
 <div class="desk__header queue-header">
   <%# The menu bar and the views name the page; the h1 is for screen readers (ui.md "Pages"). %>
   <h1 class="sr-only"><%= t("ui.queue.title") %></h1>
-  <nav class="queue__views" aria-label="<%= t("ui.queue.views_label") %>">
+  <nav class="queue__views" aria-label="<%= t("ui.queue.views_label") %>" data-view-drops data-drag-count="<%= t("ui.board.drag_count") %>">
     <ul>
       <% filter.views.each do |view| %>
         <li>
+          <%# A row dropped on a tab gets the change that puts it in that view (specs/queues.md "Dragging onto a view"). %>
+          <% field, value = view_drop(view) %>
           <%= link_to tickets_path(view: view), class: "view-link sticky--#{view_color(view)}",
-                                                aria: { current: ("page" if view == filter.view) } do %>
+                                                aria: { current: ("page" if view == filter.view) },
+                                                data: { drop_field: field, drop_value: value }.compact do %>
             <span class="view-link__dot" aria-hidden="true"></span>
             <span class="view-link__label"><%= queue_view_label(view) %></span>
             <span class="view-link__count"><%= filter.counts[view] %></span>
