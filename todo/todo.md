@@ -184,6 +184,7 @@ decisions: IMAP, address = identity, magic links, form off by default):
 - [ ] Google Workspace mail accounts, phase 4: production OAuth client and first mailbox (specs/mail-oauth.md, specs/deploy.md)
 - [ ] Microsoft 365 mail accounts, the same phases, after Google (specs/mail-oauth.md)
 - [x] reports: CSV export of each table, with a guard against spreadsheet formulas (specs/reports.md "CSV export")
+- [x] production: deployed 0ae905e (CSV export of the reports), no migrations (specs/deploy.md "Update 2026-11-12 (revision 0ae905e)")
 - [ ] reports later: custom date ranges, business hours (specs/reports.md "Later")
 
 Plan: g0no's note display options for tickets (proposed 2026-10-27,
