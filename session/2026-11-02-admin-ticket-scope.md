@@ -846,7 +846,17 @@
   mail language, public page, SMTP, IMAP. The page grows to 1560px
   for it; it fits 1280x800 without scrolling and falls to fewer
   columns on narrower windows. `_mail_fields` now holds the SMTP and
-  IMAP columns, `_mail_general` the intro and language. Not deployed
+  IMAP columns, `_mail_general` the intro and language.
+- 2026-11-12: `main` pushed and deployed at 49503f1 (not a release),
+  without a database copy (no migration). Checks passed
+  (specs/deploy.md "Update 2026-11-12 (revision 49503f1)"). Images
+  kept: 49503f1, 35cdfbf, 19cab54.
+- 2026-11-12: Shift+click selects a range in check box lists
+  (specs/ui.md "Check box lists"): one document-level click handler in
+  application.js for boxes that share a name ending in `[]` and a
+  form; it fires `change` on each box it sets, so the bulk bar and the
+  member picker count along. Browser tests in test/system/bulk_test.rb,
+  with two more for bulk delete on the search results. Not deployed
   yet.
 
 ## Decisions
@@ -947,6 +957,12 @@
 
 ## Open
 
+- Deleting tickets from the search results was reported as not
+  working in production. Not reproduced: selected rows and "Select all
+  N" both delete through the confirm dialog in headless Chrome, and
+  the bulk delete runs on the development data; production has
+  deleted tickets, so deleting works there in general. Still to
+  learn: what was clicked, the browser, and what the page showed.
 - Production starts from an empty database: the administrator still
   has the seeded email and the password from the root-only file, and
   organizations, people and the settings in `/admin/settings` have
@@ -967,7 +983,7 @@
 
 ## Next step
 
-Production runs 35cdfbf (`main` after v0.1.1); it has its first organization, mailbox and tickets.
+Production runs 49503f1 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -993,7 +1009,8 @@ image is built without the test group. The "Overdue" view of the
 queue and the SLA panel of the reports are deployed and show once a
 target is set. The Status page is deployed and its
 mail log holds the first real messages. The four-column organization
-form is committed but not deployed (no migration). A webhook has
+form is deployed. Shift+click range selection is committed but not
+deployed (no migration). A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

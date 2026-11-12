@@ -713,6 +713,21 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 49503f1)
+
+`main` after v0.1.1, not a release. Since 35cdfbf: the organization
+form in four columns (ui.md "Organization form"). No migration and no
+gem change, so no database copy was made.
+
+- Checked: the container is healthy and runs the image tagged
+  49503f1 (version v0.1.1-52-g49503f1); schema 20261112150000, none
+  pending; no failed job and no mailbox error; the served stylesheet
+  has the new form's rules; `/up` 200 on loopback and through Apache;
+  `http://` -> 301; `/api/v1/me` 401; signed out, the form -> 302;
+  `/cable` 101; the security headers are present.
+- Images kept: 49503f1, 35cdfbf, 19cab54.
+- Rollback: tag `localhost/stopan:35cdfbf` as `latest` and restart.
+
 ## Update 2026-11-12 (revision 35cdfbf)
 
 `main` after v0.1.1, not a release. Production now has one

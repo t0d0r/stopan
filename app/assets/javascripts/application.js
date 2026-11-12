@@ -1118,6 +1118,34 @@ function setUpMailView() {
   });
 }
 
+// Shift+click on a check box ticks or clears every box between it and
+// the one clicked before, as in a mail program (specs/ui.md "Check box
+// lists"). A list is the boxes that share a name ending in [] and a
+// form; hidden rows (a narrowed member picker) are left alone. Each box
+// that changes fires "change", so counters and bars follow.
+let lastChecked = null;
+document.addEventListener("click", (event) => {
+  const box = event.target;
+  if (!(box instanceof HTMLInputElement) || box.type !== "checkbox" || !box.name.endsWith("[]")) return;
+  const previous = lastChecked;
+  lastChecked = box;
+  if (!event.shiftKey || !previous || previous === box || !previous.isConnected) return;
+  if (previous.name !== box.name || previous.form !== box.form) return;
+
+  const boxes = [...document.querySelectorAll('input[type="checkbox"]')].filter((other) =>
+    other.name === box.name && other.form === box.form && !other.disabled && other.getClientRects().length > 0);
+  const from = boxes.indexOf(previous);
+  const to = boxes.indexOf(box);
+  if (from < 0 || to < 0) return;
+  boxes.slice(Math.min(from, to), Math.max(from, to) + 1).forEach((other) => {
+    if (other.checked === box.checked) return;
+    other.checked = box.checked;
+    other.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  // Shift+click on a label would also select the text in between.
+  window.getSelection()?.removeAllRanges();
+});
+
 // Bulk actions of the queue (specs/queues.md "Bulk actions"): the bar
 // shows once a row is selected and offers the whole list when the whole
 // page is selected.

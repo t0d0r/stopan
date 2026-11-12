@@ -180,6 +180,17 @@ has a ready icon for each new need.
   inbox, plus, bell, link, envelope, pencil, eye, user, flag.
 
 **Where icons are used**
+- **Check box lists** (2026-11-12: "where there are check boxes,
+  shift+click should select a range"): in a list of check boxes (the
+  ticket rows of the queue and the search results, the member picker
+  of an organization, the organizations of a user), a click followed
+  by Shift+click on another box sets every box between the two to the
+  state of the box just clicked, ticked or cleared, as in a mail
+  program. A list is the boxes that share a name and a form; rows
+  hidden by the picker's search are skipped. Counters, the bulk bar
+  and the picker's button follow, since each changed box reports its
+  change. The click on a label counts too, and it does not select the
+  text in between. Without Shift nothing changes from before.
 - **Flash messages:** the title strip shows `success` (notices) or
   `warning` (alerts) before the caption.
 - **Timeline lines** (timeline.md):

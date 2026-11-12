@@ -35,6 +35,8 @@ browser, so they never run the app's JavaScript. These few do.
 | reports filters | choosing a period applies at once; "Custom range" shows the dates and Apply; a range applies |
 | mail view | the HTML and Text tabs appear, switch the panes, and the frame grows to its content |
 | shared page | a password link asks for the password, opens, and counts one view |
+| bulk delete | on the search results: selected rows, and the whole list ("Select all N"), through the confirm dialog |
+| shift+click | a range of ticket rows is ticked and cleared and the bar counts them; the member picker's range skips rows its search hides |
 
 ## Not covered
 
