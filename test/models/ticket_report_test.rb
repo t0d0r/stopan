@@ -86,6 +86,27 @@ class TicketReportTest < ActiveSupport::TestCase
     assert_not report.invalid_range?
   end
 
+  test "SLA rows count kept and missed targets of the period, or nothing without targets" do
+    assert_nil report.sla_rows
+    AppSetting.current.update!(sla_targets: { "normal" => { "first_response" => 60, "resolution" => 1440 } })
+
+    answered = ->(t, at) { t.update_columns(first_response_at: at) }
+    answered.call(ticket(created: 5.days.ago, status: "done", done: 5.days.ago + 3.hours), 5.days.ago + 30.minutes)  # both kept
+    answered.call(ticket(created: 4.days.ago, status: "done", done: 2.days.ago), 4.days.ago + 2.hours)               # both missed
+    ticket(created: 3.days.ago)                                                                                       # unanswered, overdue
+    ticket(created: 10.minutes.ago)                                                                                   # still running
+    ticket(created: 2.days.ago, status: "done", done: 2.days.ago + 1.hour)                                            # done unanswered: kept resolution only
+    ticket(created: 2.days.ago).update_columns(priority: "low")                                                       # no target
+    answered.call(ticket(created: 60.days.ago, status: "done", done: 1.day.ago), 60.days.ago + 5.minutes)            # old: resolution only, missed
+
+    first, resolution = report.sla_rows
+    assert_equal [ "first_response", 1, 2, 3, 33 ], [ first.kind, first.met, first.missed, first.total, first.percent ]
+    assert_equal [ "resolution", 2, 2, 50 ], [ resolution.kind, resolution.met, resolution.missed, resolution.percent ]
+
+    empty = TicketReport.new(users(:admin), { period: "custom", from: "2026-01-01", to: "2026-01-02", organization: @org.id.to_s }).sla_rows
+    assert_equal [ 0, nil ], [ empty.first.total, empty.first.percent ]
+  end
+
   test "new, done, open now and the previous period" do
     ticket(created: 2.days.ago)
     ticket(created: 3.days.ago, status: "done", done: 1.day.ago)

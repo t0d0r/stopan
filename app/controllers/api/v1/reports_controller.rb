@@ -20,6 +20,7 @@ module Api
             waiting: report.waiting_count, first_response_median_seconds: report.first_response_median,
             resolution_median_seconds: report.resolution_median
           },
+          sla: report.sla_rows&.to_h { |row| [ row.kind, { met: row.met, missed: row.missed, percent: row.percent } ] },
           buckets: report.buckets.map { |bucket| { starts_at: time_json(bucket.starts_at), created: bucket.created, done: bucket.done } },
           burndown: report.burndown.map { |point| { starts_at: time_json(point.starts_at), open: point.open } },
           statuses: report.status_rows.map { |row| { status: row.status, stage: row.stage && stage_json(row.stage), count: row.count } },

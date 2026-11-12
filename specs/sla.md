@@ -79,6 +79,19 @@ the due time and one of:
   view. Without targets the view is not offered and `view=overdue`
   falls back to the default view. A Pending or Not now ticket is in
   it only while it has no staff reply.
+- **In the reports** (2026-11-12): when any target is set, the reports
+  page has a panel "SLA" under the tiles with one line per target
+  kind and a thin bar: "87% within target (26 of 30)", or "nothing to
+  measure". For the period and organization of the page:
+  - first response: of the tickets created in the period with a
+    target, those answered in time are kept; those answered late, or
+    unanswered, not done and past the time, are missed; the others
+    (still running, or done without a reply) are left out;
+  - resolution: of the tickets done in the period with a target,
+    those done in time are kept, the others missed.
+  Targets and priorities are today's, so a changed target changes
+  past numbers too. `GET /api/v1/reports` has the same as `sla`
+  (null without targets). Not in the CSV files.
 - Requesters, shared pages and emails never show targets.
 - **API:** the ticket JSON has `sla` for staff:
   `{first_response: {state, due_at, target_minutes}, resolution:
@@ -89,7 +102,8 @@ the due time and one of:
 
 Business hours and holidays, stopping the clock while Pending,
 targets per organization, emails or notifications on a breach, SLA
-numbers in the reports.
+numbers per person or organization, a history of what the targets
+were.
 
 ## Code
 

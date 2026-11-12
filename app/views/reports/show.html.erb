@@ -64,6 +64,30 @@
   </div>
 </section>
 
+<%# Kept and missed SLA targets, when any is set (specs/sla.md "In the reports"). %>
+<% if (sla_rows = report.sla_rows) %>
+  <section class="sticky sticky--gray panel report-sla" aria-labelledby="report-sla-title">
+    <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.reports.sla.caption") %></span></header>
+    <div class="panel__body">
+      <h2 class="section-title" id="report-sla-title"><%= t("ui.reports.sla.title") %></h2>
+      <ul class="report-meters">
+        <% sla_rows.each do |row| %>
+          <li class="report-meter">
+            <span class="report-meter__label"><%= t("ui.sla.kinds.#{row.kind}") %></span>
+            <svg class="report-meter__track" aria-hidden="true" focusable="false">
+              <% if row.met.positive? %><rect class="report-meter__fill" width="<%= row.percent %>%" height="100%" rx="3" /><% end %>
+            </svg>
+            <span class="report-meter__value report-sla__value">
+              <%= row.total.zero? ? t("ui.reports.sla.none") : t("ui.reports.sla.kept", percent: row.percent, met: row.met, total: row.total) %>
+            </span>
+          </li>
+        <% end %>
+      </ul>
+      <p class="field-hint"><%= t("ui.reports.sla.hint") %></p>
+    </div>
+  </section>
+<% end %>
+
 <%= render "reports/volume_chart", report: report %>
 <%= render "reports/burndown_chart", report: report %>
 

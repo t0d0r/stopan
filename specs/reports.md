@@ -84,6 +84,8 @@ Times are calendar time (no business hours), in the app's time zone.
    Median resolution. New and Done show the change against the previous
    period of the same length ("+3 vs previous 30 days"), as text, never
    colour alone. First response adds "N still waiting".
+   Under the tiles, when any SLA target is set: the "SLA" panel with
+   the share of kept targets (sla.md "In the reports").
 2. **Created and done over time:** grouped columns, two series (Created,
    Done), one group per day (7d, 30d), week (90d, weeks start on Monday)
    or month (12m). Legend above the chart. Colours from the dataviz

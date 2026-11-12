@@ -122,6 +122,19 @@ class SlaPagesTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", tickets_path(view: "overdue"), 0
   end
 
+  test "the reports show the SLA panel only when a target is set" do
+    sign_in users(:agent)
+    get reports_url
+    assert_select ".report-sla", 0
+
+    targets!
+    urgent!
+    get reports_url
+    assert_select ".report-sla .report-meter", 2
+    assert_select ".report-sla .report-meter:first-child", /First response/
+    assert_select ".report-sla .report-sla__value", /within target|nothing to measure/
+  end
+
   test "the lines are translated" do
     targets!
     urgent!

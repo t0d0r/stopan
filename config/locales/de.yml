@@ -970,6 +970,12 @@ de:
         uk: "Ukrainisch"
     reports:
       title: "Berichte"
+      sla:
+        caption: "SLA"
+        title: "Eingehaltene Ziele in diesem Zeitraum"
+        kept: "%{percent}% im Ziel (%{met} von %{total})"
+        none: "nichts zu messen"
+        hint: "Nach den heutigen Zielen und der jetzigen Priorität jedes Tickets. Die erste Antwort zählt im Zeitraum erstellte Tickets, die Lösung im Zeitraum erledigte."
       csv:
         download: "CSV herunterladen"
         seconds: "%{column} (Sekunden)"

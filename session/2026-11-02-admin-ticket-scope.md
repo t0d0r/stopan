@@ -809,6 +809,12 @@
   checks the two agree. `TicketFilter#views` adds the view for staff,
   so the API list and bulk actions take `view=overdue` too. Not
   deployed yet.
+- 2026-11-12: the reports show kept SLA targets (specs/sla.md "In the
+  reports"): a panel under the tiles, when any target is set, with
+  the share of first responses and resolutions within target for the
+  period (`TicketReport#sla_rows`), by today's targets and
+  priorities; `GET /api/v1/reports` has it as `sla`. Not deployed
+  yet.
 
 ## Decisions
 
@@ -945,7 +951,8 @@ count meets a real link once production has tickets. The OpenAPI
 description, the webhooks and the HTML of mail replies are deployed. The SLA targets are deployed
 and empty, so nothing shows until an administrator sets them; the
 image is built without the test group. The "Overdue" view of the
-queue is committed but not deployed (no migration). A webhook has
+queue and the SLA panel of the reports are committed but not deployed
+(no migration). A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

@@ -232,6 +232,7 @@ module OpenapiDocument
     Report: { type: "object", description: "The numbers of the reports page.", properties: {
       period: str, unit: str(nil, enum: %w[day week month]), organization: nullable("Organization"), from: time, to: time,
       tiles: { type: "object" },
+      sla: { type: %w[object null], description: "Kept and missed SLA targets per kind (met, missed, percent); null without targets." },
       buckets: { type: "array", items: { type: "object", properties: { starts_at: time, created: int, done: int } } },
       burndown: { type: "array", items: { type: "object", properties: { starts_at: time, open: int } } },
       statuses: { type: "array", items: { type: "object" } },

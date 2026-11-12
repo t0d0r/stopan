@@ -7095,3 +7095,29 @@ turbo-frame {
   width: 100%;
   min-width: 0;
 }
+
+/* Kept SLA targets on the reports page (specs/sla.md "In the reports"). */
+.report-sla {
+  margin-bottom: 18px;
+}
+
+/* Label, a short bar, then the words, which wrap under on phones. */
+.report-sla .report-meter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.report-sla .report-meter__label {
+  flex: 0 0 9em;
+}
+
+.report-sla .report-meter__track {
+  flex: 1 1 100px;
+  max-width: 280px;
+}
+
+.report-sla .report-meter__value {
+  flex: 1 1 14em;
+  text-align: left;
+}

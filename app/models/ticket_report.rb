@@ -15,6 +15,11 @@ class TicketReport
   Point = Struct.new(:starts_at, :open, keyword_init: true)
   StatusRow = Struct.new(:status, :stage, :count, keyword_init: true)
   OrganizationRow = Struct.new(:organization, :created, :done, :open, :first_response, :resolution, keyword_init: true)
+  # How many tickets kept and missed one SLA target (specs/sla.md "In the reports").
+  SlaRow = Struct.new(:kind, :met, :missed, keyword_init: true) do
+    def total = met + missed
+    def percent = total.zero? ? nil : (met * 100.0 / total).round
+  end
   PersonRow = Struct.new(:user, :open, :done, :replies, :notes, :first_response, keyword_init: true)
 
   attr_reader :user, :period, :organization, :now, :from_date, :to_date
@@ -123,6 +128,35 @@ class TicketReport
 
   def resolution_median
     median(resolutions.map(&:last))
+  end
+
+  # Kept and missed targets, by today's targets and each ticket's
+  # priority now; nil when no target is set. First response: tickets
+  # created in the period that were answered, or are overdue unanswered.
+  # Resolution: tickets done in the period.
+  def sla_rows
+    targets = AppSetting.current.sla_targets
+    return unless Sla.any_target?(targets)
+
+    minutes = ->(priority, kind) { targets.dig(priority, kind).to_i }
+    first = SlaRow.new(kind: "first_response", met: 0, missed: 0)
+    created_in(range).pluck(:priority, :created_at, :first_response_at, :status).each do |priority, created, answered, status|
+      target = minutes.call(priority, "first_response")
+      next unless target.positive?
+
+      due = created + target.minutes
+      if answered then answered <= due ? first.met += 1 : first.missed += 1
+      elsif status != Ticket::DONE && now > due then first.missed += 1
+      end
+    end
+    resolution = SlaRow.new(kind: "resolution", met: 0, missed: 0)
+    done_in(range).pluck(:priority, :created_at, :done_at).each do |priority, created, done|
+      target = minutes.call(priority, "resolution")
+      next unless target.positive?
+
+      done <= created + target.minutes ? resolution.met += 1 : resolution.missed += 1
+    end
+    [ first, resolution ]
   end
 
   def buckets

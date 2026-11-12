@@ -967,6 +967,12 @@ en:
         uk: "Ukrainian"
     reports:
       title: "Reports"
+      sla:
+        caption: "SLA"
+        title: "Targets kept in this period"
+        kept: "%{percent}% within target (%{met} of %{total})"
+        none: "nothing to measure"
+        hint: "By today's targets and each ticket's priority now. First response counts tickets created in the period; resolution counts tickets done in it."
       csv:
         download: "Download CSV"
         seconds: "%{column} (seconds)"
