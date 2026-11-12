@@ -717,6 +717,15 @@
   app reports version v0.1.1-35-gd0db217, and every other check
   passed (specs/deploy.md "Update 2026-11-12 (revision d0db217)").
   Images kept: d0db217, ec72cc5, 10b393b.
+- 2026-11-12: the reports take a custom date range (specs/reports.md
+  "Custom range"): `period=custom` with `from` and `to`, whole days,
+  at most 1100, drawn by day, week or month by its length. Date
+  fields and an Apply button appear on the filter row; dates that are
+  no range show the last 30 days with a note. `TicketReport#till` is
+  the end of the period (now, or the end of a past last day); the CSV
+  links, the file name and the API carry the range. Tests in
+  test/models/ticket_report_test.rb and
+  test/controllers/reports_controller_test.rb. Not deployed yet.
 
 ## Decisions
 
@@ -832,7 +841,8 @@ production image locally, not on the server, where the database has
 no data yet. The sign-in and password reset rate limits are deployed
 and count per visitor. Share link expiry and the version line on the
 admin dashboard are deployed; the dashboard line itself is still to be
-looked at in production after signing in. The
+looked at in production after signing in. The custom range of the
+reports is committed but not deployed (no migration). The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

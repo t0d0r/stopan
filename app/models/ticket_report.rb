@@ -2,8 +2,14 @@
 # user may see (Ticket.visible_to), for one period and optionally one
 # organization. Medians are computed in Ruby: SQLite has no percentiles.
 class TicketReport
+  CUSTOM = "custom".freeze
   PERIODS = %w[7d 30d 90d 12m].freeze
   UNITS = { "7d" => :day, "30d" => :day, "90d" => :week, "12m" => :month }.freeze
+  # A custom range (reports.md "Custom range"): its longest span, and up
+  # to how many days it is drawn by day and by week.
+  MAX_DAYS = 1100
+  DAY_UNIT_DAYS = 31
+  WEEK_UNIT_DAYS = 183
 
   Bucket = Struct.new(:starts_at, :created, :done, keyword_init: true)
   Point = Struct.new(:starts_at, :open, keyword_init: true)
@@ -11,12 +17,13 @@ class TicketReport
   OrganizationRow = Struct.new(:organization, :created, :done, :open, :first_response, :resolution, keyword_init: true)
   PersonRow = Struct.new(:user, :open, :done, :replies, :notes, :first_response, keyword_init: true)
 
-  attr_reader :user, :period, :organization, :now
+  attr_reader :user, :period, :organization, :now, :from_date, :to_date
 
   def initialize(user, params, now: Time.current)
     @user = user
     @now = now
-    @period = params[:period].presence_in(PERIODS) || "30d"
+    @period = params[:period].presence_in(PERIODS + [ CUSTOM ]) || "30d"
+    custom_dates(params[:from], params[:to]) if custom?
     @organization = organizations.find_by(id: params[:organization].to_s) if params[:organization].present?
   end
 
@@ -24,14 +31,34 @@ class TicketReport
     user.visible_organizations.order(:name)
   end
 
+  def custom?
+    period == CUSTOM
+  end
+
+  # The dates given were not a range; the last 30 days are shown.
+  def invalid_range?
+    @invalid_range == true
+  end
+
+  # Whole days of a custom range, both ends included.
+  def days
+    (to_date - from_date).to_i + 1
+  end
+
   def unit
-    UNITS.fetch(period)
+    return UNITS.fetch(period) unless custom?
+
+    if days <= DAY_UNIT_DAYS then :day
+    elsif days <= WEEK_UNIT_DAYS then :week
+    else :month
+    end
   end
 
   # Today and the days before it, or this month and the 11 before.
   def from
     today = now.beginning_of_day
     case period
+    when CUSTOM then from_date.in_time_zone.beginning_of_day
     when "7d" then today - 6.days
     when "30d" then today - 29.days
     when "90d" then today - 89.days
@@ -39,13 +66,30 @@ class TicketReport
     end
   end
 
+  # The end of the period: now, or the end of a custom range's last day
+  # when that is in the past.
+  def till
+    custom? ? [ to_date.in_time_zone.end_of_day, now ].min : now
+  end
+
   def range
-    from..now
+    from..till
   end
 
   # The same length just before the period, for the tiles' change.
   def previous_range
-    (from - (now - from))...from
+    (from - (till - from))...from
+  end
+
+  # The filter as link parameters, for the CSV links.
+  def filter_params
+    dates = custom? ? { from: from_date.iso8601, to: to_date.iso8601 } : {}
+    { period: period, **dates, organization: organization&.id }
+  end
+
+  # The period for a file name.
+  def period_slug
+    custom? ? "#{from_date.iso8601}_#{to_date.iso8601}" : period
   end
 
   def created_count
@@ -94,12 +138,12 @@ class TicketReport
   # and reopened counts right at every point.
   def burndown
     @burndown ||= begin
-      tickets = scope.where(created_at: ..now).pluck(:id, :created_at, :done_at)
-      changes = TicketEvent.where(ticket_id: tickets.map(&:first), action: "status_changed", created_at: ..now)
+      tickets = scope.where(created_at: ..till).pluck(:id, :created_at, :done_at)
+      changes = TicketEvent.where(ticket_id: tickets.map(&:first), action: "status_changed", created_at: ..till)
                            .order(:created_at, :id).pluck(:ticket_id, :created_at, :to_value)
                            .group_by(&:first)
       starts = buckets.map(&:starts_at)
-      ends = starts.drop(1).map { |start| start - 1.second } << now
+      ends = starts.drop(1).map { |start| start - 1.second } << till
       starts.zip(ends).map do |start, moment|
         open = tickets.count { |id, at, done_at| at <= moment && !done_at?(changes[id], done_at, moment) }
         Point.new(starts_at: start, open: open)
@@ -148,6 +192,31 @@ class TicketReport
   end
 
   private
+
+  # The dates of a custom range; without any, or when they are not a
+  # range, the last 30 days.
+  def custom_dates(from, to)
+    today = now.to_date
+    @from_date = today - 29
+    @to_date = today
+    return if from.blank? && to.blank?
+
+    first = parse_date(from)
+    last = parse_date(to)
+    last = today if last && last > today
+    if first && last && first <= last && (last - first).to_i < MAX_DAYS
+      @from_date = first
+      @to_date = last
+    else
+      @invalid_range = true
+    end
+  end
+
+  def parse_date(value)
+    Date.iso8601(value.to_s) if value.to_s.match?(/\A\d{4}-\d{2}-\d{2}\z/)
+  rescue Date::Error
+    nil
+  end
 
   def scope
     @scope ||= organization ? Ticket.visible_to(user).where(organization_id: organization.id) : Ticket.visible_to(user)
@@ -222,7 +291,7 @@ class TicketReport
     step = { day: 1.day, week: 1.week, month: 1.month }.fetch(unit)
     start = bucket_of(from)
     starts = []
-    while start <= now
+    while start <= till
       starts << start
       start = bucket_of(start + step)
     end

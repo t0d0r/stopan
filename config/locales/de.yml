@@ -927,11 +927,18 @@ de:
         30d: "Letzte 30 Tage"
         90d: "Letzte 90 Tage"
         12m: "Letzte 12 Monate"
+        custom: "Eigener Zeitraum"
       previous:
         7d: "den 7 Tagen davor"
         30d: "den 30 Tagen davor"
         90d: "den 90 Tagen davor"
         12m: "den 12 Monaten davor"
+        custom:
+          one: "dem Tag davor"
+          other: "den %{count} Tagen davor"
+      from: "Von"
+      to: "Bis"
+      invalid_range: "Diese Daten sind kein gültiger Zeitraum; angezeigt werden die letzten 30 Tage."
       vs_previous: "%{delta} gegenüber %{period}"
       summary: "Übersicht"
       tiles:

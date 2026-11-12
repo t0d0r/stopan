@@ -27,6 +27,65 @@ class TicketReportTest < ActiveSupport::TestCase
     TicketReport.new(user, { period: period, organization: @org.id.to_s })
   end
 
+  def custom(from, to, user: users(:admin))
+    TicketReport.new(user, { period: "custom", from: from, to: to, organization: @org.id.to_s })
+  end
+
+  # NOW is 2026-10-27 12:00.
+  test "a custom range counts whole days, both ends included, up to the end of a past day" do
+    ticket(created: Time.zone.local(2026, 10, 1, 0, 5))
+    ticket(created: Time.zone.local(2026, 10, 10, 23, 55), status: "done", done: Time.zone.local(2026, 10, 10, 23, 58))
+    ticket(created: Time.zone.local(2026, 10, 11, 0, 5))
+    ticket(created: Time.zone.local(2026, 9, 30, 23, 55), status: "done", done: Time.zone.local(2026, 10, 12, 9, 0))
+    ticket(created: Time.zone.local(2026, 9, 25, 9, 0))
+
+    r = custom("2026-10-01", "2026-10-10")
+    assert r.custom?
+    assert_not r.invalid_range?
+    assert_equal 10, r.days
+    assert_equal Time.zone.local(2026, 10, 1), r.from
+    assert_equal Time.zone.local(2026, 10, 10).end_of_day, r.till
+    assert_equal 2, r.created_count
+    assert_equal 1, r.done_count
+    assert_equal 2, r.previous_created_count  # 21 to 30 September
+    assert_equal 3, r.open_count              # now, whatever the range
+    assert_equal :day, r.unit
+    assert_equal 10, r.buckets.size
+    # At the end of 10 October: 25 and 30 September and 1 October were open.
+    assert_equal 3, r.burndown.last.open
+    assert_equal({ period: "custom", from: "2026-10-01", to: "2026-10-10", organization: @org.id }, r.filter_params)
+    assert_equal "2026-10-01_2026-10-10", r.period_slug
+  end
+
+  test "a custom range ends now when it reaches today or beyond; units follow its length" do
+    r = custom("2026-10-20", "2027-01-01")
+    assert_equal Date.new(2026, 10, 27), r.to_date
+    assert_equal NOW, r.till
+    assert_equal 8, r.days
+
+    assert_equal :day, custom("2026-09-27", "2026-10-27").unit
+    assert_equal :week, custom("2026-09-26", "2026-10-27").unit
+    assert_equal :week, custom("2026-04-28", "2026-10-27").unit
+    assert_equal :month, custom("2026-04-27", "2026-10-27").unit
+    assert_equal 12, custom("2025-11-01", "2026-10-27").buckets.size
+  end
+
+  test "custom without dates is the last 30 days; dates that are no range fall back to them" do
+    r = custom(nil, nil)
+    assert_not r.invalid_range?
+    assert_equal [ Date.new(2026, 9, 28), Date.new(2026, 10, 27) ], [ r.from_date, r.to_date ]
+    assert_equal report.from, r.from
+
+    [ [ "2026-10-10", "2026-10-01" ], [ "soon", "2026-10-01" ], [ "2026-10-01", "" ], [ "2026-11-01", "2026-11-05" ],
+      [ "2026-02-30", "2026-10-01" ], [ "2023-10-23", "2026-10-27" ], [ "2026-10-01'--", "2026-10-02" ] ].each do |from, to|
+      r = custom(from, to)
+      assert r.invalid_range?, "#{from}..#{to}"
+      assert_equal [ Date.new(2026, 9, 28), Date.new(2026, 10, 27) ], [ r.from_date, r.to_date ]
+    end
+    assert_not custom("2023-10-24", "2026-10-27").invalid_range?
+    assert_not report.invalid_range?
+  end
+
   test "new, done, open now and the previous period" do
     ticket(created: 2.days.ago)
     ticket(created: 3.days.ago, status: "done", done: 1.day.ago)

@@ -81,6 +81,6 @@
         </table>
       </div>
     </details>
-    <%= link_to reports_path(format: :csv, table: "volume", period: report.period, organization: report.organization&.id), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
+    <%= link_to reports_path(format: :csv, table: "volume", **report.filter_params), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
   </div>
 </section>

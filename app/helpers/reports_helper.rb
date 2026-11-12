@@ -19,8 +19,8 @@ module ReportsHelper
   # "+3", "-1", "0" against the previous period of the same length.
   def report_delta(now, before)
     difference = now - before
-    t("ui.reports.vs_previous", delta: (difference.positive? ? "+#{difference}" : difference.to_s),
-                                period: t("ui.reports.previous.#{@report.period}"))
+    period = @report.custom? ? t("ui.reports.previous.custom", count: @report.days) : t("ui.reports.previous.#{@report.period}")
+    t("ui.reports.vs_previous", delta: (difference.positive? ? "+#{difference}" : difference.to_s), period: period)
   end
 
   def report_bucket_label(start, unit)

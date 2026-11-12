@@ -51,6 +51,44 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     assert_select "select[name=organization]:not(.is-set)"
   end
 
+  test "a custom range has date fields, an Apply button, its own links and file name" do
+    sign_in users(:agent)
+    get reports_url
+    assert_select "select[name=period] option[value=custom]", "Custom range"
+    assert_select "input[type=date]", 0
+    assert_select "form.report-filters > input[type=submit]", 0
+
+    today = Date.current
+    get reports_url(period: "custom")
+    assert_select "select[name=period] option[selected][value=custom]"
+    assert_select "input[type=date][name=from][value=?][max=?]", (today - 29).iso8601, today.iso8601
+    assert_select "input[type=date][name=to][value=?]", today.iso8601
+    assert_select "label[for=from]", "From"
+    assert_select "form.report-filters > input[type=submit][value=Apply]"
+    assert_select ".report-range-note", 0
+
+    from = (today - 13).iso8601
+    to = today.iso8601
+    get reports_url(period: "custom", from: from, to: to)
+    assert_select ".report-tile__note", /vs the 14 days before/
+    assert_select "[data-report-chart]:not(.report-chart--burndown) g[data-chart-group]", 14
+    ReportCsv::TABLES.each do |table|
+      assert_select "a.report-csv[href=?]", reports_path(format: :csv, table: table, period: "custom", from: from, to: to)
+    end
+    get reports_url(format: :csv, table: "volume", period: "custom", from: from, to: to)
+    assert_match(/filename="stopan-volume-#{from}_#{to}-#{to}\.csv"/, response.headers["Content-Disposition"])
+
+    get reports_url(period: "custom", from: to, to: from)
+    assert_response :success
+    assert_select ".report-range-note[role=status]", /not a valid range/
+    assert_select "input[type=date][name=from][value=?]", (today - 29).iso8601
+    assert_select ".report-tile__note", /vs the 30 days before/
+
+    get reports_url(period: "custom", from: from, to: to), headers: { "Accept-Language" => "bg" }
+    assert_select "select[name=period] option[selected]", "Избран период"
+    assert_select ".report-tile__note", /предходните 14 дни/
+  end
+
   test "renders in Bulgarian and German" do
     sign_in users(:agent)
     get reports_url, headers: { "Accept-Language" => "bg" }

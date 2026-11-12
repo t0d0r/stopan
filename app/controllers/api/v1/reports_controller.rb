@@ -13,7 +13,7 @@ module Api
       def report_json(report)
         {
           period: report.period, unit: report.unit, organization: report.organization && organization_json(report.organization),
-          from: time_json(report.from), to: time_json(report.now),
+          from: time_json(report.from), to: time_json(report.till),
           tiles: {
             created: report.created_count, created_before: report.previous_created_count,
             done: report.done_count, done_before: report.previous_done_count, open: report.open_count,

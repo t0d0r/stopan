@@ -6,17 +6,35 @@
   <%= form_with url: reports_path, method: :get, class: "filters report-filters", data: { filter_form: true, turbo_action: "replace" } do %>
     <div class="filters__field">
       <%= label_tag :period, t("ui.reports.period") %>
-      <%= select_tag :period, options_for_select(TicketReport::PERIODS.map { |p| [ t("ui.reports.periods.#{p}"), p ] }, report.period),
+      <%= select_tag :period, options_for_select((TicketReport::PERIODS + [ TicketReport::CUSTOM ]).map { |p| [ t("ui.reports.periods.#{p}"), p ] }, report.period),
                      class: "select", data: { auto_submit: true } %>
     </div>
+    <% if report.custom? %>
+      <%# Dates apply with the button, not on their own (specs/reports.md "Custom range"). %>
+      <div class="filters__field">
+        <%= label_tag :from, t("ui.reports.from") %>
+        <%= date_field_tag :from, report.from_date.iso8601, max: report.now.to_date.iso8601, required: true, class: "field-input report-date" %>
+      </div>
+      <div class="filters__field">
+        <%= label_tag :to, t("ui.reports.to") %>
+        <%= date_field_tag :to, report.to_date.iso8601, max: report.now.to_date.iso8601, required: true, class: "field-input report-date" %>
+      </div>
+    <% end %>
     <div class="filters__field">
       <%= label_tag :organization, t("ui.fields.organization") %>
       <%= select_tag :organization, options_from_collection_for_select(report.organizations, :id, :name, report.organization&.id),
                      include_blank: t("ui.queue.any"), class: class_names("select", "is-set": report.organization), data: { auto_submit: true } %>
     </div>
-    <noscript><%= submit_tag t("ui.queue.apply"), name: nil, class: "btn" %></noscript>
+    <% if report.custom? %>
+      <%= submit_tag t("ui.queue.apply"), name: nil, class: "btn report-apply" %>
+    <% else %>
+      <noscript><%= submit_tag t("ui.queue.apply"), name: nil, class: "btn" %></noscript>
+    <% end %>
   <% end %>
 </div>
+<% if report.invalid_range? %>
+  <p class="callout report-range-note" role="status"><%= t("ui.reports.invalid_range") %></p>
+<% end %>
 
 <section class="report-tiles" aria-label="<%= t("ui.reports.summary") %>">
   <div class="sticky sticky--gray report-tile">
@@ -67,7 +85,7 @@
           </li>
         <% end %>
       </ul>
-      <%= link_to reports_path(format: :csv, table: "statuses", period: report.period, organization: report.organization&.id), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
+      <%= link_to reports_path(format: :csv, table: "statuses", **report.filter_params), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
     </div>
   </section>
 
@@ -106,7 +124,7 @@
       <% else %>
         <p class="panel__empty"><%= t("ui.reports.empty") %></p>
       <% end %>
-      <%= link_to reports_path(format: :csv, table: "organizations", period: report.period, organization: report.organization&.id), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
+      <%= link_to reports_path(format: :csv, table: "organizations", **report.filter_params), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
     </div>
   </section>
 </div>
@@ -146,6 +164,6 @@
     <% else %>
       <p class="panel__empty"><%= t("ui.reports.empty") %></p>
     <% end %>
-    <%= link_to reports_path(format: :csv, table: "people", period: report.period, organization: report.organization&.id), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
+    <%= link_to reports_path(format: :csv, table: "people", **report.filter_params), class: "report-csv" do %><%= icon :download, size: 12 %> <%= t("ui.reports.csv.download") %><% end %>
   </div>
 </section>

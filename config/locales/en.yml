@@ -924,11 +924,18 @@ en:
         30d: "Last 30 days"
         90d: "Last 90 days"
         12m: "Last 12 months"
+        custom: "Custom range"
       previous:
         7d: "the 7 days before"
         30d: "the 30 days before"
         90d: "the 90 days before"
         12m: "the 12 months before"
+        custom:
+          one: "the day before"
+          other: "the %{count} days before"
+      from: "From"
+      to: "To"
+      invalid_range: "These dates are not a valid range; showing the last 30 days."
       vs_previous: "%{delta} vs %{period}"
       summary: "Summary"
       tiles:

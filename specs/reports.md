@@ -22,8 +22,37 @@ the selects"); on phones they wrap under the title.
 
 | param | values | default |
 |---|---|---|
-| `period` | `7d`, `30d`, `90d` (today and the 6, 29 or 89 days before it), `12m` (this month and the 11 before it); up to now | `30d` |
+| `period` | `7d`, `30d`, `90d` (today and the 6, 29 or 89 days before it), `12m` (this month and the 11 before it); up to now; `custom` with `from` and `to` (below) | `30d` |
 | `organization` | id of a visible organization, or empty for all | all |
+
+### Custom range (2026-11-12)
+
+For a month's or a quarter's report the fixed periods are not enough.
+
+- `period=custom` with `from` and `to` (`YYYY-MM-DD`): whole days in
+  the app's time zone, both included. The period select has "Custom
+  range" as its last choice; choosing it shows two date fields, "From"
+  and "To", and an "Apply" button on the filter row (dates do not
+  apply on their own, since a half-typed date is not a range).
+- Without dates (the moment "Custom range" is chosen) the range is
+  the last 30 days, already filled in the fields.
+- `to` after today counts as today, and the range then ends now, as
+  for the fixed periods. A past `to` ends at the end of that day.
+- **Refused:** a date that does not parse, `from` after `to`, `from`
+  after today, or more than 1100 days. The page then shows the last 30
+  days, keeps "Custom range" selected with the dates filled in for
+  them, and says "These dates are not a valid range; showing the last
+  30 days." above the tiles.
+- **Buckets:** by day up to 31 days, by week up to 183 days, by month
+  beyond.
+- Everything "in the period" uses the range: New, Done, the medians,
+  both charts and the tables. The burndown's last point is the end of
+  the range, not now. "Open now" stays now. The change on the tiles
+  compares with the same number of days just before the range ("vs
+  the 14 days before").
+- The CSV links and the file name carry the range
+  (`stopan-volume-2026-10-01_2026-10-31-<date>.csv`); the API takes
+  the same `from` and `to` and returns them.
 
 Unknown values fall back to the default. The selects apply at once with
 JavaScript (the queue's `data-auto-submit`), with an Apply button inside
@@ -108,7 +137,8 @@ scripts or styles). It is not live-updated; reloading recalculates.
 Requesters 403; agents see only their organizations' numbers; the
 definitions above on known fixtures (new, done, reopened not done,
 first response by staff only and public only, medians, waiting count);
-period and organization filters and their fallbacks; the CSV of each
+period and organization filters and their fallbacks; the custom range
+(days included, units, a past end, the refused cases, the links); the CSV of each
 table, its formula guard, 403 and 404; buckets per period;
 the chart has a legend, titles and a table; the burndown replays
 reopened tickets and ends at the open count now; German and Bulgarian render.
@@ -150,7 +180,7 @@ Every table of the page can be downloaded, for a spreadsheet.
 
 ## Later
 
-Custom date ranges, business hours, SLA targets (roadmap.md "SLAs").
+Business hours, SLA targets (roadmap.md "SLAs").
 
 ## Security Note
 

@@ -11,7 +11,7 @@ class ReportCsv
   end
 
   def filename
-    "stopan-#{@table}-#{@report.period}-#{@report.now.to_date.iso8601}.csv"
+    "stopan-#{@table}-#{@report.period_slug}-#{@report.now.to_date.iso8601}.csv"
   end
 
   # UTF-8 with a byte order mark, every field quoted, CRLF line ends.
