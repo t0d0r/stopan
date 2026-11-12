@@ -4,7 +4,9 @@
 
 Production image (`stopan:latest`) based on `ruby:4.0.7-slim`, pinned by digest (below), built in two stages:
 
-- gems installed with `BUNDLE_DEPLOYMENT=1`, without the development group
+- gems installed with `BUNDLE_DEPLOYMENT=1`, without the development and
+  test groups (since 2026-11-12, system-tests.md: the lint, audit and
+  browser test gems stay out of the image)
 - assets precompiled at build time with a dummy secret
 - runs as the non-root user `rails` (uid 1000)
 - `bin/docker-entrypoint` runs `bin/rails db:prepare` (create, migrate) and

@@ -45,3 +45,11 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 end
+
+group :test do
+  # Browser tests of what only JavaScript does (specs/system-tests.md):
+  # Capybara drives the local Chrome over its DevTools protocol through
+  # Cuprite, so no driver binary is downloaded
+  gem "capybara", "~> 3.40"
+  gem "cuprite", "~> 0.17"
+end

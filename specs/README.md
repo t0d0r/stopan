@@ -30,6 +30,7 @@
 | [sharing.md](sharing.md) | share a ticket by secret link, optionally with a password: who may share, what the public page shows, headers, rate limit |
 | [api.md](api.md) | JSON API under /api/v1 with personal tokens (read-only or read-write), same rights as the pages |
 | [sla.md](sla.md) | first-response and resolution targets per priority: settings, states, warnings on the ticket page and in the queue for staff |
+| [system-tests.md](system-tests.md) | browser tests in headless Chrome for what only JavaScript does: `make test-system`, what is covered |
 | [webhooks.md](webhooks.md) | HTTP calls to another system on a new ticket or public reply: per organization, signed, public https addresses only, retries |
 | [presence.md](presence.md) | who is online now for staff: menu bar count, avatars and panel, other viewers of a ticket, live over Action Cable |
 | [people.md](people.md) | person profile with statistics for staff, and the queue's requester filter |

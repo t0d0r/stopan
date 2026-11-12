@@ -788,6 +788,16 @@
   `sla_targets`. Tests: test/models/sla_test.rb,
   first_response_test.rb, test/controllers/sla_pages_test.rb, the API
   test. Not deployed yet.
+- 2026-11-12: browser tests (specs/system-tests.md). `test/system`
+  runs five tests in headless Chrome through Capybara and Cuprite
+  (test group only, no driver download): sign in and reply, the
+  confirm dialog, the report filters, the mail view tabs, a password
+  share link. `make test-system` runs them; they are skipped without
+  Chrome and are not part of `make check`. The production image is
+  now built without the test group too
+  (`BUNDLE_WITHOUT="development:test"`), which also drops the lint
+  and audit gems from it; `make docker-check` passed with that image.
+  Not deployed yet.
 
 ## Decisions
 
@@ -894,6 +904,9 @@
 
 ## Verify
 
+`make test-system` runs the browser tests (needs Chrome; not part of
+`make check`).
+
 `make check` (lint, gem audit and tests; the audit needs the network to update its database, else it uses the local copy).
 
 ## Next step
@@ -918,8 +931,10 @@ admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
 reports and the view count of share links are deployed; the view
 count meets a real link once production has tickets. The OpenAPI
-description, the webhooks and the HTML of mail replies are deployed. The SLA targets are committed
-but not deployed; they have a migration, so copy the database first. A webhook has
+description, the webhooks and the HTML of mail replies are deployed. The SLA targets and the browser
+tests are committed but not deployed; the SLA has a migration, so copy
+the database first, and the image is now built without the test
+group. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

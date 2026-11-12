@@ -4,7 +4,7 @@
 
 IMAGE ?= stopan:latest
 
-.PHONY: help ruby deps build test lint audit check secrets hooks run demo screenshots clean docker-build docker-check docker-up docker-down docker-logs docker-dev docker-dev-restart docker-dev-logs docker-dev-down deploy release release-files
+.PHONY: help ruby deps build test test-system lint audit check secrets hooks run demo screenshots clean docker-build docker-check docker-up docker-down docker-logs docker-dev docker-dev-restart docker-dev-logs docker-dev-down deploy release release-files
 
 help: ## list the targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-18s %s\n", $$1, $$2}'
@@ -21,6 +21,9 @@ build: deps ## install gems and create or migrate the development database
 
 test: deps ## run all tests
 	bin/rails test
+
+test-system: deps ## run the browser tests in headless Chrome (skipped without Chrome; specs/system-tests.md)
+	bin/rails test:system
 
 lint: deps secrets ## style check (rubocop), security static analysis (brakeman), secret scan
 	bin/rubocop
