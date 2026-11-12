@@ -713,6 +713,43 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision d9d7207)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since 97c3f7d: the OpenAPI description of the API (api.md
+"OpenAPI"), webhooks (webhooks.md) and the HTML of mail replies with
+inline images (organization-mail.md "Replies and inline images"). Two
+migrations: the `webhooks` table (20261112120000) and
+`comments.mail_html` (20261112130000).
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-97c3f7d.sqlite3` (mode 600; 1 user, no
+  organizations or tickets, schema 20261112110000).
+- Checked:
+  - the container is healthy and runs the image tagged d9d7207; the
+    app reports version v0.1.1-42-gd9d7207;
+  - schema 20261112130000, none pending; the new table and column are
+    there; one user, no organizations, tickets or webhooks;
+  - `GET /api/v1/openapi.json` answers 200 as JSON without a token:
+    OpenAPI 3.1.0 with 61 operations;
+  - webhooks: plain http and local addresses are not allowed in
+    production, and the loopback and link-local metadata addresses
+    are refused by the sender; the webhooks API without a token 401; a
+    signed-out post to the admin route is refused;
+  - a mail frame of a reply, signed out -> 302 to sign-in;
+  - the job queue: supervisor in async mode, dispatcher and worker
+    registered, nothing failed;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; `/cable` 101; the security headers are present;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Not checked on the server: a webhook delivery to a real receiver,
+  and a mail reply with HTML, since the database has no organization
+  or mailbox yet.
+- Images kept: d9d7207, 97c3f7d, d0db217.
+- Rollback: tag `localhost/stopan:97c3f7d` as `latest` and restart.
+  The older code ignores the new table and column, so the database
+  may stay; webhooks would then send nothing.
+
 ## Update 2026-11-12 (revision 97c3f7d)
 
 `main` after v0.1.1, not a release, on the empty database from the

@@ -381,6 +381,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] production: deployed ec72cc5 (sign-in and password reset rate limits) and set `TRUSTED_PROXIES`; the limit checked to be per visitor (specs/deploy.md "Update 2026-11-12 (revision ec72cc5)")
 - [x] production: deployed d0db217 (share link expiry, version on the admin dashboard), database copied first (specs/deploy.md "Update 2026-11-12 (revision d0db217)")
 - [x] production: deployed 97c3f7d (custom range in the reports, view count of share links), database copied first (specs/deploy.md "Update 2026-11-12 (revision 97c3f7d)")
+- [x] production: deployed d9d7207 (OpenAPI description, webhooks, HTML of mail replies and inline images), database copied first (specs/deploy.md "Update 2026-11-12 (revision d9d7207)")
+- [ ] production: once an organization exists, add a webhook to a real receiver and check a delivery and its signature (specs/webhooks.md)
 - [x] decided: people outside the organization never go in Cc; the share link remains for them (specs/followers.md "Not in this phase")
 - [x] production: database reset, the old database and uploads kept in `~stopan/backups/reset-2026-11-09` (specs/deploy.md "Database reset (2026-11-09)")
 - [ ] operator: after the reset, sign in as `admin`, change its email and password, then add the organizations, people and settings again (specs/deploy.md "Database reset (2026-11-09)")

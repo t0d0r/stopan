@@ -743,7 +743,7 @@
   routes both ways. Found on the way: the route `PATCH
   /api/v1/memberships/:id` had no action; it now sets the organization
   administrator mark (`membership[admin]`), and memberships in the API
-  answers carry `admin`. Not deployed yet.
+  answers carry `admin`.
 - 2026-11-12: webhooks (specs/webhooks.md). An organization has up to
   5; each posts signed JSON (`X-Stopan-Signature`, HMAC-SHA256) on
   `ticket.created` and `reply.created`, never internal notes or email
@@ -757,7 +757,6 @@
   the OpenAPI document). Tests: test/models/webhook_test.rb,
   webhook_sender_test.rb, test/jobs/webhook_delivery_job_test.rb,
   test/controllers/admin/webhooks_controller_test.rb, the API test.
-  Not deployed yet.
 - 2026-11-12: mail HTML for replies and inline images
   (specs/organization-mail.md "Replies and inline images"). A reply by
   mail keeps its cleaned HTML (`comments.mail_html`, migration
@@ -769,8 +768,12 @@
   images from that path only. The mail view partial takes the record
   and the id of its text pane. Tests:
   test/controllers/reply_mail_view_test.rb and additions to
-  mail_html_test.rb. Seen in a browser with a sample reply. Not
-  deployed yet.
+  mail_html_test.rb. Seen in a browser with a sample reply.
+- 2026-11-12: `main` pushed and deployed at d9d7207 (not a release),
+  after a `VACUUM INTO` copy of the database. Both migrations ran,
+  the OpenAPI document is served (61 operations) and every check
+  passed (specs/deploy.md "Update 2026-11-12 (revision d9d7207)").
+  Images kept: d9d7207, 97c3f7d, d0db217.
 
 ## Decisions
 
@@ -875,7 +878,7 @@
 
 ## Next step
 
-Production runs 97c3f7d (`main` after v0.1.1) on an empty database.
+Production runs d9d7207 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -895,9 +898,7 @@ admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
 reports and the view count of share links are deployed; the view
 count meets a real link once production has tickets. The OpenAPI
-description, the webhooks and the HTML of mail replies are committed
-but not deployed; two of them have migrations, so copy the database
-first. A webhook has
+description, the webhooks and the HTML of mail replies are deployed. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the
