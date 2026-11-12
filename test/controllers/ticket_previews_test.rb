@@ -18,6 +18,17 @@ class TicketPreviewsTest < ActionDispatch::IntegrationTest
     assert_select ".card-preview__number", @ticket.reference
     assert_select ".card-preview__subject", @ticket.subject
     assert_select ".pill--status"
+    assert_select "time.card-preview__date[datetime=?]", @ticket.created_at.iso8601, I18n.l(@ticket.created_at, format: :short)
+
+    @ticket.update_columns(mail_headers: { "date" => "2026-11-01T08:00:00+02:00" })
+    get preview_ticket_url(@ticket)
+    # The mail's own clock time, as the ticket page shows it.
+    assert_select "time.card-preview__date", "01 Nov 08:00"
+    get preview_ticket_url(@ticket), headers: { "Accept-Language" => "bg" }
+    assert_select "time.card-preview__date", /01 ноем/i
+    @ticket.update_columns(mail_headers: { "date" => "not a date" })
+    get preview_ticket_url(@ticket)
+    assert_select "time.card-preview__date[datetime=?]", @ticket.created_at.iso8601
     text = css_select(".card-preview__text").first.text
     assert text.start_with?("First line\nSecond <b>line</b>")
     assert_equal 600, text.length

@@ -7529,3 +7529,10 @@ turbo-frame {
   color: #5b6472;
   font-size: 12px;
 }
+
+.card-preview__date {
+  margin-left: auto;
+  color: #5b6472;
+  font-size: 12px;
+  white-space: nowrap;
+}

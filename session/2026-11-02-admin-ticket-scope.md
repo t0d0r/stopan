@@ -914,6 +914,10 @@
   without a database copy (no migration). Checks passed
   (specs/deploy.md "Update 2026-11-12 (revision 6982b41)"). Images
   kept: 6982b41, 6a2cf43, 49503f1.
+- 2026-11-12: the board's preview shows, at the right of its head,
+  the date that stands at the top right of the ticket page: when the
+  mail was sent (its own clock time, as there), else when the ticket
+  was opened. Not deployed yet.
 
 ## Decisions
 

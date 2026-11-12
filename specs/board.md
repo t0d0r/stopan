@@ -87,7 +87,10 @@ to open it.
 
 - Holding the pointer over a card for half a second, or moving the
   keyboard focus to its subject link, shows a small panel beside the
-  card: number and subject, status and priority, the start of the
+  card: number and subject, status and priority, the date that
+  stands at the top right of the ticket page (when the mail was sent,
+  for a ticket that came by mail; else when the ticket was opened;
+  the short date and time), the start of the
   description (plain text, at most 600 characters, line breaks kept)
   and the latest message when there is one: who wrote it, when,
   whether it is an internal note, and its first 300 characters. It
