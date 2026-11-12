@@ -713,6 +713,36 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 97c3f7d)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since d0db217: the custom date range of the reports (reports.md
+"Custom range") and the view count of share links (sharing.md "Total
+views"). One migration: `tickets.share_views` and
+`share_last_viewed_at` (20261112110000).
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-d0db217.sqlite3` (mode 600; 1 user, no
+  organizations or tickets, schema 20261112100000).
+- Checked:
+  - the container is healthy and runs the image tagged 97c3f7d; the
+    app reports version v0.1.1-38-g97c3f7d of 2026-11-12;
+  - schema 20261112110000, none pending; the new columns are there;
+    one user and no organizations or tickets;
+  - a report for October 2026 as a custom range builds in a console:
+    31 days, by day, 31 buckets;
+  - the job queue: supervisor in async mode, dispatcher and worker
+    registered, nothing failed;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; signed out, `/reports` -> 302; an unknown share
+    link 404; `/cable` 101; the security headers are present;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Not checked on the server: the view count of a real link, since the
+  database has no tickets.
+- Images kept: 97c3f7d, d0db217, ec72cc5.
+- Rollback: tag `localhost/stopan:d0db217` as `latest` and restart.
+  The older code ignores the new columns, so the database may stay.
+
 ## Update 2026-11-12 (revision d0db217)
 
 `main` after v0.1.1, not a release, on the empty database from the

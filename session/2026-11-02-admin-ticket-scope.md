@@ -725,14 +725,17 @@
   the end of the period (now, or the end of a past last day); the CSV
   links, the file name and the API carry the range. Tests in
   test/models/ticket_report_test.rb and
-  test/controllers/reports_controller_test.rb. Not deployed yet.
+  test/controllers/reports_controller_test.rb.
 - 2026-11-12: share links count their views (specs/sharing.md "Total
   views"): `tickets.share_views` and `share_last_viewed_at` (migration
   20261112110000), counted when the shared page is shown, once per
   browser session within 30 minutes, reset by a new link. Shown in
   the Sharing panel ("Opened 5 times, last ..."), the admin list and
-  the ticket JSON. Tests in the share controller and API tests. Not
-  deployed yet.
+  the ticket JSON. Tests in the share controller and API tests.
+- 2026-11-12: `main` pushed and deployed at 97c3f7d (not a release),
+  after a `VACUUM INTO` copy of the database. The migration ran and
+  every check passed (specs/deploy.md "Update 2026-11-12 (revision
+  97c3f7d)"). Images kept: 97c3f7d, d0db217, ec72cc5.
 
 ## Decisions
 
@@ -831,7 +834,7 @@
 
 ## Next step
 
-Production runs d0db217 (`main` after v0.1.1) on an empty database.
+Production runs 97c3f7d (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -849,8 +852,8 @@ no data yet. The sign-in and password reset rate limits are deployed
 and count per visitor. Share link expiry and the version line on the
 admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
-reports and the view count of share links are committed but not
-deployed; the view count has a migration, so copy the database first. The
+reports and the view count of share links are deployed; the view
+count meets a real link once production has tickets. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 
