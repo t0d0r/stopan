@@ -388,6 +388,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] Status page for super administrators (`/admin/status`): mail log with why a mail became no ticket, job queue with failed and recent jobs, failing webhooks, warning on the dashboard (specs/status.md)
 - [x] organization form in four columns on a wide page, so it fits one screen from 1280x800 (specs/ui.md "Organization form")
 - [x] production: deployed 49503f1 (organization form in four columns); no migration (specs/deploy.md "Update 2026-11-12 (revision 49503f1)")
+- [x] production: deployed 6a2cf43 (Shift+click, form rows, several cards on the board, member tickets, bulk actions past the firewall); no migration (specs/deploy.md "Update 2026-11-12 (revision 6a2cf43)")
+- [ ] operator: try in production a delete from the Search page with advanced fields, Shift+click in the queue, and dragging several ticked cards on the board
 - [x] shift+click selects a range in check box lists: ticket rows, member picker, a user's organizations (specs/ui.md "Check box lists")
 - [x] organization form: set rows inside the columns, so fields stay level and the link's buttons stay joined (specs/ui.md "Organization form")
 - [x] board: tick several cards and drag them together, or move them with the bar above the board (specs/board.md "Several cards at once")

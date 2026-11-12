@@ -856,9 +856,7 @@
   application.js for boxes that share a name ending in `[]` and a
   form; it fires `change` on each box it sets, so the bulk bar and the
   member picker count along. Browser tests in test/system/bulk_test.rb,
-  with two more for bulk delete on the search results. Not deployed
-  yet.
-- 2026-11-12: the organization form's columns have set rows instead
+  with two more for bulk delete on the search results. - 2026-11-12: the organization form's columns have set rows instead
   of wrapping ones (specs/ui.md "Organization form"): server and port
   on a row, encryption and TLS on their own, user and password level
   with the password's hint and "remove" box under both, the mailbox
@@ -877,13 +875,13 @@
   move there stay and a notice counts them. A bar above the board
   moves the ticked cards without dragging through `PATCH
   /tickets/bulk`, whose `return_to` now accepts the board. Browser
-  tests in test/system/board_test.rb. Not deployed yet.
+  tests in test/system/board_test.rb.
 - 2026-11-12: the member list of an organization's page shows, per
   member, how many tickets they opened in that organization, as a
   link to the queue filtered by requester and organization
   (specs/admin.md "Member's tickets"); zero is plain text. Counted in
   one grouped query in `Admin::OrganizationsController#show`. Not
-  deployed yet; not looked at on a phone.
+  Not looked at on a phone.
 - 2026-11-12: bulk actions on the Search page did nothing in
   production. Cause: the bulk form posted the page's address in
   `return_to`; with the advanced search fields that address is long
@@ -895,7 +893,12 @@
   Referer when it is this site's queue, board or search page
   (specs/queues.md "Bulk actions"). The same request without the
   field passes the firewall. It could not be reproduced locally
-  because there is no firewall there. Not deployed yet.
+  because there is no firewall there.
+- 2026-11-12: `main` pushed and deployed at 6a2cf43 (not a release),
+  without a database copy (no migration). The served script and
+  stylesheet carry the changes, and a bulk request in the new shape
+  passes the firewall (specs/deploy.md "Update 2026-11-12 (revision
+  6a2cf43)"). Images kept: 6a2cf43, 49503f1, 35cdfbf.
 
 ## Decisions
 
@@ -1015,7 +1018,7 @@
 
 ## Next step
 
-Production runs 49503f1 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
+Production runs 6a2cf43 (`main` after v0.1.1); it has its first organization, mailbox and tickets.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -1041,8 +1044,9 @@ image is built without the test group. The "Overdue" view of the
 queue and the SLA panel of the reports are deployed and show once a
 target is set. The Status page is deployed and its
 mail log holds the first real messages. The four-column organization
-form is deployed. Shift+click range selection is committed but not
-deployed (no migration). A webhook has
+form, Shift+click ranges, several cards on the board, the members'
+ticket links and the bulk actions past the firewall are deployed;
+the last four are still to be tried signed in on the server. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

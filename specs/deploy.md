@@ -713,6 +713,37 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 6a2cf43)
+
+`main` after v0.1.1, not a release. Since 49503f1: Shift+click ranges
+in check box lists (ui.md "Check box lists"), set rows in the
+organization form (ui.md "Organization form"), several cards at once
+on the board (board.md), the tickets of each member on the
+organization page (admin.md "Member's tickets"), and the bulk actions
+without a posted address (queues.md "Bulk actions"). No migration and
+no gem change, so no database copy was made.
+
+- Checked:
+  - the container is healthy and runs the image tagged 6a2cf43
+    (version v0.1.1-57-g6a2cf43); schema 20261112150000, none pending;
+    no failed job and no mailbox error;
+  - the served script has the Shift+click handler and the board's
+    card selection, the served stylesheet the member ticket link and
+    the form's rows;
+  - **the firewall:** a signed-out bulk request through Apache without
+    an address in its body and with the long search address as
+    Referer reaches the app (422, no form token) instead of the
+    firewall's 403;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; signed out, the board -> 302; `/cable` 101; the
+    security headers are present; only `127.0.0.1:3183` listens; g0no
+    `/up` 200.
+- Not checked: a signed-in delete from the Search page, Shift+click
+  and group dragging in a browser on the server (they need the
+  administrator's sign-in).
+- Images kept: 6a2cf43, 49503f1, 35cdfbf.
+- Rollback: tag `localhost/stopan:49503f1` as `latest` and restart.
+
 ## Update 2026-11-12 (revision 49503f1)
 
 `main` after v0.1.1, not a release. Since 35cdfbf: the organization
