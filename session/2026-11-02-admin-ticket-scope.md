@@ -705,7 +705,13 @@
   timer (and `stopan:close_pending`) clears them with an internal
   `share_expired` event and refreshes open pages. Automatic customer
   links never expire. Tests: test/models/share_expiry_test.rb and
-  additions to the share controller and API tests. Not deployed yet.
+  additions to the share controller and API tests.
+- 2026-11-12: the bottom of the admin dashboard names the running
+  software, "Stopan <git describe>, <commit date>" (specs/admin.md
+  "Version"). `bin/deploy` writes the two values into `REVISION` in
+  the shipped tree (ignored by git); `BuildInfo` reads it at boot and
+  the page says "development version" without it. Tests:
+  test/models/build_info_test.rb and the dashboard test.
 
 ## Decisions
 

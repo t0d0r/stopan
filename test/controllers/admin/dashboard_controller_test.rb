@@ -36,4 +36,28 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     get admin_root_url
     assert_select ".mail-warning", 0
   end
+
+  def with_build(version, committed_at)
+    BuildInfo.instance_variable_set(:@current, BuildInfo.new(version, committed_at))
+    yield
+  ensure
+    BuildInfo.instance_variable_set(:@current, nil)
+  end
+
+  test "the dashboard names the running version and its date in the reader's language" do
+    sign_in users(:admin)
+    get admin_root_url
+    assert_select ".build-info", "Stopan, development version"
+
+    with_build("v0.1.1-35-g98e4114", "2026-11-12T14:30:00+02:00") do
+      get admin_root_url
+      assert_select ".build-info", "Stopan v0.1.1-35-g98e4114, November 12, 2026"
+      get admin_root_url, headers: { "Accept-Language" => "bg" }
+      assert_select ".build-info", /Stopan v0\.1\.1-35-g98e4114, 12 ноември 2026/i
+    end
+    with_build("v0.2.0", nil) do
+      get admin_root_url
+      assert_select ".build-info", "Stopan v0.2.0"
+    end
+  end
 end

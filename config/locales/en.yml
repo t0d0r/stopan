@@ -472,6 +472,10 @@ en:
         one: "1 ticket shared by link"
         other: "%{count} tickets shared by link"
       no_shared_tickets: "No ticket is shared by link."
+      build:
+        development: "Stopan, development version"
+        version: "Stopan %{version}"
+        version_date: "Stopan %{version}, %{date}"
       share_open: "Open link"
       share_password: "With password"
       share_expires: "expires %{time}"

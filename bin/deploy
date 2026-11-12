@@ -11,8 +11,15 @@ fi
 rev=$(git rev-parse --short HEAD)
 echo "Deploying $rev to $DEPLOY_HOST"
 
+# What the admin dashboard shows as the running software (specs/admin.md
+# "Version"): the version from the tags and the commit date.
+version=$(git describe --tags --always)
+committed=$(git log -1 --format=%cI)
+
 git archive --format=tar HEAD |
   ssh "$DEPLOY_HOST" 'sudo runuser -l stopan -s /bin/bash -c "rm -rf ~/src && mkdir ~/src && tar -x -C ~/src"'
+printf '%s\n%s\n' "$version" "$committed" |
+  ssh "$DEPLOY_HOST" 'sudo runuser -l stopan -s /bin/bash -c "cat > ~/src/REVISION"'
 
 ssh "$DEPLOY_HOST" "sudo runuser -l stopan -s /bin/bash -c 'bash -s $rev'" <<'REMOTE'
 set -e

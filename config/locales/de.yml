@@ -475,6 +475,10 @@ de:
         one: "1 Ticket per Link geteilt"
         other: "%{count} Tickets per Link geteilt"
       no_shared_tickets: "Kein Ticket ist per Link geteilt."
+      build:
+        development: "Stopan, Entwicklungsversion"
+        version: "Stopan %{version}"
+        version_date: "Stopan %{version}, %{date}"
       share_open: "Offener Link"
       share_password: "Mit Passwort"
       share_expires: "läuft ab am %{time}"

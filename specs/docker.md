@@ -12,6 +12,9 @@ Production image (`stopan:latest`) based on `ruby:4.0.7-slim`, pinned by digest 
   the server
 - Thruster on port 80 in front of Puma (port 3000)
 - `HEALTHCHECK` calls `/up`
+- a `REVISION` file in the build context, when present, names the
+  version and commit date shown on the admin dashboard (admin.md
+  "Version"); `bin/deploy` writes it
 - `/rails/storage` holds the SQLite databases and uploaded files; mount a
   volume there
 

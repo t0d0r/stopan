@@ -113,3 +113,15 @@
     <% end %>
   </div>
 </section>
+
+<%# specs/admin.md "Version". %>
+<p class="build-info">
+  <% build = BuildInfo.current %>
+  <% if build.version.nil? %>
+    <%= t("ui.admin.build.development") %>
+  <% elsif build.committed_at %>
+    <%= t("ui.admin.build.version_date", version: build.version, date: l(build.committed_at.to_date, format: :long)) %>
+  <% else %>
+    <%= t("ui.admin.build.version", version: build.version) %>
+  <% end %>
+</p>

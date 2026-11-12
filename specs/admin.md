@@ -11,6 +11,36 @@ Stat tiles: unsolved tickets, unassigned unsolved tickets, tickets solved
 in the last 7 days, organizations, agents (agents + admins), requesters.
 Links to the user and organization lists.
 
+### Version (2026-11-12)
+
+The bottom of the dashboard says which software runs, so an
+administrator can tell a deploy went through and name the version in a
+report: "Stopan v0.1.1-35-g98e4114, November 12, 2026".
+
+- **Version:** `git describe --tags --always` of the deployed commit:
+  the release tag alone (`v0.2.0`) on a release, or the last tag, the
+  number of commits since and the short commit id on `main` between
+  releases. The tag stays the only place a version is kept
+  (release.md); nothing is committed.
+- **Date:** the commit date of that commit, in the reader's language,
+  without the time. It is the date of the software, not of the
+  deploy.
+- **Where it comes from:** `bin/deploy` writes a `REVISION` file into
+  the shipped tree on the server before the image is built: the
+  version on the first line, the commit date (ISO 8601) on the second.
+  The file is not in git (`.gitignore`). `BuildInfo` reads it once at
+  boot and takes only a version of letters, digits, `.`, `-`, `+` and
+  `_` up to 60 characters and a date that parses; anything else counts
+  as missing.
+- **Without the file** (development, tests, an image built with
+  `make docker-build`): "Stopan, development version", no date.
+- Only super administrators see the dashboard, so the version is not
+  shown to visitors or to other users.
+
+`test/models/build_info_test.rb` (reading, bad content, missing file)
+and `test/controllers/admin/dashboard_controller_test.rb` (the line
+with and without a version, translated date).
+
 ### Google accounts that need reconnecting
 
 2026-11-10 (mail-oauth.md "Failure"). Google stops accepting an

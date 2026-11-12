@@ -7005,3 +7005,13 @@ turbo-frame {
 .wizard-choice__option input {
   margin-top: 4px;
 }
+
+/* Which software runs, at the bottom of the admin dashboard
+   (specs/admin.md "Version"). */
+.build-info {
+  margin: 1.5rem 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}

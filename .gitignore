@@ -34,3 +34,6 @@
 *.swo
 *~
 .DS_Store
+
+# Written by bin/deploy on the server, never committed (specs/admin.md "Version").
+/REVISION
