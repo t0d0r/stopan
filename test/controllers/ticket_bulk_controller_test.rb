@@ -8,7 +8,8 @@ class TicketBulkControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:agent)
     get tickets_url(view: "all", q: "printer")
     assert_select "form#bulk-form[action=?] select[name='changes[status]']", bulk_tickets_path
-    assert_select "form#bulk-form input[name=return_to][value=?]", "/tickets?q=printer&view=all"
+    # No address in the form: a long one made the web firewall refuse the request (specs/queues.md).
+    assert_select "form#bulk-form input[name=return_to]", 0
     assert_select "form#bulk-form input[name='list[q]'][value=printer]"
     assert_select "input[type=checkbox][data-bulk-page]"
     assert_select "input[type=checkbox][name='numbers[]'][form=bulk-form][value='1001']"
@@ -81,6 +82,25 @@ class TicketBulkControllerTest < ActionDispatch::IntegrationTest
     patch bulk_tickets_url, params: { numbers: [ tickets(:printer).number ], changes: { priority: "low" }, return_to: "/tickets/boardroom" }
     assert_redirected_to tickets_url
     patch bulk_tickets_url, params: { numbers: [ tickets(:printer).number ], changes: { priority: "high" }, return_to: "//evil.example/tickets/board" }
+    assert_redirected_to tickets_url
+  end
+
+  test "without return_to it goes back to the page of the Referer, on this site and a list page only" do
+    sign_in users(:agent)
+    number = tickets(:printer).number
+    long = "/search?q=&status=&priority=&assignee=&organization=&sort=updated&words=&requester_q=anna&created_from=&created_to=&updated_from=&updated_to=&source="
+    patch bulk_tickets_url, params: { numbers: [ number ], changes: { priority: "high" } }, headers: { "Referer" => "http://www.example.com#{long}" }
+    assert_redirected_to long
+
+    patch bulk_tickets_url, params: { numbers: [ number ], changes: { priority: "low" } }, headers: { "Referer" => "http://www.example.com/tickets/board?q=x" }
+    assert_redirected_to "/tickets/board?q=x"
+    patch bulk_tickets_url, params: { numbers: [ number ], changes: { priority: "high" } }, headers: { "Referer" => "https://evil.example/search?q=x" }
+    assert_redirected_to tickets_url
+    patch bulk_tickets_url, params: { numbers: [ number ], changes: { priority: "low" } }, headers: { "Referer" => "http://www.example.com/admin/users" }
+    assert_redirected_to tickets_url
+    patch bulk_tickets_url, params: { numbers: [ number ], changes: { priority: "high" } }
+    assert_redirected_to tickets_url
+    patch bulk_tickets_url, params: { numbers: [ number ], changes: { priority: "low" } }, headers: { "Referer" => "not a url %%" }
     assert_redirected_to tickets_url
   end
 end

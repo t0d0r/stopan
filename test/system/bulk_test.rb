@@ -108,4 +108,20 @@ class BulkTest < ApplicationSystemTestCase
     assert_equal [ "Alfa Picker", "Bravo Picker", "Charlie Picker", "Delta Picker" ], ticked
     assert_match(/4/, picker.find("[data-picker-submit]").value)
   end
+
+  test "deleting from an advanced search with its long address comes back to the same search" do
+    ticket = tickets(:printer)
+    sign_in_as users(:admin)
+    visit "/search?q=&status=&priority=&assignee=&organization=&sort=updated&words=&requester_q=#{ticket.requester.name.split.first}" \
+          "&created_from=&created_to=&updated_from=&updated_to=&source="
+    row = "tr##{ActionView::RecordIdentifier.dom_id(ticket)}"
+    assert_selector row
+    find("#{row} input[data-bulk-row]").click
+    within("#bulk-form") { click_button "Delete" }
+    within("dialog[open]") { find("[data-confirm-ok]").click }
+
+    assert_no_selector row
+    assert_current_path(/\A\/search\?.*requester_q=/)
+    assert ticket.reload.deleted?
+  end
 end

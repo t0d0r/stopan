@@ -28,7 +28,7 @@ class AdvancedSearchTest < ActionDispatch::IntegrationTest
     assert_select "form.menubar__search", 0, "the page has its own search field"
     get search_url(words: "printer")
     assert_select "#bulk-form input[name='list[words]'][value=printer]"
-    assert_select "#bulk-form input[name=return_to][value=?]", "/search?words=printer"
+    assert_select "#bulk-form input[name=return_to]", 0
   end
 
   test "the queue and the board have no advanced search; the quick search does not carry it there" do

@@ -884,6 +884,18 @@
   (specs/admin.md "Member's tickets"); zero is plain text. Counted in
   one grouped query in `Admin::OrganizationsController#show`. Not
   deployed yet; not looked at on a phone.
+- 2026-11-12: bulk actions on the Search page did nothing in
+  production. Cause: the bulk form posted the page's address in
+  `return_to`; with the advanced search fields that address is long
+  (`/search?q=&status=&...&created_from=&...`), and ModSecurity in
+  Apache answered the request with 403 before it reached the app.
+  Shown with signed-out requests through Apache: the long address 403,
+  short ones 422 from the app. Fix: no address in the form;
+  `TicketBulkController#back_path` takes the path and query of the
+  Referer when it is this site's queue, board or search page
+  (specs/queues.md "Bulk actions"). The same request without the
+  field passes the firewall. It could not be reproduced locally
+  because there is no firewall there. Not deployed yet.
 
 ## Decisions
 
@@ -983,15 +995,6 @@
 
 ## Open
 
-- Deleting tickets from the search results was reported as not
-  working in production. Not reproduced: selected rows and "Select all
-  N" both delete through the confirm dialog in headless Chrome, and
-  the bulk delete runs on the development data; production has
-  deleted tickets, so deleting works there in general. Still to
-  learn: the browser and what the page showed. It is from the Search
-  page; four browser tests cover it there (as an agent, as a super
-  administrator, the whole list, and after searching without a full
-  page load) and pass in Chrome.
 - Production starts from an empty database: the administrator still
   has the seeded email and the password from the root-only file, and
   organizations, people and the settings in `/admin/settings` have

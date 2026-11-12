@@ -3,7 +3,7 @@
 <%= form_with url: bulk_tickets_path, method: :patch, id: "bulk-form", class: "bulk-bar",
               data: { bulk_form: true, selected_one: t("ui.bulk.selected.one"), selected_other: t("ui.bulk.selected.other"),
                       all_selected: t("ui.bulk.all_selected", count: filter.total_count) } do %>
-  <%= hidden_field_tag :return_to, request.fullpath, id: nil %>
+  <%# No return address in the form: the controller goes back to the Referer (queues.md "Bulk actions"). %>
   <%= hidden_field_tag :scope, "selected", id: nil, data: { bulk_scope: true } %>
   <% filter.params_with.slice(*TicketBulkUpdate::LIST_FILTERS).each do |name, value| %>
     <%= hidden_field_tag "list[#{name}]", value, id: nil %>

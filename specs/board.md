@@ -118,8 +118,8 @@ statuses.
 - **Without dragging** (keyboard, touch, no JavaScript): every card has a
   small "Move" menu (a `<details>` with one button per allowed status);
   it posts to the same route and comes back to the board with a notice.
-- The bulk action's `return_to` may be the board (`/tickets/board`
-  with its filters) as well as a list or the search page.
+- The bulk action comes back to the board (`/tickets/board` with its
+  filters) when it was sent from there (queues.md "Bulk actions").
 - `move` answers 204 for `fetch` requests and redirects back to the board
   (the `Referer` when it is the board, else the board) for forms; errors
   are 422 with the message as text for `fetch`, an alert for forms. Staff

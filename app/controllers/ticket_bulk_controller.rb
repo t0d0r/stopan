@@ -23,10 +23,25 @@ class TicketBulkController < ApplicationController
     params.permit(list: TicketBulkUpdate::LIST_FILTERS)[:list] || {}
   end
 
-  # Only back to a ticket list, the board or the search page.
+  # Back to the list, the board or the search page the form was on, with
+  # its filters. The page's address comes from the Referer header, not
+  # from a form field: the web application firewall in front of the app
+  # refused the request (403) when a field held a long search address
+  # (specs/queues.md "Bulk actions"). `return_to` is still read, for
+  # clients that send it.
   def back_path
-    path = params[:return_to].to_s
-    path.match?(%r{\A/(tickets|tickets/board|search)(\?|\z)}) ? path : tickets_path
+    path = params[:return_to].presence || referer_path
+    path.to_s.match?(%r{\A/(tickets|tickets/board|search)(\?|\z)}) ? path : tickets_path
+  end
+
+  # The path and query of the page the request came from, on this host only.
+  def referer_path
+    uri = URI.parse(request.referer.to_s)
+    return unless uri.host == request.host
+
+    uri.query.present? ? "#{uri.path}?#{uri.query}" : uri.path
+  rescue URI::InvalidURIError
+    nil
   end
 
   def flash_result(bulk)

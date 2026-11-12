@@ -183,8 +183,19 @@ they have it too.
   ticket of the current view, filters and search (`scope=list`), at most
   500, and the bar says "All 94 in this list selected".
 - `PATCH /tickets/bulk` with `numbers[]` or `scope=list` plus the list's
-  `view, status, priority, assignee, organization, q`, the changes, and
-  `return_to` (a `/tickets` path; anything else goes to `/tickets`).
+  `view, status, priority, assignee, organization, q` and the changes.
+  It comes back to the page it was sent from, with its filters: the
+  path and query of the `Referer` header when that is this site's
+  queue, board or search page, else `/tickets`.
+  - **Reason (2026-11-12):** the form used to post the page's address
+    in a `return_to` field. On the Search page with its advanced
+    fields that address is long
+    (`/search?q=&status=&...&requester_q=...&created_from=&...`), and
+    the web application firewall in front of the app (ModSecurity in
+    Apache) answered such a request with 403, so "Delete" and "Apply"
+    did nothing there while they worked in the queue. No address
+    travels in the form any more. `return_to` is still read when a
+    client sends it, under the same rule.
   Each ticket goes through `Ticket.visible_to`, `TicketPolicy#update?`
   and `apply_changes`, one by one, so events, notifications and live
   refreshes are as for single changes. A ticket where a change is not

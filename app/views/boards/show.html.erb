@@ -15,7 +15,6 @@
 <%# Shown while cards are ticked (specs/board.md "Several cards at once"). %>
 <%= form_with url: bulk_tickets_path, method: :patch, id: "board-bulk", class: "bulk-bar board-bulk", hidden: true,
               data: { board_bulk: true, selected_one: t("ui.bulk.selected.one"), selected_other: t("ui.bulk.selected.other") } do %>
-  <%= hidden_field_tag :return_to, request.fullpath, id: nil %>
   <p class="bulk-bar__count" data-board-count aria-live="polite"></p>
   <div class="bulk-bar__fields">
     <%= label_tag "board_bulk_status", t("ui.board.move_to"), class: "sr-only" %>
