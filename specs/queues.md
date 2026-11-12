@@ -224,7 +224,10 @@ they have it too.
     tag at the pointer that says how many; a row that is not ticked
     is dragged alone.
   - While dragging, the tabs that take the drop are outlined and the
-    others dimmed; the one under the pointer is filled.
+    others dimmed; the one under the pointer is filled. The dashed
+    outline is drawn inside each tab, so the outlines of neighbours
+    keep the gap between the tabs and never touch (2026-11-12: drawn
+    outside, they overlapped).
   - The drop is the bulk action above with that one change, so the
     same rules, skipped tickets with their reasons, notice and
     return to the list apply. Nothing new on the server.

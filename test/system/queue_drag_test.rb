@@ -61,4 +61,20 @@ class QueueDragTest < ApplicationSystemTestCase
     assert_text "1 ticket changed."
     assert_equal "open", @tickets[0].reload.status
   end
+
+  test "while dragging, the tabs that take the drop are outlined inside themselves, apart from each other" do
+    page.execute_script(<<~JS, ActionView::RecordIdentifier.dom_id(@tickets[0]))
+      const row = document.getElementById(arguments[0]);
+      row.dispatchEvent(new DragEvent("dragstart", { bubbles: true, cancelable: true, dataTransfer: new DataTransfer() }));
+    JS
+    assert_selector ".queue__views.is-taking-rows .view-link.is-drop", minimum: 5
+    # The outline plus its offset stays within the tab's box, so two neighbours cannot overlap.
+    reach = page.evaluate_script(<<~JS)
+      [...document.querySelectorAll(".view-link.is-drop")].map((tab) => {
+        const style = getComputedStyle(tab);
+        return parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+      })
+    JS
+    assert reach.all? { |value| value <= 0 }, reach.inspect
+  end
 end

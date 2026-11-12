@@ -932,6 +932,9 @@
   in TicketsHelper). Browser tests in test/system/queue_drag_test.rb.
   Rows are draggable now, so selecting text in a row by dragging no
   longer works there. Not deployed yet.
+- 2026-11-12: the dashed outlines of the drop tabs are drawn inside
+  the tabs; drawn outside, those of neighbouring tabs overlapped. Not
+  deployed yet.
 
 ## Decisions
 
