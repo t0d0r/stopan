@@ -429,6 +429,8 @@ en:
       email_requester: "Email the requester and Cc"
       email_on: "%{email} will get public replies and status changes by email, outside Stopan."
       email_off: "No email goes to the requester or Cc for this ticket; they see replies in Stopan only."
+      email_no_server: "No outgoing mail server is set, so %{email} gets no email; they see replies in Stopan only."
+      email_set_up: "Set up outgoing mail"
       submit_as: "Then set status"
       keep_status: "Keep %{status}"
       send_reply: "Send reply"

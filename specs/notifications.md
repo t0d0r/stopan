@@ -123,6 +123,27 @@ lists every address), and every mail event names its address.
 - Each change writes an internal `mail_switched` event (from/to `on` and
   `off`, the actor), shown as "Maria turned emails to the requester off".
 
+### No outgoing server (2026-11-12)
+
+The composer said "x@example.com will get public replies and status
+changes by email" while the history of the same ticket said "No
+email to x@example.com: no outgoing mail server". Both now say the
+same.
+
+- An organization can send when its own SMTP is on and usable, or
+  when the global SMTP is configured (`Organization#sends_mail?`, the
+  test the mailer makes before it drops a message).
+- When it cannot, and the switch is on, the composer shows a warning
+  in place of the promise: "No outgoing mail server is set, so
+  x@example.com gets no email; they see replies in Stopan only." For
+  a user who administers the organization it ends with a link "Set
+  up outgoing mail" to the SMTP part of the organization's form.
+- The switch itself stays and still saves: it says what should happen
+  once a server exists. Switched off, the usual "No email goes ..."
+  line shows.
+- The history keeps recording each email that was not sent, with the
+  reason, as before.
+
 ### The record in the history
 
 Every email that would go to the ticket's requester leaves an internal

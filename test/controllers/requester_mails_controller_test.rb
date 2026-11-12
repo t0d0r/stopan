@@ -71,4 +71,40 @@ class RequesterMailsControllerTest < ActionDispatch::IntegrationTest
     get ticket_url(@ticket)
     assert_select ".timeline__item--internal .timeline__text", "Email to anna@example.com: New reply"
   end
+
+  test "without an outgoing mail server the composer warns instead of promising an email" do
+    ticket = tickets(:printer)
+    Rails.configuration.x.global_smtp = false
+    sign_in users(:agent)
+    get ticket_url(ticket)
+    assert_select "#composer .composer__mail-none", /No outgoing mail server is set, so anna@example.com gets no email/
+    assert_select "#composer .composer__mail-on", text: /will get public replies/, count: 0
+    assert_select "#composer .composer__mail-none a", 0
+    assert_select "#composer .composer__mail input[role=switch][checked]"
+
+    sign_in users(:admin)
+    get ticket_url(ticket)
+    assert_select "#composer .composer__mail-none a[href=?]", edit_admin_organization_path(ticket.organization, anchor: "smtp-settings"),
+                  "Set up outgoing mail"
+
+    # The organization's own SMTP is enough.
+    ticket.organization.update!(smtp_enabled: true, smtp_address: "smtp.acme.example", smtp_port: 587, mail_from: "desk@acme.example")
+    assert ticket.organization.sends_mail?
+    get ticket_url(ticket)
+    assert_select "#composer .composer__mail-none", 0
+    assert_select "#composer .composer__mail-on", /will get public replies/
+  ensure
+    Rails.configuration.x.global_smtp = nil
+  end
+
+  test "an organization can send with its own SMTP or the global one" do
+    organization = organizations(:globex)
+    assert organization.sends_mail?
+    Rails.configuration.x.global_smtp = false
+    assert_not organization.sends_mail?
+    organization.update!(smtp_enabled: true, smtp_address: "smtp.globex.example", smtp_port: 587, mail_from: "desk@globex.example")
+    assert organization.sends_mail?
+  ensure
+    Rails.configuration.x.global_smtp = nil
+  end
 end

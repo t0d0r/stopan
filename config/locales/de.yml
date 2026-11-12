@@ -432,6 +432,8 @@ de:
       email_requester: "E-Mails an Anfragesteller und Kopie"
       email_on: "%{email} erhalten öffentliche Antworten und Statusänderungen per E-Mail, außerhalb von Stopan."
       email_off: "An Anfragesteller und Kopie geht keine E-Mail zu diesem Ticket; sie sehen Antworten nur in Stopan."
+      email_no_server: "Es ist kein Server für ausgehende E-Mails eingerichtet, daher erhält %{email} keine E-Mail; Antworten sind nur in Stopan zu sehen."
+      email_set_up: "Ausgehende E-Mails einrichten"
       submit_as: "Danach Status setzen"
       keep_status: "%{status} beibehalten"
       send_reply: "Antwort senden"

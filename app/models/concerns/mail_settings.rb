@@ -46,6 +46,13 @@ module MailSettings
     smtp_enabled? && (!google_mail? || mail_connection&.connected? || false)
   end
 
+  # Whether any email about this organization's tickets can leave: its
+  # own SMTP, or the global one (specs/notifications.md "No outgoing
+  # server"). The same test the mailer makes before it drops a message.
+  def sends_mail?
+    smtp_ready? || Rails.configuration.x.global_smtp != false
+  end
+
   def imap_ready?
     imap_enabled? && (!google_mail? || mail_connection&.connected? || false)
   end

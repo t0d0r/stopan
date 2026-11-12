@@ -941,6 +941,14 @@
   board), an assignee other than the current one. Symptom: a done
   ticket could be dropped on Pending and was only refused afterwards
   with a "skipped" alert. Not deployed yet.
+- 2026-11-12: the composer no longer promises an email that cannot
+  be sent (specs/notifications.md "No outgoing server"). Symptom: it
+  said "x will get public replies and status changes by email" while
+  the history of the same ticket said "No email to x: no outgoing
+  mail server". `Organization#sends_mail?` (own SMTP usable, or the
+  global one) decides; without a server the composer shows a warning
+  and, for who administers the organization, a link to its SMTP
+  settings. Not deployed yet.
 
 ## Decisions
 

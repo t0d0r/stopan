@@ -7576,3 +7576,9 @@ turbo-frame {
   outline-style: solid;
   background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
+
+/* The composer's warning when no outgoing mail server exists
+   (specs/notifications.md "No outgoing server"). */
+.composer__mail-none {
+  color: var(--danger);
+}

@@ -49,7 +49,18 @@
             <span class="toggle__label"><%= t("ui.composer.email_requester") %></span>
           </label>
           <p class="composer__mail-hint" id="requester-mail-hint" aria-live="polite">
-            <span class="composer__mail-on"><%= icon :envelope, size: 13 %> <%= t("ui.composer.email_on", email: ticket.customer_emails.to_sentence) %></span>
+            <% if ticket.organization.sends_mail? %>
+              <span class="composer__mail-on"><%= icon :envelope, size: 13 %> <%= t("ui.composer.email_on", email: ticket.customer_emails.to_sentence) %></span>
+            <% else %>
+              <%# No server to send through: say so instead of promising an email
+                  (specs/notifications.md "No outgoing server"). %>
+              <span class="composer__mail-on composer__mail-none">
+                <%= icon :warning, size: 13 %> <%= t("ui.composer.email_no_server", email: ticket.customer_emails.to_sentence) %>
+                <% if current_user.administers?(ticket.organization) %>
+                  <%= link_to t("ui.composer.email_set_up"), edit_admin_organization_path(ticket.organization, anchor: "smtp-settings") %>
+                <% end %>
+              </span>
+            <% end %>
             <span class="composer__mail-off"><%= icon :lock, size: 13 %> <%= t("ui.composer.email_off") %></span>
           </p>
         </div>
