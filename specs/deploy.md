@@ -713,6 +713,32 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 19cab54)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since 44e58c9: the "Overdue" view of the queue and the SLA
+panel of the reports (sla.md "Overdue view", "In the reports"). No
+migration and no gem change, so no database copy was made.
+
+- Checked:
+  - the container is healthy and runs the image tagged 19cab54; the
+    app reports version v0.1.1-48-g19cab54;
+  - schema 20261112140000, none pending; one user and no
+    organizations or tickets;
+  - with no SLA target set, the queue offers no "Overdue" view,
+    `view=overdue` falls back to the default view, nothing is overdue
+    and the reports have no SLA rows;
+  - the job queue: supervisor in async mode, dispatcher and worker
+    registered, nothing failed;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; signed out, the queue and the reports -> 302;
+    `/cable` 101; the security headers are present;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Not checked on the server: the view and the panel with targets set,
+  since none are set and the database has no tickets.
+- Images kept: 19cab54, 44e58c9, d9d7207.
+- Rollback: tag `localhost/stopan:44e58c9` as `latest` and restart.
+
 ## Update 2026-11-12 (revision 44e58c9)
 
 `main` after v0.1.1, not a release, on the empty database from the

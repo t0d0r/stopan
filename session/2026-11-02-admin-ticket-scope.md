@@ -807,14 +807,17 @@
   state as SQL (not Done, and unanswered past the first-response
   time or New or In progress past the resolution time), and a test
   checks the two agree. `TicketFilter#views` adds the view for staff,
-  so the API list and bulk actions take `view=overdue` too. Not
-  deployed yet.
+  so the API list and bulk actions take `view=overdue` too.
 - 2026-11-12: the reports show kept SLA targets (specs/sla.md "In the
   reports"): a panel under the tiles, when any target is set, with
   the share of first responses and resolutions within target for the
   period (`TicketReport#sla_rows`), by today's targets and
-  priorities; `GET /api/v1/reports` has it as `sla`. Not deployed
-  yet.
+  priorities; `GET /api/v1/reports` has it as `sla`.
+- 2026-11-12: `main` pushed and deployed at 19cab54 (not a release),
+  without a database copy (no migration, no gem change). Every check
+  passed; with no target set the view and the panel do not show
+  (specs/deploy.md "Update 2026-11-12 (revision 19cab54)"). Images
+  kept: 19cab54, 44e58c9, d9d7207.
 
 ## Decisions
 
@@ -928,7 +931,7 @@
 
 ## Next step
 
-Production runs 44e58c9 (`main` after v0.1.1) on an empty database.
+Production runs 19cab54 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -951,8 +954,8 @@ count meets a real link once production has tickets. The OpenAPI
 description, the webhooks and the HTML of mail replies are deployed. The SLA targets are deployed
 and empty, so nothing shows until an administrator sets them; the
 image is built without the test group. The "Overdue" view of the
-queue and the SLA panel of the reports are committed but not deployed
-(no migration). A webhook has
+queue and the SLA panel of the reports are deployed and show once a
+target is set. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the
