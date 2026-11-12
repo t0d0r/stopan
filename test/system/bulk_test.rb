@@ -2,6 +2,35 @@ require "application_system_test_case"
 
 # Bulk actions in a browser (specs/queues.md "Bulk actions").
 class BulkTest < ApplicationSystemTestCase
+  test "a super administrator deletes selected tickets from the search results" do
+    ticket = tickets(:printer)
+    sign_in_as users(:admin)
+    visit search_path(q: ticket.subject.split.first)
+    find("tr##{ActionView::RecordIdentifier.dom_id(ticket)} input[data-bulk-row]").click
+    within("#bulk-form") { click_button "Delete" }
+    within("dialog[open]") { find("[data-confirm-ok]").click }
+    assert_no_selector "tr##{ActionView::RecordIdentifier.dom_id(ticket)}"
+    assert ticket.reload.deleted?
+  end
+
+  test "deleting after searching on the search page itself, without a full page load" do
+    ticket = tickets(:printer)
+    sign_in_as users(:admin)
+    visit search_path
+    assert_no_selector "#bulk-form"
+    fill_in "q", with: ticket.subject.split.first, match: :first
+    find("input[name=q]", match: :first).send_keys(:enter)
+    assert_selector "tr##{ActionView::RecordIdentifier.dom_id(ticket)}"
+
+    find("tr##{ActionView::RecordIdentifier.dom_id(ticket)} input[data-bulk-row]").click
+    assert_selector "[data-bulk-count]", text: "1 selected"
+    within("#bulk-form") { click_button "Delete" }
+    assert_selector "dialog[open]"
+    within("dialog[open]") { find("[data-confirm-ok]").click }
+    assert_no_selector "tr##{ActionView::RecordIdentifier.dom_id(ticket)}"
+    assert ticket.reload.deleted?
+  end
+
   test "deleting selected tickets from the search results" do
     ticket = tickets(:printer)
     sign_in_as users(:agent)

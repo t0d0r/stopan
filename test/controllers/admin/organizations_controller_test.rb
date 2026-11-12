@@ -188,6 +188,13 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
       assert_select ".org-form__column:nth-child(2) > fieldset#public-form-settings"
       assert_select ".org-form__column:nth-child(3) > fieldset#smtp-settings input[name='organization[smtp_address]']"
       assert_select ".org-form__column:nth-child(4) > fieldset#imap-settings input[name='organization[mailbox_address]']"
+      assert_select "#smtp-settings .field-row--server input", 2
+      assert_select "#smtp-settings .field-row--secret > .field", 2
+      assert_select "#smtp-settings > .field select[name='organization[smtp_security]']"
+      assert_select "#imap-settings .field-row--server input[name='organization[imap_port]']"
+      assert_select "#imap-settings > label.check-field input[name='organization[imap_ssl]']"
+      assert_select "#imap-settings > .field input[name='organization[mailbox_address]']"
+      assert_select "#imap-settings > .field input[name='organization[imap_folder]']"
       assert_select "form > .form-actions input[type=submit]", 1
     end
   end

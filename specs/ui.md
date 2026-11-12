@@ -323,10 +323,18 @@ has a ready icon for each new need.
     and edit forms are one wide sticky with four groups side by side:
     name, notes and the mail language | the public request page |
     outgoing mail (SMTP) | the mailbox (IMAP). The page grows up to
-    1560px for this form, whatever the width switch says, so each
-    column has room for two short fields in a row (server and port,
-    user and password). It fits 1280x800 and larger without scrolling
-    at the normal text size. The columns are a grid of at least 236px
+    1560px for this form, whatever the width switch says. It fits
+    1280x900 and larger without scrolling at the normal text size.
+    Inside a column the rows are set, not left to wrap (2026-11-12:
+    "the elements are out of place at both widths"): server and port
+    share a row, the server taking the room and the port 84px;
+    encryption and TLS each have their own row; user and password
+    share a row in two equal halves, with the password's hint, its
+    "remove the stored password" box and any error on full-width
+    lines under both, so the two fields stay level; the mailbox
+    address with its hint and the folder each take a full row. The
+    public page's address takes a row with Copy and Open joined under
+    it, sharing the width. The columns are a grid of at least 236px
     each, so a narrower window gets three, two and, on phones, one
     column, in the same order as before. The text areas start two or
     three rows tall and grow with their text. One form and one Save,

@@ -389,7 +389,8 @@ approved "go in this order", all done 2026-10-27):
 - [x] organization form in four columns on a wide page, so it fits one screen from 1280x800 (specs/ui.md "Organization form")
 - [x] production: deployed 49503f1 (organization form in four columns); no migration (specs/deploy.md "Update 2026-11-12 (revision 49503f1)")
 - [x] shift+click selects a range in check box lists: ticket rows, member picker, a user's organizations (specs/ui.md "Check box lists")
-- [~] deleting from the search results reported as not working in production; not reproduced: selected rows and the whole list delete in browser tests and against the development data. Needs what was clicked, the browser and what the page showed
+- [x] organization form: set rows inside the columns, so fields stay level and the link's buttons stay joined (specs/ui.md "Organization form")
+- [~] deleting from the Search page reported as not working in production; not reproduced in Chrome in four browser tests (agent, super administrator, whole list, after an in-page search) or on the development data. Needs the browser and what the page showed
 - [ ] status page later: labels for the stacked mailbox row on phones; outgoing mail results per ticket are already in the ticket history
 - [ ] operator: set the SLA targets in /admin/settings when wanted; they are empty, so nothing shows (specs/sla.md)
 - [ ] production: once an organization exists, add a webhook to a real receiver and check a delivery and its signature (specs/webhooks.md)

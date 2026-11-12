@@ -858,6 +858,16 @@
   member picker count along. Browser tests in test/system/bulk_test.rb,
   with two more for bulk delete on the search results. Not deployed
   yet.
+- 2026-11-12: the organization form's columns have set rows instead
+  of wrapping ones (specs/ui.md "Organization form"): server and port
+  on a row, encryption and TLS on their own, user and password level
+  with the password's hint and "remove" box under both, the mailbox
+  address and the folder on full rows, the public page's address with
+  Copy and Open joined under it. Symptom: after the first version the
+  fields were out of place at 1440 and 1280 (Open wrapped under Copy,
+  TLS hung beside the port, fields of one row at different heights).
+  It fits 1280x900; the earlier note of 1280x800 was wrong. Not
+  deployed yet.
 
 ## Decisions
 
@@ -962,7 +972,10 @@
   N" both delete through the confirm dialog in headless Chrome, and
   the bulk delete runs on the development data; production has
   deleted tickets, so deleting works there in general. Still to
-  learn: what was clicked, the browser, and what the page showed.
+  learn: the browser and what the page showed. It is from the Search
+  page; four browser tests cover it there (as an agent, as a super
+  administrator, the whole list, and after searching without a full
+  page load) and pass in Chrome.
 - Production starts from an empty database: the administrator still
   has the seeded email and the password from the root-only file, and
   organizations, people and the settings in `/admin/settings` have

@@ -7302,16 +7302,86 @@ turbo-frame {
   margin-bottom: 12px;
 }
 
-/* Two short fields share a row inside a column (server and port). */
+/* Inside a column a row holds two fields of equal width (user and
+   password), whose labels fit one line, so the fields stay level. */
 .org-form .field-row {
-  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0 10px;
+}
+
+/* Server and port: the server takes the room, the port is short. */
+.org-form .field-row--server {
+  grid-template-columns: minmax(0, 1fr) 84px;
+}
+
+.org-form .field-input,
+.org-form .select {
+  width: 100%;
+  min-width: 0;
 }
 
 .org-form .mail-settings__part {
   padding: 10px 12px 2px;
 }
 
-.org-form .field-hint {
-  margin-bottom: 6px;
+/* The public page's address on a row of its own, Copy and Open joined
+   under it and sharing the width, as on phones. */
+.org-form .public-link {
+  flex-wrap: wrap;
+}
+
+.org-form .public-link > .field-input {
+  flex-basis: 100%;
+  border-radius: 6px 6px 0 0;
+}
+
+.org-form .input-group.public-link > .btn {
+  flex: 1 1 auto;
+  margin: -1px 0 0 -1px;
+  border-radius: 0;
+}
+
+.org-form .public-link > .field-input + .btn {
+  margin-left: 0;
+  border-bottom-left-radius: 6px;
+}
+
+.org-form .public-link > .btn:last-child {
+  border-bottom-right-radius: 6px;
+}
+
+/* User and password: labels on one line, fields on the next, and what
+   belongs to the password (its hint, the "remove" box, an error) on
+   full-width lines under both. */
+.org-form .field-row--secret > .field {
+  display: contents;
+}
+
+.org-form .field-row--secret > .field > label:not(.check-field) {
+  grid-row: 1;
+}
+
+.org-form .field-row--secret > .field > .field-input,
+.org-form .field-row--secret > .field > .field_with_errors {
+  grid-row: 2;
+}
+
+.org-form .field-row--secret > .field:first-child > :is(label, .field-input, .field_with_errors) {
+  grid-column: 1;
+}
+
+.org-form .field-row--secret > .field:last-child > :is(label:not(.check-field), .field-input, .field_with_errors) {
+  grid-column: 2;
+}
+
+.org-form .field-row--secret :is(.field-hint, .check-field, .field-error) {
+  grid-column: 1 / -1;
+}
+
+.org-form .field-row--secret {
+  margin-bottom: 12px;
+}
+
+.org-form .field-row--secret .check-field {
+  margin: 4px 0 0;
 }

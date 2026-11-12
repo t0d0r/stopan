@@ -6,7 +6,8 @@
   <fieldset class="mail-settings__part" id="smtp-settings">
     <legend><%= t("ui.admin.mail.smtp") %></legend>
     <label class="check-field"><%= f.check_box :smtp_enabled %> <%= t("ui.admin.mail.smtp_enabled") %></label>
-    <div class="field-row">
+    <%# The server takes the room, the port is short; encryption has its own row. %>
+    <div class="field-row field-row--server">
       <div class="field">
         <%= f.label :smtp_address %>
         <%= f.text_field :smtp_address, class: "field-input", placeholder: "smtp.example.com", aria: { invalid: invalid?(organization, :smtp_address) } %>
@@ -15,13 +16,15 @@
         <%= f.label :smtp_port %>
         <%= f.number_field :smtp_port, class: "field-input", min: 1, max: 65_535 %>
       </div>
-      <div class="field">
-        <%= f.label :smtp_security %>
-        <%= f.select :smtp_security, MailSettings::SMTP_SECURITY.map { |s| [ t("ui.admin.mail.security.#{s}"), s ] }, {}, class: "select" %>
-      </div>
+    </div>
+    <div class="field">
+      <%= f.label :smtp_security %>
+      <%= f.select :smtp_security, MailSettings::SMTP_SECURITY.map { |s| [ t("ui.admin.mail.security.#{s}"), s ] }, {}, class: "select" %>
     </div>
     <% unless google %>
-      <div class="field-row">
+      <%# User and password level with each other; the password's hint and
+          "remove" box run under both (specs/ui.md "Organization form"). %>
+      <div class="field-row field-row--secret">
         <div class="field">
           <%= f.label :smtp_username %>
           <%= f.text_field :smtp_username, class: "field-input", autocomplete: "off" %>
@@ -39,7 +42,7 @@
   <fieldset class="mail-settings__part" id="imap-settings">
     <legend><%= t("ui.admin.mail.imap") %></legend>
     <label class="check-field"><%= f.check_box :imap_enabled %> <%= t("ui.admin.mail.imap_enabled") %></label>
-    <div class="field-row">
+    <div class="field-row field-row--server">
       <div class="field">
         <%= f.label :imap_address %>
         <%= f.text_field :imap_address, class: "field-input", placeholder: "imap.example.com", aria: { invalid: invalid?(organization, :imap_address) } %>
@@ -48,10 +51,12 @@
         <%= f.label :imap_port %>
         <%= f.number_field :imap_port, class: "field-input", min: 1, max: 65_535 %>
       </div>
-      <label class="check-field check-field--inline"><%= f.check_box :imap_ssl %> <%= t("ui.admin.mail.imap_ssl") %></label>
     </div>
+    <label class="check-field"><%= f.check_box :imap_ssl %> <%= t("ui.admin.mail.imap_ssl") %></label>
     <% unless google %>
-      <div class="field-row">
+      <%# User and password level with each other; the password's hint and
+          "remove" box run under both (specs/ui.md "Organization form"). %>
+      <div class="field-row field-row--secret">
         <div class="field">
           <%= f.label :imap_username %>
           <%= f.text_field :imap_username, class: "field-input", autocomplete: "off" %>
@@ -59,16 +64,15 @@
         <%= render "admin/organizations/password_field", f: f, organization: organization, attribute: :imap_password %>
       </div>
     <% end %>
-    <div class="field-row">
-      <div class="field">
-        <%= f.label :imap_folder %>
-        <%= f.text_field :imap_folder, class: "field-input" %>
-      </div>
-      <div class="field">
-        <%= f.label :mailbox_address %>
-        <%= f.email_field :mailbox_address, class: "field-input", placeholder: "support@example.com", aria: { invalid: invalid?(organization, :mailbox_address), describedby: "mailbox-hint" } %>
-        <small class="field-hint" id="mailbox-hint"><%= t("ui.admin.mail.mailbox_hint") %></small>
-      </div>
+    <%# The address has a hint, so it takes a row of its own; the folder follows. %>
+    <div class="field">
+      <%= f.label :mailbox_address %>
+      <%= f.email_field :mailbox_address, class: "field-input", placeholder: "support@example.com", aria: { invalid: invalid?(organization, :mailbox_address), describedby: "mailbox-hint" } %>
+      <small class="field-hint" id="mailbox-hint"><%= t("ui.admin.mail.mailbox_hint") %></small>
+    </div>
+    <div class="field">
+      <%= f.label :imap_folder %>
+      <%= f.text_field :imap_folder, class: "field-input" %>
     </div>
   </fieldset>
 </div>
