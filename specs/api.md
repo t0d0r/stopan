@@ -111,6 +111,7 @@ Administrators only (403 for others):
 | `POST /api/v1/organizations/:id/flush` | `confirm_name` (the exact name): removes all the organization's tickets for good, keeps its settings (admin.md "Flush all tickets of an organization") |
 | `POST /api/v1/organizations/:id/memberships` (`membership[user_id]`, or `user_ids[]` for several), `DELETE /api/v1/memberships/:id` | members |
 | `PATCH /api/v1/memberships/:id` | `membership[admin]`: the organization administrator mark of an agent (org-admins.md); 2026-11-12, the route existed without an action |
+| `GET/POST /api/v1/organizations/:id/webhooks`, `PATCH/DELETE /api/v1/webhooks/:id`, `POST /api/v1/webhooks/:id/ping` | webhooks of an organization (webhooks.md); the secret is in the answer to `POST` only |
 | `GET/PATCH /api/v1/settings` | `auto_postpone_days, auto_done_days, default_look, mailbox_polling, mailbox_poll_seconds, timeline_order, translation_enabled, deepl_api_key` (write-only; `deepl_api_key_set` tells whether one is stored) |
 | `POST/PATCH/DELETE /api/v1/stages[/:id]`, `POST /api/v1/stages/:id/move` (`direction` up/down) | board stages |
 | `POST /api/v1/messages` | `recipients`, `text`: a message to users' notifications |

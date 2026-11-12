@@ -844,6 +844,31 @@ en:
         other: "and %{count} requesters"
       viewers: "Also viewing now:"
 
+    webhooks:
+      title: "Webhooks"
+      intro: "Stopan calls these addresses when a ticket is opened or publicly answered in this organization. Internal notes and email addresses are never sent."
+      copy_now: "Copy the secret now; it is not shown again."
+      secret: "Webhook secret"
+      events:
+        ticket_created: "new tickets"
+        reply_created: "public replies"
+      "on": "on"
+      "off": "switched off"
+      never: "never sent"
+      failed:
+        one: "failed: %{error}"
+        other: "failed: %{error}, %{count} in a row"
+      ping: "Send test"
+      switch_off: "Switch off"
+      switch_on: "Switch on"
+      delete_title: "Delete this webhook?"
+      delete_body: "Stopan stops calling this address at once."
+      none: "No webhook yet."
+      url: "Address (URL)"
+      url_hint: "An https address on the public internet. The receiver checks the X-Stopan-Signature header with the secret."
+      send_on: "Send on"
+      add: "Add webhook"
+      limit: "An organization can have at most %{count} webhooks."
     share:
       title: "Sharing"
       expires: "Expires"
@@ -1169,6 +1194,12 @@ en:
     ticket_assigned: "Ticket %{reference} is now assigned to %{name}."
     ticket_unassigned: "Ticket %{reference} is now unassigned."
     share_created: "Share link created."
+    webhook_created: "Webhook added."
+    webhook_on: "Webhook switched on."
+    webhook_off: "Webhook switched off."
+    webhook_deleted: "Webhook deleted."
+    webhook_pinged: "Test queued; the result shows here in a moment."
+    webhook_is_off: "The webhook is switched off."
     notifications_read: "All notifications are marked as read."
     share_stopped: "Sharing stopped."
     share_wrong_password: "Wrong password."
@@ -1355,6 +1386,9 @@ en:
         auto_postpone_days: "Days without activity"
         auto_done_days: "Days until pending tickets are done"
         deepl_api_key: "DeepL API key"
+      webhook:
+        url: "Address"
+        events: "Events"
       stage:
         name: "Name"
         status: "Status"
@@ -1362,6 +1396,9 @@ en:
     errors:
       messages:
         too_many_tokens: "You can have at most %{count} API tokens"
+        not_https: "must start with https://"
+        credentials: "must not contain a user name or password"
+        too_many_webhooks: "An organization can have at most %{count} webhooks"
         google_client_id: "must end in .apps.googleusercontent.com (copy it from the client page in Google Cloud)"
         required_for_translation: "is needed before translation can be switched on"
         private_host: "must be a public mail server, not an address inside the network"

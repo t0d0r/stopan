@@ -847,6 +847,31 @@ de:
         other: "und %{count} Anfragesteller"
       viewers: "Ebenfalls geöffnet von:"
 
+    webhooks:
+      title: "Webhooks"
+      intro: "Stopan ruft diese Adressen auf, wenn in dieser Organisation ein Ticket eröffnet oder öffentlich beantwortet wird. Interne Notizen und E-Mail-Adressen werden nie gesendet."
+      copy_now: "Kopieren Sie das Geheimnis jetzt; es wird nicht noch einmal angezeigt."
+      secret: "Webhook-Geheimnis"
+      events:
+        ticket_created: "neue Tickets"
+        reply_created: "öffentliche Antworten"
+      "on": "aktiv"
+      "off": "ausgeschaltet"
+      never: "noch nie gesendet"
+      failed:
+        one: "fehlgeschlagen: %{error}"
+        other: "fehlgeschlagen: %{error}, %{count} in Folge"
+      ping: "Test senden"
+      switch_off: "Ausschalten"
+      switch_on: "Einschalten"
+      delete_title: "Diesen Webhook löschen?"
+      delete_body: "Stopan ruft diese Adresse sofort nicht mehr auf."
+      none: "Noch kein Webhook."
+      url: "Adresse (URL)"
+      url_hint: "Eine https-Adresse im öffentlichen Internet. Der Empfänger prüft den Header X-Stopan-Signature mit dem Geheimnis."
+      send_on: "Senden bei"
+      add: "Webhook hinzufügen"
+      limit: "Eine Organisation kann höchstens %{count} Webhooks haben."
     share:
       title: "Teilen"
       expires: "Läuft ab"
@@ -1172,6 +1197,12 @@ de:
     ticket_assigned: "Ticket %{reference} ist jetzt %{name} zugewiesen."
     ticket_unassigned: "Ticket %{reference} ist jetzt niemandem zugewiesen."
     share_created: "Freigabelink erstellt."
+    webhook_created: "Webhook hinzugefügt."
+    webhook_on: "Webhook eingeschaltet."
+    webhook_off: "Webhook ausgeschaltet."
+    webhook_deleted: "Webhook gelöscht."
+    webhook_pinged: "Test eingereiht; das Ergebnis erscheint gleich hier."
+    webhook_is_off: "Der Webhook ist ausgeschaltet."
     notifications_read: "Alle Benachrichtigungen sind als gelesen markiert."
     share_stopped: "Teilen beendet."
     share_wrong_password: "Falsches Passwort."
@@ -1360,6 +1391,9 @@ de:
         auto_postpone_days: "Tage ohne Aktivität"
         auto_done_days: "Tage bis erledigt für wartende Tickets"
         deepl_api_key: "DeepL-API-Schlüssel"
+      webhook:
+        url: "Adresse"
+        events: "Ereignisse"
       stage:
         name: "Name"
         status: "Status"
@@ -1367,6 +1401,9 @@ de:
     errors:
       messages:
         too_many_tokens: "Sie können höchstens %{count} API-Tokens haben"
+        not_https: "muss mit https:// beginnen"
+        credentials: "darf keinen Benutzernamen und kein Passwort enthalten"
+        too_many_webhooks: "Eine Organisation kann höchstens %{count} Webhooks haben"
         google_client_id: "muss auf .apps.googleusercontent.com enden (kopieren Sie sie von der Client-Seite in Google Cloud)"
         required_for_translation: "wird benötigt, bevor die Übersetzung eingeschaltet werden kann"
         private_host: "muss ein öffentlicher Mailserver sein, keine Adresse im internen Netzwerk"

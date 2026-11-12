@@ -7015,3 +7015,36 @@ turbo-frame {
   text-align: center;
   overflow-wrap: anywhere;
 }
+
+/* Webhooks on the organization page (specs/webhooks.md): the address,
+   its state, then the actions on a row of their own. */
+.webhooks__list .share-list__item {
+  display: block;
+}
+
+.webhooks__url {
+  overflow-wrap: anywhere;
+}
+
+.webhooks__actions {
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin-top: 6px;
+}
+
+.webhooks__actions .link-button {
+  min-height: 32px;
+  color: var(--accent);
+}
+
+.webhooks__actions .link-button.btn--danger {
+  color: var(--danger);
+}
+
+.webhooks__form {
+  margin-top: 14px;
+}
+
+.webhooks__new {
+  margin-bottom: 12px;
+}

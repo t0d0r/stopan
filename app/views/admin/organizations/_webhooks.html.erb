@@ -1,0 +1,76 @@
+<%# Webhooks of the organization, for super administrators (specs/webhooks.md). %>
+<section class="sticky sticky--blue panel webhooks" id="webhooks" aria-labelledby="webhooks-title">
+  <header class="sticky__bar"><span class="sticky__caption"><%= t("ui.webhooks.title") %></span></header>
+  <div class="panel__body">
+    <h2 class="sr-only" id="webhooks-title"><%= t("ui.webhooks.title") %></h2>
+    <p class="field-hint"><%= t("ui.webhooks.intro") %></p>
+    <% if (secret = flash[:webhook_secret]) %>
+      <div class="callout webhooks__new" role="status">
+        <p><strong><%= t("ui.webhooks.copy_now") %></strong></p>
+        <div class="sharing__link input-group">
+          <%= text_field_tag "new-webhook-secret", secret, readonly: true, class: "field-input", data: { select_on_focus: true },
+                             "aria-label": t("ui.webhooks.secret") %>
+          <button type="button" class="btn" data-copy="new-webhook-secret" data-copied-label="<%= t("ui.share.copied") %>">
+            <%= icon :copy, size: 12 %> <span data-copy-label><%= t("ui.google_setup.copy") %></span>
+          </button>
+        </div>
+      </div>
+    <% end %>
+    <% webhooks = organization.webhooks.ordered.to_a %>
+    <% if webhooks.any? %>
+      <ul class="share-list webhooks__list">
+        <% webhooks.each do |webhook| %>
+          <li class="share-list__item" id="<%= dom_id(webhook) %>">
+            <p class="share-list__title webhooks__url"><%= webhook.url %></p>
+            <p class="share-list__meta">
+              <%= webhook.event_names.map { |name| t("ui.webhooks.events.#{name.tr('.', '_')}") }.to_sentence %>
+              <span aria-hidden="true">&middot;</span>
+              <%= webhook.active? ? t("ui.webhooks.on") : t("ui.webhooks.off") %>
+              <span aria-hidden="true">&middot;</span>
+              <% if webhook.last_sent_at.nil? %>
+                <%= t("ui.webhooks.never") %>
+              <% elsif webhook.failures.zero? %>
+                <%= webhook.last_status %>, <%= time_ago webhook.last_sent_at %>
+              <% else %>
+                <%= t("ui.webhooks.failed", error: webhook.last_error, count: webhook.failures) %>, <%= time_ago webhook.last_sent_at %>
+              <% end %>
+            </p>
+            <div class="form-actions form-actions--start webhooks__actions">
+              <% if webhook.active? %>
+                <%= button_to t("ui.webhooks.ping"), ping_admin_webhook_path(webhook), class: "link-button" %>
+              <% end %>
+              <%= button_to t(webhook.active? ? "ui.webhooks.switch_off" : "ui.webhooks.switch_on"), admin_webhook_path(webhook),
+                            method: :patch, params: { webhook: { active: webhook.active? ? "0" : "1" } }, class: "link-button" %>
+              <%= button_to t("ui.delete"), admin_webhook_path(webhook), method: :delete, class: "link-button btn--danger",
+                            form: { data: confirm_data(title: t("ui.webhooks.delete_title"), body: t("ui.webhooks.delete_body"),
+                                                       button: t("ui.delete")) } %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="panel__empty"><%= t("ui.webhooks.none") %></p>
+    <% end %>
+    <% if webhooks.size < Webhook::LIMIT %>
+      <%= form_with url: admin_organization_webhooks_path(organization), scope: :webhook, class: "stack-form webhooks__form" do |f| %>
+        <div class="field">
+          <%= f.label :url, t("ui.webhooks.url") %>
+          <%= f.url_field :url, class: "field-input", required: true, maxlength: 500, placeholder: "https://", autocomplete: "off" %>
+          <small class="field-hint"><%= t("ui.webhooks.url_hint") %></small>
+        </div>
+        <fieldset class="checklist">
+          <legend><%= t("ui.webhooks.send_on") %></legend>
+          <% Webhook::EVENTS.each do |name| %>
+            <label class="check">
+              <%= check_box_tag "webhook[events][]", name, true, id: "webhook_event_#{name.tr('.', '_')}" %>
+              <%= t("ui.webhooks.events.#{name.tr('.', '_')}") %>
+            </label>
+          <% end %>
+        </fieldset>
+        <%= f.submit t("ui.webhooks.add"), class: "btn btn--primary" %>
+      <% end %>
+    <% else %>
+      <p class="field-hint"><%= t("ui.webhooks.limit", count: Webhook::LIMIT) %></p>
+    <% end %>
+  </div>
+</section>

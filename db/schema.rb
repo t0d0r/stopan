@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -300,6 +300,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_110000) do
     t.index ["role"], name: "index_users_on_role"
   end
 
+  create_table "webhooks", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.string "url", null: false
+    t.text "secret", null: false
+    t.string "events", null: false
+    t.boolean "active", default: true, null: false
+    t.integer "failures", default: 0, null: false
+    t.integer "last_status"
+    t.string "last_error"
+    t.datetime "last_sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_webhooks_on_organization_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "api_tokens", "users", on_delete: :cascade
@@ -328,4 +343,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_110000) do
   add_foreign_key "tickets", "users", column: "deleted_by_id"
   add_foreign_key "tickets", "users", column: "edited_by_id"
   add_foreign_key "tickets", "users", column: "requester_id"
+  add_foreign_key "webhooks", "organizations"
 end

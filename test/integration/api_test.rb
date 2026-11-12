@@ -30,6 +30,40 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "administrators manage webhooks through the API; the secret is in the answer to create only" do
+    organization = organizations(:acme)
+    body = api(:post, api_v1_organization_webhooks_url(organization), user: :admin,
+               params: { webhook: { url: "https://hooks.example.com/api", events: %w[ticket.created] } })
+    assert_response :created
+    webhook = Webhook.last
+    assert_equal webhook.secret, body.dig("webhook", "secret")
+    assert_equal %w[ticket.created], body.dig("webhook", "events")
+
+    body = api(:get, api_v1_organization_webhooks_url(organization), user: :admin)
+    assert_equal [ webhook.id ], body["webhooks"].map { |row| row["id"] }
+    assert_not_includes response.body, webhook.secret
+
+    api(:patch, api_v1_webhook_url(webhook), user: :admin, params: { webhook: { active: false } })
+    assert_not webhook.reload.active?
+    assert_not_includes response.body, webhook.secret
+    api(:post, ping_api_v1_webhook_url(webhook), user: :admin)
+    assert_response :unprocessable_content
+    api(:patch, api_v1_webhook_url(webhook), user: :admin, params: { webhook: { active: true } })
+    assert_enqueued_jobs(1, only: WebhookDeliveryJob) { api(:post, ping_api_v1_webhook_url(webhook), user: :admin) }
+
+    api(:post, api_v1_organization_webhooks_url(organization), user: :admin,
+        params: { webhook: { url: "http://10.0.0.1/", events: %w[ticket.created] } })
+    assert_response :unprocessable_content
+
+    api(:get, api_v1_organization_webhooks_url(organization), user: :agent)
+    assert_response :forbidden
+    api(:delete, api_v1_webhook_url(webhook), user: :agent)
+    assert_response :forbidden
+    api(:delete, api_v1_webhook_url(webhook), user: :admin)
+    assert_response :no_content
+    assert_not Webhook.exists?(webhook.id)
+  end
+
   test "an administrator sets and clears the organization administrator mark through the API" do
     membership = Membership.find_by!(user: users(:agent), organization: organizations(:acme))
     body = api(:patch, api_v1_membership_url(membership), user: :admin, params: { membership: { admin: true } })

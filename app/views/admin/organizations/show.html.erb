@@ -95,6 +95,10 @@
   </section>
 </div>
 
+<% if current_user.admin? %>
+  <%= render "admin/organizations/webhooks", organization: @organization %>
+<% end %>
+
 <%# Remove all tickets for good after typing the name; settings stay
     (specs/admin.md "Flush all tickets of an organization"). %>
 <% if @ticket_count.positive? %>

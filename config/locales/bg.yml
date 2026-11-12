@@ -847,6 +847,31 @@ bg:
         other: "и %{count} заявители"
       viewers: "В момента я гледат и:"
 
+    webhooks:
+      title: "Webhooks"
+      intro: "Stopan вика тези адреси, когато в тази организация се отвори заявка или се напише публичен отговор. Вътрешни бележки и имейл адреси никога не се изпращат."
+      copy_now: "Копирайте тайната сега; тя няма да се покаже отново."
+      secret: "Тайна на webhook-а"
+      events:
+        ticket_created: "нови заявки"
+        reply_created: "публични отговори"
+      "on": "включен"
+      "off": "изключен"
+      never: "още не е изпращан"
+      failed:
+        one: "неуспешно: %{error}"
+        other: "неуспешно: %{error}, %{count} поредни"
+      ping: "Изпрати проба"
+      switch_off: "Изключи"
+      switch_on: "Включи"
+      delete_title: "Да се изтрие ли този webhook?"
+      delete_body: "Stopan веднага спира да вика този адрес."
+      none: "Още няма webhook."
+      url: "Адрес (URL)"
+      url_hint: "Адрес с https в публичния интернет. Получателят проверява заглавието X-Stopan-Signature с тайната."
+      send_on: "Изпращай при"
+      add: "Добави webhook"
+      limit: "Една организация може да има най-много %{count} webhook-а."
     share:
       title: "Споделяне"
       expires: "Изтича"
@@ -1172,6 +1197,12 @@ bg:
     ticket_assigned: "Заявка %{reference} вече е възложена на %{name}."
     ticket_unassigned: "Заявка %{reference} вече няма отговорник."
     share_created: "Връзката за споделяне е създадена."
+    webhook_created: "Webhook-ът е добавен."
+    webhook_on: "Webhook-ът е включен."
+    webhook_off: "Webhook-ът е изключен."
+    webhook_deleted: "Webhook-ът е изтрит."
+    webhook_pinged: "Пробата е на опашката; резултатът ще се покаже тук след малко."
+    webhook_is_off: "Webhook-ът е изключен."
     notifications_read: "Всички известия са маркирани като прочетени."
     share_stopped: "Споделянето е спряно."
     share_wrong_password: "Грешна парола."
@@ -1360,6 +1391,9 @@ bg:
         auto_postpone_days: "Дни без активност"
         auto_done_days: "Дни до готово за чакащите заявки"
         deepl_api_key: "API ключ за DeepL"
+      webhook:
+        url: "Адрес"
+        events: "Събития"
       stage:
         name: "Име"
         status: "Статус"
@@ -1367,6 +1401,9 @@ bg:
     errors:
       messages:
         too_many_tokens: "Можете да имате най-много %{count} API токена"
+        not_https: "трябва да започва с https://"
+        credentials: "не може да съдържа потребителско име или парола"
+        too_many_webhooks: "Една организация може да има най-много %{count} webhook-а"
         google_client_id: "трябва да завършва на .apps.googleusercontent.com (копирайте го от страницата на клиента в Google Cloud)"
         required_for_translation: "е нужен, преди преводът да се включи"
         private_host: "трябва да е публичен пощенски сървър, не адрес във вътрешната мрежа"

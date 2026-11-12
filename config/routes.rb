@@ -62,12 +62,17 @@ Rails.application.routes.draw do
     end
     resources :organizations do
       resources :memberships, only: :create
+      resources :webhooks, only: :create
       post :mail_test, on: :member
       post :mailbox_check, on: :member
       # Remove all its tickets for good (specs/admin.md).
       post :flush, on: :member
     end
     resources :memberships, only: %i[update destroy]
+    # Calls to another system on new tickets and replies (specs/webhooks.md).
+    resources :webhooks, only: %i[update destroy] do
+      post :ping, on: :member
+    end
     # Deleted tickets to review and restore (specs/tickets.md "Deleting").
     resources :deleted_tickets, only: :index, param: :number do
       patch :restore, on: :member
@@ -151,8 +156,12 @@ Rails.application.routes.draw do
         post :mailbox_check, on: :member
         post :flush, on: :member
         resources :memberships, only: :create
+        resources :webhooks, only: %i[index create]
       end
       resources :memberships, only: %i[update destroy]
+      resources :webhooks, only: %i[update destroy] do
+        post :ping, on: :member
+      end
       resource :settings, only: %i[show update]
       resources :messages, only: :create
       resources :deleted_tickets, only: :index, param: :number do

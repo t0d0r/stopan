@@ -155,3 +155,9 @@ The standard three tables. Blobs are served only by
 
 The database holds personal data (names, emails, ticket text). Back up and
 store `storage/` accordingly; it is ignored by git.
+
+## webhooks (2026-11-12)
+
+webhooks.md "Data model": `organization_id`, `url`, `secret`
+(encrypted), `events`, `active`, `failures`, `last_status`,
+`last_error`, `last_sent_at`. Deleted with their organization.

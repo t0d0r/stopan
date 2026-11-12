@@ -42,6 +42,7 @@ class TicketNotifier
   # Stores the in-app notification and queues the email for each recipient;
   # a new ticket also reaches the organization's members, in the app only.
   def deliver_later
+    Webhook.notify(@ticket, @events)
     recipients = notifications
     recipients.each do |recipient, kind|
       store(recipient, kind)

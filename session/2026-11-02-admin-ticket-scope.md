@@ -744,8 +744,28 @@
   /api/v1/memberships/:id` had no action; it now sets the organization
   administrator mark (`membership[admin]`), and memberships in the API
   answers carry `admin`. Not deployed yet.
+- 2026-11-12: webhooks (specs/webhooks.md). An organization has up to
+  5; each posts signed JSON (`X-Stopan-Signature`, HMAC-SHA256) on
+  `ticket.created` and `reply.created`, never internal notes or email
+  addresses. `Webhook.notify` is called by `TicketNotifier` after
+  commit; `WebhookDeliveryJob` sends through `WebhookSender`, which
+  takes only https URLs, refuses private and loopback addresses and
+  connects to the address it checked; 5 tries, switched off after 20
+  failures in a row. New table `webhooks` (migration 20261112120000),
+  secret encrypted and shown once. Managed by super administrators in
+  a panel on the organization page and under `/api/v1` (described in
+  the OpenAPI document). Tests: test/models/webhook_test.rb,
+  webhook_sender_test.rb, test/jobs/webhook_delivery_job_test.rb,
+  test/controllers/admin/webhooks_controller_test.rb, the API test.
+  Not deployed yet.
 
 ## Decisions
+
+- Webhooks, 2026-11-12: public replies and new tickets only, with
+  text but without email addresses, so nothing internal or personal
+  beyond names leaves; super administrators only, because the text
+  goes to another system; the secret is generated, not chosen. No
+  delivery log is kept, only the last result.
 
 - Share expiry, 2026-11-12: fixed choices (1, 7, 30 days) instead of
   a date field, and "Never" stays the default, so existing behaviour
@@ -862,7 +882,10 @@ admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
 reports and the view count of share links are deployed; the view
 count meets a real link once production has tickets. The OpenAPI
-description is committed but not deployed (no migration). The
+description and the webhooks are committed but not deployed; the
+webhooks have a migration, so copy the database first. A webhook has
+not met a real receiver yet: delivery is tested against a local
+server only. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

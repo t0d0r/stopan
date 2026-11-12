@@ -212,6 +212,11 @@ module OpenapiDocument
       } } ] },
     Membership: { type: "object", properties: { id: int, admin: bool("Organization administrator."),
                                                 organization: ref("Organization"), user: ref("User") } },
+    Webhook: { type: "object", description: "A call to another system on new tickets or public replies. Without its secret.",
+               properties: { id: int, organization: ref("Organization"), url: str,
+                             events: { type: "array", items: str(nil, enum: ::Webhook::EVENTS) }, active: bool,
+                             failures: int("Failed deliveries in a row."), last_status: { type: %w[integer null] },
+                             last_error: { type: %w[string null] }, last_sent_at: time, created_at: time } },
     Settings: { type: "object", properties: {
       auto_postpone_days: int, auto_done_days: int, default_look: str, mailbox_polling: bool, mailbox_poll_seconds: int,
       timeline_order: str, translation_enabled: bool, deepl_api_key_set: bool, google_ready: bool
@@ -362,6 +367,18 @@ module OpenapiDocument
       { body: { membership: { type: "object", properties: { admin: bool } } },
         returns: wrap(:membership, ref("Membership")) } ],
     [ "delete", "/memberships/{id}", "Admin", "Remove a member", { status: 204 } ],
+    [ "get", "/organizations/{organization_id}/webhooks", "Admin", "The organization's webhooks, without secrets",
+      { returns: wrap(:webhooks, list("Webhook")) } ],
+    [ "post", "/organizations/{organization_id}/webhooks", "Admin", "Add a webhook; the answer carries its secret, once",
+      { status: 201,
+        body: { webhook: { type: "object", required: %w[url events], properties: {
+          url: str("An https address on the public internet."), events: { type: "array", items: str(nil, enum: ::Webhook::EVENTS) }
+        } } },
+        returns: wrap(:webhook, { allOf: [ ref("Webhook"), { type: "object", properties: { secret: str("Shown only here.") } } ] }) } ],
+    [ "patch", "/webhooks/{id}", "Admin", "Switch a webhook on or off",
+      { body: { webhook: { type: "object", properties: { active: bool } } }, returns: wrap(:webhook, ref("Webhook")) } ],
+    [ "delete", "/webhooks/{id}", "Admin", "Delete a webhook", { status: 204 } ],
+    [ "post", "/webhooks/{id}/ping", "Admin", "Queue a test delivery", { returns: { type: "object", properties: { queued: bool } } } ],
     [ "get", "/settings", "Admin", "The application settings", { returns: wrap(:settings, ref("Settings")) } ],
     [ "patch", "/settings", "Admin", "Change the application settings",
       { returns: wrap(:settings, ref("Settings")),
