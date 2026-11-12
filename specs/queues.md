@@ -223,6 +223,15 @@ they have it too.
   - Dragging a ticked row drags every ticked row of the page, with a
     tag at the pointer that says how many; a row that is not ticked
     is dragged alone.
+  - **Only tabs whose change is allowed are active** (2026-11-12: a
+    done ticket dropped on Pending was only refused afterwards, with
+    "1 skipped: Status cannot change from Done to Pending"). A status
+    tab takes a row when the ticket may move to that status
+    (tickets.md, the same table the board uses) and is not in it
+    already; "Assigned to me" when it is not assigned to the user,
+    "Unassigned" when it has an assignee. With several rows a tab is
+    active when at least one of them qualifies, and the drop changes
+    only those.
   - While dragging, the tabs that take the drop are outlined and the
     others dimmed; the one under the pointer is filled. The dashed
     outline is drawn inside each tab, so the outlines of neighbours

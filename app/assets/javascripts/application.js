@@ -1195,8 +1195,19 @@ function setUpViewDrops() {
   let rows = [];
   let tag = null;
 
-  // "All unsolved" reopens: it takes only rows that are done or put aside.
-  const takes = (tab, row) => tab.dataset.dropValue !== "open" || [ "done", "postponed" ].includes(row.dataset.status);
+  // A tab takes a row only when its change is allowed for that row and
+  // would change something: a status the ticket may move to (and "All
+  // unsolved" only reopens rows that are done or put aside), an
+  // assignee other than the one it has.
+  const transitions = JSON.parse(nav.dataset.transitions || "{}");
+  const takes = (tab, row) => {
+    const value = tab.dataset.dropValue;
+    if (tab.dataset.dropField === "assignee") {
+      return value === "me" ? row.dataset.assignee !== nav.dataset.me : row.dataset.assignee !== "";
+    }
+    if (value === "open" && ![ "done", "postponed" ].includes(row.dataset.status)) return false;
+    return (transitions[row.dataset.status] || []).includes(value);
+  };
   const clear = () => {
     nav.classList.remove("is-taking-rows");
     tabs.forEach((tab) => tab.classList.remove("is-drop", "is-over"));

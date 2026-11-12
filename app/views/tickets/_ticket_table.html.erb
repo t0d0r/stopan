@@ -24,7 +24,7 @@
       <tbody>
         <% filter.tickets.each do |ticket| %>
           <tr id="<%= dom_id(ticket) %>" class="ticket-row ticket-row--<%= ticket.priority %>" draggable="true" data-row-drag
-              data-status="<%= ticket.status %>">
+              data-status="<%= ticket.status %>" data-assignee="<%= ticket.assignee_id %>">
             <td class="col-select">
               <label class="select-box"><input type="checkbox" name="numbers[]" value="<%= ticket.number %>" form="bulk-form" data-bulk-row
                      aria-label="<%= t("ui.bulk.select_row", reference: ticket.reference) %>"></label>

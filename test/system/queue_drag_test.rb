@@ -67,7 +67,7 @@ class QueueDragTest < ApplicationSystemTestCase
       const row = document.getElementById(arguments[0]);
       row.dispatchEvent(new DragEvent("dragstart", { bubbles: true, cancelable: true, dataTransfer: new DataTransfer() }));
     JS
-    assert_selector ".queue__views.is-taking-rows .view-link.is-drop", minimum: 5
+    assert_selector ".queue__views.is-taking-rows .view-link.is-drop", count: 4
     # The outline plus its offset stays within the tab's box, so two neighbours cannot overlap.
     reach = page.evaluate_script(<<~JS)
       [...document.querySelectorAll(".view-link.is-drop")].map((tab) => {
@@ -76,5 +76,41 @@ class QueueDragTest < ApplicationSystemTestCase
       })
     JS
     assert reach.all? { |value| value <= 0 }, reach.inspect
+  end
+
+  def active_tabs(ticket)
+    page.execute_script(<<~JS, ActionView::RecordIdentifier.dom_id(ticket))
+      const row = document.getElementById(arguments[0]);
+      row.dispatchEvent(new DragEvent("dragstart", { bubbles: true, cancelable: true, dataTransfer: new DataTransfer() }));
+    JS
+    tabs = all(".view-link.is-drop").map { |tab| tab[:href][/view=(\w+)/, 1] }
+    page.execute_script("document.dispatchEvent(new DragEvent('dragend', { bubbles: true }))")
+    tabs
+  end
+
+  test "only the tabs whose change is allowed for the row are active" do
+    assert_equal %w[mine pending postponed done], active_tabs(@tickets[0])  # new, unassigned
+
+    @tickets[0].apply_changes!({ status: "done", assignee_id: users(:agent).id }, actor: users(:agent))
+    @tickets[1].apply_changes!({ status: "pending" }, actor: users(:agent))
+    visit tickets_path(view: "all", q: "Numbat")
+    assert_equal %w[unsolved unassigned], active_tabs(@tickets[0])         # done, mine: only reopening and unassigning
+    assert_equal %w[mine postponed done], active_tabs(@tickets[1])          # pending already
+
+    drag(@tickets[0], to: "pending")
+    assert_no_text "skipped"
+    assert_no_text "changed."
+    assert_equal "done", @tickets[0].reload.status
+  end
+
+  test "with several rows a tab is active for those that qualify, and only they change" do
+    @tickets[0].apply_changes!({ status: "done" }, actor: users(:agent))
+    visit tickets_path(view: "all", q: "Numbat")
+    row(@tickets[0]).find("[data-bulk-row]").click
+    row(@tickets[1]).find("[data-bulk-row]").click
+    drag(@tickets[1], to: "pending")
+    assert_text "1 ticket changed."
+    assert_no_text "skipped"
+    assert_equal %w[done pending new], @tickets.map { |ticket| ticket.reload.status }
   end
 end

@@ -3,7 +3,8 @@
 <div class="desk__header queue-header">
   <%# The menu bar and the views name the page; the h1 is for screen readers (ui.md "Pages"). %>
   <h1 class="sr-only"><%= t("ui.queue.title") %></h1>
-  <nav class="queue__views" aria-label="<%= t("ui.queue.views_label") %>" data-view-drops data-drag-count="<%= t("ui.board.drag_count") %>">
+  <nav class="queue__views" aria-label="<%= t("ui.queue.views_label") %>" data-view-drops data-drag-count="<%= t("ui.board.drag_count") %>"
+       data-transitions="<%= Ticket::TRANSITIONS.to_json %>" data-me="<%= current_user.id %>">
     <ul>
       <% filter.views.each do |view| %>
         <li>

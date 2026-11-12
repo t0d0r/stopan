@@ -935,6 +935,12 @@
 - 2026-11-12: the dashed outlines of the drop tabs are drawn inside
   the tabs; drawn outside, those of neighbouring tabs overlapped. Not
   deployed yet.
+- 2026-11-12: a view tab is active for a dragged row only when its
+  change is allowed and would change something: a status the ticket
+  may move to (`Ticket::TRANSITIONS`, sent to the page as on the
+  board), an assignee other than the current one. Symptom: a done
+  ticket could be dropped on Pending and was only refused afterwards
+  with a "skipped" alert. Not deployed yet.
 
 ## Decisions
 
