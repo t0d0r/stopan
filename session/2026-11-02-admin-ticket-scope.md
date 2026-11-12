@@ -787,7 +787,7 @@
   has `sla` and `first_response_at` for staff, the settings API
   `sla_targets`. Tests: test/models/sla_test.rb,
   first_response_test.rb, test/controllers/sla_pages_test.rb, the API
-  test. Not deployed yet.
+  test.
 - 2026-11-12: browser tests (specs/system-tests.md). `test/system`
   runs five tests in headless Chrome through Capybara and Cuprite
   (test group only, no driver download): sign in and reply, the
@@ -797,7 +797,11 @@
   now built without the test group too
   (`BUNDLE_WITHOUT="development:test"`), which also drops the lint
   and audit gems from it; `make docker-check` passed with that image.
-  Not deployed yet.
+- 2026-11-12: `main` pushed and deployed at 44e58c9 (not a release),
+  after a `VACUUM INTO` copy of the database. The migration ran, the
+  image holds no test or lint gems and the app runs without them, and
+  every check passed (specs/deploy.md "Update 2026-11-12 (revision
+  44e58c9)"). Images kept: 44e58c9, d9d7207, 97c3f7d.
 
 ## Decisions
 
@@ -911,7 +915,7 @@
 
 ## Next step
 
-Production runs d9d7207 (`main` after v0.1.1) on an empty database.
+Production runs 44e58c9 (`main` after v0.1.1) on an empty database.
 The changes since v0.1.1 are not in a release yet: the file limits in
 the drop zone, the joined copy fields, the new ticket busy fix, the
 mail view and files of deleted tickets for administrators, mailbox
@@ -931,10 +935,9 @@ admin dashboard are deployed; the dashboard line itself is still to be
 looked at in production after signing in. The custom range of the
 reports and the view count of share links are deployed; the view
 count meets a real link once production has tickets. The OpenAPI
-description, the webhooks and the HTML of mail replies are deployed. The SLA targets and the browser
-tests are committed but not deployed; the SLA has a migration, so copy
-the database first, and the image is now built without the test
-group. A webhook has
+description, the webhooks and the HTML of mail replies are deployed. The SLA targets are deployed
+and empty, so nothing shows until an administrator sets them; the
+image is built without the test group. A webhook has
 not met a real receiver yet: delivery is tested against a local
 server only. The
 other open todo items are larger or need the operator, and the

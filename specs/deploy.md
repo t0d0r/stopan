@@ -713,6 +713,43 @@ requesters (organization-mail.md "Settings", notifications.md
 - Rollback: tag `localhost/stopan:624ccbd` as `latest` and restart; the
   extra column is harmless to the older code.
 
+## Update 2026-11-12 (revision 44e58c9)
+
+`main` after v0.1.1, not a release, on the empty database from the
+reset. Since d9d7207: SLA targets (sla.md) and the browser tests
+(system-tests.md), with which the image is now built without the test
+group (`BUNDLE_WITHOUT="development:test"`). One migration:
+`app_settings.sla_targets` and `tickets.first_response_at`
+(20261112140000). `Gemfile.lock` changed (capybara, cuprite and their
+dependencies, test group only).
+
+- Before: `VACUUM INTO` copy to
+  `~stopan/backups/pre-deploy-d9d7207.sqlite3` (mode 600; 1 user, no
+  organizations or tickets, schema 20261112130000).
+- Checked:
+  - the container is healthy and runs the image tagged 44e58c9, using
+    about 124 MB of memory; the app reports version
+    v0.1.1-45-g44e58c9;
+  - the image holds none of the test, lint or audit gems (capybara,
+    cuprite, ferrum, brakeman, rubocop, bundler-audit, debug), and the
+    app boots and serves without them;
+  - schema 20261112140000, none pending; the new columns are there;
+    the SLA targets are empty, so nothing shows; one user and no
+    organizations or tickets;
+  - the OpenAPI document describes the SLA fields;
+  - the job queue: supervisor in async mode, dispatcher and worker
+    registered, nothing failed;
+  - `/up` 200 on loopback and through Apache; `http://` -> 301;
+    `/api/v1/me` 401; the sign-in page 200 and its stylesheet served;
+    signed out, `/admin/settings` -> 302; `/cable` 101; the security
+    headers are present;
+  - only `127.0.0.1:3183` listens; g0no `/up` 200.
+- Not checked on the server: SLA lines and marks on a real ticket,
+  since the database has no tickets and no targets are set.
+- Images kept: 44e58c9, d9d7207, 97c3f7d.
+- Rollback: tag `localhost/stopan:d9d7207` as `latest` and restart.
+  The older code ignores the new columns, so the database may stay.
+
 ## Update 2026-11-12 (revision d9d7207)
 
 `main` after v0.1.1, not a release, on the empty database from the
