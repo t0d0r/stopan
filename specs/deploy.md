@@ -27,7 +27,7 @@ The deployment waited on ISPConfig Remote API access on 2026-10-25/26
 | system user | `stopan` (system account, no login shell, home `/srv/stopan`, own subuid/subgid range, lingering so its services run without a login) |
 | container | rootless Podman as `stopan`, from the quadlet `deploy/stopan.container`, installed as `~stopan/.config/containers/systemd/stopan.container`; systemd user service `stopan.service`, `Restart=always`, `WantedBy=default.target` |
 | image | `localhost/stopan:latest` (also tagged with the git revision), built on the server from `Dockerfile` |
-| data | `~stopan/storage` -> `/rails/storage` (SQLite databases and uploads). SQLite is the application's only database (overview.md); no MySQL database is created |
+| data | `~stopan/storage` -> `/rails/storage` (SQLite databases and uploads). SQLite is the application's only database (overview.md); no MySQL database is created. Since 2026-11-12 a second file, `production_queue.sqlite3`, holds the jobs that have not run yet (notifications.md "Delivery"); the entrypoint's `db:prepare` creates it |
 | settings | `~stopan/stopan.env`, mode 600, owner `stopan`; never in git |
 | network | the container publishes only `127.0.0.1:3183`; Apache on the host is the only way in |
 

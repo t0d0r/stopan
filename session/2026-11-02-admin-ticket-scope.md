@@ -664,8 +664,26 @@
   with no migrations; every check passed (specs/deploy.md "Update
   2026-11-12 (revision c802739)"). Images kept: c802739, 34f3e79,
   0ae905e.
+- Durable job queue (specs/notifications.md "Delivery"). Production
+  uses Solid Queue 1.7.0 with a second SQLite database,
+  `storage/production_queue.sqlite3` (`config/database.yml`,
+  `db/queue_schema.rb`), so queued emails survive a restart. It runs
+  inside Puma as threads (`solid_queue_mode :async` in
+  `config/puma.rb`): the page refreshes are jobs too, and the async
+  Action Cable adapter reaches only the process that broadcasts, so
+  forked workers would refresh no page. `MailDeliveryJob` retries a
+  failed email 5 times; emails to the customer side stay recorded on
+  the ticket and are not retried. Finished jobs are not kept.
+  `bin/docker-check` now checks the queue through a restart. Tests:
+  test/jobs/mail_delivery_job_test.rb. A change made in the browser
+  reached an open `/cable` subscription in the production image.
 
 ## Decisions
+
+- Job queue, 2026-11-12: Solid Queue in async mode inside Puma, not
+  forked and not a second container, because Action Cable stays on the
+  in-process async adapter. Moving to forked workers needs a shared
+  cable adapter (Solid Cable) first.
 
 - Followers, 2026-11-12: people outside the organization never go in
   Cc, the share link remains for them; requesters add colleagues to Cc
@@ -757,7 +775,11 @@ CSV export of the reports, and automatic done, which stays off until
 an administrator sets its days. The mailbox
 filter meets a real IMAP server once a mailbox is set up again after
 the reset. The followers work is complete and deployed, the requester adding
-colleagues to Cc included. The
+colleagues to Cc included. The durable job queue is committed and not
+deployed: it adds a gem and a second database file that the entrypoint
+creates, and the main database's schema does not change. After its
+deploy, check on the server that the queue's supervisor, dispatcher
+and worker run in one process and that `/cable` still answers 101. The
 other open todo items are larger or need the operator, and the
 operator steps after the reset remain.
 

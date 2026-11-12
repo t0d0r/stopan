@@ -45,7 +45,7 @@
 - [x] staff "new tickets" subscription on the account page (specs/notifications.md)
 - [x] SMTP from environment variables; file delivery in development (specs/notifications.md)
 - [ ] operator: set SMTP_* (and APP_HOST) in the production settings file, then check a reset email (specs/notifications.md, specs/deploy.md)
-- [ ] durable job queue (Solid Queue) so queued emails survive restarts and failures are retried (specs/notifications.md)
+- [x] durable job queue (Solid Queue 1.7.0) in production, inside Puma as threads: queued emails survive restarts and failed ones are retried 5 times (specs/notifications.md "Delivery")
 
 ## Ticket list look (2026-10-26, specs/queues.md, specs/ui.md)
 

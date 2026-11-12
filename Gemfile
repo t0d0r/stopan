@@ -22,6 +22,10 @@ gem "commonmarker", "~> 2.10"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
+# Durable job queue in SQLite for production, so queued emails survive a
+# restart and are retried (specs/notifications.md "Delivery")
+gem "solid_queue", "1.7.0"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 

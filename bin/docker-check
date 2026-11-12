@@ -2,7 +2,7 @@
 # Smoke test of the production image (specs/docker.md): runs it with
 # throwaway secrets and a throwaway volume on a loopback port, checks the
 # image contents, /up, the sign-in page, a sign-in as the seeded admin,
-# the admin page and a restart, then removes the container and volume.
+# the admin page, the job queue and a restart, then removes the container and volume.
 # Never reads .env; the generated secrets are not printed.
 #
 #   bin/docker-check [image]   (default stopan:latest; PORT default 3190)
@@ -58,9 +58,28 @@ status=$(curl -s -o /dev/null -w '%{http_code}' -c "$jar" -b "$jar" \
 [ "$status" = 303 ] || fail "sign-in answered $status, expected 303"
 [ "$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" "$base/admin")" = 200 ] || fail "admin page not reachable"
 
+# The job queue (specs/notifications.md "Delivery"): it runs as threads
+# of the one web process, a queued email is taken, and a waiting one survives the
+# restart below.
+echo "job queue"
+runner() { docker exec "$name" bin/rails runner "$1" 2>/dev/null | tail -n 1; }
+i=0
+until [ "$(runner 'print SolidQueue::Process.distinct.pluck(:kind).sort.join(",")')" = "Dispatcher,Supervisor(async),Worker" ]; do
+  i=$((i + 1)); [ "$i" -le 20 ] || fail "the job queue's supervisor (async), dispatcher and worker are not running"
+  sleep 1
+done
+[ "$(runner 'print SolidQueue::Process.distinct.count(:pid)')" = 1 ] || fail "the job queue runs in more than one process"
+runner 'mail = AccountMailer.with(user: User.first).magic_link; mail.deliver_later; mail.deliver_later(wait: 1.hour)' >/dev/null
+i=0
+until [ "$(runner 'print [SolidQueue::Job.count, SolidQueue::FailedExecution.count].join(",")')" = "1,0" ]; do
+  i=$((i + 1)); [ "$i" -le 20 ] || fail "the queued email was not taken, or it failed"
+  sleep 1
+done
+
 echo "restart keeps the data"
 docker restart "$name" >/dev/null
 wait_up
+[ "$(runner 'print SolidQueue::Job.count')" = 1 ] || fail "the waiting job did not survive the restart"
 # Production logs to STDOUT, so startup warnings come before the count.
 users=$(docker exec "$name" bin/rails runner 'print User.count' 2>/dev/null | tail -n 1)
 [ "$users" = 1 ] || fail "expected 1 user after restart, found $users"

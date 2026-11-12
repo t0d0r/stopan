@@ -342,9 +342,47 @@ notifications, live.
 - `ActionMailer` `deliver_later` after the transaction commits
   (`ActiveRecord::Base.current_transaction.after_commit`), so a rolled
   back action sends nothing and the request does not wait for SMTP.
-- Active Job uses Rails' default in-process `:async` adapter. Emails
-  queued in the seconds before a restart are lost, and a failed delivery
-  is logged, not retried. A durable queue (Solid Queue) is a later item.
+- **Durable queue (2026-11-12).** Until then Active Job used Rails'
+  in-process `:async` adapter: emails queued in the seconds before a
+  restart were lost, and a failed delivery was logged, not retried.
+  - **Production** uses Solid Queue. Jobs are rows in a second SQLite
+    database, `storage/production_queue.sqlite3` (database `queue` in
+    `config/database.yml`, schema `db/queue_schema.rb`). A job is
+    written when the action commits and removed when it has run, so a
+    restart or a deploy loses nothing: what was waiting is sent after
+    the start.
+  - **One process.** Solid Queue runs inside Puma (`plugin
+    :solid_queue` in `config/puma.rb`, production only), with one
+    worker of 3 threads and one dispatcher (`config/queue.yml`). No
+    second container and no Redis.
+  - **Threads, not forks** (`solid_queue_mode :async`). The live page
+    refreshes are jobs too (`Turbo::Streams::BroadcastStreamJob`), and
+    Action Cable's `async` adapter reaches only the browsers connected
+    to the process that broadcasts. A forked worker would send the
+    emails but refresh no page.
+  - **Retries.** Emails go through `MailDeliveryJob`
+    (`config.action_mailer.delivery_job`), which tries again on any
+    error: 5 attempts in all, with growing waits (about 3 s, 18 s,
+    83 s, 258 s). After the last one the job stays in Solid Queue's
+    failed list with its error, for an administrator to look at in the
+    console.
+  - **Emails to the customer side are the exception:** `TicketMailer`
+    records a failed one in the ticket's history (`mail_failed`,
+    "Emails to the requester") and does not raise, so it is not tried
+    again. **Reason:** staff see the failure on the ticket and decide;
+    several attempts would leave several records.
+  - Finished jobs are deleted at once (`preserve_finished_jobs` off),
+    so the queue database holds no copy of who was emailed.
+  - **Development and tests** keep `:async` and `:test`. The gem is
+    locked at 1.7.0, the newest release older than two weeks, with its
+    checksum in `Gemfile.lock`; it brings fugit, et-orbi and raabro.
+  - **Checked:** `make docker-check` (docker.md) runs the queue in the
+    production image through a restart. A change made in the browser
+    reached an open `/cable` subscription as a refresh in that image.
+  - **Backups:** the queue database holds only jobs that have not run.
+    The copy before a deploy stays the main database only (deploy.md).
+  - Not moved: the hourly timers (automatic done and postponing, the
+    mailbox poller) stay threads of the web process.
 - Devise's password reset email stays synchronous (specs/auth.md).
 
 ## SMTP (production)

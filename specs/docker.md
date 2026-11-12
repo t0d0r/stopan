@@ -109,9 +109,13 @@ Builds the image, then `bin/docker-check` runs it with throwaway secrets
 - the sign-in page has the Stopan title and its fingerprinted stylesheet
   is served;
 - the seeded admin signs in (303) and `/admin` answers 200;
-- after `docker restart` `/up` answers again and the database still holds
+- the job queue (notifications.md "Delivery") has its supervisor in
+  async mode, a dispatcher and a worker, all in one process; a queued
+  email is taken without failing, and one queued for later is still
+  waiting;
+- after `docker restart` `/up` answers again, the database still holds
   exactly the one seeded user (seeding is idempotent, data is in the
-  volume).
+  volume), and the waiting job is still there.
 
 The container and volume are removed afterwards, also on failure.
 

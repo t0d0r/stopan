@@ -34,6 +34,16 @@ port ENV.fetch("PORT", 3000)
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
 
+# The job queue runs inside Puma in production, as threads of the web
+# process (async mode), not as forked processes: the page refreshes are
+# jobs too, and Action Cable's async adapter reaches only the browsers
+# connected to the process that broadcasts
+# (specs/notifications.md "Delivery").
+if ENV["RAILS_ENV"] == "production"
+  plugin :solid_queue
+  solid_queue_mode :async
+end
+
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
