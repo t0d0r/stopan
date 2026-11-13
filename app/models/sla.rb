@@ -7,6 +7,14 @@ class Sla
   # A fifth of the target left counts as "soon".
   SOON = 0.2
   WAITING_STATUSES = %w[pending postponed].freeze
+  # What a new installation starts with, in minutes (specs/sla.md
+  # "Defaults"); the column's default holds the same values.
+  DEFAULT_TARGETS = {
+    "urgent" => { "first_response" => 120, "resolution" => 1440 },
+    "high" => { "first_response" => 480, "resolution" => 4320 },
+    "normal" => { "first_response" => 1440, "resolution" => 7200 },
+    "low" => { "first_response" => 4320, "resolution" => 14_400 }
+  }.freeze
 
   # state: met, late, overdue, soon, running or waiting. `at` is when it
   # was answered or done; `seconds` the time that matters for the state:

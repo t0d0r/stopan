@@ -122,4 +122,16 @@ class SlaTest < ActiveSupport::TestCase
     setting.sla_targets = { "urgent" => { "reply" => 5 } }
     assert_not setting.valid?
   end
+
+  test "a new installation starts with the default targets; clearing them stays cleared" do
+    AppSetting.delete_all
+    setting = AppSetting.current
+    assert_equal Sla::DEFAULT_TARGETS, setting.sla_targets
+    assert_equal [ 2, 24, 8, 72, 24, 120, 72, 240 ],
+                 %w[urgent high normal low].flat_map { |priority| Sla::KINDS.map { |kind| setting.sla_hours(priority, kind) } }
+    assert Sla.any_target?
+
+    setting.update!(sla_hours: {})
+    assert_not Sla.any_target?(AppSetting.current.sla_targets)
+  end
 end

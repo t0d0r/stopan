@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_090000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -67,7 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_150000) do
     t.string "timeline_order", default: "oldest_first", null: false
     t.integer "last_ticket_number", default: 0, null: false
     t.integer "auto_done_days", default: 0, null: false
-    t.json "sla_targets", default: {}, null: false
+    t.json "sla_targets", default: {"urgent" => {"first_response" => 120, "resolution" => 1440}, "high" => {"first_response" => 480, "resolution" => 4320}, "normal" => {"first_response" => 1440, "resolution" => 7200}, "low" => {"first_response" => 4320, "resolution" => 14400}}, null: false
   end
 
   create_table "comments", force: :cascade do |t|

@@ -112,6 +112,7 @@ class TicketSharesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "ticket lists mark shared tickets" do
+    AppSetting.current.update!(sla_targets: {}) # no SLA icon beside the link
     tickets(:printer).share!(actor: users(:agent))
     sign_in users(:agent)
     get tickets_url(view: "all")

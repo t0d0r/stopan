@@ -977,6 +977,14 @@
   without a database copy (no migration). Checks passed
   (specs/deploy.md "Update 2026-11-12 (revision eae75a7)").
   Images kept: eae75a7, cf20643, 6982b41.
+- 2026-11-13: SLA targets have defaults: urgent 2 h / 24 h, high
+  8 h / 72 h, normal 24 h / 120 h, low 72 h / 240 h
+  (`Sla::DEFAULT_TARGETS`, the column default, migration
+  `20261113090000_default_sla_targets.rb`, which also fills an
+  installation that never set a target; specs/sla.md "Defaults").
+  Tests that need a desk without targets clear them first. Not
+  deployed: after the deploy production gets the defaults, so the
+  marks and the "Overdue" view appear there at once.
 
 ## Decisions
 

@@ -2,7 +2,12 @@ require "test_helper"
 
 # specs/sla.md "Where it shows" and the settings panel.
 class SlaPagesTest < ActionDispatch::IntegrationTest
-  setup { @ticket = tickets(:printer) }
+  # Each test starts without targets; the defaults (specs/sla.md
+  # "Defaults") are tested in test/models/sla_test.rb.
+  setup do
+    @ticket = tickets(:printer)
+    AppSetting.current.update!(sla_targets: {})
+  end
 
   def targets!(targets = { "urgent" => { "first_response" => 60, "resolution" => 480 } })
     AppSetting.current.update!(sla_targets: targets)

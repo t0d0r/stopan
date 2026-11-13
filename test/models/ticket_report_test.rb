@@ -87,6 +87,7 @@ class TicketReportTest < ActiveSupport::TestCase
   end
 
   test "SLA rows count kept and missed targets of the period, or nothing without targets" do
+    AppSetting.current.update!(sla_targets: {})
     assert_nil report.sla_rows
     AppSetting.current.update!(sla_targets: { "normal" => { "first_response" => 60, "resolution" => 1440 } })
 

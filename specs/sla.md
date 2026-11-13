@@ -16,13 +16,39 @@ service desk:
 - Set by super administrators on `/admin/settings`, panel "SLA
   targets": a small table, one row per priority, two fields in hours
   (quarter hours allowed, so 0.25 is 15 minutes; at most 8760). An
-  empty field or 0 means no target. **All are empty at first**, so
-  nothing shows until an administrator sets one.
+  empty field or 0 means no target. The panel starts with the
+  defaults below.
 - Stored in minutes in `app_settings.sla_targets` (JSON:
   `{"urgent": {"first_response": 60, "resolution": 480}, ...}`).
 - Times are calendar time, as in the reports (no business hours).
 - A changed target or a changed priority applies at once to open
   tickets, since nothing is stored per ticket but the first response.
+
+## Defaults (2026-11-13)
+
+A new installation starts with targets for a small team that does not
+work nights, so the marks and the "Overdue" view work without setup:
+
+| priority | first response | resolution |
+|---|---|---|
+| urgent | 2 h | 24 h |
+| high | 8 h | 72 h |
+| normal | 24 h | 120 h |
+| low | 72 h | 240 h |
+
+- They are the default of the `app_settings.sla_targets` column and
+  `Sla::DEFAULT_TARGETS` (a test keeps the two equal).
+- The migration `DefaultSlaTargets` also writes them to an
+  installation where no target was ever set. Targets that were set
+  stay as they are.
+- An administrator changes them as before. Clearing every field
+  leaves the desk without targets; the defaults do not come back.
+- **Reason for these values:** the clock is calendar time, so tighter
+  targets would show tickets as overdue after every night and
+  weekend. With these, urgent and high tickets can still go overdue
+  over a weekend, which is meant.
+- **Before 2026-11-13** all targets were empty at first and nothing
+  showed until an administrator set one.
 
 ## The first response is remembered
 

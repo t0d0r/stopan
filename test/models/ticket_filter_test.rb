@@ -6,6 +6,7 @@ class TicketFilterTest < ActiveSupport::TestCase
   end
 
   test "staff views" do
+    AppSetting.current.update!(sla_targets: {}) # no "overdue" view
     agent = users(:agent)
     assert_equal [ 1003, 1002, 1001 ], numbers(agent)
     assert_equal [ 1001 ], numbers(agent, view: "mine")
